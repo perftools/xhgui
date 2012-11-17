@@ -5,6 +5,7 @@
 define('ROOT_DIR', dirname(__DIR__));
 
 require ROOT_DIR . '/vendor/Twig/Autoloader.php';
+require ROOT_DIR . '/app/utility.php';
 Twig_Autoloader::register();
 
 
