@@ -15,23 +15,32 @@ function exclusive($run)
         $name = splitName($name);
         $parent = $name[0];
         $child = $name[1];
-        $data['exclusive'] = $data;
+        //Init exclusive values 
+        $data['ewt'] = $data['wt'];
+        $data['emu'] = $data['mu'];
+        $data['ecpu'] = $data['cpu'];
+        $data['ect'] = $data['ct'];
+        $data['epmu'] = $data['pmu'];
+        
+        //Set parent
         $data['parent'] = $parent;
+        
+        //Save all this data as the child function, this is wrong (since we'll clobber something if the same function is called from two places)
         $final[$child] = $data;
     }
     
     //Delete from parent its children, this is wrong
     foreach($final as $child => $data)
     {
-        echo "I am $child, My parent is: {$data['parent']}\n";
+        //echo "I am $child, My parent is: {$data['parent']}\n";
         //var_dump($data);
         if (isset($final[$data['parent']]))
         {
-            $final[$data['parent']]['exclusive']['wt'] -= $data['wt'];
-            $final[$data['parent']]['exclusive']['mu'] -= $data['mu'];
-            $final[$data['parent']]['exclusive']['cpu'] -= $data['cpu'];
-            $final[$data['parent']]['exclusive']['ct'] -= $data['ct'];
-            $final[$data['parent']]['exclusive']['pmu'] -= $data['pmu'];
+            $final[$data['parent']]['ewt'] -= $data['wt'];
+            $final[$data['parent']]['emu'] -= $data['mu'];
+            $final[$data['parent']]['ecpu'] -= $data['cpu'];
+            $final[$data['parent']]['ect'] -= $data['ct'];
+            $final[$data['parent']]['epmu'] -= $data['pmu'];
         }
         
     }
