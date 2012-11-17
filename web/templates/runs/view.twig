@@ -68,7 +68,34 @@
       <p><a class="btn" href="#">View details &raquo;</a></p>
     </div><!--/span-->
   </div><!--/row-->
-
+  <table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Function</th>
+            <th>Call Count</th>
+            <th>Exclusive Wall Time</th>
+            <th>Exclusive CPU</th>
+            <th>Exclusive Memory Usage</th>
+            <th>Exclusive Peak Memory Usage</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for key, value in profile %}
+    <tr>
+        <td>{{ key }}</td>
+        <td>{{ value.ct }}</td>
+        <td>{{ value.wt }}</td>
+        <td>{{ value.cpu }}</td>
+        <td>{{ value.mu }}</td>
+        <td>{{ value.pmu }}</td>
+        
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<pre>
+ {{ f }}
+</pre>
 </div><!--/span-->
 </div><!--/row-->
 {% endblock %}
