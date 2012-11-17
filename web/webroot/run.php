@@ -17,17 +17,19 @@ $f = print_r($result['profile'], 1);
 
 function build_sorter($key) {
     return function ($a, $b) use ($key) {
-        return strnatcmp($a[$key], $b[$key]);
+        if ($a[$key] == $b[$key])
+        {
+            return 0;
+        }
+        return $a[$key] > $b[$key] ? -1 : 1;
     };
 }
 
-uasort($profile, build_sorter('wt'));
+uasort($profile, build_sorter('ewt'));
 
 
 $template = load_template('runs/view.twig');
 echo $template->display(array(
     'profile' => $profile,
     'result' => $result,
-    'e' => $e,
-    'f' => $f
 ));
