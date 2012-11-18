@@ -5,8 +5,7 @@ $m = new Mongo();
 $db = $m->xhprof;
 $collection = $db->results;
 
-$res = $collection->find(array('meta.url' => '/'));
-
+$res = $collection->find(array('meta.url' => '/'))->sort(array("meta.SERVER.REQUEST_TIME" => -1))->limit(DISPLAY_LIMIT);
 
 $template = load_template('runs/list.twig');
 echo $template->render(array(
