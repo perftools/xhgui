@@ -16,7 +16,7 @@
     {% for result in runs %}
     <tr>
         <td><a href="{{ url('/run.php', {id: result._id}) }}">{{ result['meta']['url'] }}</a></td>
-        <td>{{ result['meta']['SERVER']['REQUEST_TIME'] }}</td>
+        <td>{{ result['meta']['SERVER']['REQUEST_TIME']|date(constant('DATE_FORMAT')) }}</td>
         <td>{{ result['profile']['main()']['wt'] }}</td>
         <td>{{ result['profile']['main()']['cpu'] }}</td>
         <td>{{ result['profile']['main()']['mu'] }}</td>

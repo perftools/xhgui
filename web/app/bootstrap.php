@@ -3,6 +3,7 @@
  * Boostrapping and common utility definition.
  */
 define('ROOT_DIR', dirname(__DIR__));
+define('DATE_FORMAT', 'M jS H:i:s');
 
 require ROOT_DIR . '/vendor/Twig/Autoloader.php';
 Twig_Autoloader::register();
