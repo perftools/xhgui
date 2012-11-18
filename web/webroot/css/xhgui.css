@@ -5,3 +5,22 @@ body {
 span.units {
     color: #999999;
 }
+
+th {
+    text-align: center;
+}
+
+td.right {
+    text-align: right;
+}
+th.right {
+    text-align: right;
+    padding-right: 30px;
+}
+
+span.footersplit {
+    width: 33%;
+    display:block;
+    text-align: center;
+    float: left;
+}
