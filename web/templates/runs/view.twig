@@ -57,14 +57,9 @@
 
     </div><!--/span-->
 
-    <div class="span4">
-      <h2>Memory Users</h2>
-      {% for key, value in memory %}
-      <li>{{ key }} &mdash; {{ value.mu|number_format }} <span class="units">bytes</span></li>
-      {% endfor %}
-    </div><!--/span-->
 
-    <div class="span4">
+
+    <div class="span8">
       <h2>Exclusive Wall Time</h2>
       <p>I should have a pie chart of these values</p>
       <ul>
@@ -78,22 +73,13 @@
 
   <div class="row-fluid">
     <div class="span4">
-      <h2>Heading</h2>
-      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-      <p><a class="btn" href="#">View details &raquo;</a></p>
+      <h2>Memory Users</h2>
+      {% for key, value in memory %}
+      <li>{{ key }} &mdash; {{ value.mu|number_format }} <span class="units">bytes</span></li>
+      {% endfor %}
     </div><!--/span-->
 
-    <div class="span4">
-      <h2>Heading</h2>
-      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-      <p><a class="btn" href="#">View details &raquo;</a></p>
-    </div><!--/span-->
-
-    <div class="span4">
-      <h2>Heading</h2>
-      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-      <p><a class="btn" href="#">View details &raquo;</a></p>
-    </div><!--/span-->
+  
   </div><!--/row-->
   <table class="table table-hover">
     <thead>
