@@ -8,18 +8,8 @@ $db = $m->xhprof;
 $collection = $db->results;
 
 
-function stuff($a)
-{
-    for ($i = 0; $i < 1000; $i++)
-    {
-        $b = strlen($a);
-    }
-}
-stuff("asdasdsda asdasijd aisdjiasdjio jiasdjio asd");
-
 //Let's get results from the database
-$res = $collection->find();
-
+$res = $collection->find()->sort(array("meta.SERVER.REQUEST_TIME" => -1))->limit(DISPLAY_LIMIT);
 $template = load_template('runs/list.twig');
 echo $template->render(array(
     'runs' => $res
@@ -32,14 +22,10 @@ foreach($res as $result)
     
 ROW;
 }
-echo <<<TABLECLOSE
-<pre>
-TABLECLOSE;
-var_dump($result);
 
 
 //Store results
-$profile = xhprof_disable();
+
 
 function _xhGetMeta()
 {
@@ -51,6 +37,7 @@ function _xhGetMeta()
     );
     return $meta;
 }
+$profile = xhprof_disable();
 $data['meta'] = _xhGetMeta();
 $data['profile'] = $profile;
 
