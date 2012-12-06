@@ -1,7 +1,7 @@
 <?php
 xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
 
-$m = new MongoClient();
+$m = new Mongo();
 $db = $m->xhprof;
 $collection = $db->results;
 
@@ -61,6 +61,6 @@ $data['meta'] = _xhGetMeta();
 $data['profile'] = $profile;
 
 $collection->insert($data);
-$m = new MongoClient();
+$m = new Mongo();
 $db = $m->xhprof;
 $collection = $db->results;
