@@ -23,5 +23,6 @@ uasort($profile, build_sorter('wt'));
 
 $template = load_template('runs/view.twig');
 echo $template->display(array(
-    'profile' => $profile
+    'profile' => $profile,
+    'result' => $result
 ));
