@@ -1,4 +1,6 @@
 <?php
+require dirname(__DIR__) . '/app/bootstrap.php';
+
 xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
 
 $m = new Mongo();
@@ -17,28 +19,20 @@ stuff("asdasdsda asdasijd aisdjiasdjio jiasdjio asd");
 
 //Let's get results from the database
 $res = $collection->find();
-echo <<<TABLE
-<table>
-    <thead>
-        <tr>
-            <th>URL</th><th>Time</th><th>wt</th><th>cpu</th><th>mu</th><th>pmu</th>
-        </tr>
-    </thead>
-    <tbody>
-TABLE;
+
+$template = load_template('runs/list.twig');
+echo $template->render(array(
+    'runs' => $res
+));
+
 foreach($res as $result)
 {
     $id = (string) $result['_id'];
     echo <<<ROW
-    <tr>
-        <td><a href="/run.php?id={$id}">{$result['meta']['url']}</a></td><td>{$result['meta']['SERVER']['REQUEST_TIME']}</td><td>{$result['profile']['main()']['wt']}</td><td>{$result['profile']['main()']['cpu']}</td><td>{$result['profile']['main()']['mu']}</td><td>{$result['profile']['main()']['pmu']}</td>
-    </tr>
     
 ROW;
 }
 echo <<<TABLECLOSE
-    </tbody>
-</table>
 <pre>
 TABLECLOSE;
 var_dump($result);

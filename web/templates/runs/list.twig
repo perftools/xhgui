@@ -1,0 +1,28 @@
+{% extends 'layout/base.twig' %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>URL</th>
+            <th>Time</th>
+            <th>wt</th>
+            <th>cpu</th>
+            <th>mu</th>
+            <th>pmu</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for result in runs %}
+    <tr>
+        <td><a href="/run.php?id={{ result._id }}">{{ result['meta']['url'] }}</a></td>
+        <td>{{ result['meta']['SERVER']['REQUEST_TIME'] }}</td>
+        <td>{{ result['profile']['main()']['wt'] }}</td>
+        <td>{{ result['profile']['main()']['cpu'] }}</td>
+        <td>{{ result['profile']['main()']['mu'] }}</td>
+        <td>{{ result['profile']['main()']['pmu'] }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
