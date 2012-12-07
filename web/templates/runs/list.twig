@@ -15,7 +15,7 @@
     <tbody>
     {% for result in runs %}
     <tr>
-        <td><a href="/run.php?id={{ result._id }}">{{ result['meta']['url'] }}</a></td>
+        <td><a href="{{ url('/run.php', {id: result._id}) }}">{{ result['meta']['url'] }}</a></td>
         <td>{{ result['meta']['SERVER']['REQUEST_TIME'] }}</td>
         <td>{{ result['profile']['main()']['wt'] }}</td>
         <td>{{ result['profile']['main()']['cpu'] }}</td>
