@@ -100,15 +100,15 @@
     {% for key, value in profile %}
     <tr>
         <td>{{ key }}</td>
-        <td>{{ value.ct }}</td>
-        <td>{{ value.ewt }}</td>
-        <td>{{ value.ecpu }}</td>
-        <td>{{ value.emu }}</td>
-        <td>{{ value.epmu }}</td>
-        <td>{{ value.wt }}</td>
-        <td>{{ value.cpu }}</td>
-        <td>{{ value.mu }}</td>
-        <td>{{ value.pmu }}</td>
+        <td>{{ value.ct | number_format }}</td>
+        <td>{{ value.ewt | number_format }} <span class="units">탎</span></td>
+        <td>{{ value.ecpu |number_format }} <span class="units">탎</span></td>
+        <td>{{ value.emu |number_format }} <span class="units">bytes</span></td>
+        <td>{{ value.epmu |number_format }} <span class="units">bytes</span></td>
+        <td>{{ value.wt | number_format }} <span class="units">탎</span></td>
+        <td>{{ value.cpu | number_format }} <span class="units">탎</span></td>
+        <td>{{ value.mu | number_format }} <span class="units">bytes</span></td>
+        <td>{{ value.pmu | number_format }} <span class="units">bytes</span></td>
     </tr>
     {% endfor %}
     </tbody>
