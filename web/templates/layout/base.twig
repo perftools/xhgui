@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Xhgui</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/xhgui.css" rel="stylesheet" media="screen">
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="brand" href="{{ url('/') }}">XHGui Run Results</a>
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        {% block content '' %}
+    <hr>
+    <footer>
+    <span class="footersplit">© Paul Reinheimer &amp; Mark Story 2012</span>
+    <span class="footersplit">1,000,000 µs = 1 second</span>
+    <span class="footersplit">1,048,576 bytes = 1 MB</span>
+    </footer>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/xhgui.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends 'layout/base.twig' %}
+
+{% block content %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>URL</th>
+            <th>Time</th>
+            <th class="right"><span class="tip" title="Wall time">wt</span></th>
+            <th class="right"><span class="tip" title="CPU time">cpu</span></th>
+            <th class="right"><span class="tip" title="Memory Usage">mu</span></th>
+            <th class="right"><span class="tip" title="Peak Memory Usage">pmu</span></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for result in runs %}
+    <tr>
+        <td><a href="{{ url('/url.php', {'url': result.meta.url|simple_url }) }}">{{ result.meta.url }}</a></td>
+        <td><a href="{{ url('/run.php', {'id': result._id|trim }) }}">{{ result['meta']['SERVER']['REQUEST_TIME']|date(constant('DATE_FORMAT')) }}</a></td>
+        <td class="right">{{ result.profile['main()']['wt'] |number_format }} <span class="units">µs</span></td>
+        <td class="right">{{ result.profile['main()']['cpu'] |number_format }} <span class="units">µs</span></td>
+        <td class="right">{{ result.profile['main()']['mu'] |number_format }} <span class="units">bytes</span></td>
+        <td class="right">{{ result.profile['main()']['pmu'] |number_format }} <span class="units">bytes</span></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
