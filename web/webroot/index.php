@@ -34,6 +34,7 @@ function _xhGetMeta()
         'SERVER' => $_SERVER,
         'get' => $_GET,
         'env' => $_ENV,
+        'simple_url' => simpleUrl($_SERVER['REQUEST_URI']),
     );
     return $meta;
 }

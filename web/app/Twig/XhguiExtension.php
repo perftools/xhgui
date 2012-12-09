@@ -10,7 +10,14 @@ class Twig_XhguiExtension extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            'url' => new Twig_Function_Method($this, 'url')
+            'url' => new Twig_Function_Method($this, 'url'),
+        );
+    }
+
+    public function getFilters()
+    {
+        return array(
+            'simple_url' => new Twig_Filter_Function('simpleUrl'),
         );
     }
 
@@ -36,5 +43,5 @@ class Twig_XhguiExtension extends Twig_Extension
         $path = '/' . ltrim($path, '/');
         return $base . $path . $query;
     }
-}
 
+}
