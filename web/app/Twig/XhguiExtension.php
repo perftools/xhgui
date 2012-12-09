@@ -23,7 +23,11 @@ class Twig_XhguiExtension extends Twig_Extension
 
     protected function _getBase()
     {
-        return dirname($_SERVER['PHP_SELF']);
+        $base = dirname($_SERVER['PHP_SELF']);
+        if ($base == '/') {
+            return '';
+        }
+        return $base;
     }
 
     /**
