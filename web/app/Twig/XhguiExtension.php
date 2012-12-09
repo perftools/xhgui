@@ -18,6 +18,8 @@ class Twig_XhguiExtension extends Twig_Extension
     {
         return array(
             'simple_url' => new Twig_Filter_Function('simpleUrl'),
+            'as_bytes' => new Twig_Filter_Method($this, 'formatBytes', array('is_safe' => array('html'))),
+            'as_time' => new Twig_Filter_Method($this, 'formatTime', array('is_safe' => array('html'))),
         );
     }
 
@@ -46,6 +48,16 @@ class Twig_XhguiExtension extends Twig_Extension
         }
         $path = '/' . ltrim($path, '/');
         return $base . $path . $query;
+    }
+
+    public function formatBytes($value)
+    {
+        return number_format((float)$value) . ' <span class="units">bytes</span>';
+    }
+
+    public function formatTime($value)
+    {
+        return number_format((float)$value) . ' <span class="units">µs</span>';
     }
 
 }

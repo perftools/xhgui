@@ -26,10 +26,10 @@
         <tr>
             <td><a href="{{ url('/url.php', {'url': result.meta.url}) }}">{{ result.meta.url }}</a></td>
             <td><a href="{{ url('/run.php', {'id': result._id|trim }) }}">{{ result['meta']['SERVER']['REQUEST_TIME']|date(constant('DATE_FORMAT')) }}</a></td>
-            <td class="right">{{ result.profile['main()']['wt'] |number_format }} <span class="units">µs</span></td>
-            <td class="right">{{ result.profile['main()']['cpu'] |number_format }} <span class="units">µs</span></td>
-            <td class="right">{{ result.profile['main()']['mu'] |number_format }} <span class="units">bytes</span></td>
-            <td class="right">{{ result.profile['main()']['pmu'] |number_format }} <span class="units">bytes</span></td>
+            <td class="right">{{ result.profile['main()']['wt'] |as_time }}</td>
+            <td class="right">{{ result.profile['main()']['cpu'] |as_bytes }}</td>
+            <td class="right">{{ result.profile['main()']['mu'] |as_bytes }}</td>
+            <td class="right">{{ result.profile['main()']['pmu'] |as_bytes }}</td>
         </tr>
         {% endfor %}
         </tbody>

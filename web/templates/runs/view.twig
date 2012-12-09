@@ -9,10 +9,10 @@
             <li class="nav-header">This Run</li>
             <li>URL: {{ result.meta.url }}</li>
             <li>Time: {{ result.meta.SERVER.REQUEST_TIME|date('r') }}</li>
-            <li>Wall Time: {{ result.profile['main()'].wt }}</li>
-            <li>CPU Time: {{ result.profile['main()'].cpu }}</li>
-            <li>Memory Usage: {{ result.profile['main()'].mu }}</li>
-            <li>Peak Memory Usage: {{ result.profile['main()'].pmu }}</li>
+            <li>Wall Time: {{ result.profile['main()'].wt|number_format }}</li>
+            <li>CPU Time: {{ result.profile['main()'].cpu|number_format }}</li>
+            <li>Memory Usage: {{ result.profile['main()'].mu|number_format }}</li>
+            <li>Peak Memory Usage: {{ result.profile['main()'].pmu|number_format }}</li>
             <li class="nav-header">95th Percentile</li>
             <li><a href="#">Link</a></li>
             <li><a href="#">Link</a></li>
