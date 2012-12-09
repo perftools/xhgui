@@ -14,15 +14,7 @@ $template = load_template('runs/list.twig');
 echo $template->render(array(
     'runs' => $res
 ));
-
-foreach($res as $result)
-{
-    $id = (string) $result['_id'];
-    echo <<<ROW
-    
-ROW;
-}
-
+flush();
 
 //Store results
 

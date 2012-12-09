@@ -33,7 +33,7 @@ $pie = array_slice($profile, 0, PIE_COUNT);
 //Memory Block
 $memory = $profile;
 uasort($memory, build_sorter('emu'));
-
+$memory = array_slice($memory, 0, DETAIL_COUNT);
 
 //Watched Functions Block
 //The purpose of watched functions is to let developers call out functions whose performance they want to keep an eye on, they'll
