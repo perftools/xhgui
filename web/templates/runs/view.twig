@@ -9,10 +9,10 @@
             <li class="nav-header">This Run</li>
             <li>URL: {{ result.meta.url }}</li>
             <li>Time: {{ result.meta.SERVER.REQUEST_TIME|date('r') }}</li>
-            <li>Wall Time: {{ result.profile['main()'].wt|number_format }}</li>
-            <li>CPU Time: {{ result.profile['main()'].cpu|number_format }}</li>
-            <li>Memory Usage: {{ result.profile['main()'].mu|number_format }}</li>
-            <li>Peak Memory Usage: {{ result.profile['main()'].pmu|number_format }}</li>
+            <li>Wall Time: {{ result.profile['main()'].wt|as_time }}</li>
+            <li>CPU Time: {{ result.profile['main()'].cpu|as_time }}</li>
+            <li>Memory Usage: {{ result.profile['main()'].mu|as_bytes }}</li>
+            <li>Peak Memory Usage: {{ result.profile['main()'].pmu|as_bytes }}</li>
             <li class="nav-header">95th Percentile</li>
             <li><a href="#">Link</a></li>
             <li><a href="#">Link</a></li>
@@ -48,10 +48,10 @@
         {% for key, value in watches %}
         <tr>
             <td>{{ key }}</td>
-            <td>{{ value.ct|number_format }}</td>
-            <td>{{ value.ewt|number_format }}</td>
-            <td>{{ value.emu|number_format }}</td>
-            <td>{{ value.epmu|number_format }}</td>
+            <td>{{ value.ct|as_time }}</td>
+            <td>{{ value.ewt|as_time }}</td>
+            <td>{{ value.emu|as_bytes }}</td>
+            <td>{{ value.epmu|as_bytes }}</td>
         </tr>
         {% endfor %}
         </tbody>
@@ -65,7 +65,7 @@
       <p>I should have a pie chart of these values</p>
       <ul>
       {% for key, value in pie_data %}
-      <li>{{ key }} &mdash; {{ value.ewt }} <span class="units">ms</span></li>
+      <li>{{ key }} &mdash; {{ value.ewt|as_time }}</li>
       {% endfor %}
       </ul>
     </div><!--/span-->
@@ -76,7 +76,7 @@
     <div class="span4">
       <h2>Memory Users</h2>
       {% for key, value in memory %}
-      <li>{{ key }} &mdash; {{ value.mu|number_format }} <span class="units">bytes</span></li>
+      <li>{{ key }} &mdash; {{ value.mu|as_bytes }}</li>
       {% endfor %}
     </div><!--/span-->
   </div><!--/row-->
@@ -100,15 +100,15 @@
     {% for key, value in profile %}
     <tr>
         <td>{{ key }}</td>
-        <td>{{ value.ct | number_format }}</td>
-        <td>{{ value.ewt | number_format }} <span class="units">탎</span></td>
-        <td>{{ value.ecpu |number_format }} <span class="units">탎</span></td>
-        <td>{{ value.emu |number_format }} <span class="units">bytes</span></td>
-        <td>{{ value.epmu |number_format }} <span class="units">bytes</span></td>
-        <td>{{ value.wt | number_format }} <span class="units">탎</span></td>
-        <td>{{ value.cpu | number_format }} <span class="units">탎</span></td>
-        <td>{{ value.mu | number_format }} <span class="units">bytes</span></td>
-        <td>{{ value.pmu | number_format }} <span class="units">bytes</span></td>
+        <td>{{ value.ct|as_time }}</td>
+        <td>{{ value.ewt|as_time }}</td>
+        <td>{{ value.ecpu|as_time }}</td>
+        <td>{{ value.emu|as_bytes }}</td>
+        <td>{{ value.epmu|as_bytes }}</td>
+        <td>{{ value.wt|as_time }}</td>
+        <td>{{ value.cpu|as_time }}</td>
+        <td>{{ value.mu|as_bytes }}</td>
+        <td>{{ value.pmu|as_bytes }}</td>
     </tr>
     {% endfor %}
     </tbody>
