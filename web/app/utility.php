@@ -29,9 +29,8 @@ function exclusive($run)
 {
     $final = array();
     //Create a list of each function
-    foreach($run as $name => $data)
+    foreach((array)$run as $name => $data)
     {
-        
         $name = splitName($name);
         $parent = $name[0];
         $child = $name[1];
