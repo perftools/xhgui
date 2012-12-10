@@ -1,0 +1,10 @@
+{% macro request_table(name, data) %}
+{% for k, v in data %}
+    <li>
+    <strong>{{ k }}</strong>
+    {{ v }}
+</li>
+{% else %}
+    <li>No {{ name }} data</li>
+{% endfor %}
+{% endmacro %}

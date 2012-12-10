@@ -1,29 +1,39 @@
 {% extends 'layout/base.twig' %}
+{% import 'macros/helpers.twig' as helpers %}
 
 {% block content %}
 <div class="row-fluid">
-<h2>Profile data for {{ result.meta.url }}</h2>
+    <h2>Profile data for {{ result.meta.url }}</h2>
+</div>
+<div class="row-fluid">
 <div class="span3">
     <div class="well sidebar-nav">
         <ul class="nav nav-list">
             <li class="nav-header">This Run</li>
-            <li>URL: {{ result.meta.url }}</li>
-            <li>Time: {{ result.meta.SERVER.REQUEST_TIME|date('r') }}</li>
-            <li>Wall Time: {{ result.profile['main()'].wt|as_time }}</li>
-            <li>CPU Time: {{ result.profile['main()'].cpu|as_time }}</li>
-            <li>Memory Usage: {{ result.profile['main()'].mu|as_bytes }}</li>
-            <li>Peak Memory Usage: {{ result.profile['main()'].pmu|as_bytes }}</li>
+            <li><strong>URL</strong> {{ result.meta.url }}</li>
+            <li><strong>Time</strong> {{ result.meta.SERVER.REQUEST_TIME|date('r') }}</li>
+            <li><strong>Wall Time</strong> {{ result.profile['main()'].wt|as_time }}</li>
+            <li><strong>CPU Time</strong> {{ result.profile['main()'].cpu|as_time }}</li>
+            <li><strong>Memory Usage</strong> {{ result.profile['main()'].mu|as_bytes }}</li>
+            <li><strong>Peak Memory Usage</strong> {{ result.profile['main()'].pmu|as_bytes }}</li>
+
             <li class="nav-header">95th Percentile</li>
             <li><a href="#">Link</a></li>
             <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
 
-            <li class="nav-header">Environment</li>
+            <li class="nav-header">GET</li>
             <li>
+            {{ helpers.request_table('GET', result.meta.get) }}
+            </li>
 
+            <li class="nav-header">SERVER</li>
+            <li>
+            {{ helpers.request_table('SERVER', result.meta.SERVER) }}
+            </li>
+
+            <li class="nav-header">ENV</li>
+            <li>
+            {{ helpers.request_table('ENV', result.meta.env) }}
             </li>
         </ul>
     </div><!--/.well -->
@@ -81,6 +91,9 @@
     </div><!--/span-->
   </div><!--/row-->
 
+</div>
+
+<div class="row-fluid">
   <table class="table table-hover">
     <thead>
         <tr>
@@ -113,6 +126,5 @@
     {% endfor %}
     </tbody>
 </table>
-</div><!--/span-->
 </div><!--/row-->
 {% endblock %}
