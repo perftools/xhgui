@@ -1,10 +1,12 @@
-{% macro request_table(name, data) %}
+{% macro property_list(name, data) %}
+<dl>
 {% for k, v in data %}
-    <li>
-    <strong>{{ k }}</strong>
-    {{ v }}
-</li>
+    <dt>{{ k }}</dt>
+    <dd class="text-wrap">
+        {{ v }}
+    </dd>
 {% else %}
-    <li>No {{ name }} data</li>
+    <dt>No {{ name }} data</dt>
 {% endfor %}
+</dl>
 {% endmacro %}

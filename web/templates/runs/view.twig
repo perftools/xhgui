@@ -21,20 +21,14 @@
             <li><a href="#">Link</a></li>
             <li><a href="#">Link</a></li>
 
-            <li class="nav-header">GET</li>
-            <li>
-            {{ helpers.request_table('GET', result.meta.get) }}
-            </li>
+            <h6 class="nav-header">GET</h6>
+            {{ helpers.property_list('GET', result.meta.get) }}
 
-            <li class="nav-header">SERVER</li>
-            <li>
-            {{ helpers.request_table('SERVER', result.meta.SERVER) }}
-            </li>
+            <h6 class="nav-header">SERVER</h6>
+            {{ helpers.property_list('SERVER', result.meta.SERVER) }}
 
-            <li class="nav-header">ENV</li>
-            <li>
-            {{ helpers.request_table('ENV', result.meta.env) }}
-            </li>
+            <h6 class="nav-header">ENV</h6>
+            {{ helpers.property_list('ENV', result.meta.env) }}
         </ul>
     </div><!--/.well -->
 </div><!--/span-->

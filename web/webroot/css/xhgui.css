@@ -24,3 +24,7 @@ span.footersplit {
     text-align: center;
     float: left;
 }
+
+.text-wrap {
+    word-break: break-all;
+}
