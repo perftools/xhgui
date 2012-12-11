@@ -29,6 +29,10 @@ uasort($profile, build_sorter('ewt'));
 
 //Pie Chart Widget
 $pie = array_slice($profile, 0, PIE_COUNT);
+$pieChart = array();
+foreach ($pie as $func => $funcData) {
+    $pieChart[] = array('name' => $func, 'value' => $funcData['ewt']);
+}
 
 //Memory Block
 $memory = $profile;
@@ -55,7 +59,7 @@ $template = load_template('runs/view.twig');
 echo $template->display(array(
     'profile' => $profile,
     'result' => $result,
-    'pie_data' => $pie,
+    'pie_data' => $pieChart,
     'memory' => $memory,
     'watches' => $watches
 ));
