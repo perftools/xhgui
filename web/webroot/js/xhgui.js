@@ -25,7 +25,9 @@ Xhgui.piechart = function (container, data, options) {
 
     var color = d3.scale.category20();
 
-    var svg = d3.select(container).append('svg')
+    container = d3.select(container);
+
+    var svg = container.append('svg')
         .attr('width', width)
         .attr('height', height)
             .append('g')
@@ -36,31 +38,47 @@ Xhgui.piechart = function (container, data, options) {
             .enter().append('g')
         .attr('class', 'arc');
 
-    var text;
+    var popover = container.append('div');
+
+    popover.attr('class', 'popover top')
+        .append('div').attr('class', 'arrow');
+
+    var popoverContent = popover.append('div').attr('class', 'popover-content');
 
     g.append('path')
         .attr('d', arc)
         .style('fill', function (d) {
             return color(d.data.value);
         })
-        .on('mouseover', function () {
-            // get the g element
-            var el = d3.select(this.parentNode);
-            // Make a 'tooltip' (not done)
-            text = el.append('text')
-                .attr('transform', function (d) {
-                    return "translate(" + arc.centroid(d) + ")";
-                })
-                .attr({
-                    dy: '.35em',
-                    'class': 'chart-tooltip'
-                })
-                .style("text-anchor", "middle")
-                .text(function(d) {
-                    return d.data.name + ': ' + d.data.value + options.postfix;
-                });
+        .on('mouseover', function (d, i) {
+            var sliceX, sliceY, top, left, tooltipHeight, tooltipWidth;
+
+            var position = arc.centroid(d, i);
+
+            var label = '<strong>' + d.data.name + '</strong><br />' +
+                d.data.value + options.postfix;
+
+            popoverContent.html(label);
+            popover.style('display', 'block');
+
+            tooltipWidth = parseInt(popover.style('width'), 10);
+            tooltipHeight = parseInt(popover.style('height'), 10);
+
+            // Recalculate base on outer transform.
+            sliceX = position[0] + (height / 2);
+            sliceY = position[1] + (width / 2);
+
+            // Recalculate based on width/height of tooltip.
+            // arrow is 10x10px
+            top = sliceY - (tooltipHeight / 2) - 5;
+            left = sliceX - (tooltipWidth / 2) + 5;
+
+            popover.style({
+                top: top + 'px',
+                left: left + 'px'
+            });
         }).on('mouseout', function () {
-            text.remove();
+            popover.style('display', 'none');
         });
 };
 

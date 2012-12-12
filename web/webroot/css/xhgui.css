@@ -28,3 +28,10 @@ span.footersplit {
 .text-wrap {
     word-break: break-all;
 }
+
+.chart-container {
+    position: relative;
+}
+.chart-container .popover {
+    width: auto;
+}

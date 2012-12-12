@@ -66,7 +66,7 @@
 
     <div class="span8">
       <h2>Exclusive Wall Time</h2>
-      <div id="wall-time-chart"></div>
+      <div id="wall-time-chart" class="chart-container"></div>
       <ul>
       {% for value in pie_data %}
       <li>{{ value.name }} &mdash; {{ value.value|as_time }}</li>
@@ -128,8 +128,8 @@
 $(document).ready(function () {
     var pieData = {{ pie_data|json_encode|raw }};
     Xhgui.piechart('#wall-time-chart', pieData, {
-        width: 400,
-        height: 400,
+        width: 300,
+        height: 300,
         postfix: '\u00b5s'
     });
 });
