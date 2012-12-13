@@ -109,7 +109,7 @@ Xhgui.columnchart = function (container, data, options) {
     options = options || {};
     var height = options.height || 400,
         width = options.width || 400,
-        margin = {top: 20, right: 20, bottom: 30, left: 60};
+        margin = {top: 20, right: 20, bottom: 30, left: 50};
 
     var y = d3.scale.linear()
         .range([height, 0]);
@@ -119,6 +119,7 @@ Xhgui.columnchart = function (container, data, options) {
 
     var yAxis = d3.svg.axis()
         .scale(y)
+        .tickFormat(d3.format('2s'))
         .orient("left");
 
     var xAxis = d3.svg.axis()
@@ -133,7 +134,7 @@ Xhgui.columnchart = function (container, data, options) {
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    x.domain(data.map(function(d) { return d.name; }));
+    x.domain(data.map(function(d, i) { return i + 1; }));
     y.domain([0, d3.max(data, function(d) { return d.value; })]);
 
     svg.append("g")
@@ -148,11 +149,11 @@ Xhgui.columnchart = function (container, data, options) {
     svg.selectAll(".chart-bar")
         .data(data)
     .enter().append("rect")
-          .attr("class", "chart-bar")
-          .attr("x", function(d) { return x(d.name); })
-          .attr("width", x.rangeBand())
-          .attr("y", function(d) { return y(d.value); })
-          .attr("height", function(d) { return height - y(d.value); });
+        .attr("class", "chart-bar")
+        .attr("x", function(d) { return x(d.value); })
+        .attr("width", x.rangeBand())
+        .attr("y", function(d) { return y(d.value); })
+        .attr("height", function(d) { return height - y(d.value); });
 };
 
 // Utilitarian DOM behavior.
