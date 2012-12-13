@@ -34,10 +34,10 @@
 </div><!--/span-->
 
 <div class="span9">
-    <div class="row-fluid">
 
-    <div class="span4">
-      <h2>Watch Functions</h2>
+    <div class="row-fluid">
+        <h2>Watch Functions</h2>
+
         <table class="table table-hover">
         <thead>
             <tr>
@@ -52,7 +52,7 @@
         {% for key, value in watches %}
         <tr>
             <td>{{ key }}</td>
-            <td>{{ value.ct|as_time }}</td>
+            <td>{{ value.ct }}</td>
             <td>{{ value.ewt|as_time }}</td>
             <td>{{ value.emu|as_bytes }}</td>
             <td>{{ value.epmu|as_bytes }}</td>
@@ -60,33 +60,37 @@
         {% endfor %}
         </tbody>
         </table>
-    </div><!--/span-->
+    </div>
 
+    <div class="row-fluid">
+        <div class="span6">
+          <h2>Exclusive Wall Time</h2>
+          <div id="wall-time-chart" class="chart-container"></div>
+          <table class="table">
+          {% for value in pie_data %}
+          <tr>
+              <td>{{ value.name }}</td><td>{{ value.value|as_time }}</td>
+          </tr>
+          {% endfor %}
+          </table>
+        </div>
 
-
-    <div class="span8">
-      <h2>Exclusive Wall Time</h2>
-      <div id="wall-time-chart" class="chart-container"></div>
-      <ul>
-      {% for value in pie_data %}
-      <li>{{ value.name }} &mdash; {{ value.value|as_time }}</li>
-      {% endfor %}
-      </ul>
-    </div><!--/span-->
+        <div class="span6">
+          <h2>Memory Hogs</h2>
+          <div id="memory-usage-chart" class="chart-container"></div>
+          <table class="table">
+          {% for key, value in memory %}
+          <tr>
+              <td>{{ key }}</td><td>{{ value.mu|as_bytes }}</td>
+          </tr>
+          {% endfor %}
+          </table>
+        </div>
+    </div>
 
   </div><!--/row-->
 
   <div class="row-fluid">
-    <div class="span12">
-      <h2>Memory Users</h2>
-      <table class="table">
-      {% for key, value in memory %}
-      <tr>
-          <td>{{ key }}</td><td>{{ value.mu|as_bytes }}</td>
-      </tr>
-      {% endfor %}
-      </table>
-    </div><!--/span-->
   </div><!--/row-->
 
 </div>
