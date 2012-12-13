@@ -33,10 +33,10 @@ Xhgui.piechart = function (container, data, options) {
             .append('g')
             .attr('transform', "translate(" + width / 2 + "," + height / 2 + ")");
 
-    var g = svg.selectAll('.arc')
+    var g = svg.selectAll('.chart-arc')
         .data(pie(data))
             .enter().append('g')
-        .attr('class', 'arc');
+        .attr('class', 'chart-arc');
 
     var popover = container.append('div');
 
@@ -82,7 +82,7 @@ Xhgui.piechart = function (container, data, options) {
 
             // Recalculate based on width/height of tooltip.
             // arrow is 10x10px
-            top = sliceY - (tooltipHeight / 2) - 5;
+            top = sliceY - (tooltipHeight / 2) - 7;
             left = sliceX - (tooltipWidth / 2) + 5;
 
             popover.style({
@@ -98,7 +98,64 @@ Xhgui.piechart = function (container, data, options) {
     popover.on('mouseout', stop);
 };
 
-// Random DOM behavior.
+/**
+ * Create a column chart.
+ *
+ * @param selector container The container for the chart
+ * @param array data The data list with name, value keys.
+ * @param object options
+ */
+Xhgui.columnchart = function (container, data, options) {
+    options = options || {};
+    var height = options.height || 400,
+        width = options.width || 400,
+        margin = {top: 20, right: 20, bottom: 30, left: 60};
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, width], 0.1);
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    container = d3.select(container);
+
+    var svg = container.append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    x.domain(data.map(function(d) { return d.name; }));
+    y.domain([0, d3.max(data, function(d) { return d.value; })]);
+
+    svg.append("g")
+        .attr("class", "chart-axis x-axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "chart-axis y-axis")
+        .call(yAxis);
+
+    svg.selectAll(".chart-bar")
+        .data(data)
+    .enter().append("rect")
+          .attr("class", "chart-bar")
+          .attr("x", function(d) { return x(d.name); })
+          .attr("width", x.rangeBand())
+          .attr("y", function(d) { return y(d.value); })
+          .attr("height", function(d) { return height - y(d.value); });
+};
+
+// Utilitarian DOM behavior.
 $(document).ready(function () {
 	$('.tip').tooltip();
 });

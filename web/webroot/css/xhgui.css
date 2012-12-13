@@ -35,3 +35,18 @@ span.footersplit {
 .chart-container .popover {
     width: auto;
 }
+
+.chart-axis path,
+.chart-axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.chart-bar {
+  fill: steelblue;
+}
+
+.x.axis path {
+  display: none;
+}

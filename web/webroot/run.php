@@ -27,17 +27,21 @@ function build_sorter($key) {
 
 uasort($profile, build_sorter('ewt'));
 
-//Pie Chart Widget
+// Pie Chart Widget
 $pie = array_slice($profile, 0, PIE_COUNT);
 $pieChart = array();
 foreach ($pie as $func => $funcData) {
     $pieChart[] = array('name' => $func, 'value' => $funcData['ewt']);
 }
 
-//Memory Block
+// Memory Block
 $memory = $profile;
 uasort($memory, build_sorter('emu'));
 $memory = array_slice($memory, 0, DETAIL_COUNT);
+$memoryChart = array();
+foreach ($memory as $func => $funcData) {
+    $memoryChart[] = array('name' => $func, 'value' => $funcData['mu']);
+}
 
 //Watched Functions Block
 //The purpose of watched functions is to let developers call out functions whose performance they want to keep an eye on, they'll
@@ -59,7 +63,7 @@ $template = load_template('runs/view.twig');
 echo $template->display(array(
     'profile' => $profile,
     'result' => $result,
-    'pie_data' => $pieChart,
-    'memory' => $memory,
+    'wall_time' => $pieChart,
+    'memory' => $memoryChart,
     'watches' => $watches
 ));
