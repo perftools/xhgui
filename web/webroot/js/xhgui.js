@@ -45,17 +45,21 @@ Xhgui.piechart = function (container, data, options) {
 
     var popoverContent = popover.append('div').attr('class', 'popover-content');
 
+    function stop() {
+        d3.event.stopPropagation();
+    }
+
     g.append('path')
         .attr('d', arc)
         .style('fill', function (d) {
             return color(d.data.value);
         })
         .on('mouseover', function (d, i) {
-            var sliceX, sliceY, top, left, tooltipHeight, tooltipWidth;
+            var sliceX, sliceY, top, left, tooltipHeight, tooltipWidth,
+                label, position;
 
-            var position = arc.centroid(d, i);
-
-            var label = '<strong>' + d.data.name + '</strong><br />' +
+            position = arc.centroid(d, i);
+            label = '<strong>' + d.data.name + '</strong><br />' +
                 d.data.value + options.postfix;
 
             popoverContent.html(label);
@@ -77,9 +81,15 @@ Xhgui.piechart = function (container, data, options) {
                 top: top + 'px',
                 left: left + 'px'
             });
-        }).on('mouseout', function () {
-            popover.style('display', 'none');
         });
+
+    // stop flickering tooltips.
+    svg.on('mouseout', stop);
+    popover.on('mouseout', stop);
+
+    d3.select(document).on('mouseout', function () {
+        popover.style('display', 'none');
+    });
 };
 
 // Random DOM behavior.
