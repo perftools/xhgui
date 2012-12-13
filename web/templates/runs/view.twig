@@ -77,11 +77,15 @@
   </div><!--/row-->
 
   <div class="row-fluid">
-    <div class="span4">
+    <div class="span12">
       <h2>Memory Users</h2>
+      <table class="table">
       {% for key, value in memory %}
-      <li>{{ key }} &mdash; {{ value.mu|as_bytes }}</li>
+      <tr>
+          <td>{{ key }}</td><td>{{ value.mu|as_bytes }}</td>
+      </tr>
       {% endfor %}
+      </table>
     </div><!--/span-->
   </div><!--/row-->
 
