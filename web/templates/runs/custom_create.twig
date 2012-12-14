@@ -26,8 +26,10 @@
 
     <div class="span3">
       <h2>Values to Graph</h2>
-      <p>These are things that should end up on the graph</p>
-    
+      <p>These are things that should end up on the graph.</p>
+      <form>
+        <textarea id="graph">{"meta" : true, "profile.main()" : true}</textarea>
+      </form>
     </div><!--/span-->
     
     <div class="span3">
@@ -67,12 +69,12 @@
     <tr>
         <td>{{ key }}</td>
         <td>{{ value.ct | number_format }}</td>
-        <td>{{ value.ewt | number_format }} <span class="units">µs</span></td>
-        <td>{{ value.ecpu |number_format }} <span class="units">µs</span></td>
+        <td>{{ value.ewt | number_format }} <span class="units">Âµs</span></td>
+        <td>{{ value.ecpu |number_format }} <span class="units">Âµs</span></td>
         <td>{{ value.emu |number_format }} <span class="units">bytes</span></td>
         <td>{{ value.epmu |number_format }} <span class="units">bytes</span></td>
-        <td>{{ value.wt | number_format }} <span class="units">µs</span></td>
-        <td>{{ value.cpu | number_format }} <span class="units">µs</span></td>
+        <td>{{ value.wt | number_format }} <span class="units">Âµs</span></td>
+        <td>{{ value.cpu | number_format }} <span class="units">Âµs</span></td>
         <td>{{ value.mu | number_format }} <span class="units">bytes</span></td>
         <td>{{ value.pmu | number_format }} <span class="units">bytes</span></td>
 
@@ -101,11 +103,37 @@
                     $('#results tbody').empty();
                     $("#runbutton").show();
                     $("#loading").hide();
-                    console.log(data);
-                    $.each( data, function(i, n){
+                    if (data.hasOwnProperty('error'))
+                    {
+                      console.log(data.error);
+                      if (data.error.hasOwnProperty('query'))
+                      {
+                        $('#selection').animate(
+                        { backgroundColor: '#FFD9D9'}, 
+                        800, 
+                        function() {
+                        $(this).animate({ backgroundColor: '#FFF'});
+                        }
+                        );
+                      }
+                      
+                      if (data.error.hasOwnProperty('retrieve'))
+                      {
+                        $('#retrieve').animate(
+                        { backgroundColor: '#FFD9D9'}, 
+                        800, 
+                        function() {
+                        $(this).animate({ backgroundColor: '#FFF'});
+                        }
+                        );
+                      }
+                    }else  {
+                      $.each( data, function(i, n){
                          $("#results tbody").append('<tr><td>' + n.meta.url + '</td><td>' + n.meta.SERVER.REQUEST_TIME + '</td><td>' + n.profile['main()'].wt + '</td><td>' + n.profile['main()'].cpu + '</td><td>' + n.profile['main()'].mu + '</td><td>' + n.profile['main()'].pmu + '</td></tr>');
-                    });
-        
+                      });
+                    }
+                    
+
         
             }
         });
