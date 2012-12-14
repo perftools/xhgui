@@ -66,25 +66,23 @@
         <div class="span6">
           <h2>Exclusive Wall Time</h2>
           <div id="wall-time-chart" class="chart-container"></div>
-          <table class="table">
+          <dl>
           {% for value in wall_time %}
-          <tr>
-              <td>{{ value.name }}</td><td>{{ value.value|as_time }}</td>
-          </tr>
+              <dt class="text-wrap">{{ value.name }}</dt>
+              <dd>{{ value.value|as_time }}</dd>
           {% endfor %}
-          </table>
+          </dl>
         </div>
 
         <div class="span6">
           <h2>Memory Hogs</h2>
           <div id="memory-usage-chart" class="chart-container"></div>
-          <table class="table">
+          <dl>
           {% for value in memory %}
-          <tr>
-              <td>{{ value.name }}</td><td>{{ value.value|as_bytes }}</td>
-          </tr>
+              <dt class="text-wrap">{{ value.name }}</dt>
+              <dd>{{ value.value|as_bytes }}</dd>
           {% endfor %}
-          </table>
+          </dl>
         </div>
     </div>
 
