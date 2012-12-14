@@ -159,4 +159,5 @@ Xhgui.columnchart = function (container, data, options) {
 // Utilitarian DOM behavior.
 $(document).ready(function () {
 	$('.tip').tooltip();
+	$('.table-sort').tablesorter();
 });

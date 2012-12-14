@@ -2,10 +2,19 @@ body {
     margin-top: 40px;
 }
 
-span.units {
+/**
+ * Typography
+ */
+.units {
     color: #999999;
 }
+.text-wrap {
+    word-break: break-all;
+}
 
+/**
+ * Tables
+ */
 th {
     text-align: center;
 }
@@ -17,6 +26,17 @@ th.right {
     text-align: right;
     padding-right: 30px;
 }
+th.header {
+    background: url(../img/bg.gif) center right no-repeat;
+    cursor: pointer;
+    padding-right: 18px;
+}
+th.headerSortDown {
+    background-image: url(../img/desc.gif);
+}
+th.headerSortUp {
+    background-image: url(../img/asc.gif);
+}
 
 span.footersplit {
     width: 33%;
@@ -25,10 +45,10 @@ span.footersplit {
     float: left;
 }
 
-.text-wrap {
-    word-break: break-all;
-}
 
+/**
+ * Chart styles
+ */
 .chart-container {
     position: relative;
 }
@@ -45,8 +65,4 @@ span.footersplit {
 
 .chart-bar {
   fill: steelblue;
-}
-
-.x.axis path {
-  display: none;
 }
