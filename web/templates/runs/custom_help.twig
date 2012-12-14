@@ -14,6 +14,11 @@
       <p style="white-space: pre;">
         {"meta.url" : "/index.php"}
       </p>
+      <b>Display runs that took more than 1 second</b>
+      <p style="white-space: pre;">
+        { "profile.main().wt" : {"$gt" : 1000000}}
+      </p>
+      
     </div><!--/span-->
 
 
@@ -21,6 +26,11 @@
     <div class="span4">
       <h2>Values to Retrieve</h2>
       <p>It's unlikely you require the full dataset back, this allows you to grab just the values you care about to reduce transferred data.</p>
+      <h3>Samples</h3>
+      <b>Retrieve meta details, and overall run data</b>
+      <p style="white-space: pre;">
+        {"meta" : true, "profile.main()" : true}
+      </p>
     </div><!--/span-->
 
     <div class="span4">
