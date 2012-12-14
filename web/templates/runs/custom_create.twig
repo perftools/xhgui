@@ -6,7 +6,7 @@
 <div class="span9">
   <div class="row-fluid">
 
-    <div class="span4">
+    <div class="span3">
       <h2>Selection Criteria</h2>
       <p>This is how values will be selected for graphing</p>
       <form>
@@ -16,7 +16,7 @@
 
 
 
-    <div class="span4">
+    <div class="span3">
       <h2>Values to Retrieve</h2>
       <p>Values that should be retrieved, and put in the table</p>
       <form>
@@ -24,9 +24,15 @@
       </form>
     </div><!--/span-->
 
-    <div class="span4">
+    <div class="span3">
       <h2>Values to Graph</h2>
       <p>These are things that should end up on the graph</p>
+    
+    </div><!--/span-->
+    
+    <div class="span3">
+      <h2>Help</h2>
+      <p>Don't Fret, <a href="/custom_help.php">there's instructions</a>.</p>
     
     </div><!--/span-->
   
@@ -95,6 +101,7 @@
                     $('#results tbody').empty();
                     $("#runbutton").show();
                     $("#loading").hide();
+                    console.log(data);
                     $.each( data, function(i, n){
                          $("#results tbody").append('<tr><td>' + n.meta.url + '</td><td>' + n.meta.SERVER.REQUEST_TIME + '</td><td>' + n.profile['main()'].wt + '</td><td>' + n.profile['main()'].cpu + '</td><td>' + n.profile['main()'].mu + '</td><td>' + n.profile['main()'].pmu + '</td></tr>');
                     });
