@@ -21,5 +21,5 @@ Installation
   If you're lazy `0777` will work. Run
 
       chmod -R 0777 web/cache
-* You may want to look at [header.php](./xhgui/blob/master/external/header.php) for an easy way to start profiling your code
+* You may want to look at [/external/header.php](./xhgui/blob/master/external/header.php) for an easy way to start profiling your code
 * Profit!?
