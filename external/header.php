@@ -6,7 +6,10 @@
  *  - The MongoDB collection and such.
  *
  * I use unsafe writes by default, let's not slow down requests any more than I need to. As a result you will
- * indubidubly want to ensure that writes are actually working. 
+ * indubidubly want to ensure that writes are actually working.
+ *
+ * The easiest way to get going is to either include this file in your index.php script, or use php.ini's
+ * auto_prepend_file directive http://php.net/manual/en/ini.core.php#ini.auto-prepend-file
  */
 
  
