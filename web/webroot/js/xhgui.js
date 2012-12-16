@@ -1,6 +1,72 @@
 window.Xhgui = {};
 
 /**
+ * Bind a tooltip to an element.
+ */
+Xhgui.tooltip = function (container, options) {
+    if (
+        !options.formatter ||
+        !options.positioner ||
+        !options.bindTo
+    ) {
+        throw new Exception('You need the formatter, positioner & bindTo options.');
+    }
+    var popover = container.append('div');
+
+    popover.attr('class', 'popover top')
+        .append('div').attr('class', 'arrow');
+
+    var popoverContent = popover.append('div')
+        .attr('class', 'popover-content');
+
+    function stop() {
+        d3.event.stopPropagation();
+    }
+
+    function hide() {
+        popover.transition().style('opacity', 0);
+        d3.select(document).on('mouseout', false);
+    }
+
+    options.bindTo.on('mouseover', function (d, i) {
+        var top, left,
+            tooltipHeight, tooltipWidth,
+            content, position;
+
+        // Get the tooltip content.
+        content = options.formatter.call(this, d, i);
+
+        // Get the tooltip position.
+        position = options.positioner.call(this, d, i);
+
+        popoverContent.html(content);
+        popover.style({
+            display: 'block',
+            opacity: 1
+        });
+
+        tooltipWidth = parseInt(popover.style('width'), 10);
+        tooltipHeight = parseInt(popover.style('height'), 10);
+
+        // Recalculate based on width/height of tooltip.
+        // arrow is 10x10px
+        top = position.y - (tooltipHeight / 2) - 7;
+        left = position.x - (tooltipWidth / 2) + 5;
+
+        popover.style({
+            top: top + 'px',
+            left: left + 'px'
+        });
+
+        d3.select(document).on('mouseout', hide);
+    });
+
+    // stop flickering tooltips.
+    container.on('mouseout', stop);
+    popover.on('mouseout', stop);
+};
+
+/**
  * Create a pie chart.
  *
  * @param selector container The container for the chart
@@ -38,64 +104,32 @@ Xhgui.piechart = function (container, data, options) {
             .enter().append('g')
         .attr('class', 'chart-arc');
 
-    var popover = container.append('div');
-
-    popover.attr('class', 'popover top')
-        .append('div').attr('class', 'arrow');
-
-    var popoverContent = popover.append('div').attr('class', 'popover-content');
-
-    function stop() {
-        d3.event.stopPropagation();
-    }
-
-    function hide() {
-        popover.transition().style('opacity', 0);
-        d3.select(document).on('mouseout', false);
-    }
-
     g.append('path')
         .attr('d', arc)
         .style('fill', function (d) {
             return color(d.data.value);
-        })
-        .on('mouseover', function (d, i) {
-            var sliceX, sliceY, top, left, tooltipHeight, tooltipWidth,
-                label, position;
+        });
+
+    Xhgui.tooltip(container, {
+        bindTo: g,
+        positioner: function (d, i) {
+            var position, sliceX, sliceY;
 
             position = arc.centroid(d, i);
-            label = '<strong>' + d.data.name + '</strong><br />' +
-                d.data.value + options.postfix;
-
-            popoverContent.html(label);
-            popover.style({
-                display: 'block',
-                opacity: 1
-            });
-
-            tooltipWidth = parseInt(popover.style('width'), 10);
-            tooltipHeight = parseInt(popover.style('height'), 10);
 
             // Recalculate base on outer transform.
             sliceX = position[0] + (height / 2);
             sliceY = position[1] + (width / 2);
+            return {x: sliceX, y: sliceY};
+        },
+        formatter: function (d, i) {
+            var label = '<strong>' + d.data.name +
+                '</strong><br />' +
+                d.data.value + options.postfix;
+            return label;
+        }
+    });
 
-            // Recalculate based on width/height of tooltip.
-            // arrow is 10x10px
-            top = sliceY - (tooltipHeight / 2) - 7;
-            left = sliceX - (tooltipWidth / 2) + 5;
-
-            popover.style({
-                top: top + 'px',
-                left: left + 'px'
-            });
-
-            d3.select(document).on('mouseout', hide);
-        });
-
-    // stop flickering tooltips.
-    svg.on('mouseout', stop);
-    popover.on('mouseout', stop);
 };
 
 /**
