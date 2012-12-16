@@ -49,7 +49,7 @@ Xhgui.tooltip = function (container, options) {
         tooltipHeight = parseInt(popover.style('height'), 10);
 
         // Recalculate based on width/height of tooltip.
-        // arrow is 10x10px
+        // arrow is 10x10, so 7 & 5 are magic numbers
         top = position.y - (tooltipHeight / 2) - 7;
         left = position.x - (tooltipWidth / 2) + 5;
 
@@ -129,7 +129,6 @@ Xhgui.piechart = function (container, data, options) {
             return label;
         }
     });
-
 };
 
 /**
@@ -180,7 +179,7 @@ Xhgui.columnchart = function (container, data, options) {
         .attr("class", "chart-axis y-axis")
         .call(yAxis);
 
-    svg.selectAll(".chart-bar")
+    svg.selectAll('.chart-bar')
         .data(data)
     .enter().append("rect")
         .attr("class", "chart-bar")
@@ -188,6 +187,24 @@ Xhgui.columnchart = function (container, data, options) {
         .attr("width", x.rangeBand())
         .attr("y", function(d) { return y(d.value); })
         .attr("height", function(d) { return height - y(d.value); });
+    Xhgui.tooltip(container, {
+        bindTo: svg.selectAll('.chart-bar'),
+        positioner: function (d, i) {
+            var position, x, y;
+            position = this.getBBox();
+
+            // Recalculate base on outer transform.
+            // 7 is a magic number. It offsets the arrow.
+            x = position.x + (position.width * 1.5) - 7;
+            return {x: x, y: position.y};
+        },
+        formatter: function (d, i) {
+            var label = '<strong>' + d.name +
+                '</strong><br />' +
+                d.value + options.postfix;
+            return label;
+        }
+    });
 };
 
 // Utilitarian DOM behavior.

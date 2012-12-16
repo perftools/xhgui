@@ -141,7 +141,8 @@ $(document).ready(function () {
     var memoryData = {{ memory|json_encode|raw }};
     Xhgui.columnchart('#memory-usage-chart', memoryData, {
         width: 350,
-        height: 300
+        height: 300,
+        postfix: ' bytes'
     });
 });
 </script>
