@@ -209,6 +209,14 @@ Xhgui.columnchart = function (container, data, options) {
 
 // Utilitarian DOM behavior.
 $(document).ready(function () {
-	$('.tip').tooltip();
-	$('.table-sort').tablesorter();
+    $('.tip').tooltip();
+    $('.table-sort').tablesorter({
+        textExtraction: function(node) { 
+            if (node.className.match(/text/)) {
+                return node.innerText;
+            }
+            var text = node.innerText;
+            return '' + parseInt(text.replace(',', ''), 10);
+        }
+    });
 });
