@@ -222,10 +222,12 @@ Xhgui.linegraph = function (container, data, options) {
         throw new Exception('You need to define series & xAxis');
     }
 
-    var height = options.height || 400,
-        width = options.width || 400,
-        lastIndex = data.length - 1,
-        margin = {top: 20, right: 20, bottom: 30, left: 50};
+    container = d3.select(container);
+
+    var margin = {top: 20, right: 20, bottom: 30, left: 50},
+        height = options.height || (parseInt(container.style('height'), 10) - margin.top - margin.bottom),
+        width = options.width || (parseInt(container.style('width'), 10) - margin.left - margin.right),
+        lastIndex = data.length - 1;
 
     var x = d3.time.scale()
         .range([0, width])
@@ -236,7 +238,7 @@ Xhgui.linegraph = function (container, data, options) {
     var y = d3.scale.linear()
         .range([height, 0])
         .domain(d3.extent(data, function (d) {
-            return d.cpu;
+            return d[options.series];
         }));
 
     var xAxis = d3.svg.axis()
@@ -248,7 +250,12 @@ Xhgui.linegraph = function (container, data, options) {
         .tickFormat(d3.format('2s'))
         .orient("left");
 
-    container = d3.select(container);
+    // If there are going to be too
+    // many ticks (they are ~18px tall)
+    // make fewer ticks.
+    if (height / 18 < 10) {
+        yAxis = yAxis.ticks(height / 18);
+    }
 
     var svg = container.append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -266,15 +273,22 @@ Xhgui.linegraph = function (container, data, options) {
       .attr("class", "chart-axis y-axis")
       .call(yAxis);
 
+    if (options.title) {
+        svg.append('text')
+            .attr('y', 10)
+            .attr('x', width / 2)
+            .style('text-anchor', 'middle')
+            .text(options.title);
+    }
+
     var line = d3.svg.line()
-        .x(function(d) { return x(d.time); })
-        .y(function(d) { return y(d.cpu); });
+        .x(function(d) { return x(d[options.xAxis]); })
+        .y(function(d) { return y(d[options.series]); });
 
     svg.append("path")
       .datum(data)
-      .attr("class", "line")
+      .attr("class", "chart-line")
       .attr("d", line);
-
 };
 
 // Utilitarian DOM behavior.

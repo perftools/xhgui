@@ -58,11 +58,16 @@ span.footersplit {
 
 .chart-axis path,
 .chart-axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+.chart-line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
 }
 
 .chart-bar {
-  fill: steelblue;
+    fill: steelblue;
 }
