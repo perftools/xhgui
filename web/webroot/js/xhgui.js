@@ -187,6 +187,7 @@ Xhgui.columnchart = function (container, data, options) {
         .attr("width", x.rangeBand())
         .attr("y", function(d) { return y(d.value); })
         .attr("height", function(d) { return height - y(d.value); });
+
     Xhgui.tooltip(container, {
         bindTo: svg.selectAll('.chart-bar'),
         positioner: function (d, i) {
@@ -207,11 +208,80 @@ Xhgui.columnchart = function (container, data, options) {
     });
 };
 
+/**
+ * Creates a single or multiseries line graph with tooltips.
+ *
+ * @param string container Selector to the container for the graph
+ * @param array data The data to graph. Should be an array of objects. Each
+ * object should contain a key for each element in `options.series`.
+ * @param object options The options to use. Needs to define xAxis & series
+ */
+Xhgui.linegraph = function (container, data, options) {
+    options = options || {};
+    if (!options.xAxis || !options.series) {
+        throw new Exception('You need to define series & xAxis');
+    }
+
+    var height = options.height || 400,
+        width = options.width || 400,
+        lastIndex = data.length - 1,
+        margin = {top: 20, right: 20, bottom: 30, left: 50};
+
+    var x = d3.time.scale()
+        .range([0, width])
+        .domain(d3.extent(data, function (d) {
+            return d[options.xAxis];
+        }));
+
+    var y = d3.scale.linear()
+        .range([height, 0])
+        .domain(d3.extent(data, function (d) {
+            return d.cpu;
+        }));
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .tickFormat(d3.format('2s'))
+        .orient("left");
+
+    container = d3.select(container);
+
+    var svg = container.append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // Add axis
+    svg.append("g")
+      .attr("class", "chart-axis x-axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+    svg.append("g")
+      .attr("class", "chart-axis y-axis")
+      .call(yAxis);
+
+    var line = d3.svg.line()
+        .x(function(d) { return x(d.time); })
+        .y(function(d) { return y(d.cpu); });
+
+    svg.append("path")
+      .datum(data)
+      .attr("class", "line")
+      .attr("d", line);
+
+};
+
 // Utilitarian DOM behavior.
 $(document).ready(function () {
     $('.tip').tooltip();
     $('.table-sort').tablesorter({
-        textExtraction: function(node) { 
+        textExtraction: function(node) {
             if (node.className.match(/text/)) {
                 return node.innerText;
             }

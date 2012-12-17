@@ -136,7 +136,7 @@ $(document).ready(function () {
     Xhgui.piechart('#wall-time-chart', wallTime, {
         width: 300,
         height: 300,
-        postfix: '\u00b5s'
+        postfix: ' \u00b5s'
     });
     var memoryData = {{ memory|json_encode|raw }};
     Xhgui.columnchart('#memory-usage-chart', memoryData, {
