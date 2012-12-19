@@ -4,13 +4,8 @@
 <h2>Runs for {{ url }} (simplified)</h2>
 
 <div class="row-fluid">
-    <div id="wt-line-graph" class="span6">
-    </div>
-    <div class="span6">
-        <div id="cpu-line-graph" class="row-fluid"></div>
-        <div id="mu-line-graph" class="row-fluid"></div>
-        <div id="pmu-line-graph" class="row-fluid"></div>
-    </div>
+    <div id="time-line-graph" class="span6"></div>
+    <div id="memory-line-graph" class="span6"></div>
 </div>
 
 <div class="row-fluid">
@@ -45,29 +40,17 @@
 <script>
 $(document).ready(function () {
     var graphData = {{ chart_data|json_encode|raw }};
-    Xhgui.linegraph('#wt-line-graph', graphData, {
-        series: 'wt',
-        height: 400,
+    Xhgui.linegraph('#time-line-graph', graphData, {
+        series: ['wt', 'cpu'],
+        height: 300,
         xAxis: 'time',
-        title: 'Wall time'
+        title: 'Time usage'
     });
-    Xhgui.linegraph('#cpu-line-graph', graphData, {
-        series: 'cpu',
-        height: 100,
+    Xhgui.linegraph('#memory-line-graph', graphData, {
+        series: ['mu', 'pmu'],
+        height: 300,
         xAxis: 'time',
-        title: 'CPU usage'
-    });
-    Xhgui.linegraph('#mu-line-graph', graphData, {
-        series: 'mu',
-        height: 100,
-        xAxis: 'time',
-        title: 'Memory Usage'
-    });
-    Xhgui.linegraph('#pmu-line-graph', graphData, {
-        series: 'pmu',
-        height: 100,
-        xAxis: 'time',
-        title: 'Peak Memory Usage'
+        title: 'Memory usage'
     });
 });
 </script>

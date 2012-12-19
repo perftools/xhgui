@@ -229,17 +229,31 @@ Xhgui.linegraph = function (container, data, options) {
         width = options.width || (parseInt(container.style('width'), 10) - margin.left - margin.right),
         lastIndex = data.length - 1;
 
+    if (!Array.isArray(options.series)) {
+        options.series = [options.series];
+    }
+
     var x = d3.time.scale()
         .range([0, width])
         .domain(d3.extent(data, function (d) {
             return d[options.xAxis];
         }));
 
+    // Get the mins/maxes for all series.
+    var mins = [];
+    var maxes = [];
+    options.series.forEach(function (key) {
+        var extent = d3.extent(data, function (d) {
+            return d[key];
+        });
+        mins.push(extent[0]);
+        maxes.push(extent[1]);
+    });
+    var yDomain = [d3.min(mins), d3.max(maxes)];
+
     var y = d3.scale.linear()
         .range([height, 0])
-        .domain(d3.extent(data, function (d) {
-            return d[options.series];
-        }));
+        .domain(yDomain);
 
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -281,14 +295,22 @@ Xhgui.linegraph = function (container, data, options) {
             .text(options.title);
     }
 
-    var line = d3.svg.line()
-        .x(function(d) { return x(d[options.xAxis]); })
-        .y(function(d) { return y(d[options.series]); });
+    var colors = d3.scale.category10();
 
-    svg.append("path")
-      .datum(data)
-      .attr("class", "chart-line")
-      .attr("d", line);
+    for (var i = 0, len = options.series.length; i < len; i++) {
+        var series = options.series[i];
+        var line = d3.svg.line()
+            .x(function(d) { return x(d[options.xAxis]); })
+            .y(function(d) { return y(d[series]); });
+
+        svg.append("path")
+          .datum(data)
+          .attr("class", "chart-line")
+          .style('stroke', function (d) {
+              return colors(i);
+          })
+          .attr("d", line);
+    }
 };
 
 // Utilitarian DOM behavior.
