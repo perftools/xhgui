@@ -321,7 +321,7 @@ $(document).ready(function () {
             if (node.className.match(/text/)) {
                 return node.innerText;
             }
-            var text = node.innerText;
+            var text = node.innerText || node.textContent;
             return '' + parseInt(text.replace(',', ''), 10);
         }
     });
