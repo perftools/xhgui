@@ -44,13 +44,15 @@ $(document).ready(function () {
         series: ['wt', 'cpu'],
         height: 300,
         xAxis: 'time',
-        title: 'Time usage'
+        title: 'Time usage',
+        legend: ['Wall time', 'CPU time']
     });
     Xhgui.linegraph('#memory-line-graph', graphData, {
         series: ['mu', 'pmu'],
         height: 300,
         xAxis: 'time',
-        title: 'Memory usage'
+        title: 'Memory usage',
+        legend: ['Memory usage', 'Peak memory usage']
     });
 });
 </script>

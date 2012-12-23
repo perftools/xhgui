@@ -224,7 +224,7 @@ Xhgui.linegraph = function (container, data, options) {
 
     container = d3.select(container);
 
-    var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    var margin = {top: 30, right: 20, bottom: 40, left: 50},
         height = options.height || (parseInt(container.style('height'), 10) - margin.top - margin.bottom),
         width = options.width || (parseInt(container.style('width'), 10) - margin.left - margin.right),
         lastIndex = data.length - 1;
@@ -292,7 +292,8 @@ Xhgui.linegraph = function (container, data, options) {
             .attr('y', 10)
             .attr('x', width / 2)
             .style('text-anchor', 'middle')
-            .text(options.title);
+            .text(options.title)
+            .attr('transform', 'translate(0, ' + (margin.top * -1) + ')');
     }
 
     var colors = d3.scale.category10();
@@ -312,15 +313,14 @@ Xhgui.linegraph = function (container, data, options) {
     }
 
     function drawDots(i, series) {
-        var circleClass = 'dot-' + series;
-        var circle = svg.selectAll('.' + circleClass)
+        var g = svg.append('g')
+            .attr('class', 'chart-dots');
+
+        var circle = g.selectAll('circle')
             .data(data)
             .enter()
             .append('circle')
-            .style('fill', function (d) {
-                return colors(i);
-            })
-            .attr('class', circleClass)
+            .style('fill', colors(i))
             .attr('cx', function (d) {
                 return x(d[options.xAxis]);
             })
@@ -330,10 +330,52 @@ Xhgui.linegraph = function (container, data, options) {
             .attr('r', 3);
     }
 
+    function drawLegend(i) {
+        var text = options.legend[i];
+        if (!text) {
+            return;
+        }
+        // position on y. 3 offsets descenders.
+        var yOffset = height + margin.bottom - 3;
+
+        // calculate the xOffset based on all the other legend.
+        // cross fingers that we don't run out of X space.
+        var legendGroups = svg.select('.legend-group');
+        var xOffset = i;
+
+        if (legendGroups[0].length && legendGroups[0][0]) {
+            var box = legendGroups[legendGroups.length - 1][0].getBBox();
+            // 20 is some margin.
+            xOffset = box.x + box.width + 20;
+        }
+
+        var group = svg.append('g')
+            .attr('class', 'legend-group');
+
+        // Append the legend dot
+        group.append('circle')
+            .attr('fill', colors(i))
+            .attr('r', 3)
+            .attr('cx', 0)
+            .attr('cy', -5);
+
+        // Add text.
+        group.append('text')
+            .attr('x', 5)
+            .attr('y', 0)
+            .text(text);
+
+        // position the group
+        group.attr('transform', 'translate(' + xOffset + ', ' + yOffset + ')');
+    }
+
     for (var i = 0, len = options.series.length; i < len; i++) {
         var series = options.series[i];
         drawLine(i, series);
         drawDots(i, series);
+        if (options.legend) {
+            drawLegend(i);
+        }
     }
 };
 
