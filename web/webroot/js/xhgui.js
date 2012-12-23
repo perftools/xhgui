@@ -49,20 +49,38 @@ Xhgui.tooltip = function (container, options) {
     ) {
         throw new Exception('You need the formatter, positioner & bindTo options.');
     }
-    var popover = container.append('div');
-
-    popover.attr('class', 'popover top')
-        .append('div').attr('class', 'arrow');
-
-    var popoverContent = popover.append('div')
-        .attr('class', 'popover-content');
 
     function stop() {
         d3.event.stopPropagation();
     }
 
+    function createTooltip(container) {
+        var exists = container.select('.popover'),
+            popover, content;
+
+        if (exists.empty()) {
+            popover = container.append('div');
+
+            popover.attr('class', 'popover top')
+                .append('div').attr('class', 'arrow');
+
+            content = popover.append('div')
+                .attr('class', 'popover-content');
+
+            // stop flickering tooltips.
+            container.on('mouseout', stop);
+            popover.on('mouseout', stop);
+            return {frame: popover, content: content};
+        }
+        popover = exists;
+        content = exists.select('.popover-content');
+        return {frame: popover, content: content};
+    }
+
+    var tooltip = createTooltip(container);
+
     function hide() {
-        popover.transition().style('opacity', 0);
+        tooltip.frame.transition().style('opacity', 0);
         d3.select(document).on('mouseout', false);
     }
 
@@ -77,31 +95,27 @@ Xhgui.tooltip = function (container, options) {
         // Get the tooltip position.
         position = options.positioner.call(this, d, i);
 
-        popoverContent.html(content);
-        popover.style({
+        tooltip.content.html(content);
+        tooltip.frame.style({
             display: 'block',
             opacity: 1
         });
 
-        tooltipWidth = parseInt(popover.style('width'), 10);
-        tooltipHeight = parseInt(popover.style('height'), 10);
+        tooltipWidth = parseInt(tooltip.frame.style('width'), 10);
+        tooltipHeight = parseInt(tooltip.frame.style('height'), 10);
 
         // Recalculate based on width/height of tooltip.
         // arrow is 10x10, so 7 & 5 are magic numbers
         top = position.y - (tooltipHeight / 2) - 7;
         left = position.x - (tooltipWidth / 2) + 5;
 
-        popover.style({
+        tooltip.frame.style({
             top: top + 'px',
             left: left + 'px'
         });
 
         d3.select(document).on('mouseout', hide);
     });
-
-    // stop flickering tooltips.
-    container.on('mouseout', stop);
-    popover.on('mouseout', stop);
 };
 
 /**
@@ -366,6 +380,22 @@ Xhgui.linegraph = function (container, data, options) {
                 return y(d[series]);
             })
             .attr('r', 3);
+
+        Xhgui.tooltip(container, {
+            bindTo: circle,
+            positioner: function (d, i) {
+                var x, y;
+
+                x = this.cx.baseVal.value;
+                y = this.cy.baseVal.value;
+                x += margin.left - 7;
+                y += 7;
+                return {x: x, y: y};
+            },
+            formatter: function (d, i) {
+                return d[series];
+            }
+        });
     }
 
     for (var i = 0, len = options.series.length; i < len; i++) {
