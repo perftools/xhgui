@@ -297,8 +297,7 @@ Xhgui.linegraph = function (container, data, options) {
 
     var colors = d3.scale.category10();
 
-    for (var i = 0, len = options.series.length; i < len; i++) {
-        var series = options.series[i];
+    function drawLine(i, series) {
         var line = d3.svg.line()
             .x(function(d) { return x(d[options.xAxis]); })
             .y(function(d) { return y(d[series]); });
@@ -310,6 +309,31 @@ Xhgui.linegraph = function (container, data, options) {
               return colors(i);
           })
           .attr("d", line);
+    }
+
+    function drawDots(i, series) {
+        var circleClass = 'dot-' + series;
+        var circle = svg.selectAll('.' + circleClass)
+            .data(data)
+            .enter()
+            .append('circle')
+            .style('fill', function (d) {
+                return colors(i);
+            })
+            .attr('class', circleClass)
+            .attr('cx', function (d) {
+                return x(d[options.xAxis]);
+            })
+            .attr('cy', function (d) {
+                return y(d[series]);
+            })
+            .attr('r', 3);
+    }
+
+    for (var i = 0, len = options.series.length; i < len; i++) {
+        var series = options.series[i];
+        drawLine(i, series);
+        drawDots(i, series);
     }
 };
 
