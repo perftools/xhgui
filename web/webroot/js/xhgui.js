@@ -1,5 +1,43 @@
 window.Xhgui = {};
 
+Xhgui.legend = function(svg, text, height, margin, color) {
+    if (!text) {
+        return;
+    }
+    // position on y. 3 offsets descenders.
+    var yOffset = height + margin.bottom - 3;
+
+    // calculate the xOffset based on all the other legend.
+    // cross fingers that we don't run out of X space.
+    var legendGroups = svg.select('.legend-group');
+    var xOffset = 0;
+
+    if (legendGroups[0].length && legendGroups[0][0]) {
+        var box = legendGroups[legendGroups.length - 1][0].getBBox();
+        // 20 is some margin.
+        xOffset = box.x + box.width + 20;
+    }
+
+    var group = svg.append('g')
+        .attr('class', 'legend-group');
+
+    // Append the legend dot
+    group.append('circle')
+        .attr('fill', color)
+        .attr('r', 3)
+        .attr('cx', 0)
+        .attr('cy', -5);
+
+    // Add text.
+    group.append('text')
+        .attr('x', 5)
+        .attr('y', 0)
+        .text(text);
+
+    // position the group
+    group.attr('transform', 'translate(' + xOffset + ', ' + yOffset + ')');
+};
+
 /**
  * Bind a tooltip to an element.
  */
@@ -330,51 +368,18 @@ Xhgui.linegraph = function (container, data, options) {
             .attr('r', 3);
     }
 
-    function drawLegend(i) {
-        var text = options.legend[i];
-        if (!text) {
-            return;
-        }
-        // position on y. 3 offsets descenders.
-        var yOffset = height + margin.bottom - 3;
-
-        // calculate the xOffset based on all the other legend.
-        // cross fingers that we don't run out of X space.
-        var legendGroups = svg.select('.legend-group');
-        var xOffset = i;
-
-        if (legendGroups[0].length && legendGroups[0][0]) {
-            var box = legendGroups[legendGroups.length - 1][0].getBBox();
-            // 20 is some margin.
-            xOffset = box.x + box.width + 20;
-        }
-
-        var group = svg.append('g')
-            .attr('class', 'legend-group');
-
-        // Append the legend dot
-        group.append('circle')
-            .attr('fill', colors(i))
-            .attr('r', 3)
-            .attr('cx', 0)
-            .attr('cy', -5);
-
-        // Add text.
-        group.append('text')
-            .attr('x', 5)
-            .attr('y', 0)
-            .text(text);
-
-        // position the group
-        group.attr('transform', 'translate(' + xOffset + ', ' + yOffset + ')');
-    }
-
     for (var i = 0, len = options.series.length; i < len; i++) {
         var series = options.series[i];
         drawLine(i, series);
         drawDots(i, series);
         if (options.legend) {
-            drawLegend(i);
+            Xhgui.legend(
+                svg,
+                options.legend[i],
+                height,
+                margin,
+                colors(i)
+            );
         }
     }
 };
