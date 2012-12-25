@@ -18,10 +18,6 @@
             <li><strong>Memory Usage</strong> {{ result.profile['main()'].mu|as_bytes }}</li>
             <li><strong>Peak Memory Usage</strong> {{ result.profile['main()'].pmu|as_bytes }}</li>
 
-            <li class="nav-header">95th Percentile</li>
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-
             <h6 class="nav-header">GET</h6>
             {{ helpers.property_list('GET', result.meta.get) }}
 
