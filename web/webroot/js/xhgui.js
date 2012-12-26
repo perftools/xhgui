@@ -393,7 +393,11 @@ Xhgui.linegraph = function (container, data, options) {
                 return {x: x, y: y};
             },
             formatter: function (d, i) {
-                return d[series];
+                var value = d[series];
+                if (options.postfix) {
+                    value += options.postfix;
+                }
+                return value;
             }
         });
     }
