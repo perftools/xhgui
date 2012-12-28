@@ -130,8 +130,8 @@
 <script>
 $(document).ready(function () {
     var wallTime = {{ wall_time|json_encode|raw }};
-    Xhgui.piechart('#wall-time-chart', wallTime, {
-        width: 300,
+    Xhgui.columnchart('#wall-time-chart', wallTime, {
+        width: 350,
         height: 300,
         postfix: ' \u00b5s'
     });

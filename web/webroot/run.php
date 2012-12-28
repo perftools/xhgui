@@ -27,11 +27,13 @@ function build_sorter($key) {
 
 uasort($profile, build_sorter('ewt'));
 
-// Pie Chart Widget
-$pie = array_slice($profile, 0, PIE_COUNT);
-$pieChart = array();
-foreach ($pie as $func => $funcData) {
-    $pieChart[] = array('name' => $func, 'value' => $funcData['ewt']);
+// Exclusive wall time graph
+$wallTime = $profile;
+uasort($wallTime, build_sorter('ewt'));
+$wallTime = array_slice($wallTime, 0, DETAIL_COUNT);
+$timeChart = array();
+foreach ($wallTime as $func => $funcData) {
+    $timeChart[] = array('name' => $func, 'value' => $funcData['ewt']);
 }
 
 // Memory Block
@@ -63,7 +65,7 @@ $template = load_template('runs/view.twig');
 echo $template->display(array(
     'profile' => $profile,
     'result' => $result,
-    'wall_time' => $pieChart,
+    'wall_time' => $timeChart,
     'memory' => $memoryChart,
     'watches' => $watches
 ));
