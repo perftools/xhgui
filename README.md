@@ -12,4 +12,14 @@ System Requirements
  * [XHProf](http://pecl.php.net/package/xhprof) to actually profile the data
  * [MongoDB PHP](http://pecl.php.net/package/mongo) MongoDB PHP extension
  * [MongoDB](http://www.mongodb.org/) MongoDB Itself
- 
+
+Installation
+------------
+
+* Configure mongodb?
+* Set the permissions on `web/cache` to allow the webserver to create files.
+  If you're lazy `0777` will work. Run
+
+      chmod -R 0777 web/cache
+
+* Profit!?
