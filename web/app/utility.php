@@ -94,7 +94,35 @@ function splitName($name)
     }
 
     return array(null, $a[0]);
-    
+}
+
+/**
+ * Extracts a single dimension of data
+ * from a profile run.
+ *
+ * Useful for creating bar/column graphs.
+ * The profile data will be sorted by the column
+ * and then the $limit records will be extracted.
+ *
+ * @param array $profile Profile data.
+ * @param string $dimension The dimension to extract
+ * @param int $limit Number of elements to pull
+ * @return array Array of data with name = function name and 
+ *   value = the dimension.
+ */
+function extractDimension($profile, $dimension, $limit)
+{
+    uasort($profile, build_sorter($dimension));
+    $slice = array_slice($profile, 0, $limit);
+    $extract = array();
+    foreach ($slice as $func => $funcData)
+    {
+        $extract[] = array(
+            'name' => $func,
+            'value' => $funcData[$dimension]
+        );
+    }
+    return $extract;
 }
 
 

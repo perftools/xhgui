@@ -28,22 +28,10 @@ function build_sorter($key) {
 uasort($profile, build_sorter('ewt'));
 
 // Exclusive wall time graph
-$wallTime = $profile;
-uasort($wallTime, build_sorter('ewt'));
-$wallTime = array_slice($wallTime, 0, DETAIL_COUNT);
-$timeChart = array();
-foreach ($wallTime as $func => $funcData) {
-    $timeChart[] = array('name' => $func, 'value' => $funcData['ewt']);
-}
+$timeChart = extractDimension($profile, 'ewt', DETAIL_COUNT);
 
 // Memory Block
-$memory = $profile;
-uasort($memory, build_sorter('emu'));
-$memory = array_slice($memory, 0, DETAIL_COUNT);
-$memoryChart = array();
-foreach ($memory as $func => $funcData) {
-    $memoryChart[] = array('name' => $func, 'value' => $funcData['mu']);
-}
+$memoryChart = extractDimension($profile, 'emu', DETAIL_COUNT);
 
 //Watched Functions Block
 //The purpose of watched functions is to let developers call out functions whose performance they want to keep an eye on, they'll
