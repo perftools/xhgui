@@ -16,7 +16,10 @@ body {
 /**
  * Typography
  */
-h1, h2, h3, h4, h5, h6, .nav-header {
+h1, h2, h3, h4, h5, h6,
+.nav-header,
+.brand {
+    -webkit-font-smoothing: antialiased;
     font-family: 'Chunkfive';
     font-weight: normal;
 }
