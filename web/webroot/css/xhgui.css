@@ -1,3 +1,14 @@
+@font-face {
+    font-family: 'Chunkfive';
+    src: url('../fonts/Chunkfive-webfont.eot');
+    src: url('../fonts/Chunkfive-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Chunkfive-webfont.woff') format('woff'),
+         url('../fonts/Chunkfive-webfont.ttf') format('truetype'),
+         url('../fonts/Chunkfive-webfont.svg#MuseoSlab500') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     margin-top: 40px;
 }
@@ -5,6 +16,10 @@ body {
 /**
  * Typography
  */
+h1, h2, h3, h4, h5, h6, .nav-header {
+    font-family: 'Chunkfive';
+    font-weight: normal;
+}
 .units {
     color: #999999;
 }
