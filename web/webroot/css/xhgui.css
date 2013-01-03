@@ -1,3 +1,14 @@
+/**
+ * XHGui colors
+ *
+ * red - #d46245
+ * orange - #e9814f
+ * green - #637964
+ * yellow - #ffe85e
+ * blue - #59bdd2
+ * pink - #e3b7b3
+ * purple - #b63c71
+ */
 @font-face {
     font-family: 'Chunkfive';
     src: url('../fonts/Chunkfive-webfont.eot');
@@ -29,6 +40,28 @@ h1, h2, h3, h4, h5, h6,
 /**
  * Navbar
  */
+.navbar-inner {
+    background: -webkit-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240))
+    background: -moz-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240))
+    background: linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240))
+}
+.navbar-static-top .navbar-inner {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+.navbar .brand {
+    color: #637964;
+}
+.navbar .nav > li > a {
+    color: #444;
+}
+.navbar .brand {
+    border-right: 1px solid rgb(212, 212, 212);
+    -webkit-box-shadow: 1px 0px 1px white;
+    -moz-box-shadow: 1px 0px 1px white;
+    box-shadow: 1px 0px 1px white;
+}
 
 
 /**
