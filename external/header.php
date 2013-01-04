@@ -39,8 +39,12 @@ if (rand(0, 100) === 42) {
 }
 
 
-
-
+function simpleUrl($url)
+{
+    $url = preg_replace('/\=\d+/', '', $url);
+    // TODO Add hooks for customizing this.
+    return $url;
+}
 
 function recordXHProfData()
 {
