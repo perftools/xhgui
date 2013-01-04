@@ -72,6 +72,9 @@ h1, h2, h3, h4, h5, h6,
 .nav-list dl {
     margin: 0;
 }
+.sidebar-nav li a:hover {
+    background: transparent;
+}
 
 
 /**
