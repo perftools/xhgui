@@ -38,7 +38,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 /**
- * Navbar
+ * Top Navbar
  */
 .navbar-inner {
     background: -webkit-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240))
@@ -61,6 +61,13 @@ h1, h2, h3, h4, h5, h6,
     -webkit-box-shadow: 1px 0px 1px white;
     -moz-box-shadow: 1px 0px 1px white;
     box-shadow: 1px 0px 1px white;
+}
+
+/**
+ * Sidebar navs
+ */
+.nav-list dl {
+    margin: 0;
 }
 
 

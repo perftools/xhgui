@@ -7,7 +7,7 @@
 </div>
 <div class="row-fluid">
 <div class="span3">
-    <div class="well sidebar-nav">
+    <div class="sidebar-nav">
         <ul class="nav nav-list">
             <li class="nav-header">This Run</li>
             <li><strong>URL</strong> {{ result.meta.url }}</li>
@@ -18,14 +18,14 @@
             <li><strong>Memory Usage</strong> {{ result.profile['main()'].mu|as_bytes }}</li>
             <li><strong>Peak Memory Usage</strong> {{ result.profile['main()'].pmu|as_bytes }}</li>
 
-            <h6 class="nav-header">GET</h6>
-            {{ helpers.property_list('GET', result.meta.get) }}
+            <li class="nav-header">GET</li>
+            <li>{{ helpers.property_list('GET', result.meta.get) }}</li>
 
-            <h6 class="nav-header">SERVER</h6>
-            {{ helpers.property_list('SERVER', result.meta.SERVER) }}
+            <li class="nav-header">SERVER</li>
+            <li>{{ helpers.property_list('SERVER', result.meta.SERVER) }}
 
-            <h6 class="nav-header">ENV</h6>
-            {{ helpers.property_list('ENV', result.meta.env) }}
+            <li class="nav-header">ENV</li>
+            <li>{{ helpers.property_list('ENV', result.meta.env) }}</li>
         </ul>
     </div><!--/.well -->
 </div><!--/span-->
