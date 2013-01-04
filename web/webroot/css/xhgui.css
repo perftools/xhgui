@@ -66,6 +66,9 @@ h1, h2, h3, h4, h5, h6,
 /**
  * Sidebar navs
  */
+.sidebar-nav {
+    border-right: 1px solid rgb(221, 221, 221);
+}
 .nav-list dl {
     margin: 0;
 }
