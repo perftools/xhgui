@@ -51,7 +51,7 @@ h1, h2, h3, h4, h5, h6,
     box-shadow: none;
 }
 .navbar .brand {
-    color: #637964;
+    color: rgb(100, 100, 118);
 }
 .navbar .nav > li > a {
     color: #444;
