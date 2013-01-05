@@ -10,3 +10,29 @@
 {% endfor %}
 </dl>
 {% endmacro %}
+
+{% macro pagination(url, page, total_pages) %}
+<div class="pagination">
+<ul>
+{% if page == 1 %}
+    <li class="disabled"><span>&laquo;</span><li>
+{% else %}
+    <li><a href="{{ url(url, {'page': page - 1}) }}">&laquo;</a><li>
+{% endif %}
+
+{% for i in 1..total_pages %}
+    {% if i == page %}
+    <li class="active"><span>{{ i }}</span></li>
+    {% else %}
+    <li><a href="{{ url(url, {'page': i}) }}">{{ i }}</a></li>
+    {% endif %}
+{% endfor %}
+
+{% if page == total_pages %}
+    <li class="disabled"><span>&raquo;</span></li>
+{% else %}
+    <li><a href="{{ url(url, {'page': page + 1}) }}">&raquo;</a></li>
+{% endif %}
+</ul>
+</div>
+{% endmacro %}

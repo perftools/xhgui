@@ -1,4 +1,5 @@
 {% extends 'layout/base.twig' %}
+{% import 'macros/helpers.twig' as helpers %}
 
 {% block content %}
 <table class="table table-hover table-sort">
@@ -25,4 +26,5 @@
     {% endfor %}
     </tbody>
 </table>
+{{ helpers.pagination('/index.php', page, total_pages) }}
 {% endblock %}

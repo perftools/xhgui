@@ -22,7 +22,7 @@ if (isset($_GET['sort'])) {
 
 $totalRows = $collection->find()->count();
 
-$page = 0;
+$page = 1;
 $totalPages = ceil($totalRows / DISPLAY_LIMIT);
 
 if (isset($_GET['page'])) {
@@ -31,7 +31,7 @@ if (isset($_GET['page'])) {
 
 $res = $collection->find()
     ->sort($sort)
-    ->skip($page * DISPLAY_LIMIT)
+    ->skip(($page - 1) * DISPLAY_LIMIT)
     ->limit(DISPLAY_LIMIT);
 
 $template = load_template('runs/list.twig');
@@ -39,7 +39,6 @@ echo $template->render(array(
     'runs' => $res,
     'page' => $page,
     'sort' => $sort,
-    'total_rows' => $totalRows,
     'total_pages' => $totalPages,
 ));
 flush();
