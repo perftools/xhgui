@@ -12,6 +12,26 @@
 {% endmacro %}
 
 {% macro pagination(url, page, total_pages) %}
+
+{# Hard code because I'm lazy #}
+{% set num_pages = 10 %}
+{% set midpoint = none %}
+{% set start = 1 %}
+{% set end = total_pages %}
+
+{# show a slice of pages in the middle #}
+{% if total_pages > num_pages %}
+    {% set midpoint = (num_pages // 2) %}
+    {% set start = page - midpoint %}
+    {% if start < 1 %}
+        {% set start = 1 %}
+    {% endif %}
+    {% set end = page + midpoint %}
+    {% if end > total_pages %}
+        {% set end = total_pages %}
+    {% endif %}
+{% endif %}
+
 <div class="pagination">
 <ul>
 {% if page == 1 %}
@@ -20,7 +40,7 @@
     <li><a href="{{ url(url, {'page': page - 1}) }}">&laquo;</a><li>
 {% endif %}
 
-{% for i in 1..total_pages %}
+{% for i in start..end %}
     {% if i == page %}
     <li class="active"><span>{{ i }}</span></li>
     {% else %}
