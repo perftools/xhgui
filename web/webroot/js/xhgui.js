@@ -437,7 +437,9 @@ Xhgui.linegraph = function (container, data, options) {
 // Utilitarian DOM behavior.
 $(document).ready(function () {
     $('.tip').tooltip();
-    $('.table-sort').tablesorter({
+    var tables = $('.table-sort');
+    tables.stickyTableHeaders();
+    tables.tablesorter({
         textExtraction: function(node) {
             if (node.className.match(/text/)) {
                 return node.innerText;

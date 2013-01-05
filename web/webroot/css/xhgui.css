@@ -102,6 +102,10 @@ th.headerSortDown {
 th.headerSortUp {
     background-image: url(../img/asc.gif);
 }
+.tableFloatingHeader {
+    background-color: #fff;
+    border-bottom: 1px solid rgb(217, 217, 217);
+}
 
 span.footersplit {
     width: 33%;
