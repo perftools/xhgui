@@ -1,5 +1,21 @@
 window.Xhgui = {};
 
+/**
+ * Color generator for graphs.
+ */
+Xhgui.colors = function () {
+    var colors = [
+        '#59bdd2', // blue
+        '#637964', // green
+        '#d46245', // red
+        '#ffe85e', // yellow
+        '#e9814f', // orange
+        '#e3b7b3', // pink
+        '#b63c71' // purple
+    ];
+    return d3.scale.ordinal().range(colors);
+};
+
 Xhgui.legend = function(svg, text, height, margin, color) {
     if (!text) {
         return;
@@ -141,7 +157,7 @@ Xhgui.piechart = function (container, data, options) {
             return d.value;
         });
 
-    var color = d3.scale.category20();
+    var color = Xhgui.colors();
 
     container = d3.select(container);
 
@@ -348,7 +364,7 @@ Xhgui.linegraph = function (container, data, options) {
             .attr('transform', 'translate(0, ' + (margin.top * -1) + ')');
     }
 
-    var colors = d3.scale.category10();
+    var colors = Xhgui.colors();
 
     function drawLine(i, series) {
         var line = d3.svg.line()

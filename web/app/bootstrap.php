@@ -19,7 +19,8 @@ function load_template($name) {
     if (empty($environment)) {
         $loader = new Twig_Loader_Filesystem(ROOT_DIR . '/templates/');
         $environment = new Twig_Environment($loader, array(
-            'cache' => ROOT_DIR . '/cache'
+            'cache' => ROOT_DIR . '/cache',
+            'debug' => true,
         ));
         $environment->addExtension(new Twig_XhguiExtension());
     }

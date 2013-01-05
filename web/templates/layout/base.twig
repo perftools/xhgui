@@ -7,15 +7,22 @@
     <link href="css/xhgui.css" rel="stylesheet" media="screen">
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-static-top">
         <div class="navbar-inner">
             <div class="container-fluid">
-                <a class="brand" href="/">XHGui Run Results</a>
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="{{ url('/') }}">XHG</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
-                        <li class="active"><a href="#">Home</a></li>
-                        <li><a href="/custom.php">Custom View</a></li>
-                        
+                        <li><a href="{{ url('/') }}">Recent</a></li>
+                        <li><a href="{{ url('/', {'sort': 'wt'}) }}">Longest wall time</a></li>
+                        <li><a href="{{ url('/', {'sort': 'cpu'}) }}">Most CPU</a></li>
+                        <li><a href="{{ url('/', {'sort': 'mu'}) }}">Most memory</a></li>
+                        <li><a href="{{ url('/custom.php') }}">Custom View</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -32,8 +39,7 @@
     </footer>
     </div>
 
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="js/jquery-ui-1.9.2.custom.min.js"></script>
+    <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap-tooltip.js"></script>
     <script src="js/d3.js"></script>
