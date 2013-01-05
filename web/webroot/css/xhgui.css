@@ -76,6 +76,33 @@ h1, h2, h3, h4, h5, h6,
     background: transparent;
 }
 
+/**
+ * Pagination
+ *
+ * Remove the borders and boxshadows bootstrap applies.
+ */
+.pagination ul {
+    border: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.pagination > ul > li.active > span {
+    color: #d46245;
+}
+.pagination > ul > li > span,
+.pagination > ul > li > a {
+    border-top: 0;
+    border-bottom: 0;
+}
+.pagination ul > li:last-child > span,
+.pagination > ul > li:last-child > a {
+    border-right: 0;
+}
+.pagination ul > li:first-child > span,
+.pagination > ul > li:first-child > a {
+    border-left: 0;
+}
 
 /**
  * Tables
@@ -110,12 +137,6 @@ th.headerSortUp {
     border-top: none;
 }
 
-span.footersplit {
-    width: 33%;
-    display:block;
-    text-align: center;
-    float: left;
-}
 
 
 /**
@@ -142,4 +163,11 @@ span.footersplit {
 
 .chart-bar {
     fill: #d46245;
+}
+
+/**
+ * Footer
+ */
+.footer-text {
+    text-align: center;
 }
