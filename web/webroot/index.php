@@ -9,7 +9,18 @@ $collection = $db->results;
 
 
 //Let's get results from the database
-$res = $collection->find()->sort(array("meta.SERVER.REQUEST_TIME" => -1))->limit(DISPLAY_LIMIT);
+$sort = array('meta.SERVER.REQUEST_TIME' => -1);
+if (isset($_GET['sort'])) {
+    if ($_GET['sort'] == 'wt') {
+        $sort = array('profile.main().wt' => -1);
+    } elseif ($_GET['sort'] == 'mu') {
+        $sort = array('profile.main().mu' => -1);
+    } elseif ($_GET['sort'] == 'cpu') {
+        $sort = array('profile.main().cpu' => -1);
+    }
+}
+$res = $collection->find()->sort($sort)->limit(DISPLAY_LIMIT);
+
 $template = load_template('runs/list.twig');
 echo $template->render(array(
     'runs' => $res
