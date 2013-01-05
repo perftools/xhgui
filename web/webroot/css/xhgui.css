@@ -106,6 +106,9 @@ th.headerSortUp {
     background-color: #fff;
     border-bottom: 1px solid rgb(217, 217, 217);
 }
+.tableFloatingHeaderOriginal th {
+    border-top: none;
+}
 
 span.footersplit {
     width: 33%;
