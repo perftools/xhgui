@@ -19,11 +19,28 @@ if (isset($_GET['sort'])) {
         $sort = array('profile.main().cpu' => -1);
     }
 }
-$res = $collection->find()->sort($sort)->limit(DISPLAY_LIMIT);
+
+$totalRows = $collection->find()->count();
+
+$page = 0;
+$totalPages = ceil($totalRows / DISPLAY_LIMIT);
+
+if (isset($_GET['page'])) {
+    $page = min(max($_GET['page'], 1), $totalPages);
+}
+
+$res = $collection->find()
+    ->sort($sort)
+    ->skip($page * DISPLAY_LIMIT)
+    ->limit(DISPLAY_LIMIT);
 
 $template = load_template('runs/list.twig');
 echo $template->render(array(
-    'runs' => $res
+    'runs' => $res,
+    'page' => $page,
+    'sort' => $sort,
+    'total_rows' => $totalRows,
+    'total_pages' => $totalPages,
 ));
 flush();
 
