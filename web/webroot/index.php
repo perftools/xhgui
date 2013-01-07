@@ -1,8 +1,6 @@
 <?php
 require dirname(__DIR__) . '/bootstrap.php';
 
-xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
-
 $db = new Xhgui_Db();
 
 $result = $db->getAll(array(
@@ -25,27 +23,3 @@ echo $template->render(array(
     'total_pages' => $totalPages,
     'date_format' => Xhgui_Config::read('date.format')
 ));
-flush();
-
-//Store results
-
-
-function _xhGetMeta()
-{
-    $meta = array(
-        'url' => $_SERVER['REQUEST_URI'],
-        'SERVER' => $_SERVER,
-        'get' => $_GET,
-        'env' => $_ENV,
-        'simple_url' => simpleUrl($_SERVER['REQUEST_URI']),
-    );
-    return $meta;
-}
-$profile = xhprof_disable();
-$data['meta'] = _xhGetMeta();
-$data['profile'] = $profile;
-
-$m = new Mongo();
-$db = $m->xhprof;
-$collection = $db->results;
-$collection->insert($data);
