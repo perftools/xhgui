@@ -27,4 +27,11 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('value', Xhgui_Config::read('test.name'));
     }
 
+    public function testClear()
+    {
+        Xhgui_Config::write('test', 'value');
+        $this->assertNull(Xhgui_Config::clear());
+        $this->assertNull(Xhgui_Config::read('test'));
+    }
+
 }
