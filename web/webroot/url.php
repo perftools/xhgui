@@ -5,11 +5,13 @@ $m = new Mongo();
 $db = $m->xhprof;
 $collection = $db->results;
 
+$perPage = Xhgui_Config::read('page.limit');
+
 $res = $collection->find(array(
         'meta.simple_url' => $_GET['url']
     ))
     ->sort(array("meta.SERVER.REQUEST_TIME" => -1))
-    ->limit(DISPLAY_LIMIT);
+    ->limit($perPage);
 
 
 $chartData = array();
@@ -24,4 +26,5 @@ echo $template->render(array(
     'runs' => $res,
     'url' => $_GET['url'],
     'chart_data' => $chartData,
+    'date_format' => Xhgui_Config::read('date.format')
 ));

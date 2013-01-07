@@ -23,7 +23,8 @@ if (isset($_GET['sort'])) {
 $totalRows = $collection->find()->count();
 
 $page = 1;
-$totalPages = ceil($totalRows / DISPLAY_LIMIT);
+$perPage = Xhgui_Config::read('page.limit');
+$totalPages = ceil($totalRows / $perPage);
 
 if (isset($_GET['page'])) {
     $page = min(max($_GET['page'], 1), $totalPages);
@@ -31,8 +32,8 @@ if (isset($_GET['page'])) {
 
 $res = $collection->find()
     ->sort($sort)
-    ->skip(($page - 1) * DISPLAY_LIMIT)
-    ->limit(DISPLAY_LIMIT);
+    ->skip(($page - 1) * $perPage)
+    ->limit($perPage);
 
 $template = load_template('runs/list.twig');
 echo $template->render(array(
@@ -40,6 +41,7 @@ echo $template->render(array(
     'page' => $page,
     'sort' => $sort,
     'total_pages' => $totalPages,
+    'date_format' => Xhgui_Config::read('date.format')
 ));
 flush();
 

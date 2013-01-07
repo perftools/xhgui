@@ -6,14 +6,12 @@ $db = $m->xhprof;
 $collection = $db->results;
 
 
-$result = $collection->findOne(array('_id' => new MongoId($_GET['id'])));
+$result = $collection->findOne(array(
+    '_id' => new MongoId($_GET['id'])
+));
 
 
-
-$profile = $result['profile'];
-$profile = exclusive($profile);
-$e = print_r($profile, 1);
-$f = print_r($result['profile'], 1);
+$profile = $result['profile']; $profile = exclusive($profile);
 
 function build_sorter($key) {
     return function ($a, $b) use ($key) {
@@ -27,11 +25,13 @@ function build_sorter($key) {
 
 uasort($profile, build_sorter('ewt'));
 
+$detailCount = Xhgui_Config::read('detail.count');
+
 // Exclusive wall time graph
-$timeChart = extractDimension($profile, 'ewt', DETAIL_COUNT);
+$timeChart = extractDimension($profile, 'ewt', $detailCount);
 
 // Memory Block
-$memoryChart = extractDimension($profile, 'emu', DETAIL_COUNT);
+$memoryChart = extractDimension($profile, 'emu', $detailCount);
 
 //Watched Functions Block
 //The purpose of watched functions is to let developers call out functions whose performance they want to keep an eye on, they'll

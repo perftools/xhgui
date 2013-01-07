@@ -6,8 +6,7 @@ $db = $m->xhprof;
 $collection = $db->results;
 
 $res = $collection->findOne();
-    
-    
+
 echo $template->render(array(
     'data' => print_r($res, 1)
 ));
