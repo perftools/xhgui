@@ -141,3 +141,22 @@ function simpleUrl($url)
     // TODO Add hooks for customizing this.
     return $url;
 }
+
+/**
+ * Load twig templates using the shared environment object.
+ *
+ * @param string $name The name of the template.
+ * @return Twig_Template
+ */
+function load_template($name) {
+    static $environment;
+    if (empty($environment)) {
+        $loader = new Twig_Loader_Filesystem(ROOT_DIR . '/templates/');
+        $environment = new Twig_Environment($loader, array(
+            'cache' => ROOT_DIR . '/cache',
+            'debug' => true,
+        ));
+        $environment->addExtension(new Xhgui_Twig_Extension());
+    }
+    return $environment->loadTemplate($name);
+}

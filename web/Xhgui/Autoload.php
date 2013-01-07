@@ -12,7 +12,7 @@ class Xhgui_Autoload
         if (strpos($class, 'Xhgui_') !== 0) {
             return;
         }
-        $file = dirname(__FILE__) . str_replace('_', '/', $class) . '.php';
+        $file = dirname(dirname(__FILE__)) . '/' . str_replace('_', '/', $class) . '.php';
         if (is_file($file)) {
             require $file;
         }

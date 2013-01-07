@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require dirname(__DIR__) . '/app/bootstrap.php';
+require dirname(__DIR__) . '/bootstrap.php';
 $m = new Mongo();
 $db = $m->xhprof;
 $collection = $db->results;

@@ -1,5 +1,5 @@
 <?php
-require dirname(__DIR__) . '/app/bootstrap.php';
+require dirname(__DIR__) . '/bootstrap.php';
 
 xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
 

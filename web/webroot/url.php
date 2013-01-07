@@ -1,5 +1,5 @@
 <?php
-require dirname(__DIR__) . '/app/bootstrap.php';
+require dirname(__DIR__) . '/bootstrap.php';
 
 $m = new Mongo();
 $db = $m->xhprof;
