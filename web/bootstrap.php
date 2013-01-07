@@ -9,9 +9,10 @@ define('DETAIL_COUNT', 6);
 define('DISPLAY_LIMIT', 25);
 
 require ROOT_DIR . '/Xhgui/Autoload.php';
+require ROOT_DIR . '/vendor/Twig/Autoloader.php';
+
 Xhgui_Autoload::register();
+Twig_Autoloader::register();
 
 require ROOT_DIR . '/Xhgui/utility.php';
 
-require ROOT_DIR . '/vendor/Twig/Autoloader.php';
-Twig_Autoloader::register();
