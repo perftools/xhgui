@@ -3,37 +3,19 @@ require dirname(__DIR__) . '/bootstrap.php';
 
 xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
 
-$m = new Mongo();
-$db = $m->xhprof;
-$collection = $db->results;
+$db = new Xhgui_Db();
 
+$result = $db->getAll(array(
+    'sort' => isset($_GET['sort']) ? $_GET['sort'] : null,
+    'page' => isset($_GET['page']) ? $_GET['page'] : null,
+    'perPage' => Xhgui_Config::read('page.limit'),
+));
 
-//Let's get results from the database
-$sort = array('meta.SERVER.REQUEST_TIME' => -1);
-if (isset($_GET['sort'])) {
-    if ($_GET['sort'] == 'wt') {
-        $sort = array('profile.main().wt' => -1);
-    } elseif ($_GET['sort'] == 'mu') {
-        $sort = array('profile.main().mu' => -1);
-    } elseif ($_GET['sort'] == 'cpu') {
-        $sort = array('profile.main().cpu' => -1);
-    }
-}
+$res = $result['results'];
+$page = $result['page'];
+$totalPages = $result['totalPages'];
+$sort = $result['sort'];
 
-$totalRows = $collection->find()->count();
-
-$page = 1;
-$perPage = Xhgui_Config::read('page.limit');
-$totalPages = ceil($totalRows / $perPage);
-
-if (isset($_GET['page'])) {
-    $page = min(max($_GET['page'], 1), $totalPages);
-}
-
-$res = $collection->find()
-    ->sort($sort)
-    ->skip(($page - 1) * $perPage)
-    ->limit($perPage);
 
 $template = load_template('runs/list.twig');
 echo $template->render(array(
@@ -63,7 +45,7 @@ $profile = xhprof_disable();
 $data['meta'] = _xhGetMeta();
 $data['profile'] = $profile;
 
-$collection->insert($data);
 $m = new Mongo();
 $db = $m->xhprof;
 $collection = $db->results;
+$collection->insert($data);

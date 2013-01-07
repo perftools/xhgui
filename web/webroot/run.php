@@ -1,17 +1,12 @@
 <?php
 require dirname(__DIR__) . '/bootstrap.php';
 
-$m = new Mongo();
-$db = $m->xhprof;
-$collection = $db->results;
+$db = new Xhgui_Db();
 
+$result = $db->get($_GET['id']);
 
-$result = $collection->findOne(array(
-    '_id' => new MongoId($_GET['id'])
-));
-
-
-$profile = $result['profile']; $profile = exclusive($profile);
+$profile = $result['profile'];
+$profile = exclusive($profile);
 
 function build_sorter($key) {
     return function ($a, $b) use ($key) {

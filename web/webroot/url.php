@@ -1,18 +1,9 @@
 <?php
 require dirname(__DIR__) . '/bootstrap.php';
-
-$m = new Mongo();
-$db = $m->xhprof;
-$collection = $db->results;
-
 $perPage = Xhgui_Config::read('page.limit');
 
-$res = $collection->find(array(
-        'meta.simple_url' => $_GET['url']
-    ))
-    ->sort(array("meta.SERVER.REQUEST_TIME" => -1))
-    ->limit($perPage);
-
+$db = new Xhgui_Db();
+$res = $db->getForUrl($_GET['url'], $perPage);
 
 $chartData = array();
 foreach ($res as $run) {
