@@ -9,17 +9,12 @@ $result = $db->getAll(array(
     'perPage' => Xhgui_Config::read('page.limit'),
 ));
 
-$res = $result['results'];
-$page = $result['page'];
-$totalPages = $result['totalPages'];
-$sort = $result['sort'];
-
 
 $template = load_template('runs/list.twig');
 echo $template->render(array(
-    'runs' => $res,
-    'page' => $page,
-    'sort' => $sort,
-    'total_pages' => $totalPages,
+    'runs' => $result['results'],
+    'page' => $result['page'],
+    'sort' => $result['sort'],
+    'total_pages' => $result['totalPages'],
     'date_format' => Xhgui_Config::read('date.format')
 ));
