@@ -13,7 +13,7 @@ class Xhgui_Config
      * @param string $file
      * @return void
      */
-    public function load($file)
+    public static function load($file)
     {
         $config = include($file);
         self::$_config = $config;
@@ -25,7 +25,7 @@ class Xhgui_Config
      * @param string $name The name of the config variable
      * @return The value or null.
      */
-    public function read($name)
+    public static function read($name)
     {
         if (isset(self::$_config[$name])) {
             return self::$_config[$name];
@@ -40,9 +40,14 @@ class Xhgui_Config
      * @param mixed $value The value of the config variable
      * @return void
      */
-    public function write($name, $value)
+    public static function write($name, $value)
     {
         self::$_config[$name] = $value;
+    }
+
+    public static function clear()
+    {
+        self::$_config = array();
     }
 
 }
