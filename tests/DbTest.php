@@ -5,6 +5,17 @@ class DbTest extends PHPUnit_Framework_TestCase
     {
         Xhgui_Config::load(ROOT_DIR . '/config/config.php');
         $this->db = new Xhgui_Db(null, 'test_results');
+        $this->db->truncate();
+        $this->_loadFixture('tests/fixtures/results.json');
+    }
+
+    protected function _loadFixture($file)
+    {
+        $contents = file_get_contents($file);
+        $data = json_decode($contents, true);
+        foreach ($data as $record) {
+            $this->db->insert($record);
+        }
     }
 
     public function testPagination()

@@ -109,4 +109,14 @@ class Xhgui_Db
         }
     }
 
+    public function insert($profile)
+    {
+        return $this->_collection->insert($profile);
+    }
+
+    public function truncate()
+    {
+        return $this->_collection->drop();
+    }
+
 }
