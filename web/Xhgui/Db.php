@@ -91,6 +91,14 @@ class Xhgui_Db
         );
     }
 
+    /**
+     * Get sort options for a paginated set.
+     *
+     * Whitelists to valid known keys.
+     *
+     * @param array $options Pagination options including the sort key.
+     * @return array Sort field & direction.
+     */
     protected function _getSort($options)
     {
         $valid = array('wt', 'mu', 'cpu');
@@ -109,11 +117,25 @@ class Xhgui_Db
         }
     }
 
+    /**
+     * Insert a profile run.
+     *
+     * Does unchecked inserts.
+     *
+     * @param array $profile The profile data to save.
+     */
     public function insert($profile)
     {
-        return $this->_collection->insert($profile);
+        return $this->_collection->insert($profile, array('w' => 0));
     }
 
+    /**
+     * Used to truncate a collection.
+     *
+     * Primarly used in test cases to reset the test db.
+     *
+     * @return boolean
+     */
     public function truncate()
     {
         return $this->_collection->drop();
