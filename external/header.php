@@ -31,7 +31,7 @@
  *
  */
 // Obtain the answer to life, the universe, and your application one time out of a hundred 
-if (rand(0, 100) === 42) {
+if (true) {
     xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
     register_shutdown_function('recordXHProfData');
 }
@@ -47,8 +47,7 @@ function recordXHProfData()
 
     $data['profile'] = xhprof_disable();
 
-    // Bootstrap xhgui and save data.
-    require dirname(__FILE__) . '/web/bootstrap.php';
+    require dirname(dirname(__FILE__)) . '/web/bootstrap.php';
 
     $data['meta'] = array(
         'url' => $_SERVER['REQUEST_URI'],
