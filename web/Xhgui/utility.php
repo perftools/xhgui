@@ -151,9 +151,9 @@ function simpleUrl($url)
 function load_template($name) {
     static $environment;
     if (empty($environment)) {
-        $loader = new Twig_Loader_Filesystem(ROOT_DIR . '/templates/');
+        $loader = new Twig_Loader_Filesystem(XHGUI_ROOT_DIR . '/templates/');
         $environment = new Twig_Environment($loader, array(
-            'cache' => ROOT_DIR . '/cache',
+            'cache' => XHGUI_ROOT_DIR . '/cache',
             'debug' => true,
         ));
         $environment->addExtension(new Xhgui_Twig_Extension());

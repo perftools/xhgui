@@ -3,7 +3,7 @@ class DbTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Xhgui_Config::load(ROOT_DIR . '/config/config.php');
+        Xhgui_Config::load(XHGUI_ROOT_DIR . '/config/config.php');
         $this->db = new Xhgui_Db(null, 'test_results');
         $this->db->truncate();
         $this->_loadFixture('tests/fixtures/results.json');
