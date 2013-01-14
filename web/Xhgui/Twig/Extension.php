@@ -1,6 +1,6 @@
 <?php
 
-class Twig_XhguiExtension extends Twig_Extension
+class Xhgui_Twig_Extension extends Twig_Extension
 {
     public function getName()
     {

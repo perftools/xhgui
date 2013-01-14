@@ -141,3 +141,25 @@ function simpleUrl($url)
     // TODO Add hooks for customizing this.
     return $url;
 }
+
+/**
+ * Load twig templates using the shared environment object.
+ *
+ * @param string $name The name of the template.
+ * @return Twig_Template
+ */
+function load_template($name) {
+    static $environment;
+    if (empty($environment)) {
+        require XHGUI_ROOT_DIR . '/vendor/Twig/Autoloader.php';
+        Twig_Autoloader::register();
+
+        $loader = new Twig_Loader_Filesystem(XHGUI_ROOT_DIR . '/templates/');
+        $environment = new Twig_Environment($loader, array(
+            'cache' => XHGUI_ROOT_DIR . '/cache',
+            'debug' => true,
+        ));
+        $environment->addExtension(new Xhgui_Twig_Extension());
+    }
+    return $environment->loadTemplate($name);
+}

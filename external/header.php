@@ -1,5 +1,4 @@
 <?php
-
 /* Things you may want to tweak in here:
  *  - xhprof_enable() uses a few constants.
  *  - The values passed to rand() determine the the odds of any particular run being profiled.
@@ -31,32 +30,25 @@
  * Use bitwise operators to combine, so XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY to profile CPU and Memory
  *
  */
-
-//Obtain the answer to life, the universe, and your application one time out of a hundred 
+// Obtain the answer to life, the universe, and your application one time out of a hundred 
 if (rand(0, 100) === 42) {
     xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
     register_shutdown_function('recordXHProfData');
 }
 
-
-function simpleUrl($url)
-{
-    $url = preg_replace('/\=\d+/', '', $url);
-    // TODO Add hooks for customizing this.
-    return $url;
-}
-
 function recordXHProfData()
 {
-    //ignore_user_abort(true) allows your PHP script to continue executing, even if the user has terminated their request.
+    // ignore_user_abort(true) allows your PHP script to continue executing, even if the user has terminated their request.
     // Further Reading: http://blog.preinheimer.com/index.php?/archives/248-When-does-a-user-abort.html
-    //flush() asks PHP to send any data remaining in the output buffers. This is normally done when the script completes, but
-    //  since we're delaying that a bit by dealing with the xhprof stuff, we'll do it now to avoid making the user wait. 
+    // flush() asks PHP to send any data remaining in the output buffers. This is normally done when the script completes, but
+    // since we're delaying that a bit by dealing with the xhprof stuff, we'll do it now to avoid making the user wait.
     ignore_user_abort(true);
     flush();
-    
-    
+
     $data['profile'] = xhprof_disable();
+
+    require dirname(dirname(__FILE__)) . '/web/bootstrap.php';
+
     $data['meta'] = array(
         'url' => $_SERVER['REQUEST_URI'],
         'SERVER' => $_SERVER,
@@ -64,13 +56,7 @@ function recordXHProfData()
         'env' => $_ENV,
         'simple_url' => simpleUrl($_SERVER['REQUEST_URI']),
     );
-    
-    $m = new Mongo();
-    $db = $m->xhprof;
-    $collection = $db->results;
-    
-    //We're fine with unsafe writes
-    $collection->insert($data, array('w' => 0));
+
+    $db = new Xhgui_Db();
+    $db->insert($data);
 }
-
-
