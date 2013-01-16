@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require dirname(__DIR__) . '/app/bootstrap.php';
+require dirname(__DIR__) . '/bootstrap.php';
 $m = new Mongo();
 $db = $m->xhprof;
 $collection = $db->results;
@@ -24,7 +24,9 @@ if (count($error) > 0)
     exit;
 }
 
-$res = $collection->find($query, $retrieve)->limit(DISPLAY_LIMIT);
+$perPage = Xhgui_Config::read('page.limit');
+$res = $collection->find($query, $retrieve)
+    ->limit($perPage);
 $r = iterator_to_array($res);
 
 echo json_encode($r);

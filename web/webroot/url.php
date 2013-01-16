@@ -1,16 +1,9 @@
 <?php
-require dirname(__DIR__) . '/app/bootstrap.php';
+require dirname(__DIR__) . '/bootstrap.php';
+$perPage = Xhgui_Config::read('page.limit');
 
-$m = new Mongo();
-$db = $m->xhprof;
-$collection = $db->results;
-
-$res = $collection->find(array(
-        'meta.simple_url' => $_GET['url']
-    ))
-    ->sort(array("meta.SERVER.REQUEST_TIME" => -1))
-    ->limit(DISPLAY_LIMIT);
-
+$db = new Xhgui_Db();
+$res = $db->getForUrl($_GET['url'], $perPage);
 
 $chartData = array();
 foreach ($res as $run) {
@@ -24,4 +17,5 @@ echo $template->render(array(
     'runs' => $res,
     'url' => $_GET['url'],
     'chart_data' => $chartData,
+    'date_format' => Xhgui_Config::read('date.format')
 ));
