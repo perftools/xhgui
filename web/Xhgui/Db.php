@@ -48,6 +48,46 @@ class Xhgui_Db
     }
 
     /**
+     * Get the Average metrics for a URL
+     *
+     * This will group data by date and returns only the
+     * avg + date, making the data ideal for time series graphs
+     *
+     * @param string $url
+     * @return array Array of metrics grouped by date
+     */
+    public function getAvgsForUrl($url)
+    {
+        $results = $this->_collection->aggregate(array(
+            array('$match' => array('meta.simple_url' => $url)),
+            array(
+                '$project' => array(
+                    'year' => array('$year' => '$meta.request_time'),
+                    'month' => array('$month' => '$meta.request_time'),
+                    'day' => array('$dayOfMonth' => '$meta.request_time'),
+                    'profile.main()' => 1,
+                )
+            ),
+            array(
+                '$group' => array(
+                    '_id' => array('year' => '$year', 'month' => '$month', 'day' => '$day'),
+                    'avg_wt' => array('$avg' => '$profile.main().wt'),
+                    'avg_cpu' => array('$avg' => '$profile.main().cpu'),
+                    'avg_mu' => array('$avg' => '$profile.main().mu'),
+                    'avg_pmu' => array('$avg' => '$profile.main().pmu'),
+                )
+            ),
+            array('$sort' => array('_id' => 1))
+        ));
+        foreach ($results['result'] as $i => $result) {
+            $date = array($result['_id']['year'], $result['_id']['month'], $result['_id']['day']);
+            $results['result'][$i]['date'] = implode('-', $date);
+            unset($results['result'][$i]['_id']);
+        }
+        return $results['result'];
+    }
+
+    /**
      * Get a paginated set of results.
      *
      * @param array $options The find options to use.

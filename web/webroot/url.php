@@ -5,12 +5,7 @@ $perPage = Xhgui_Config::read('page.limit');
 $db = new Xhgui_Db();
 $res = $db->getForUrl($_GET['url'], $perPage);
 
-$chartData = array();
-foreach ($res as $run) {
-    $data = $run['profile']['main()'];
-    $data += array('time' => $run['meta']['SERVER']['REQUEST_TIME'] * 1000);
-    $chartData[] = $data;
-}
+$chartData = $db->getAvgsForUrl($_GET['url']);
 
 $template = load_template('runs/url.twig');
 echo $template->render(array(
