@@ -38,14 +38,15 @@ class Xhgui_Db
      */
     public function getForUrl($url, $options)
     {
+        $options['conditions'] = array(
+            'meta.simple_url' => $url
+        );
         $pagination = $this->pagination($options);
         $perPage = $pagination['perPage'];
         $page = $pagination['page'];
         $sort = $pagination['sort'];
 
-        $cursor = $this->_collection->find(array(
-                'meta.simple_url' => $url
-            ))
+        $cursor = $this->_collection->find($options['conditions'])
             ->sort($sort)
             ->skip(($page - 1) * $perPage)
             ->limit($perPage);
