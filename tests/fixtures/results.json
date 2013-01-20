@@ -5,15 +5,35 @@
             "simple_url": "/",
             "get": [],
             "env": [],
-            "SERVER": {}
+            "SERVER": {},
+            "request_time": "2013-01-18"
         },
         "profile": {
             "main()": {
-                "ct" : 1,
-                "wt" : 50139,
-                "cpu" : 49513,
-                "mu" : 3449360,
-                "pmu" : 3535120
+                "ct": 1,
+                "wt": 50139,
+                "cpu": 49513,
+                "mu": 3449360,
+                "pmu": 3535120
+            }
+        }
+    },
+    {
+        "meta": {
+            "url": "/?page=1",
+            "simple_url": "/",
+            "get": [],
+            "env": [],
+            "SERVER": {},
+            "request_time": "2013-01-19"
+        },
+        "profile": {
+            "main()": {
+                "ct": 1,
+                "wt": 60000,
+                "cpu": 50000,
+                "mu": 355999,
+                "pmu": 375999
             }
         }
     }

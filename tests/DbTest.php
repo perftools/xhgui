@@ -14,6 +14,10 @@ class DbTest extends PHPUnit_Framework_TestCase
         $contents = file_get_contents($file);
         $data = json_decode($contents, true);
         foreach ($data as $record) {
+            if (isset($record['meta']['request_time'])) {
+                $time = strtotime($record['meta']['request_time']);
+                $record['meta']['request_time'] = new MongoDate($time);
+            }
             $this->db->insert($record);
         }
     }
@@ -65,6 +69,20 @@ class DbTest extends PHPUnit_Framework_TestCase
         $result = $this->db->getForUrl('/not-there', 1);
         $result = iterator_to_array($result);
         $this->assertCount(0, $result);
+    }
+
+    public function testGetAvgsForUrl()
+    {
+        $result = $this->db->getAvgsForUrl('/');
+        $this->assertCount(2, $result);
+
+        $this->assertArrayHasKey('avg_wt', $result[0]);
+        $this->assertArrayHasKey('avg_cpu', $result[0]);
+        $this->assertArrayHasKey('avg_mu', $result[0]);
+        $this->assertArrayHasKey('avg_pmu', $result[0]);
+
+        $this->assertEquals('2013-01-18', $result[0]['date']);
+        $this->assertEquals('2013-01-19', $result[1]['date']);
     }
 
 }
