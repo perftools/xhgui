@@ -311,7 +311,11 @@ Xhgui.linegraph = function (container, data, options) {
     }
     // Convert X-axis key into date objects.
     data = data.map(function (d) {
-        d[options.xAxis] = new Date(d[options.xAxis]);
+        var date = new Date(d[options.xAxis]);
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        d[options.xAxis] = date;
         return d;
     });
 
@@ -339,6 +343,7 @@ Xhgui.linegraph = function (container, data, options) {
 
     var xAxis = d3.svg.axis()
         .scale(x)
+        .ticks(d3.time.days, 1)
         .orient("bottom");
 
     var yAxis = d3.svg.axis()
