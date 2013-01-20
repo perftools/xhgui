@@ -151,8 +151,7 @@ function simpleUrl($url)
 function load_template($name) {
     static $environment;
     if (empty($environment)) {
-        require XHGUI_ROOT_DIR . '/vendor/Twig/Autoloader.php';
-        Twig_Autoloader::register();
+        autoloadTwig();
 
         $loader = new Twig_Loader_Filesystem(XHGUI_ROOT_DIR . '/templates/');
         $environment = new Twig_Environment($loader, array(
@@ -162,4 +161,14 @@ function load_template($name) {
         $environment->addExtension(new Xhgui_Twig_Extension());
     }
     return $environment->loadTemplate($name);
+}
+
+function autoloadTwig()
+{
+    static $complete;
+    if (empty($complete)) {
+        require XHGUI_ROOT_DIR . '/vendor/Twig/Autoloader.php';
+        Twig_Autoloader::register();
+        $complete = true;
+    }
 }
