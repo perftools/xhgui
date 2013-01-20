@@ -41,17 +41,17 @@
 $(document).ready(function () {
     var graphData = {{ chart_data|json_encode|raw }};
     Xhgui.linegraph('#time-line-graph', graphData, {
-        series: ['wt', 'cpu'],
+        series: ['avg_wt', 'avg_cpu'],
         height: 300,
-        xAxis: 'time',
+        xAxis: 'date',
         title: 'Time usage',
         legend: ['Wall time', 'CPU time'],
-        postfix: ' \u00b5s'
+        postfix: ' \u00b5s',
     });
     Xhgui.linegraph('#memory-line-graph', graphData, {
-        series: ['mu', 'pmu'],
+        series: ['avg_mu', 'avg_pmu'],
         height: 300,
-        xAxis: 'time',
+        xAxis: 'date',
         title: 'Memory usage',
         legend: ['Memory usage', 'Peak memory usage'],
         postfix: ' bytes'

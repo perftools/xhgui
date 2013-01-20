@@ -80,7 +80,11 @@ class Xhgui_Db
             array('$sort' => array('_id' => 1))
         ));
         foreach ($results['result'] as $i => $result) {
-            $date = array($result['_id']['year'], $result['_id']['month'], $result['_id']['day']);
+            $date = array(
+                $result['_id']['year'],
+                sprintf('%02d', $result['_id']['month']),
+                sprintf('%02d', $result['_id']['day'])
+            );
             $results['result'][$i]['date'] = implode('-', $date);
             unset($results['result'][$i]['_id']);
         }
