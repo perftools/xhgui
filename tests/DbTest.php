@@ -62,12 +62,19 @@ class DbTest extends PHPUnit_Framework_TestCase
 
     public function testGetForUrl()
     {
-        $result = $this->db->getForUrl('/', 1);
-        $result = iterator_to_array($result);
+        $options = array(
+            'perPage' => 1
+        );
+        $result = $this->db->getForUrl('/', $options);
+        $this->assertEquals(1, $result['page']);
+        $this->assertEquals(2, $result['totalPages']);
+        $this->assertEquals(1, $result['perPage']);
+
+        $result = iterator_to_array($result['results']);
         $this->assertCount(1, $result);
 
-        $result = $this->db->getForUrl('/not-there', 1);
-        $result = iterator_to_array($result);
+        $result = $this->db->getForUrl('/not-there', $options);
+        $result = iterator_to_array($result['results']);
         $this->assertCount(0, $result);
     }
 

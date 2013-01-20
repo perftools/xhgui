@@ -33,18 +33,24 @@ class Xhgui_Db
      * Get the list of profiles for a simplified url.
      *
      * @param string $url The url to load profiles for.
-     * @param int $limit The number of runs to get.
+     * @param array $options Pagination options to use.
      * @return MongoCursor
      */
-    public function getForUrl($url, $limit)
+    public function getForUrl($url, $options)
     {
-        return $this->_collection->find(array(
+        $pagination = $this->pagination($options);
+        $perPage = $pagination['perPage'];
+        $page = $pagination['page'];
+        $sort = $pagination['sort'];
+
+        $cursor = $this->_collection->find(array(
                 'meta.simple_url' => $url
             ))
-            ->sort(array(
-                "meta.SERVER.REQUEST_TIME" => -1
-            ))
-            ->limit($limit);
+            ->sort($sort)
+            ->skip(($page - 1) * $perPage)
+            ->limit($perPage);
+        $pagination['results'] = $cursor;
+        return $pagination;
     }
 
     /**
@@ -105,18 +111,19 @@ class Xhgui_Db
         $page = $pagination['page'];
         $sort = $pagination['sort'];
 
-        $records = $this->_collection->find()
+        $cursor = $this->_collection->find()
             ->sort($sort)
             ->skip(($page - 1) * $perPage)
             ->limit($perPage);
 
-        $pagination['results'] = $records;
+        $pagination['results'] = $cursor;
         return $pagination;
     }
 
     public function pagination($options)
     {
-        $totalRows = $this->_collection->find()->count();
+        $conditions = isset($options['conditions']) ? $options['conditions'] : array();
+        $totalRows = $this->_collection->find($conditions)->count();
 
         $perPage = isset($options['perPage']) ? $options['perPage'] : 25;
 

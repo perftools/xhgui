@@ -1,4 +1,5 @@
 {% extends 'layout/base.twig' %}
+{% import 'macros/helpers.twig' as helpers %}
 
 {% block content %}
 <h2>Runs for {{ url }} (simplified)</h2>
@@ -34,6 +35,7 @@
         </tbody>
     </table>
 </div>
+{{ helpers.pagination(url('/url.php', {'url': url}), page, total_pages) }}
 {% endblock %}
 
 {% block jsfoot %}
