@@ -6,7 +6,7 @@
             "get": [],
             "env": [],
             "SERVER": {},
-            "request_time": "2013-01-18"
+            "request_date": "2013-01-18"
         },
         "profile": {
             "main()": {
@@ -25,7 +25,7 @@
             "get": [],
             "env": [],
             "SERVER": {},
-            "request_time": "2013-01-19"
+            "request_date": "2013-01-19"
         },
         "profile": {
             "main()": {

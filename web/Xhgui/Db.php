@@ -69,15 +69,13 @@ class Xhgui_Db
             array('$match' => array('meta.simple_url' => $url)),
             array(
                 '$project' => array(
-                    'year' => array('$year' => '$meta.request_time'),
-                    'month' => array('$month' => '$meta.request_time'),
-                    'day' => array('$dayOfMonth' => '$meta.request_time'),
+                    'date' => '$meta.request_date',
                     'profile.main()' => 1,
                 )
             ),
             array(
                 '$group' => array(
-                    '_id' => array('year' => '$year', 'month' => '$month', 'day' => '$day'),
+                    '_id' => '$date',
                     'avg_wt' => array('$avg' => '$profile.main().wt'),
                     'avg_cpu' => array('$avg' => '$profile.main().cpu'),
                     'avg_mu' => array('$avg' => '$profile.main().mu'),
@@ -87,12 +85,7 @@ class Xhgui_Db
             array('$sort' => array('_id' => 1))
         ));
         foreach ($results['result'] as $i => $result) {
-            $date = array(
-                $result['_id']['year'],
-                sprintf('%02d', $result['_id']['month']),
-                sprintf('%02d', $result['_id']['day'])
-            );
-            $results['result'][$i]['date'] = implode('-', $date);
+            $results['result'][$i]['date'] = $result['_id'];
             unset($results['result'][$i]['_id']);
         }
         return $results['result'];

@@ -311,10 +311,7 @@ Xhgui.linegraph = function (container, data, options) {
     }
     // Convert X-axis key into date objects.
     data = data.map(function (d) {
-        var date = new Date(d[options.xAxis]);
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(0);
+        var date = new Date(d[options.xAxis] + '00:00:00');
         d[options.xAxis] = date;
         return d;
     });

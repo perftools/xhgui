@@ -31,7 +31,7 @@
  *
  */
 // Obtain the answer to life, the universe, and your application one time out of a hundred 
-if (rand(0, 100) === 42) {
+if (true || rand(0, 100) === 42) {
     xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
     register_shutdown_function('recordXHProfData');
 }
@@ -55,7 +55,8 @@ function recordXHProfData()
         'get' => $_GET,
         'env' => $_ENV,
         'simple_url' => simpleUrl($_SERVER['REQUEST_URI']),
-        'request_time' => new MongoDate($_SERVER['REQUEST_TIME']),
+        'request_ts' => new MongoDate($_SERVER['REQUEST_TIME']),
+        'request_date' => date('Y-m-d', $_SERVER['REQUEST_TIME']),
     );
 
     $db = new Xhgui_Db();
