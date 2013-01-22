@@ -43,8 +43,9 @@ class Xhgui_Twig_Extension extends Twig_Extension
     {
         $base = $this->_getBase();
         $query = '';
+        $q = strpos($path, '?') === false ? '?' : '&';
         if (!empty($queryargs)) {
-            $query = '?' . http_build_query($queryargs);
+            $query = $q . http_build_query($queryargs);
         }
         $path = '/' . ltrim($path, '/');
         return $base . $path . $query;

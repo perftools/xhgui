@@ -33,18 +33,62 @@ class Xhgui_Db
      * Get the list of profiles for a simplified url.
      *
      * @param string $url The url to load profiles for.
-     * @param int $limit The number of runs to get.
+     * @param array $options Pagination options to use.
      * @return MongoCursor
      */
-    public function getForUrl($url, $limit)
+    public function getForUrl($url, $options)
     {
-        return $this->_collection->find(array(
-                'meta.simple_url' => $url
-            ))
-            ->sort(array(
-                "meta.SERVER.REQUEST_TIME" => -1
-            ))
-            ->limit($limit);
+        $options['conditions'] = array(
+            'meta.simple_url' => $url
+        );
+        $pagination = $this->pagination($options);
+        $perPage = $pagination['perPage'];
+        $page = $pagination['page'];
+        $sort = $pagination['sort'];
+
+        $cursor = $this->_collection->find($options['conditions'])
+            ->sort($sort)
+            ->skip(($page - 1) * $perPage)
+            ->limit($perPage);
+        $pagination['results'] = $cursor;
+        return $pagination;
+    }
+
+    /**
+     * Get the Average metrics for a URL
+     *
+     * This will group data by date and returns only the
+     * avg + date, making the data ideal for time series graphs
+     *
+     * @param string $url
+     * @return array Array of metrics grouped by date
+     */
+    public function getAvgsForUrl($url)
+    {
+        $results = $this->_collection->aggregate(array(
+            array('$match' => array('meta.simple_url' => $url)),
+            array(
+                '$project' => array(
+                    'date' => '$meta.request_date',
+                    'profile.main()' => 1,
+                )
+            ),
+            array(
+                '$group' => array(
+                    '_id' => '$date',
+                    'avg_wt' => array('$avg' => '$profile.main().wt'),
+                    'avg_cpu' => array('$avg' => '$profile.main().cpu'),
+                    'avg_mu' => array('$avg' => '$profile.main().mu'),
+                    'avg_pmu' => array('$avg' => '$profile.main().pmu'),
+                )
+            ),
+            array('$sort' => array('_id' => 1))
+        ));
+        foreach ($results['result'] as $i => $result) {
+            $results['result'][$i]['date'] = $result['_id'];
+            unset($results['result'][$i]['_id']);
+        }
+        return $results['result'];
     }
 
     /**
@@ -61,18 +105,19 @@ class Xhgui_Db
         $page = $pagination['page'];
         $sort = $pagination['sort'];
 
-        $records = $this->_collection->find()
+        $cursor = $this->_collection->find()
             ->sort($sort)
             ->skip(($page - 1) * $perPage)
             ->limit($perPage);
 
-        $pagination['results'] = $records;
+        $pagination['results'] = $cursor;
         return $pagination;
     }
 
     public function pagination($options)
     {
-        $totalRows = $this->_collection->find()->count();
+        $conditions = isset($options['conditions']) ? $options['conditions'] : array();
+        $totalRows = $this->_collection->find($conditions)->count();
 
         $perPage = isset($options['perPage']) ? $options['perPage'] : 25;
 
