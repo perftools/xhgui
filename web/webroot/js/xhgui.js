@@ -279,6 +279,15 @@ Xhgui.columnchart = function (container, data, options) {
 /**
  * Creates a single or multiseries line graph with tooltips.
  *
+ * Options:
+ *
+ * - xAxis - The key to use for the x-axis.
+ * - series - An array of the keys used for the series data.
+ * - title - The chart title.
+ * - legend - An array of legends for each series.
+ * - postfix - A string to append to the tooltip for each datapoint.
+ * - height - The height of the chart.
+ *
  * @param string container Selector to the container for the graph
  * @param array data The data to graph. Should be an array of objects. Each
  * object should contain a key for each element in `options.series`.
@@ -300,6 +309,15 @@ Xhgui.linegraph = function (container, data, options) {
     if (!Array.isArray(options.series)) {
         options.series = [options.series];
     }
+    // Convert X-axis key into date objects.
+    data = data.map(function (d) {
+        if (d[options.xAxis] instanceof Date) {
+            return d;
+        }
+        var date = new Date(d[options.xAxis] + ' 00:00:00');
+        d[options.xAxis] = date;
+        return d;
+    });
 
     var x = d3.time.scale()
         .range([0, width])
@@ -325,6 +343,7 @@ Xhgui.linegraph = function (container, data, options) {
 
     var xAxis = d3.svg.axis()
         .scale(x)
+        .ticks(d3.time.days, 1)
         .orient("bottom");
 
     var yAxis = d3.svg.axis()

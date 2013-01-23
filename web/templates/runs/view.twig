@@ -11,7 +11,7 @@
         <ul class="nav nav-list">
             <li class="nav-header">This Run</li>
             <li><strong>URL</strong> {{ result.meta.url }}</li>
-            <li><strong>Time</strong> {{ result.meta.SERVER.REQUEST_TIME|date('r') }}</li>
+            <li><strong>Time</strong> {{ result.meta.request_time.sec|date('r') }}</li>
             <li><strong>ID</strong> <a href="/custom_help.php?id={{ result._id }}" style="font-size: small; display: inline;">{{ result._id }}</a></li>
             <li><strong>Wall Time</strong> {{ result.profile['main()'].wt|as_time }}</li>
             <li><strong>CPU Time</strong> {{ result.profile['main()'].cpu|as_time }}</li>
