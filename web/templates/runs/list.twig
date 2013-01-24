@@ -2,6 +2,27 @@
 {% import 'macros/helpers.twig' as helpers %}
 
 {% block content %}
+<div class="searchbar clearfix">
+<form action="{{ url('/index.php') }}" method="get" class="form-inline">
+    <div class="control-group span4">
+        <label class="control-label" for="start_date">Date range</label>
+        <div class="controls">
+            <input type="text" id="start_date" name="start_date" class="span2" value="{{ search.start_date }}">
+            <input type="text" name="end_date" class="span2" value="{{ search.end_date }}">
+        </div>
+    </div>
+    <div class="control-group span4">
+        <label class="control-label" for="url">URL</label>
+        <div class="controls">
+            <input type="text" id="url" name="url" value="{{ search.url }}">
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+</div>
+
 <table class="table table-hover table-sort">
     <thead>
         <tr>
