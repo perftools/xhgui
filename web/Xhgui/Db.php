@@ -99,13 +99,18 @@ class Xhgui_Db
      */
     public function getAll($options = array())
     {
+        $conditions = array();
+        if (isset($options['search'])) {
+            $conditions = $this->convertConditions($options['search']);
+        }
+        $options['conditions'] = $conditions;
         $pagination = $this->pagination($options);
 
         $perPage = $pagination['perPage'];
         $page = $pagination['page'];
         $sort = $pagination['sort'];
 
-        $cursor = $this->_collection->find()
+        $cursor = $this->_collection->find($conditions)
             ->sort($sort)
             ->skip(($page - 1) * $perPage)
             ->limit($perPage);
@@ -114,6 +119,15 @@ class Xhgui_Db
         return $pagination;
     }
 
+    /**
+     * Handle and convert pagination related data.
+     *
+     * Calculates the number of pages, perPage,
+     * sort data.
+     *
+     * @param array $options
+     * @return array
+     */
     public function pagination($options)
     {
         $conditions = isset($options['conditions']) ? $options['conditions'] : array();
@@ -134,6 +148,34 @@ class Xhgui_Db
             'perPage' => $perPage,
             'totalPages' => $totalPages,
         );
+    }
+
+    /**
+     * Convert the search parameters into the matching fields.
+     *
+     * Keeps the schema details out of the GET parameters.
+     *
+     * @param array $search
+     * @return array
+     */
+    public function convertConditions($search)
+    {
+        $conditions = array();
+        if (isset($search['date_start'])) {
+            $conditions['meta.request_date']['$gte'] = $search['date_start'];
+        }
+        if (isset($search['date_end'])) {
+            $conditions['meta.request_date']['$lte'] = $search['date_end'];
+        }
+        if (isset($search['url'])) {
+            // Not sure if letting people use regex here
+            // is a good idea. Only one way to find out.
+            $conditions['meta.url'] = array(
+                '$regex' => $search['url'],
+                '$options' => 'i',
+            );
+        }
+        return $conditions;
     }
 
     /**
