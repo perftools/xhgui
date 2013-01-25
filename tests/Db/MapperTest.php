@@ -101,4 +101,17 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testConvertPerPage()
+    {
+        $options = array();
+        $result = $this->mapper->convert($options);
+        $this->assertEquals(25, $result['perPage']);
+
+        $options = array(
+            'perPage' => 1
+        );
+        $result = $this->mapper->convert($options);
+        $this->assertEquals(1, $result['perPage']);
+    }
+
 }

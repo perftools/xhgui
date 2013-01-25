@@ -14,11 +14,17 @@ class Xhgui_Db_Mapper
         $result = array(
             'conditions' => array(),
             'sort' => null,
+            'perPage' => 25
         );
         if (isset($options['conditions'])) {
             $result['conditions'] = $this->_conditions($options['conditions']);
         }
         $result['sort'] = $this->_sort($options);
+
+        if (isset($options['perPage'])) {
+            $result['perPage'] = $options['perPage'];
+        }
+
         return $result;
     }
 

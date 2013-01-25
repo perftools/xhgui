@@ -28,7 +28,7 @@ class DbTest extends PHPUnit_Framework_TestCase
             'page' => 1,
             'sort' => 'wt',
         );
-        $result = $this->db->pagination($options);
+        $result = $this->db->paginate($options);
         $this->assertEquals(25, $result['perPage'], 'default works');
         $this->assertEquals(1, $result['page']);
         $this->assertEquals(
@@ -37,26 +37,26 @@ class DbTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testPaginationInvalidSort()
+    public function testPaginateInvalidSort()
     {
         $options = array(
             'page' => 1,
             'sort' => 'barf',
         );
-        $result = $this->db->pagination($options);
+        $result = $this->db->paginate($options);
         $this->assertEquals(
             array('meta.SERVER.REQUEST_TIME' => -1),
             $result['sort']
         );
     }
 
-    public function testPaginationOutOfRangePage()
+    public function testPaginateOutOfRangePage()
     {
         $options = array(
             'page' => 9000,
             'sort' => 'barf',
         );
-        $result = $this->db->pagination($options);
+        $result = $this->db->paginate($options);
         $this->assertEquals(1, $result['page']);
     }
 

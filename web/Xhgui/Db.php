@@ -45,20 +45,34 @@ class Xhgui_Db
                 'simple_url' => $url
             )
         ));
-        $opts = $this->_mapper->convert($options);
-        $opts = array_merge($options, $opts);
+        return $this->paginate($options);
+    }
 
-        $pagination = $this->pagination($opts);
-        $perPage = $pagination['perPage'];
-        $page = $pagination['page'];
-        $sort = $pagination['sort'];
+    public function paginate($options)
+    {
+        $opts = $this->_mapper->convert($options);
+
+        $totalRows = $this->_collection->find($opts['conditions'])
+            ->count();
+
+        $totalPages = max(ceil($totalRows / $opts['perPage']), 1);
+        $page = 1;
+        if (isset($options['page'])) {
+            $page = min(max($options['page'], 1), $totalPages);
+        }
 
         $cursor = $this->_collection->find($opts['conditions'])
-            ->sort($sort)
-            ->skip(($page - 1) * $perPage)
-            ->limit($perPage);
-        $pagination['results'] = $cursor;
-        return $pagination;
+            ->sort($opts['sort'])
+            ->skip(($page - 1) * $opts['perPage'])
+            ->limit($opts['perPage']);
+
+        return array(
+            'results' => $cursor,
+            'sort' => $opts['sort'],
+            'page' => $page,
+            'perPage' => $opts['perPage'],
+            'totalPages' => $totalPages
+        );
     }
 
     /**
@@ -106,77 +120,7 @@ class Xhgui_Db
      */
     public function getAll($options = array())
     {
-        $opts = $this->_mapper->convert($options);
-        $pagination = $this->pagination($opts);
-
-        $perPage = $pagination['perPage'];
-        $page = $pagination['page'];
-        $sort = $pagination['sort'];
-
-        $cursor = $this->_collection->find($opts['conditions'])
-            ->sort($sort)
-            ->skip(($page - 1) * $perPage)
-            ->limit($perPage);
-
-        $pagination['results'] = $cursor;
-        return $pagination;
-    }
-
-    /**
-     * Handle and convert pagination related data.
-     *
-     * Calculates the number of pages, perPage,
-     * sort data.
-     *
-     * @param array $options
-     * @return array
-     */
-    public function pagination($options)
-    {
-        $conditions = isset($options['conditions']) ? $options['conditions'] : array();
-        $totalRows = $this->_collection->find($conditions)->count();
-
-        $perPage = isset($options['perPage']) ? $options['perPage'] : 25;
-
-        $totalPages = max(ceil($totalRows / $perPage), 1);
-        $page = 1;
-        if (isset($options['page'])) {
-            $page = min(max($options['page'], 1), $totalPages);
-        }
-
-        $sort = $this->_getSort($options);
-        return array(
-            'sort' => $sort,
-            'page' => $page,
-            'perPage' => $perPage,
-            'totalPages' => $totalPages,
-        );
-    }
-
-    /**
-     * Get sort options for a paginated set.
-     *
-     * Whitelists to valid known keys.
-     *
-     * @param array $options Pagination options including the sort key.
-     * @return array Sort field & direction.
-     */
-    protected function _getSort($options)
-    {
-        $valid = array('wt', 'mu', 'cpu');
-        if (
-            empty($options['sort']) ||
-            (isset($options['sort']) && !in_array($options['sort'], $valid))
-        ) {
-            return array('meta.SERVER.REQUEST_TIME' => -1);
-        }
-        if ($options['sort'] == 'wt') {
-            return array('profile.main().wt' => -1);
-        } elseif ($options['sort'] == 'mu') {
-            return array('profile.main().mu' => -1);
-        } elseif ($options['sort'] == 'cpu') {
-           return array('profile.main().cpu' => -1);
-        }
+        return $this->paginate($options);
     }
 
     /**
