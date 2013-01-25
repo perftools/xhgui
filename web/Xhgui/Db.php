@@ -5,6 +5,7 @@ class Xhgui_Db
     protected $_mongo;
     protected $_db;
     protected $_collection;
+    protected $_mapper;
 
     public function __construct($host = null, $collection = 'results')
     {
@@ -14,6 +15,7 @@ class Xhgui_Db
         $this->_mongo = new Mongo($host);
         $this->_db = $this->_mongo->xhprof;
         $this->_collection = $this->_db->{$collection};
+        $this->_mapper = new Xhgui_Db_Mapper();
     }
 
     /**
@@ -38,15 +40,20 @@ class Xhgui_Db
      */
     public function getForUrl($url, $options)
     {
-        $options['conditions'] = array(
-            'meta.simple_url' => $url
-        );
-        $pagination = $this->pagination($options);
+        $options = array_merge($options, array(
+            'conditions' => array(
+                'simple_url' => $url
+            )
+        ));
+        $opts = $this->_mapper->convert($options);
+        $opts = array_merge($options, $opts);
+
+        $pagination = $this->pagination($opts);
         $perPage = $pagination['perPage'];
         $page = $pagination['page'];
         $sort = $pagination['sort'];
 
-        $cursor = $this->_collection->find($options['conditions'])
+        $cursor = $this->_collection->find($opts['conditions'])
             ->sort($sort)
             ->skip(($page - 1) * $perPage)
             ->limit($perPage);
@@ -99,18 +106,14 @@ class Xhgui_Db
      */
     public function getAll($options = array())
     {
-        $conditions = array();
-        if (isset($options['search'])) {
-            $conditions = $this->convertConditions($options['search']);
-        }
-        $options['conditions'] = $conditions;
-        $pagination = $this->pagination($options);
+        $opts = $this->_mapper->convert($options);
+        $pagination = $this->pagination($opts);
 
         $perPage = $pagination['perPage'];
         $page = $pagination['page'];
         $sort = $pagination['sort'];
 
-        $cursor = $this->_collection->find($conditions)
+        $cursor = $this->_collection->find($opts['conditions'])
             ->sort($sort)
             ->skip(($page - 1) * $perPage)
             ->limit($perPage);
@@ -148,34 +151,6 @@ class Xhgui_Db
             'perPage' => $perPage,
             'totalPages' => $totalPages,
         );
-    }
-
-    /**
-     * Convert the search parameters into the matching fields.
-     *
-     * Keeps the schema details out of the GET parameters.
-     *
-     * @param array $search
-     * @return array
-     */
-    public function convertConditions($search)
-    {
-        $conditions = array();
-        if (isset($search['date_start'])) {
-            $conditions['meta.request_date']['$gte'] = $search['date_start'];
-        }
-        if (isset($search['date_end'])) {
-            $conditions['meta.request_date']['$lte'] = $search['date_end'];
-        }
-        if (isset($search['url'])) {
-            // Not sure if letting people use regex here
-            // is a good idea. Only one way to find out.
-            $conditions['meta.url'] = array(
-                '$regex' => $search['url'],
-                '$options' => 'i',
-            );
-        }
-        return $conditions;
     }
 
     /**

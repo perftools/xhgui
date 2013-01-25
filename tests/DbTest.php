@@ -92,50 +92,10 @@ class DbTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('2013-01-19', $result[1]['date']);
     }
 
-    public function testConvertConditions()
-    {
-        $result = $this->db->convertConditions(array(
-            'date_start' => '2013-01-15',
-        ));
-        $expected = array(
-            'meta.request_date' => array(
-                '$gte' => '2013-01-15',
-            )
-        );
-        $this->assertEquals($expected, $result);
-
-        $result = $this->db->convertConditions(array(
-            'date_end' => '2013-01-20',
-        ));
-        $expected = array(
-            'meta.request_date' => array(
-                '$lte' => '2013-01-20'
-            )
-        );
-        $this->assertEquals($expected, $result);
-
-        $result = $this->db->convertConditions(array(
-            'date_start' => '2013-01-15',
-            'date_end' => '2013-01-20',
-            'url' => 'tasks'
-        ));
-        $expected = array(
-            'meta.url' => array(
-                '$regex' => 'tasks',
-                '$options' => 'i'
-            ),
-            'meta.request_date' => array(
-                '$gte' => '2013-01-15',
-                '$lte' => '2013-01-20'
-            )
-        );
-        $this->assertEquals($expected, $result);
-    }
-
     public function testGetAllConditions()
     {
         $result = $this->db->getAll(array(
-            'search' => array(
+            'conditions' => array(
                 'date_start' => '2013-01-20',
                 'date_end' => '2013-01-21',
                 'url' => 'tasks',
