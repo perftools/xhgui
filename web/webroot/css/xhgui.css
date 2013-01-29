@@ -41,9 +41,9 @@ h1, h2, h3, h4, h5, h6,
  * Top Navbar
  */
 .navbar-inner {
-    background: -webkit-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240))
-    background: -moz-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240))
-    background: linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240))
+    background: -webkit-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
+    background: -moz-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
+    background: linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
 }
 .navbar-static-top .navbar-inner {
     -webkit-box-shadow: none;
@@ -74,6 +74,24 @@ h1, h2, h3, h4, h5, h6,
 }
 .sidebar-nav li a:hover {
     background: transparent;
+}
+
+/**
+ * Search bar/box
+ */
+.searchbar {
+    margin: 10px;
+    padding: 5px;
+    background: -webkit-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
+    background: -moz-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
+    background: linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
+}
+.searchbar .form-actions {
+    margin: 0px;
+    float: left;
+    background: none;
+    padding: 25px 0 0 0;
+    border: none;
 }
 
 /**
