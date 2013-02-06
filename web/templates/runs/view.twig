@@ -3,14 +3,14 @@
 
 {% block content %}
 <div class="row-fluid">
-    <h1>Profile data for {{ result.meta.url }}</h1>
+    <h1>Profile data for {{ result.meta.SERVER.REQUEST_METHOD}} {{ result.meta.url }}</h1>
 </div>
 <div class="row-fluid">
 <div class="span3">
     <div class="sidebar-nav">
         <ul class="nav nav-list">
             <li class="nav-header">This Run</li>
-            <li><strong>URL</strong> {{ result.meta.url }}</li>
+            <li><strong>URL</strong> <a href="{{ url('/url.php', {'url': result.meta.url|simple_url }) }}" style="font-size: small; display: inline;">{{ result.meta.url }}</a></li>
             <li><strong>Time</strong> {{ result.meta.request_time.sec|date('r') }}</li>
             <li><strong>ID</strong> <a href="/custom_help.php?id={{ result._id }}" style="font-size: small; display: inline;">{{ result._id }}</a></li>
             <li><strong>Wall Time</strong> {{ result.profile['main()'].wt|as_time }}</li>
