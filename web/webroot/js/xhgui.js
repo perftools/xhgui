@@ -467,4 +467,6 @@ $(document).ready(function () {
             return '' + parseInt(text.replace(',', ''), 10);
         }
     });
+
+    $('.datepicker').datepicker();
 });

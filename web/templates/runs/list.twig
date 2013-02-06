@@ -7,8 +7,8 @@
     <div class="control-group span4">
         <label class="control-label" for="start_date">Date range</label>
         <div class="controls">
-            <input type="text" id="date_start" name="date_start" class="span2" value="{{ search.date_start }}">
-            <input type="text" id="date_end" name="date_end" class="span2" value="{{ search.date_end }}">
+            <input type="text" data-date-format="yyyy-mm-dd" id="date_start" name="date_start" class="datepicker span2" value="{{ search.date_start }}">
+            <input type="text" id="date_end" data-date-format="yyyy-mm-dd" name="date_end" class="datepicker span2" value="{{ search.date_end }}">
         </div>
     </div>
     <div class="control-group span4">
@@ -49,3 +49,4 @@
 </table>
 {{ helpers.pagination('/index.php', page, total_pages) }}
 {% endblock %}
+
