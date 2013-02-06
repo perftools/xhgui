@@ -11,13 +11,14 @@
 </dl>
 {% endmacro %}
 
-{% macro pagination(url, page, total_pages) %}
+{% macro pagination(url, page, total_pages, search) %}
 
 {# Hard code because I'm lazy #}
 {% set num_pages = 10 %}
 {% set midpoint = none %}
 {% set start = 1 %}
 {% set end = total_pages %}
+{% set search = search|default({}) %}
 
 {# show a slice of pages in the middle #}
 {% if total_pages > num_pages %}
@@ -37,14 +38,14 @@
 {% if page == 1 %}
     <li class="disabled"><span>&laquo;</span><li>
 {% else %}
-    <li><a href="{{ url(url, {'page': page - 1}) }}">&laquo;</a><li>
+    <li><a href="{{ url(url, {'page': page - 1}|merge(search)) }}">&laquo;</a><li>
 {% endif %}
 
 {% for i in start..end %}
     {% if i == page %}
     <li class="active"><span>{{ i }}</span></li>
     {% else %}
-    <li><a href="{{ url(url, {'page': i}) }}">{{ i }}</a></li>
+    <li><a href="{{ url(url, {'page': i}|merge(search)) }}">{{ i }}</a></li>
     {% endif %}
 {% endfor %}
 
