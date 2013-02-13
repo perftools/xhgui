@@ -18,6 +18,9 @@ Xhgui.colors = function () {
 
 /**
  * Format a date object to a readable string in SQL date format.
+ *
+ * @param Date date The date to format.
+ * @return String Formatted date string.
  */
 Xhgui.formatDate = function(date) {
     var year = date.getFullYear(),
@@ -35,6 +38,10 @@ Xhgui.formatDate = function(date) {
 /**
  * Format a number to have thousand separators + decimal places.
  * All inputs will be cast to a Number
+ *
+ * @param Mixed num The number or string number to format.
+ * @param Number decimalPlaces Number of decimal places to use.
+ * @return String Formatted number string.
  */
 Xhgui.formatNumber = function (num, decimalPlaces) {
     if (decimalPlaces === undefined) {
@@ -49,11 +56,11 @@ Xhgui.formatNumber = function (num, decimalPlaces) {
     }
     var split = val.split(/\./);
     var thousands = split[0];
-    var decimals = split[1];
     var i = thousands.length % 3 || 3;
 
     thousands = thousands.slice(0, i) + thousands.slice(i).replace(/(\d{3})/g, sep + '$1');
-    return thousands + '.' + decimals;
+    split[0] = thousands;
+    return split.join('.');
 };
 
 
@@ -480,7 +487,7 @@ Xhgui.linegraph = function (container, data, options) {
                 }
                 value += '</strong>';
                 value += '<br />';
-                value += d[series];
+                value += Xhgui.formatNumber(d[series], 0);
                 if (options.postfix) {
                     value += options.postfix;
                 }
