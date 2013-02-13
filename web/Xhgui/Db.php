@@ -12,10 +12,20 @@ class Xhgui_Db
         if (empty($host)) {
             $host = Xhgui_Config::read('db.host');
         }
-        $this->_mongo = new MongoClient($host);
-        $this->_db = $this->_mongo->xhprof;
-        $this->_collection = $this->_db->{$collection};
-        $this->_mapper = new Xhgui_Db_Mapper();
+        try {
+            $this->_mongo = new MongoClient($host);
+            $this->_db = $this->_mongo->xhprof;
+            $this->_collection = $this->_db->{$collection};
+            $this->_mapper = new Xhgui_Db_Mapper();
+        }catch (Exception $e)
+        {
+            echo "Unable to connect to Mongo<br>\n";
+            echo "Exception: " . $e->getMessage() ."<br>\n";
+            echo "You may want to ensure that Mongo has been started, and that the config file has the right connection information";
+            exit;
+        }
+        
+        
     }
 
     /**
