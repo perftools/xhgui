@@ -22,18 +22,7 @@ Xhgui.colors = function () {
  * @param Date date The date to format.
  * @return String Formatted date string.
  */
-Xhgui.formatDate = function(date) {
-    var year = date.getFullYear(),
-        month = date.getMonth() + 1,
-        day = date.getDate();
-    if (month < 10) {
-        month = '0' + month;
-    }
-    if (day < 10) {
-        day = '0' + day;
-    }
-    return year + '-' + month + '-' + day;
-};
+Xhgui.formatDate = d3.time.format('%Y-%m-%d');
 
 /**
  * Format a number to have thousand separators + decimal places.
@@ -269,10 +258,12 @@ Xhgui.columnchart = function (container, data, options) {
     var yAxis = d3.svg.axis()
         .scale(y)
         .tickFormat(d3.format('2s'))
+        .tickSize(6, 6, 0)
         .orient("left");
 
     var xAxis = d3.svg.axis()
         .scale(x)
+        .tickSize(6, 6, 0)
         .orient("bottom");
 
     container = d3.select(container);
@@ -367,11 +358,14 @@ Xhgui.linegraph = function (container, data, options) {
         return d;
     });
 
+    var xRange = d3.extent(data, function (d) {
+        return d[options.xAxis];
+    });
+    var xSpread = xRange[1] - xRange[0];
+
     var x = d3.time.scale()
         .range([0, width])
-        .domain(d3.extent(data, function (d) {
-            return d[options.xAxis];
-        }));
+        .domain(xRange);
 
     // Get the mins/maxes for all series.
     var mins = [];
@@ -391,12 +385,21 @@ Xhgui.linegraph = function (container, data, options) {
 
     var xAxis = d3.svg.axis()
         .scale(x)
-        .ticks(d3.time.days, 1)
         .orient("bottom");
+    xAxis.tickFormat(d3.time.format('%Y-%m-%d'))
+        .ticks(d3.time.days, 1);
+
+    // If its a big date range show fewer ticks
+    if (xSpread / (86400 * 1000) > 5) {
+        xAxis.ticks(d3.time.days, 8)
+            .tickSize(9, 6, 0)
+            .tickSubdivide(8);
+    }
 
     var yAxis = d3.svg.axis()
         .scale(y)
         .tickFormat(d3.format('2s'))
+        .tickSize(6, 6, 0)
         .orient("left");
 
     // If there are going to be too
