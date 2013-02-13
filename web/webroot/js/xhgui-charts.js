@@ -416,6 +416,19 @@ Xhgui.linegraph = function (container, data, options) {
             })
             .attr('r', 3);
 
+        function formatDate(date) {
+            var year = date.getFullYear(),
+                month = date.getMonth() + 1,
+                day = date.getDate();
+            if (month < 10) {
+                month = '0' + month;
+            }
+            if (day < 10) {
+                day = '0' + day;
+            }
+            return year + '-' + month + '-' + day;
+        }
+
         Xhgui.tooltip(container, {
             bindTo: circle,
             positioner: function (d, i) {
@@ -427,8 +440,19 @@ Xhgui.linegraph = function (container, data, options) {
                 y += 7;
                 return {x: x, y: y};
             },
+
             formatter: function (d, i) {
-                var value = d[series];
+                var value = '';
+                var xValue = d[options.xAxis];
+                value += '<strong>';
+                if (xValue instanceof Date) {
+                    value += formatDate(xValue);
+                } else {
+                    value += xValue;
+                }
+                value += '</strong>';
+                value += '<br />';
+                value += d[series];
                 if (options.postfix) {
                     value += options.postfix;
                 }
