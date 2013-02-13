@@ -16,6 +16,47 @@ Xhgui.colors = function () {
     return d3.scale.ordinal().range(colors);
 };
 
+/**
+ * Format a date object to a readable string in SQL date format.
+ */
+Xhgui.formatDate = function(date) {
+    var year = date.getFullYear(),
+        month = date.getMonth() + 1,
+        day = date.getDate();
+    if (month < 10) {
+        month = '0' + month;
+    }
+    if (day < 10) {
+        day = '0' + day;
+    }
+    return year + '-' + month + '-' + day;
+};
+
+/**
+ * Format a number to have thousand separators + decimal places.
+ * All inputs will be cast to a Number
+ */
+Xhgui.formatNumber = function (num, decimalPlaces) {
+    if (decimalPlaces === undefined) {
+        decimalPlaces = 2;
+    }
+    var sep = ',';
+
+    number = +num;
+    var val = number.toFixed(decimalPlaces);
+    if (val < 1000) {
+        return val;
+    }
+    var split = val.split(/\./);
+    var thousands = split[0];
+    var decimals = split[1];
+    var i = thousands.length % 3 || 3;
+
+    thousands = thousands.slice(0, i) + thousands.slice(i).replace(/(\d{3})/g, sep + '$1');
+    return thousands + '.' + decimals;
+};
+
+
 Xhgui.legend = function(svg, text, height, margin, color) {
     if (!text) {
         return;
@@ -416,19 +457,6 @@ Xhgui.linegraph = function (container, data, options) {
             })
             .attr('r', 3);
 
-        function formatDate(date) {
-            var year = date.getFullYear(),
-                month = date.getMonth() + 1,
-                day = date.getDate();
-            if (month < 10) {
-                month = '0' + month;
-            }
-            if (day < 10) {
-                day = '0' + day;
-            }
-            return year + '-' + month + '-' + day;
-        }
-
         Xhgui.tooltip(container, {
             bindTo: circle,
             positioner: function (d, i) {
@@ -446,7 +474,7 @@ Xhgui.linegraph = function (container, data, options) {
                 var xValue = d[options.xAxis];
                 value += '<strong>';
                 if (xValue instanceof Date) {
-                    value += formatDate(xValue);
+                    value += Xhgui.formatDate(xValue);
                 } else {
                     value += xValue;
                 }
