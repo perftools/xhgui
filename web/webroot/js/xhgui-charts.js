@@ -241,7 +241,7 @@ Xhgui.piechart = function (container, data, options) {
         formatter: function (d, i) {
             var label = '<strong>' + d.data.name +
                 '</strong><br />' +
-                d.data.value + options.postfix;
+                Xhgui.formatNumber(d.data.value, 0) + options.postfix;
             return label;
         }
     });
@@ -318,7 +318,7 @@ Xhgui.columnchart = function (container, data, options) {
         formatter: function (d, i) {
             var label = '<strong>' + d.name +
                 '</strong><br />' +
-                d.value + options.postfix;
+                Xhgui.formatNumber(d.value, 0) + options.postfix;
             return label;
         }
     });
