@@ -172,7 +172,8 @@ th.headerSortUp {
     position: relative;
 }
 .chart-container .popover {
-    width: auto;
+	min-width: 125px;
+	width: auto;
 }
 
 .chart-axis path,
