@@ -4,6 +4,7 @@
 {% block content %}
 <h1>{{ title }}</h1>
 
+{% if runs.count or has_search %}
 <div class="searchbar clearfix">
 <form action="{{ url('/index.php') }}" method="get" class="form-inline">
     <div class="control-group span4">
@@ -24,39 +25,45 @@
     </div>
 </form>
 </div>
+{% endif %}
 
+{% if runs.count or has_search %}
 <table class="table table-hover table-sort">
-    {% if runs|length or has_search %}
-        <thead>
-            <tr>
-                <th>URL</th>
-                <th>Time</th>
-                <th class="right"><span class="tip" title="Wall time">wt</span></th>
-                <th class="right"><span class="tip" title="CPU time">cpu</span></th>
-                <th class="right"><span class="tip" title="Memory Usage">mu</span></th>
-                <th class="right"><span class="tip" title="Peak Memory Usage">pmu</span></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for result in runs %}
+    <thead>
         <tr>
-            <td><a href="{{ url('/url.php', {'url': result.meta.url|simple_url }) }}">{{ result.meta.url }}</a></td>
-            <td><a href="{{ url('/run.php', {'id': result._id|trim }) }}">{{ result['meta']['SERVER']['REQUEST_TIME']|date(date_format) }}</a></td>
-            <td class="right">{{ result.profile['main()']['wt'] |as_time }}</td>
-            <td class="right">{{ result.profile['main()']['cpu'] |as_bytes }}</td>
-            <td class="right">{{ result.profile['main()']['mu'] |as_bytes }}</td>
-            <td class="right">{{ result.profile['main()']['pmu'] |as_bytes }}</td>
+            <th>URL</th>
+            <th>Time</th>
+            <th class="right"><span class="tip" title="Wall time">wt</span></th>
+            <th class="right"><span class="tip" title="CPU time">cpu</span></th>
+            <th class="right"><span class="tip" title="Memory Usage">mu</span></th>
+            <th class="right"><span class="tip" title="Peak Memory Usage">pmu</span></th>
         </tr>
-        {% else %}
-        <tr>
-            <td colspan="6" class="no-results">
-                Your search conditions matched no runs. Try changing you search criteria.
-            </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    {% endif %}
+    </thead>
+    <tbody>
+    {% for result in runs %}
+    <tr>
+        <td><a href="{{ url('/url.php', {'url': result.meta.url|simple_url }) }}">{{ result.meta.url }}</a></td>
+        <td><a href="{{ url('/run.php', {'id': result._id|trim }) }}">{{ result['meta']['SERVER']['REQUEST_TIME']|date(date_format) }}</a></td>
+        <td class="right">{{ result.profile['main()']['wt'] |as_time }}</td>
+        <td class="right">{{ result.profile['main()']['cpu'] |as_bytes }}</td>
+        <td class="right">{{ result.profile['main()']['mu'] |as_bytes }}</td>
+        <td class="right">{{ result.profile['main()']['pmu'] |as_bytes }}</td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="6" class="no-results">
+            Your search conditions matched no runs. Try changing you search criteria.
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
 </table>
-{{ helpers.pagination('/index.php', page, total_pages, search) }}
+
+{% endif %}
+
+{% if runs.count %}
+    {{ helpers.pagination('/index.php', page, total_pages, search) }}
+{% endif %}
+
 {% endblock %}
 
