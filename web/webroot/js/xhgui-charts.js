@@ -236,6 +236,81 @@ Xhgui.piechart = function (container, data, options) {
     });
 };
 
+
+/**
+ * Create a rose chart.
+ *
+ * @param selector container The container for the chart
+ * @param array data The data list with name, value keys.
+ * @param object options
+ */
+Xhgui.rosechart = function (container, data, options) {
+    options = options || {};
+    var maxValue = 0;
+    var height = options.height || 400,
+        width = options.width || 400,
+        radius = Math.min(width, height) / 2;
+
+    var arc = d3.svg.arc()
+        .outerRadius(function (d) {
+            var num = (d.value - 20) * 10000;
+            return 100 / maxValue * num / 100 * (radius - 10);
+        })
+        .innerRadius(0);
+
+    var pie = d3.layout.pie()
+        .sort(null)
+        .value(function (d) {
+            var v = 20 + (d.value / 10000);
+            if (d.value > maxValue)
+            {
+                maxValue = d.value;
+            }
+            return v;
+        });
+
+    var color = Xhgui.colors();
+
+    container = d3.select(container);
+
+    var svg = container.append('svg')
+        .attr('width', width)
+        .attr('height', height)
+            .append('g')
+            .attr('transform', "translate(" + width / 2 + "," + height / 2 + ")");
+
+    var g = svg.selectAll('.chart-arc')
+        .data(pie(data))
+            .enter().append('g')
+        .attr('class', 'chart-arc');
+
+    g.append('path')
+        .attr('d', arc)
+        .style('fill', function (d) {
+            return color(d.data.value);
+        });
+
+    Xhgui.tooltip(container, {
+        bindTo: g,
+        positioner: function (d, i) {
+            var position, sliceX, sliceY;
+
+            position = arc.centroid(d, i);
+
+            // Recalculate base on outer transform.
+            sliceX = position[0] + (height / 2);
+            sliceY = position[1] + (width / 2);
+            return {x: sliceX, y: sliceY};
+        },
+        formatter: function (d, i) {
+            var label = '<strong>' + d.data.name +
+                '</strong><br />' +
+                Xhgui.formatNumber(d.data.value, 0) + options.postfix;
+            return label;
+        }
+    });
+};
+
 /**
  * Create a column chart.
  *

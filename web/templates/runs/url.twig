@@ -42,7 +42,7 @@
 <script>
 $(document).ready(function () {
     var graphData = {{ chart_data|json_encode|raw }};
-    Xhgui.linegraph('#time-line-graph', graphData, {
+    Xhgui.rosechart('#time-line-graph', graphData, {
         series: ['avg_wt', 'avg_cpu'],
         height: 300,
         xAxis: 'date',
