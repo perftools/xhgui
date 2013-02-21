@@ -36,5 +36,6 @@ echo $template->render(array(
     'total_pages' => $result['totalPages'],
     'date_format' => Xhgui_Config::read('date.format'),
     'search' => $search,
+    'has_search' => strlen(implode('', $search)) > 0,
     'title' => $title
 ));

@@ -162,6 +162,10 @@ th.headerSortUp {
 .tableFloatingHeaderOriginal th {
     border-top: none;
 }
+tr .no-results {
+    text-align: center;
+    font-size: 1.2em;
+}
 
 
 
