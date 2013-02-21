@@ -36,7 +36,7 @@ Installing the xhgui ui
 Profiling an application / site
 -------------------------------
 
-The simplest way to get an application profiled, you should use `external/header.php`.
+The simplest way to get an application profiled, is to use `external/header.php`.
 This file is designed to be combined with PHP's [auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-prepend-file)
 directive. This can be enabled system-wide through `php.ini`. Alternatively, you can enable
 `auto_prepend_file` per virtual host. With apache this would look like:
