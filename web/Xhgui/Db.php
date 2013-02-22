@@ -12,7 +12,7 @@ class Xhgui_Db
         if (empty($host)) {
             $host = Xhgui_Config::read('db.host');
         }
-        $this->_mongo = new Mongo($host);
+        $this->_mongo = new MongoClient($host);
         $this->_db = $this->_mongo->xhprof;
         $this->_collection = $this->_db->{$collection};
         $this->_mapper = new Xhgui_Db_Mapper();
