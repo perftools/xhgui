@@ -107,7 +107,9 @@
     <tbody>
     {% for key, value in profile %}
     <tr>
-        <td class="text">{{ key }}</td>
+        <td class="text">
+            <a href="{{ url('/symbol.php', {'id': result._id|trim, 'symbol': key}) }}">{{ key }}</a>
+        </td>
         <td>{{ value.ct }}</td>
         <td>{{ value.ewt|as_time }}</td>
         <td>{{ value.ecpu|as_time }}</td>
