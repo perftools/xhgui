@@ -1,0 +1,91 @@
+{% extends 'layout/base.twig' %}
+{% import 'macros/helpers.twig' as helpers %}
+
+{% block content %}
+<div class="row-fluid">
+    <h1>Parent/child calls for {{ symbol }}</h1>
+</div>
+<div class="row-fluid">
+    <h3>Current function</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Function</th>
+                <th>Call Count</th>
+                <th>Inclusive Wall Time</th>
+                <th>Inclusive CPU</th>
+                <th>Inclusive Memory Usage</th>
+                <th>Inclusive Peak Memory Usage</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="text">
+                <a href="{{ url('/symbol.php', {'id': id, 'symbol': current.function}) }}">{{ current.function }}</a>
+            </td>
+            <td>{{ current.ct }}</td>
+            <td>{{ current.wt|as_time }}</td>
+            <td>{{ current.cpu|as_time }}</td>
+            <td>{{ current.mu|as_bytes }}</td>
+            <td>{{ current.pmu|as_bytes }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Parent function</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Function</th>
+                <th>Call Count</th>
+                <th>Inclusive Wall Time</th>
+                <th>Inclusive CPU</th>
+                <th>Inclusive Memory Usage</th>
+                <th>Inclusive Peak Memory Usage</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="text">
+                <a href="{{ url('/symbol.php', {'id': id, 'symbol': parent.function}) }}">{{ parent.function }}</a>
+            </td>
+            <td>{{ parent.ct }}</td>
+            <td>{{ parent.wt|as_time }}</td>
+            <td>{{ parent.cpu|as_time }}</td>
+            <td>{{ parent.mu|as_bytes }}</td>
+            <td>{{ parent.pmu|as_bytes }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Child functions</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Function</th>
+                <th>Call Count</th>
+                <th>Inclusive Wall Time</th>
+                <th>Inclusive CPU</th>
+                <th>Inclusive Memory Usage</th>
+                <th>Inclusive Peak Memory Usage</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for child in children %}
+        <tr>
+            <td class="text">
+                <a href="{{ url('/symbol.php', {'id': id, 'symbol': child.function}) }}">{{ child.function }}</a>
+            </td>
+            <td>{{ child.ct }}</td>
+            <td>{{ child.wt|as_time }}</td>
+            <td>{{ child.cpu|as_time }}</td>
+            <td>{{ child.mu|as_bytes }}</td>
+            <td>{{ child.pmu|as_bytes }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}
