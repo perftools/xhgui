@@ -17,15 +17,12 @@ class Xhgui_Db
             $this->_db = $this->_mongo->xhprof;
             $this->_collection = $this->_db->{$collection};
             $this->_mapper = new Xhgui_Db_Mapper();
-        }catch (Exception $e)
-        {
+        } catch (Exception $e) {
             echo "Unable to connect to Mongo<br>\n";
             echo "Exception: " . $e->getMessage() ."<br>\n";
             echo "You may want to ensure that Mongo has been started, and that the config file has the right connection information";
             exit;
         }
-        
-        
     }
 
     /**
