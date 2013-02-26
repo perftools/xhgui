@@ -32,7 +32,7 @@
         </tbody>
     </table>
 
-    <h3>Parent function</h3>
+    <h3>Parent functions</h3>
     <table class="table">
         <thead>
             <tr>
@@ -45,6 +45,7 @@
             </tr>
         </thead>
         <tbody>
+        {% for parent in parents %}
         <tr>
             <td class="text">
                 <a href="{{ url('/symbol.php', {'id': id, 'symbol': parent.function}) }}">{{ parent.function }}</a>
@@ -55,6 +56,7 @@
             <td>{{ parent.mu|as_bytes }}</td>
             <td>{{ parent.pmu|as_bytes }}</td>
         </tr>
+        {% endfor %}
         </tbody>
     </table>
 
