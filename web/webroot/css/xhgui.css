@@ -196,6 +196,11 @@ tr .no-results {
     fill: #d46245;
 }
 
+.back-link {
+    float: right;
+    margin-top: 20px;
+}
+
 /**
  * Footer
  */
