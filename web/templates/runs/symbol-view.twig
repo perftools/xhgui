@@ -85,6 +85,10 @@
             <td>{{ child.mu|as_bytes }}</td>
             <td>{{ child.pmu|as_bytes }}</td>
         </tr>
+        {% else %}
+        <tr>
+            <td colspan="6">{{ symbol }} called no functions.</td>
+        </tr>
         {% endfor %}
         </tbody>
     </table>
