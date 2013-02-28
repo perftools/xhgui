@@ -1,7 +1,8 @@
 <?php
 require dirname(__DIR__) . '/bootstrap.php';
 
-$db = new Xhgui_Db();
+$db = Xhgui_Db::connect();
+$profiles = new Xhgui_Profiles($db->results);
 
 $search = array();
 $keys = array('date_start', 'date_end', 'url');
@@ -10,7 +11,7 @@ foreach ($keys as $key) {
 }
 $sort = isset($_GET['sort']) ? $_GET['sort'] : null;
 
-$result = $db->getAll(array(
+$result = $profiles->getAll(array(
     'sort' => $sort,
     'page' => isset($_GET['page']) ? $_GET['page'] : null,
     'perPage' => Xhgui_Config::read('page.limit'),

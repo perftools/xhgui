@@ -1,9 +1,10 @@
 <?php
 require dirname(__DIR__) . '/bootstrap.php';
 
-$db = new Xhgui_Db();
+$db = Xhgui_Db::connect();
+$profiles = new Xhgui_Profiles($db->results);
 
-$result = $db->get($_GET['id']);
+$result = $profiles->get($_GET['id']);
 
 $profile = $result['profile'];
 $profile = exclusive($profile);
