@@ -5,8 +5,8 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
     {
         Xhgui_Config::load(XHGUI_ROOT_DIR . '/config/config.php');
         $db = Xhgui_Db::connect();
-        $this->db = new Xhgui_Profiles($db->test_results);
-        $this->db->truncate();
+        $this->profiles = new Xhgui_Profiles($db->test_results);
+        $this->profiles->truncate();
         $this->_loadFixture('tests/fixtures/results.json');
     }
 
@@ -19,7 +19,7 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
                 $time = strtotime($record['meta']['request_time']);
                 $record['meta']['request_time'] = new MongoDate($time);
             }
-            $this->db->insert($record);
+            $this->profiles->insert($record);
         }
     }
 
@@ -29,7 +29,7 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
             'page' => 1,
             'sort' => 'wt',
         );
-        $result = $this->db->paginate($options);
+        $result = $this->profiles->paginate($options);
         $this->assertEquals(25, $result['perPage'], 'default works');
         $this->assertEquals(1, $result['page']);
         $this->assertEquals(
@@ -44,7 +44,7 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
             'page' => 1,
             'sort' => 'barf',
         );
-        $result = $this->db->paginate($options);
+        $result = $this->profiles->paginate($options);
         $this->assertEquals(
             array('meta.SERVER.REQUEST_TIME' => -1),
             $result['sort']
@@ -57,7 +57,7 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
             'page' => 9000,
             'sort' => 'barf',
         );
-        $result = $this->db->paginate($options);
+        $result = $this->profiles->paginate($options);
         $this->assertEquals(1, $result['page']);
     }
 
@@ -66,7 +66,7 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
         $options = array(
             'perPage' => 1
         );
-        $result = $this->db->getForUrl('/', $options);
+        $result = $this->profiles->getForUrl('/', $options);
         $this->assertEquals(1, $result['page']);
         $this->assertEquals(2, $result['totalPages']);
         $this->assertEquals(1, $result['perPage']);
@@ -74,14 +74,14 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
         $result = iterator_to_array($result['results']);
         $this->assertCount(1, $result);
 
-        $result = $this->db->getForUrl('/not-there', $options);
+        $result = $this->profiles->getForUrl('/not-there', $options);
         $result = iterator_to_array($result['results']);
         $this->assertCount(0, $result);
     }
 
     public function testGetAvgsForUrl()
     {
-        $result = $this->db->getAvgsForUrl('/');
+        $result = $this->profiles->getAvgsForUrl('/');
         $this->assertCount(2, $result);
 
         $this->assertArrayHasKey('avg_wt', $result[0]);
@@ -95,7 +95,7 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
 
     public function testGetAllConditions()
     {
-        $result = $this->db->getAll(array(
+        $result = $this->profiles->getAll(array(
             'conditions' => array(
                 'date_start' => '2013-01-20',
                 'date_end' => '2013-01-21',
