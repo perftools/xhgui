@@ -85,4 +85,5 @@ class Xhgui_Db_Mapper
            return array('profile.main().cpu' => -1);
         }
     }
+
 }
