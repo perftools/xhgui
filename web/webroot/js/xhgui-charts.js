@@ -465,7 +465,7 @@ Xhgui.linegraph = function (container, data, options) {
             .attr('cy', function (d) {
                 return y(d[series]);
             })
-            .attr('r', 3);
+            .attr('r', 4);
 
         Xhgui.tooltip(container, {
             bindTo: circle,

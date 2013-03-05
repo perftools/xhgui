@@ -189,6 +189,10 @@ tr .no-results {
 .chart-line {
     fill: none;
     stroke: steelblue;
+    stroke-width: 2px;
+}
+.chart-dots circle {
+    stroke: white;
     stroke-width: 1.5px;
 }
 
