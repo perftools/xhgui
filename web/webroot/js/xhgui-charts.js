@@ -348,6 +348,7 @@ Xhgui.linegraph = function (container, data, options) {
     if (!Array.isArray(options.series)) {
         options.series = [options.series];
     }
+
     // Convert X-axis key into date objects.
     data = data.map(function (d) {
         if (d[options.xAxis] instanceof Date) {
@@ -361,11 +362,12 @@ Xhgui.linegraph = function (container, data, options) {
     var xRange = d3.extent(data, function (d) {
         return d[options.xAxis];
     });
-    var xSpread = xRange[1] - xRange[0];
 
     var x = d3.time.scale()
         .range([0, width])
         .domain(xRange);
+
+    var xSpread = xRange[1] - xRange[0];
 
     // Get the mins/maxes for all series.
     var mins = [];
@@ -383,18 +385,19 @@ Xhgui.linegraph = function (container, data, options) {
         .range([height, 0])
         .domain(yDomain);
 
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
-    xAxis.tickFormat(d3.time.format('%Y-%m-%d'))
-        .ticks(d3.time.days, 1);
-
+    ticks = 1;
     // If its a big date range show fewer ticks
     if (xSpread / (86400 * 1000) > 5) {
-        xAxis.ticks(d3.time.days, 8)
-            .tickSize(9, 6, 0)
-            .tickSubdivide(8);
+        ticks = 16;
     }
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .ticks(d3.time.days, ticks)
+        .tickFormat(d3.time.format('%Y-%m-%d'))
+        .tickSize(9, 6, 0)
+        .tickSubdivide(ticks - 1)
+        .orient('bottom');
 
     var yAxis = d3.svg.axis()
         .scale(y)
