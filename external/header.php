@@ -59,6 +59,7 @@ function recordXHProfData()
         'request_date' => date('Y-m-d', $_SERVER['REQUEST_TIME']),
     );
 
-    $db = new Xhgui_Db();
-    $db->insert($data);
+    $db = Xhgui_Db::connect();
+    $profiles = new Xhgui_Profiles($db->results);
+    $profiles->insert($data);
 }
