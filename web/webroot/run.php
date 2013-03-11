@@ -6,7 +6,7 @@ $profiles = new Xhgui_Profiles($db->results);
 
 $result = $profiles->get($_GET['id']);
 
-$profile = $result['profile'];
+$profile = $result->getProfile();
 $profile = exclusive($profile);
 
 function build_sorter($key) {

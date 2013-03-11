@@ -4,7 +4,7 @@
 {% block content %}
 <h1>{{ title }}</h1>
 
-{% if runs.count or has_search %}
+{% if runs|length or has_search %}
 <div class="searchbar clearfix">
 <form action="{{ url('/index.php') }}" method="get" class="form-inline">
     <div class="control-group span4">
@@ -28,7 +28,7 @@
 {% endif %}
 
 {# No run data, and no search, must be just getting started #}
-{% if not runs.count and not has_search %}
+{% if not runs|length and not has_search %}
 <div class="hero-unit">
     <h3>Looks like you haven't done any profiling</h3>
     <p>To get started with XHGUI you'll need to collect some profiling data.</p>
@@ -41,7 +41,7 @@
 </div>
 {% endif %}
 
-{% if runs.count or has_search %}
+{% if runs|length or has_search %}
 <table class="table table-hover table-sort">
     <thead>
         <tr>
@@ -57,11 +57,11 @@
     {% for result in runs %}
     <tr>
         <td><a href="{{ url('/url.php', {'url': result.meta.url|simple_url }) }}">{{ result.meta.url }}</a></td>
-        <td><a href="{{ url('/run.php', {'id': result._id|trim }) }}">{{ result['meta']['SERVER']['REQUEST_TIME']|date(date_format) }}</a></td>
-        <td class="right">{{ result.profile['main()']['wt'] |as_time }}</td>
-        <td class="right">{{ result.profile['main()']['cpu'] |as_bytes }}</td>
-        <td class="right">{{ result.profile['main()']['mu'] |as_bytes }}</td>
-        <td class="right">{{ result.profile['main()']['pmu'] |as_bytes }}</td>
+        <td><a href="{{ url('/run.php', {'id': result.id|trim }) }}">{{ result.meta.SERVER.REQUEST_TIME|date(date_format) }}</a></td>
+        <td class="right">{{ result.get('main()', 'wt') |as_time }}</td>
+        <td class="right">{{ result.get('main()', 'cpu') |as_bytes }}</td>
+        <td class="right">{{ result.get('main()', 'mu') |as_bytes }}</td>
+        <td class="right">{{ result.get('main()', 'pmu') |as_bytes }}</td>
     </tr>
     {% else %}
     <tr>
@@ -75,7 +75,7 @@
 
 {% endif %}
 
-{% if runs.count %}
+{% if runs|length %}
     {{ helpers.pagination('/index.php', page, total_pages, search) }}
 {% endif %}
 
