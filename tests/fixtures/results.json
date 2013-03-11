@@ -5,7 +5,7 @@
             "simple_url": "/tasks",
             "get": [],
             "env": [],
-            "SERVER": {},
+            "SERVER": {"REQUEST_TIME": 12345566},
             "request_date": "2013-01-21"
         },
         "profile": {

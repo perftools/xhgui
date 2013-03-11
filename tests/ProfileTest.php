@@ -2,6 +2,13 @@
 
 class ProfileTest extends PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $contents = file_get_contents('tests/fixtures/results.json');
+        $this->_fixture = json_decode($contents, true);
+    }
+
     public function testGetRelatives()
     {
         $data = array(
@@ -52,5 +59,30 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, $current['wt']);
         $this->assertEquals(2, $current['mu']);
         $this->assertEquals(2, $current['pmu']);
+    }
+
+    public function testGet()
+    {
+        $fixture = $this->_fixture[0];
+        $profile = new Xhgui_Profile($fixture);
+        $this->assertEquals($fixture['profile']['main()']['wt'], $profile->get('main()', 'wt'));
+
+        $this->assertNull($profile->get('main()', 'derp'));
+        $this->assertNull($profile->get('derp', 'wt'));
+    }
+
+    public function testGetMeta()
+    {
+        $fixture = $this->_fixture[0];
+        $profile = new Xhgui_Profile($fixture);
+        $this->assertEquals($fixture['meta']['simple_url'], $profile->getMeta('simple_url'));
+        $this->assertEquals($fixture['meta']['SERVER']['REQUEST_TIME'], $profile->getMeta('SERVER.REQUEST_TIME'));
+
+        $this->assertNull($profile->getMeta('not there'));
+        $this->assertNull($profile->getMeta('SERVER.NOT_THERE'));
+    }
+
+    public function testId()
+    {
     }
 }

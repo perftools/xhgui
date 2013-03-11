@@ -6,11 +6,65 @@
  */
 class Xhgui_Profile
 {
-    protected $_profile;
+    protected $_data;
 
     public function __construct($profile)
     {
-        $this->_profile = $profile;
+        $this->_data = $profile;
+    }
+
+    /**
+     * Get the profile run data.
+     *
+     * TODO remove this and move all the features using it into this/
+     * other classes.
+     *
+     * @return array
+     */
+    public function getProfile()
+    {
+        return $this->_data['profile'];
+    }
+
+    public function getId()
+    {
+        return $this->_data['_id'];
+    }
+
+    /**
+     * Get meta data about the profile. Read's a . split path
+     * out of the meta data in a profile. For example `SERVER.REQUEST_TIME`
+     *
+     * @param string $key The dotted key to read.
+     * @return null|mixed Null on failure, otherwise the stored value.
+     */
+    public function getMeta($key)
+    {
+        $parts = explode('.', $key);
+        $data = $this->_data['meta'];
+        foreach ($parts as $key) {
+            if (is_array($data) && isset($data[$key])) {
+                $data =& $data[$key];
+            } else {
+                return null;
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Read data from the profile run.
+     *
+     * @param string $key The function key name to read.
+     * @param string $metric The metric to read.
+     * @return null|float
+     */
+    public function get($key, $metric)
+    {
+        if (!isset($this->_data['profile'][$key][$metric])) {
+            return null;
+        }
+        return $this->_data['profile'][$key][$metric];
     }
 
     /**
@@ -37,7 +91,7 @@ class Xhgui_Profile
             'mu' => 0,
             'pmu' => 0,
         );
-        foreach ($this->_profile['profile'] as $name => $data) {
+        foreach ($this->_data['profile'] as $name => $data) {
             list($parent, $child) = splitName($name);
             if ($parent === $symbol) {
                 $children[] = $data + array('function' => $child);
