@@ -71,12 +71,11 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, $result['totalPages']);
         $this->assertEquals(1, $result['perPage']);
 
-        $result = iterator_to_array($result['results']);
-        $this->assertCount(1, $result);
+        $this->assertCount(1, $result['results']);
+        $this->assertInstanceOf('Xhgui_Profile', $result['results'][0]);
 
         $result = $this->profiles->getForUrl('/not-there', $options);
-        $result = iterator_to_array($result['results']);
-        $this->assertCount(0, $result);
+        $this->assertCount(0, $result['results']);
     }
 
     public function testGetAvgsForUrl()
@@ -105,8 +104,7 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $result['page']);
         $this->assertEquals(25, $result['perPage']);
         $this->assertEquals(1, $result['totalPages']);
-        $rows = iterator_to_array($result['results']);
-        $this->assertCount(2, $rows);
+        $this->assertCount(2, $result['results']);
     }
 
 }
