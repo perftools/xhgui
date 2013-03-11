@@ -38,10 +38,13 @@ class Xhgui_Profile
      * @param string $key The dotted key to read.
      * @return null|mixed Null on failure, otherwise the stored value.
      */
-    public function getMeta($key)
+    public function getMeta($key = null)
     {
-        $parts = explode('.', $key);
         $data = $this->_data['meta'];
+        if ($key === null) {
+            return $data;
+        }
+        $parts = explode('.', $key);
         foreach ($parts as $key) {
             if (is_array($data) && isset($data[$key])) {
                 $data =& $data[$key];

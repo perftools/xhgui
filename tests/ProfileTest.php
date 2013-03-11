@@ -75,6 +75,9 @@ class ProfileTest extends PHPUnit_Framework_TestCase
     {
         $fixture = $this->_fixture[0];
         $profile = new Xhgui_Profile($fixture);
+
+        $this->assertEquals($fixture['meta'], $profile->getMeta());
+
         $this->assertEquals($fixture['meta']['simple_url'], $profile->getMeta('simple_url'));
         $this->assertEquals($fixture['meta']['SERVER']['REQUEST_TIME'], $profile->getMeta('SERVER.REQUEST_TIME'));
 
