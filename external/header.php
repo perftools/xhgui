@@ -33,10 +33,10 @@
 // Obtain the answer to life, the universe, and your application one time out of a hundred 
 if (true || rand(0, 100) === 42) {
     xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
-    register_shutdown_function('recordXHProfData');
+    register_shutdown_function('Xhgui_recordXHProfData');
 }
 
-function recordXHProfData()
+function Xhgui_recordXHProfData()
 {
     // ignore_user_abort(true) allows your PHP script to continue executing, even if the user has terminated their request.
     // Further Reading: http://blog.preinheimer.com/index.php?/archives/248-When-does-a-user-abort.html
@@ -47,7 +47,9 @@ function recordXHProfData()
 
     $data['profile'] = xhprof_disable();
 
-    require dirname(dirname(__FILE__)) . '/web/bootstrap.php';
+    if (!defined('XHGUI_ROOT_DIR')) {
+        require dirname(dirname(__FILE__)) . '/web/bootstrap.php';
+    }
 
     $data['meta'] = array(
         'url' => $_SERVER['REQUEST_URI'],
