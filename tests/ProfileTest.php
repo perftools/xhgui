@@ -34,7 +34,8 @@ class ProfileTest extends PHPUnit_Framework_TestCase
                 'pmu' => 1,
             ),
         );
-        $result = Xhgui_Profile::getRelatives($data, 'func');
+        $profile = new Xhgui_Profile(array('profile' => $data));
+        $result = $profile->getRelatives('func');
         $this->assertCount(3, $result);
 
         list($parent, $current, $children) = $result;

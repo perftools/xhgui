@@ -1,7 +1,18 @@
 <?php
-
+/**
+ * Domain object for handling profile runs.
+ *
+ * Provides method to manipulate the data from a single profile run.
+ */
 class Xhgui_Profile
 {
+    protected $_profile;
+
+    public function __construct($profile)
+    {
+        $this->_profile = $profile;
+    }
+
     /**
      * Find the parent and children method/functions for a given
      * symbol.
@@ -15,7 +26,7 @@ class Xhgui_Profile
      *    relatives for.
      * @return array List of (parent, current, children)
      */
-    public static function getRelatives($profile, $symbol)
+    public function getRelatives($symbol)
     {
         $parents = $children = array();
         $current = array(
@@ -26,7 +37,7 @@ class Xhgui_Profile
             'mu' => 0,
             'pmu' => 0,
         );
-        foreach ($profile as $name => $data) {
+        foreach ($this->_profile['profile'] as $name => $data) {
             list($parent, $child) = splitName($name);
             if ($parent === $symbol) {
                 $children[] = $data + array('function' => $child);
@@ -39,4 +50,5 @@ class Xhgui_Profile
         }
         return array($parents, $current, $children);
     }
+
 }
