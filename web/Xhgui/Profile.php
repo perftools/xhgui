@@ -159,53 +159,45 @@ class Xhgui_Profile
      *  Function names are not unique, but we're merging them
      *
      */
-    function calculateExclusive()
+    public function calculateExclusive()
     {
         $run = $this->_data['profile'];
-
         $final = array();
+
         //Create a list of each function
-        foreach((array)$run as $name => $data)
-        {
+        foreach ((array)$run as $name => $data) {
             $name = splitName($name);
             $parent = $name[0];
             $child = $name[1];
+
             //Init exclusive values 
             $data['ewt'] = $data['wt'];
             $data['emu'] = $data['mu'];
             $data['ecpu'] = $data['cpu'];
             $data['ect'] = $data['ct'];
             $data['epmu'] = $data['pmu'];
-            
-            
-            //Set parent
+
+            // Set parent
             $data['parent'] = $parent;
-            
-            
-            if(!isset($final[$child]))
-            {
-                //Save all this data as the child function, this is wrong (since we'll clobber something if the same function is called from two places)
-                $final[$child] = $data;    
-            }else {
+            if (!isset($final[$child])) {
+                // Save all this data as the child function,
+                // this is wrong (since we'll clobber something
+                // if the same function is called from two places)
+                $final[$child] = $data;
+            } else {
                 $final[$child] = $this->addFunctions($final[$child], $data);
             }
-            
         }
-        
-        //Delete from parent its children, this is wrong
-        foreach($final as $child => $data)
-        {
-            //echo "I am $child, My parent is: {$data['parent']}\n";
-            //var_dump($data);
-            if (isset($final[$data['parent']]))
-            {
+
+        // Delete from parent its children, this is wrong
+        foreach ($final as $child => $data) {
+            if (isset($final[$data['parent']])) {
                 $final[$data['parent']]['ewt'] -= $data['wt'];
                 $final[$data['parent']]['emu'] -= $data['mu'];
                 $final[$data['parent']]['ecpu'] -= $data['cpu'];
                 $final[$data['parent']]['ect'] -= $data['ct'];
                 $final[$data['parent']]['epmu'] -= $data['pmu'];
             }
-            
         }
         $this->_data['profile'] = $final;
     }
