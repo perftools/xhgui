@@ -2,32 +2,18 @@
 require dirname(__DIR__) . '/bootstrap.php';
 
 $db = Xhgui_Db::connect();
+$detailCount = Xhgui_Config::read('detail.count');
+
 $profiles = new Xhgui_Profiles($db->results);
 
 $result = $profiles->get($_GET['id']);
-
-$profile = $result->getProfile();
-$profile = exclusive($profile);
-
-function build_sorter($key) {
-    return function ($a, $b) use ($key) {
-        if ($a[$key] == $b[$key])
-        {
-            return 0;
-        }
-        return $a[$key] > $b[$key] ? -1 : 1;
-    };
-}
-
-uasort($profile, build_sorter('ewt'));
-
-$detailCount = Xhgui_Config::read('detail.count');
+$result->calculateExclusive();
 
 // Exclusive wall time graph
-$timeChart = extractDimension($profile, 'ewt', $detailCount);
+$timeChart = $result->extractDimension('ewt', $detailCount);
 
 // Memory Block
-$memoryChart = extractDimension($profile, 'emu', $detailCount);
+$memoryChart = $result->extractDimension('emu', $detailCount);
 
 //Watched Functions Block
 //The purpose of watched functions is to let developers call out functions whose performance they want to keep an eye on, they'll
@@ -44,6 +30,8 @@ foreach($watch_list as $watchey)
         $watches[$watchey] = $profile[$watchey];
     }
 }
+
+$profile = $result->sort('ewt', $result->getProfile());
 
 $template = load_template('runs/view.twig');
 echo $template->display(array(
