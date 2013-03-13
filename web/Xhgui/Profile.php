@@ -164,6 +164,14 @@ class Xhgui_Profile
         $run = $this->_data['profile'];
         $final = array();
 
+        $totaler = function ($a, $b) {
+            $c = array();
+            foreach ($a as $k => $v) {
+                $c[$k] = $v + $b[$k];
+            }
+            return $c;
+        };
+
         //Create a list of each function
         foreach ((array)$run as $name => $data) {
             $name = splitName($name);
@@ -185,7 +193,7 @@ class Xhgui_Profile
                 // if the same function is called from two places)
                 $final[$child] = $data;
             } else {
-                $final[$child] = $this->addFunctions($final[$child], $data);
+                $final[$child] = $totaler($final[$child], $data);
             }
         }
 
@@ -200,16 +208,6 @@ class Xhgui_Profile
             }
         }
         $this->_data['profile'] = $final;
-    }
-
-    function addFunctions($a, $b)
-    {
-        $c = array();
-        foreach($a as $k => $v)
-        {
-            $c[$k] = $v + $b[$k];
-        }
-        return $c;
     }
 
     /**
