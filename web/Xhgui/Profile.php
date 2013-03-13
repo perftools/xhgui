@@ -174,9 +174,7 @@ class Xhgui_Profile
 
         //Create a list of each function
         foreach ((array)$run as $name => $data) {
-            $name = splitName($name);
-            $parent = $name[0];
-            $child = $name[1];
+            list($parent, $child) = splitName($name);
 
             //Init exclusive values 
             $data['ewt'] = $data['wt'];
