@@ -123,8 +123,7 @@ class Xhgui_Profile
      */
     public function extractDimension($dimension, $limit)
     {
-        $profile = $this->_data['profile'];
-        $profile = $this->sort($dimension, $profile);
+        $profile = $this->sort($dimension, $this->_data['profile']);
         $slice = array_slice($profile, 0, $limit);
         $extract = array();
         foreach ($slice as $func => $funcData) {

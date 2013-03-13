@@ -9,6 +9,13 @@
             "request_date": "2013-01-21"
         },
         "profile": {
+            "main()==>strpos()": {
+                "ct": 10,
+                "wt": 600,
+                "cpu": 500,
+                "mu": 3500,
+                "pmu": 3800
+            },
             "main()": {
                 "ct": 1,
                 "wt": 50139,

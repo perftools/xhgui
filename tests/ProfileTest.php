@@ -85,7 +85,41 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->assertNull($profile->getMeta('SERVER.NOT_THERE'));
     }
 
-    public function testId()
+    public function testExtractDimension()
     {
+        $profile = new Xhgui_Profile($this->_fixture[0]);
+        $result = $profile->extractDimension('mu', 1);
+
+        $this->assertCount(1, $result);
+        $expected = array(
+            'name' => 'main()',
+            'value' => 3449360
+        );
+        $this->assertEquals($expected, $result[0]);
     }
+
+    public function testSort()
+    {
+        $data = array(
+            'main()' => array(
+                'mu' => 12345
+            ),
+            'main()==>class_exists()' => array(
+                'mu' => 34567
+            ),
+        );
+        $profile = new Xhgui_Profile(array());
+        $result = $profile->sort('mu', $data);
+
+        $expected = array(
+            'main()==>class_exists()' => array(
+                'mu' => 34567
+            ),
+            'main()' => array(
+                'mu' => 12345
+            ),
+        );
+        $this->assertSame($expected, $result);
+    }
+
 }
