@@ -6,8 +6,7 @@ $detailCount = Xhgui_Config::read('detail.count');
 
 $profiles = new Xhgui_Profiles($db->results);
 
-$result = $profiles->get($_GET['id']);
-$result->calculateExclusive();
+$result = $profiles->get($_GET['id'])->calculateExclusive();
 
 // Exclusive wall time graph
 $timeChart = $result->extractDimension('ewt', $detailCount);

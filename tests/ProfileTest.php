@@ -101,9 +101,9 @@ class ProfileTest extends PHPUnit_Framework_TestCase
     public function testCalculateExclusive()
     {
         $profile = new Xhgui_Profile($this->_fixture[1]);
-        $this->assertNull($profile->calculateExclusive());
+        $this->assertInstanceOf('Xhgui_Profile', $profile->calculateExclusive());
 
-        $result = $profile->getProfile();
+        $result = $profile->calculateExclusive()->getProfile();
 
         $main = $result['main()'];
         $this->assertEquals(800, $main['emu']);

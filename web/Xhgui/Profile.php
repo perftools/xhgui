@@ -158,6 +158,7 @@ class Xhgui_Profile
      * Notes:
      *  Function names are not unique, but we're merging them
      *
+     * @return Xhgui_Profile A new instance with exclusive data set.
      */
     public function calculateExclusive()
     {
@@ -205,7 +206,11 @@ class Xhgui_Profile
                 $final[$data['parent']]['epmu'] -= $data['pmu'];
             }
         }
-        $this->_data['profile'] = $final;
+
+        return new self(array(
+            'meta' => $this->_data['meta'],
+            'profile' => $final
+        ));
     }
 
     /**
