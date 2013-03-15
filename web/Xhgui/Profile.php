@@ -208,8 +208,9 @@ class Xhgui_Profile
         }
 
         return new self(array(
+            '_id' => $this->_data['_id'],
             'meta' => $this->_data['meta'],
-            'profile' => $final
+            'profile' => $final,
         ));
     }
 
