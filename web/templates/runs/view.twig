@@ -3,26 +3,26 @@
 
 {% block content %}
 <div class="row-fluid">
-    <h1>Profile data for {{ result.meta.SERVER.REQUEST_METHOD}} {{ result.meta.url }}</h1>
+    <h1>Profile data for {{ result.meta('SERVER.REQUEST_METHOD')}} {{ result.meta('url') }}</h1>
 </div>
 <div class="row-fluid">
 <div class="span3">
     <div class="sidebar-nav">
         <ul class="nav nav-list">
             <li class="nav-header">This Run</li>
-            <li><strong>URL</strong> <a href="{{ url('/url.php', {'url': result.meta.url|simple_url }) }}">{{ result.meta.url }}</a></li>
-            <li><strong>Time</strong> {{ result.meta.request_time.sec|date('r') }}</li>
-            <li><strong>ID</strong> <a href="/custom_help.php?id={{ result._id }}">{{ result._id }}</a></li>
-            <li><strong>Wall Time</strong> {{ result.profile['main()'].wt|as_time }}</li>
-            <li><strong>CPU Time</strong> {{ result.profile['main()'].cpu|as_time }}</li>
-            <li><strong>Memory Usage</strong> {{ result.profile['main()'].mu|as_bytes }}</li>
-            <li><strong>Peak Memory Usage</strong> {{ result.profile['main()'].pmu|as_bytes }}</li>
+            <li><strong>URL</strong> <a href="{{ url('/url.php', {'url': result.meta('url')|simple_url }) }}">{{ result.meta('url') }}</a></li>
+            <li><strong>Time</strong> {{ result.meta('request_time.sec')|date('r') }}</li>
+            <li><strong>ID</strong> <a href="/custom_help.php?id={{ result.id }}">{{ result.id }}</a></li>
+            <li><strong>Wall Time</strong> {{ result.get('main()', 'wt')|as_time }}</li>
+            <li><strong>CPU Time</strong> {{ result.get('main()', 'cpu')|as_time }}</li>
+            <li><strong>Memory Usage</strong> {{ result.get('main()', 'mu')|as_bytes }}</li>
+            <li><strong>Peak Memory Usage</strong> {{ result.get('main()', 'pmu')|as_bytes }}</li>
 
             <li class="nav-header">GET</li>
-            <li>{{ helpers.property_list('GET', result.meta.get) }}</li>
+            <li>{{ helpers.property_list('GET', result.meta('get')) }}</li>
 
             <li class="nav-header">SERVER</li>
-            <li>{{ helpers.property_list('SERVER', result.meta.SERVER) }}
+            <li>{{ helpers.property_list('SERVER', result.meta('SERVER')) }}
 
         </ul>
     </div><!--/.well -->
@@ -108,7 +108,7 @@
     {% for key, value in profile %}
     <tr>
         <td class="text">
-            <a href="{{ url('/symbol.php', {'id': result._id|trim, 'symbol': key}) }}">{{ key }}</a>
+            <a href="{{ url('/symbol.php', {'id': result.id|trim, 'symbol': key}) }}">{{ key }}</a>
         </td>
         <td>{{ value.ct }}</td>
         <td>{{ value.ewt|as_time }}</td>

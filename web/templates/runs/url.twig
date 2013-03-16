@@ -25,11 +25,11 @@
         {% for result in runs %}
         <tr>
             <td><a href="{{ url('/url.php', {'url': result.meta.url}) }}">{{ result.meta.url }}</a></td>
-            <td><a href="{{ url('/run.php', {'id': result._id|trim }) }}">{{ result['meta']['SERVER']['REQUEST_TIME']|date(date_format) }}</a></td>
-            <td class="right">{{ result.profile['main()']['wt'] |as_time }}</td>
-            <td class="right">{{ result.profile['main()']['cpu'] |as_time }}</td>
-            <td class="right">{{ result.profile['main()']['mu'] |as_bytes }}</td>
-            <td class="right">{{ result.profile['main()']['pmu'] |as_bytes }}</td>
+            <td><a href="{{ url('/run.php', {'id': result.id|trim }) }}">{{ result.meta.SERVER.REQUEST_TIME|date(date_format) }}</a></td>
+            <td class="right">{{ result.get('main()', 'wt') |as_time }}</td>
+            <td class="right">{{ result.get('main()', 'cpu') |as_time }}</td>
+            <td class="right">{{ result.get('main()', 'mu') |as_bytes }}</td>
+            <td class="right">{{ result.get('main()', 'pmu') |as_bytes }}</td>
         </tr>
         {% endfor %}
         </tbody>

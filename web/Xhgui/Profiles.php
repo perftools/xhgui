@@ -21,9 +21,9 @@ class Xhgui_Profiles
      */
     public function get($id)
     {
-        return $this->_collection->findOne(array(
+        return $this->_wrap($this->_collection->findOne(array(
             '_id' => new MongoId($id)
-        ));
+        )));
     }
 
     /**
@@ -62,7 +62,7 @@ class Xhgui_Profiles
             ->limit($opts['perPage']);
 
         return array(
-            'results' => $cursor,
+            'results' => $this->_wrap($cursor),
             'sort' => $opts['sort'],
             'page' => $page,
             'perPage' => $opts['perPage'],
@@ -142,4 +142,21 @@ class Xhgui_Profiles
         return $this->_collection->drop();
     }
 
+    /**
+     * Converts arrays + MongoCursors into Xhgui_Profile instances.
+     *
+     * @param array|MongoCursor $data The data to transform.
+     * @return Xhgui_Profile|array The transformed/wrapped results.
+     */
+    protected function _wrap($data)
+    {
+        if (is_array($data)) {
+            return new Xhgui_Profile($data);
+        }
+        $results = array();
+        foreach ($data as $row) {
+            $results[] = new Xhgui_Profile($row);
+        }
+        return $results;
+    }
 }

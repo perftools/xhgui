@@ -1,14 +1,22 @@
 [
     {
+        "_id": 1,
         "meta": {
             "url": "/tasks?page=3",
             "simple_url": "/tasks",
             "get": [],
             "env": [],
-            "SERVER": {},
+            "SERVER": {"REQUEST_TIME": 12345566},
             "request_date": "2013-01-21"
         },
         "profile": {
+            "main()==>strpos()": {
+                "ct": 10,
+                "wt": 600,
+                "cpu": 500,
+                "mu": 3500,
+                "pmu": 3800
+            },
             "main()": {
                 "ct": 1,
                 "wt": 50139,
@@ -19,6 +27,7 @@
         }
     },
     {
+        "_id": 2,
         "meta": {
             "url": "/tasks?page=2",
             "simple_url": "/tasks",
@@ -30,14 +39,43 @@
         "profile": {
             "main()": {
                 "ct": 1,
-                "wt": 50139,
-                "cpu": 49513,
-                "mu": 3449360,
-                "pmu": 3535120
+                "wt": 35,
+                "cpu": 50,
+                "mu": 3000,
+                "pmu": 3000
+            },
+            "main()==>eat_burger()": {
+                "ct": 1,
+                "wt": 25,
+                "cpu": 20,
+                "mu": 2000,
+                "pmu": 2500
+            },
+            "eat_burger()==>chew_food()": {
+                "ct": 10,
+                "wt": 22,
+                "cpu": 18,
+                "mu": 100,
+                "pmu": 150
+            },
+            "main()==>drink_beer()": {
+                "ct": 1,
+                "wt": 14,
+                "cpu": 10,
+                "mu": 200,
+                "pmu": 250
+            },
+            "drink_beer()==>lift_glass()": {
+                "ct": 5,
+                "wt": 10,
+                "cpu": 8,
+                "mu": 10,
+                "pmu": 15
             }
         }
     },
     {
+        "_id": 3,
         "meta": {
             "url": "/tasks?page=1",
             "simple_url": "/tasks",
@@ -57,6 +95,7 @@
         }
     },
     {
+        "_id": 4,
         "meta": {
             "url": "/?page=1",
             "simple_url": "/",
@@ -76,6 +115,7 @@
         }
     },
     {
+        "_id": 5,
         "meta": {
             "url": "/?page=1",
             "simple_url": "/",
