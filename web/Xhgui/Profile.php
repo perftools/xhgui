@@ -190,7 +190,8 @@ class Xhgui_Profile
     }
 
     /**
-     * Take in huge flat array, turn into heirarchy
+     * Generate the approximate exclusive values for each metric.
+     *
      * We get a==>b as the name, we need a key for a and b in the array
      * to get exclusive values for A we need to subtract the values of B (and any other children);
      * call passing in the entire profile only, should return an array of
@@ -216,9 +217,6 @@ class Xhgui_Profile
      */
     public function calculateExclusive()
     {
-        $run = $this->_data['profile'];
-        $final = array();
-
         // Init exclusive values
         foreach ($this->_data['profile'] as &$data) {
             $data['ewt'] = $data['wt'];
@@ -227,24 +225,26 @@ class Xhgui_Profile
             $data['ect'] = $data['ct'];
             $data['epmu'] = $data['pmu'];
         }
+        unset($data);
 
-        // Delete from parent its children, this is wrong
-        foreach ($this->_data['profile'] as $child => $data) {
-            $parent = $data['parents'][0];
-            if (isset($this->_data['profile'][$parent])) {
-                $this->_data['profile'][$parent]['ewt'] -= $data['wt'];
-                $this->_data['profile'][$parent]['emu'] -= $data['mu'];
-                $this->_data['profile'][$parent]['ecpu'] -= $data['cpu'];
-                $this->_data['profile'][$parent]['ect'] -= $data['ct'];
-                $this->_data['profile'][$parent]['epmu'] -= $data['pmu'];
+        // Go over each method and remove each parents metrics
+        // from the children. We use the count of the parents to
+        // split the cost of any function amongst its callees.
+        foreach ($this->_data['profile'] as $name => $data) {
+            foreach ($data['parents'] as $parent) {
+                if (empty($this->_data['profile'][$parent])) {
+                    continue;
+                }
+                $parentData = $this->_data['profile'][$parent];
+                $parentCount = count($parentData['parents']);
+                $this->_data['profile'][$parent]['ewt'] -= ($data['wt'] / $parentCount);
+                $this->_data['profile'][$parent]['emu'] -= ($data['mu'] / $parentCount);
+                $this->_data['profile'][$parent]['ecpu'] -= ($data['cpu'] / $parentCount);
+                $this->_data['profile'][$parent]['ect'] -= ($data['ct'] / $parentCount);
+                $this->_data['profile'][$parent]['epmu'] -= ($data['pmu'] / $parentCount);
             }
         }
-
-        return new self(array(
-            '_id' => $this->_data['_id'],
-            'meta' => $this->_data['meta'],
-            'profile' => $final,
-        ));
+        return $this;
     }
 
     /**
