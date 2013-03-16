@@ -8,9 +8,56 @@ class Xhgui_Profile
 {
     protected $_data;
 
-    public function __construct($profile)
+    protected $_keys = array('ct', 'wt', 'cpu', 'mu', 'pmu');
+
+    public function __construct($profile, $convert = true)
     {
         $this->_data = $profile;
+        if (!empty($profile['profile']) && $convert) {
+            $this->_process();
+        }
+    }
+
+    /**
+     * Convert the raw data into a flatter list that is easier to use.
+     *
+     * This removes some of the parentage detail as all calls of a given
+     * method are aggregated. We are not able to maintain a full tree structure
+     * in any case, as xhprof only keeps one level of detail.
+     *
+     * @return void
+     */
+    protected function _process()
+    {
+        $this->_data['original'] = $this->_data['profile'];
+
+        $result = array();
+        foreach ($this->_data['profile'] as $name => $values) {
+            list($parent, $func) = splitName($name);
+            if (isset($result[$func])) {
+                $result[$func] = $this->_sumKeys($result[$func], $values);
+                $result[$func]['parents'][] = $parent;
+            } else {
+                $result[$func] = $values;
+                $result[$func]['parents'] = array($parent);
+            }
+        }
+        $this->_data['profile'] = $result;
+    }
+
+    /**
+     * Sum up the values in $this->_keys;
+     *
+     * @param array $a The first set of profile data
+     * @param array $b The second set of profile data.
+     * @return array Merged profile data.
+     */
+    protected function _sumKeys($a, $b)
+    {
+        foreach ($this->_keys as $key) {
+            $a[$key] += $b[$key];
+        }
+        return $a;
     }
 
     /**
@@ -86,23 +133,30 @@ class Xhgui_Profile
     public function getRelatives($symbol)
     {
         $parents = $children = array();
-        $current = array(
-            'function' => $symbol,
-            'ct' => 0,
-            'wt' => 0,
-            'cpu' => 0,
-            'mu' => 0,
-            'pmu' => 0,
-        );
+
+        // If the function doesn't exist, it won't have parents/children
+        if (empty($this->_data['profile'][$symbol])) {
+            return array(
+                $parents,
+                array(),
+                $children,
+            );
+        }
+        $current = $this->_data['profile'][$symbol];
+        $current['function'] = $symbol;
+
+        // Use the parents data to collect parents.
+        $parentMethods = $current['parents'];
+        foreach ($parentMethods as $parent) {
+            if (isset($this->_data['profile'][$parent])) {
+                $parents[] = array('function' => $parent) + $this->_data['profile'][$parent];
+            }
+        }
+
+        // Find children with linear search.
         foreach ($this->_data['profile'] as $name => $data) {
-            list($parent, $child) = splitName($name);
-            if ($parent === $symbol) {
-                $children[] = $data + array('function' => $child);
-            } elseif ($child === $symbol) {
-                $parents[] = $data + array('function' => $parent);
-                foreach ($data as $k => $v) {
-                    $current[$k] += $v;
-                }
+            if (in_array($symbol, $data['parents'])) {
+                $children[] = $data + array('function' => $name);
             }
         }
         return array($parents, $current, $children);
@@ -165,45 +219,24 @@ class Xhgui_Profile
         $run = $this->_data['profile'];
         $final = array();
 
-        $totaler = function ($a, $b) {
-            $c = array();
-            foreach ($a as $k => $v) {
-                $c[$k] = $v + $b[$k];
-            }
-            return $c;
-        };
-
-        //Create a list of each function
-        foreach ((array)$run as $name => $data) {
-            list($parent, $child) = splitName($name);
-
-            //Init exclusive values 
+        // Init exclusive values
+        foreach ($this->_data['profile'] as &$data) {
             $data['ewt'] = $data['wt'];
             $data['emu'] = $data['mu'];
             $data['ecpu'] = $data['cpu'];
             $data['ect'] = $data['ct'];
             $data['epmu'] = $data['pmu'];
-
-            // Set parent
-            $data['parent'] = $parent;
-            if (!isset($final[$child])) {
-                // Save all this data as the child function,
-                // this is wrong (since we'll clobber something
-                // if the same function is called from two places)
-                $final[$child] = $data;
-            } else {
-                $final[$child] = $totaler($final[$child], $data);
-            }
         }
 
         // Delete from parent its children, this is wrong
-        foreach ($final as $child => $data) {
-            if (isset($final[$data['parent']])) {
-                $final[$data['parent']]['ewt'] -= $data['wt'];
-                $final[$data['parent']]['emu'] -= $data['mu'];
-                $final[$data['parent']]['ecpu'] -= $data['cpu'];
-                $final[$data['parent']]['ect'] -= $data['ct'];
-                $final[$data['parent']]['epmu'] -= $data['pmu'];
+        foreach ($this->_data['profile'] as $child => $data) {
+            $parent = $data['parents'][0];
+            if (isset($this->_data['profile'][$parent])) {
+                $this->_data['profile'][$parent]['ewt'] -= $data['wt'];
+                $this->_data['profile'][$parent]['emu'] -= $data['mu'];
+                $this->_data['profile'][$parent]['ecpu'] -= $data['cpu'];
+                $this->_data['profile'][$parent]['ect'] -= $data['ct'];
+                $this->_data['profile'][$parent]['epmu'] -= $data['pmu'];
             }
         }
 

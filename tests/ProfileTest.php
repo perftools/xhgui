@@ -12,6 +12,21 @@ class ProfileTest extends PHPUnit_Framework_TestCase
     public function testGetRelatives()
     {
         $data = array(
+            'main()' => array(),
+            'main()==>other_func' => array(
+                'ct' => 1,
+                'cpu' => 1,
+                'wt' => 1,
+                'mu' => 1,
+                'pmu' => 1,
+            ),
+            'main()==>your_func' => array(
+                'ct' => 1,
+                'cpu' => 1,
+                'wt' => 1,
+                'mu' => 1,
+                'pmu' => 1,
+            ),
             'other_func==>func' => array(
                 'ct' => 1,
                 'cpu' => 1,
@@ -42,6 +57,13 @@ class ProfileTest extends PHPUnit_Framework_TestCase
             ),
         );
         $profile = new Xhgui_Profile(array('profile' => $data));
+
+        $result = $profile->getRelatives('not there at all');
+        $this->assertCount(3, $result);
+        $this->assertEquals(array(), $result[0]);
+        $this->assertEquals(array(), $result[1]);
+        $this->assertEquals(array(), $result[2]);
+
         $result = $profile->getRelatives('func');
         $this->assertCount(3, $result);
 
