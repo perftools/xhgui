@@ -17,4 +17,14 @@ class Xhgui_Autoload
             require $file;
         }
     }
+
+    public static function autoloadTwig()
+    {
+        static $complete;
+        if (empty($complete)) {
+            require XHGUI_ROOT_DIR . '/vendor/Twig/Autoloader.php';
+            Twig_Autoloader::register();
+            $complete = true;
+        }
+    }
 }
