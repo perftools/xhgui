@@ -4,7 +4,7 @@ class Xhgui_Twig_ExtensionTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        autoloadTwig();
+        Xhgui_Autoload::autoloadTwig();
         $this->ext = new Xhgui_Twig_Extension();
     }
 
