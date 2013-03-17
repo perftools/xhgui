@@ -33,7 +33,7 @@ foreach($watch_list as $watchey)
 
 $profile = $result->sort('ewt', $result->getProfile());
 
-$template = load_template('runs/view.twig');
+$template = Xhgui_Template::load('runs/view.twig');
 echo $template->display(array(
     'profile' => $profile,
     'result' => $result,

@@ -1,6 +1,6 @@
 <?php
 require dirname(__DIR__) . '/bootstrap.php';
-$template = load_template('runs/custom_help.twig');
+$template = Xhgui_Template::load('runs/custom_help.twig');
 $m = new Mongo();
 $db = $m->xhprof;
 $collection = $db->results;

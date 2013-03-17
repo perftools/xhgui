@@ -14,7 +14,7 @@ $runs = $profiles->getForUrl($_GET['url'], $pagination);
 
 $chartData = $profiles->getAvgsForUrl($_GET['url']);
 
-$template = load_template('runs/url.twig');
+$template = Xhgui_Template::load('runs/url.twig');
 echo $template->render(array(
     'runs' => $runs['results'],
     'page' => $runs['page'],

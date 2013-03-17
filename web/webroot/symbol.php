@@ -10,7 +10,7 @@ $profiles = new Xhgui_Profiles($db->results);
 $profile = $profiles->get($id);
 list($parents, $current, $children) = $profile->getRelatives($symbol);
 
-$template = load_template('runs/symbol-view.twig');
+$template = Xhgui_Template::load('runs/symbol-view.twig');
 echo $template->display(array(
     'symbol' => $symbol,
     'id' => $id,

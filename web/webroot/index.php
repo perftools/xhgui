@@ -29,7 +29,7 @@ if (isset($titleMap[$sort])) {
     $title = $titleMap[$sort];
 }
 
-$template = load_template('runs/list.twig');
+$template = Xhgui_Template::load('runs/list.twig');
 echo $template->render(array(
     'runs' => $result['results'],
     'page' => $result['page'],
