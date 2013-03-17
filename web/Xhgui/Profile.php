@@ -33,7 +33,7 @@ class Xhgui_Profile
 
         $result = array();
         foreach ($this->_data['profile'] as $name => $values) {
-            list($parent, $func) = splitName($name);
+            list($parent, $func) = $this->splitName($name);
             if (isset($result[$func])) {
                 $result[$func] = $this->_sumKeys($result[$func], $values);
                 $result[$func]['parents'][] = $parent;
@@ -264,6 +264,22 @@ class Xhgui_Profile
         };
         uasort($data, $sorter);
         return $data;
+    }
+
+    /**
+     * Split a key name into the parent==>child format.
+     *
+     * @param string $name The name to split.
+     * @return array An array of parent, child. parent will be null if there
+     *    is no parent.
+     */
+    public function splitName($name)
+    {
+        $a = explode("==>", $name);
+        if (isset($a[1])) {
+            return $a;
+        }
+        return array(null, $a[0]);
     }
 
 }

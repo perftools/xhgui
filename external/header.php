@@ -56,7 +56,7 @@ function Xhgui_recordXHProfData()
         'SERVER' => $_SERVER,
         'get' => $_GET,
         'env' => $_ENV,
-        'simple_url' => simpleUrl($_SERVER['REQUEST_URI']),
+        'simple_url' => Xhgui_Util::simpleUrl($_SERVER['REQUEST_URI']),
         'request_ts' => new MongoDate($_SERVER['REQUEST_TIME']),
         'request_date' => date('Y-m-d', $_SERVER['REQUEST_TIME']),
     );

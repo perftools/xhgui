@@ -17,7 +17,7 @@ class Xhgui_Twig_Extension extends Twig_Extension
     public function getFilters()
     {
         return array(
-            'simple_url' => new Twig_Filter_Function('simpleUrl'),
+            'simple_url' => new Twig_Filter_Function('Xhgui_Util::simpleUrl'),
             'as_bytes' => new Twig_Filter_Method($this, 'formatBytes', array('is_safe' => array('html'))),
             'as_time' => new Twig_Filter_Method($this, 'formatTime', array('is_safe' => array('html'))),
         );
