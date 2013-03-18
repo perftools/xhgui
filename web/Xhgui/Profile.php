@@ -154,9 +154,11 @@ class Xhgui_Profile
         }
 
         // Find children with linear search.
-        foreach ($this->_data['profile'] as $name => $data) {
-            if (in_array($symbol, $data['parents'])) {
-                $children[] = $data + array('function' => $name);
+        $childName = $symbol . '==>';
+        foreach ($this->_data['original'] as $name => $data) {
+            if (strpos($name, $childName) === 0) {
+                $nameParts = $this->splitName($name);
+                $children[] = $data + array('function' => $nameParts[1]);
             }
         }
         return array($parents, $current, $children);

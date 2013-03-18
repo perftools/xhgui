@@ -34,6 +34,13 @@ class ProfileTest extends PHPUnit_Framework_TestCase
                 'mu' => 1,
                 'pmu' => 1,
             ),
+            'other_func==>isset' => array(
+                'ct' => 10,
+                'cpu' => 10,
+                'wt' => 1,
+                'mu' => 5,
+                'pmu' => 1,
+            ),
             'your_func==>func' => array(
                 'ct' => 1,
                 'cpu' => 1,
