@@ -24,7 +24,7 @@
 		{% for i, watch in watched %}
 		<tr>
 			<td>
-				<input name="watch[{{ i }}][id]" type="hidden" value="{{ watch.id }}" />
+				<input name="watch[{{ i }}][_id]" type="hidden" value="{{ watch.id }}" />
 				<input name="watch[{{ i }}][name]" type="text" value="{{ watch.name }}" />
 			</td>
 			<td>
