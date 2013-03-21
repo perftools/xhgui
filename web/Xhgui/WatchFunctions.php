@@ -34,7 +34,8 @@ class Xhgui_WatchFunctions
         unset($data['_id']);
         $this->_collection->update(
             array('_id' => $id),
-            $data
+            $data,
+            array('w' => 1)
         );
         return true;
     }
