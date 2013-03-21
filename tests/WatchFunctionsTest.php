@@ -36,4 +36,5 @@ class WatchFunctionsTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->watch->save($data));
         $this->assertCount(1, $this->watch->getAll());
     }
+
 }

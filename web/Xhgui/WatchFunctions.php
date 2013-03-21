@@ -22,6 +22,7 @@ class Xhgui_WatchFunctions
         if (empty($data['name'])) {
             return false;
         }
+
         if (empty($data['_id'])) {
             $this->_collection->insert(
                 $data,
@@ -40,12 +41,22 @@ class Xhgui_WatchFunctions
         return true;
     }
 
+    /**
+     * Get all the known watch functions.
+     *
+     * @return array Array of watch functions.
+     */
     public function getAll()
     {
         $cursor = $this->_collection->find();
         return iterator_to_array($cursor);
     }
 
+    /**
+     * Truncate the watch collection.
+     *
+     * @return void
+     */
     public function truncate()
     {
         $this->_collection->drop();
