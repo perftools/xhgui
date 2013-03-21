@@ -34,14 +34,14 @@ Installing the xhgui ui
   You'll need to update `web/config/config.php` so that it can connect to mongod.
 * After couple of runs, you may wish to add indexes (recommended) to improve the performance
   You'll need to do this by using mongo console
-  On your command prompt (irrespective of Windows or *nix), start mogo using command 'mongo' and follow below commands to add the index
+  On your command prompt (irrespective of Windows or *nix), start mogo using command 'mongo' and follow below commands   to add the index
 
-  > use xhprof
-  > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
-  > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
-  > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
-  > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
-  > db.results.ensureIndex( { 'meta.url' : 1 } )
+		  use xhprof
+		  db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
+		  db.results.ensureIndex( { 'profile.main().wt' : -1 } )
+		  db.results.ensureIndex( { 'profile.main().mu' : -1 } )
+		  db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
+		  db.results.ensureIndex( { 'meta.url' : 1 } )
   
   Thats it you added the indexes
 
