@@ -37,12 +37,12 @@ Installing the xhgui ui
   
   On your command prompt (irrespective of Windows or *nix), open mongo shell using command 'mongo' and follow below commands to add the index
 
-		  use xhprof
-		  db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
-		  db.results.ensureIndex( { 'profile.main().wt' : -1 } )
-		  db.results.ensureIndex( { 'profile.main().mu' : -1 } )
-		  db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
-		  db.results.ensureIndex( { 'meta.url' : 1 } )
+		  $ use xhprof
+		  > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
+		  > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
+		  > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
+		  > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
+		  > db.results.ensureIndex( { 'meta.url' : 1 } )
   
   That's it you added the indexes, you may notice now you are able navigate across pages faster
 
