@@ -25,6 +25,7 @@ Installing the xhgui ui
 
 * Clone or download `xhgui` from github.
 * You'll need to install mongodb, and php-mongodb, at least version 1.3.0 is required.
+* Point your webserver to folder `web/webroot` 
 * Set the permissions on `web/cache` to allow the webserver to create files.
   If you're lazy `0777` will work. Run
 
@@ -32,6 +33,19 @@ Installing the xhgui ui
 
 * If your mongodb setup requires a username + password, or isn't running on the default port + host.
   You'll need to update `web/config/config.php` so that it can connect to mongod.
+* You may wish to add indexes (recommended but optional) to improve the performance, you'll need to do this by using mongo console
+  
+  On your command prompt (irrespective of Windows or *nix), open mongo shell using command 'mongo' and follow below commands to add the index
+
+		  $ mongo
+		  > use xhprof
+		  > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
+		  > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
+		  > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
+		  > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
+		  > db.results.ensureIndex( { 'meta.url' : 1 } )
+  
+  That's it you added the indexes, you may notice now you are able navigate across pages faster
 
 Profiling an application / site
 -------------------------------
