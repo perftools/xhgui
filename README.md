@@ -37,7 +37,8 @@ Installing the xhgui ui
   
   On your command prompt (irrespective of Windows or *nix), open mongo shell using command 'mongo' and follow below commands to add the index
 
-		  $ use xhprof
+		  $ mongo
+		  > use xhprof
 		  > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
 		  > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
 		  > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
