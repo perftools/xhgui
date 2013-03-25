@@ -96,6 +96,11 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $profile = new Xhgui_Profile($fixture);
         $this->assertEquals($fixture['profile']['main()']['wt'], $profile->get('main()', 'wt'));
 
+        $expected = $fixture['profile']['main()'];
+        $result = $profile->get('main()');
+        unset($result['parents']);
+        $this->assertEquals($expected, $result);
+
         $this->assertNull($profile->get('main()', 'derp'));
         $this->assertNull($profile->get('derp', 'wt'));
     }

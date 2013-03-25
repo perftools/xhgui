@@ -168,6 +168,17 @@ tr .no-results {
 }
 
 
+/**
+ * Watch lists
+ */
+.watch-list .btn {
+    vertical-align: top;
+    margin-top: 2px;
+    display: none;
+}
+.watch-list li:hover .btn {
+    display: inline-block;
+}
 
 /**
  * Chart styles

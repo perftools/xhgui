@@ -1,0 +1,56 @@
+{% extends 'layout/base.twig' %}
+{% import 'macros/helpers.twig' as helpers %}
+
+{% block content %}
+<h1>Watch functions</h1>
+
+{% if saved %}
+<div class="alert alert-success">
+    Watch functions updated.
+</div>
+{% endif %}
+
+<form action="{{ url('/watch.php') }}" method="post">
+
+{% if watched|length %}
+    <ul class="unstyled watch-list">
+        {% for i, watch in watched %}
+        <li>
+            <input name="watch[{{ i }}][_id]" type="hidden" value="{{ watch.id }}" />
+            <input name="watch[{{ i }}][name]" type="text" value="{{ watch.name }}" />
+            <a href="#" class="btn btn-small btn-warning watch-delete">Delete</a>
+        </li>
+        {% endfor %}
+        <li>
+            <input name="watch[{{ watched|length }}][name]" type="text" />
+        </li>
+    </ul>
+
+    <input class="btn btn-large btn-primary" type="submit" value="Save" />
+{% else %}
+    <div class="hero-unit">
+        <h3>You have no watch functions</h3>
+        <p>Watch functions let you pluck function names
+        you're interested in to the top of run reports.</p>
+        <p>Add one to get started</p>
+        <input name="watch[0][name]" type="text" />
+        <input class="btn btn-primary" type="submit" value="Save" />
+    </div>
+{% endif %}
+
+</form>
+
+{% endblock %}
+
+{% block jsfoot %}
+<script>
+$(document).ready(function () {
+    $('.watch-delete').on('click', function () {
+        $(this).parent().fadeOut('fast', function () {
+            $(this).remove();
+        });
+        return false;
+    });
+});
+</script>
+{% endblock %} 

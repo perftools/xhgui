@@ -109,8 +109,14 @@ class Xhgui_Profile
      * @param string $metric The metric to read.
      * @return null|float
      */
-    public function get($key, $metric)
+    public function get($key, $metric = null)
     {
+        if (!isset($this->_data['profile'][$key])) {
+            return null;
+        }
+        if (empty($metric)) {
+            return $this->_data['profile'][$key];
+        }
         if (!isset($this->_data['profile'][$key][$metric])) {
             return null;
         }
