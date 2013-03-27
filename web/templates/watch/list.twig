@@ -10,23 +10,27 @@
 </div>
 {% endif %}
 
-<form action="{{ url('/watch.php') }}" method="post">
-
+<form class="form-stacked" action="{{ url('/watch.php') }}" method="post">
 {% if watched|length %}
     <ul class="unstyled watch-list">
         {% for i, watch in watched %}
         <li>
             <input name="watch[{{ i }}][_id]" type="hidden" value="{{ watch.id }}" />
-            <input name="watch[{{ i }}][name]" type="text" value="{{ watch.name }}" />
-            <a href="#" class="btn btn-small btn-warning watch-delete">Delete</a>
+            <input class="input-xlarge" name="watch[{{ i }}][name]" type="text" value="{{ watch.name }}" />
+            <a href="#" class="btn btn-small btn-warning watch-delete">Remove</a>
         </li>
         {% endfor %}
-        <li>
-            <input name="watch[{{ watched|length }}][name]" type="text" />
+        <li id="new-row-template">
+            <input class="input-xlarge" name="watch[{{ watched|length }}][name]" type="text" />
         </li>
     </ul>
+    <p class="offset2">
+        <a href="#" id="add-new-watch" class="btn">Add another</a>
+    </p>
 
-    <input class="btn btn-large btn-primary" type="submit" value="Save" />
+    <div class="form-actions">
+        <input class="btn btn-large btn-primary" type="submit" value="Save" />
+    </div>
 {% else %}
     <div class="hero-unit">
         <h3>You have no watch functions</h3>
@@ -45,10 +49,18 @@
 {% block jsfoot %}
 <script>
 $(document).ready(function () {
+    var template = $('#new-row-template').html();
+    var list = $('.watch-list');
+
     $('.watch-delete').on('click', function () {
         $(this).parent().fadeOut('fast', function () {
             $(this).remove();
         });
+        return false;
+    });
+
+    $('#add-new-watch').on('click', function () {
+        list.append('<li>' + template + '</li>');
         return false;
     });
 });
