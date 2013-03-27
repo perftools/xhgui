@@ -8,6 +8,10 @@
 Watch functions allow you to set function name/patterns that
 you want to see at the top of each run result page.
 </p>
+<p>
+Watches can either be exact matches or use PCRE patterns
+to match multiple function names.
+</p>
 
 {% if saved %}
 <div class="alert alert-success">
@@ -27,6 +31,7 @@ you want to see at the top of each run result page.
         {% endfor %}
         <li id="new-row-template">
             <input class="input-xlarge" name="watch[{{ watched|length }}][name]" type="text" />
+            <a href="#" class="btn btn-small btn-warning watch-delete">Remove</a>
         </li>
     </ul>
     <p class="offset2">
@@ -58,7 +63,7 @@ $(document).ready(function () {
     var list = $('.watch-list');
     var placeholder = list.children().length - 1;
 
-    $('.watch-delete').on('click', function () {
+    $('.watch-list').on('click', '.watch-delete', function () {
         $(this).parent().fadeOut('fast', function () {
             $(this).remove();
         });
