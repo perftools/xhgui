@@ -173,4 +173,31 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expected, $result);
     }
 
+    public function testGetWatched()
+    {
+        $fixture = $this->_fixture[0];
+        $profile = new Xhgui_Profile($fixture);
+        $data = $profile->getProfile();
+
+        $this->assertEmpty($profile->getWatched('not there'));
+        $matches = $profile->getWatched('strpos');
+
+        $this->assertCount(1, $matches);
+        $this->assertEquals('strpos()', $matches[0]['function']);
+        $this->assertEquals($data['wt'], $matches[0]['wt']);
+
+        $match = $profile->getWatched('str.*');
+        $this->assertCount(1, $matches);
+        $this->assertEquals('strpos()', $matches[0]['function']);
+        $this->assertEquals($data['wt'], $matches[0]['wt']);
+
+        $match = $profile->getWatched('[ms].*');
+        $this->assertCount(2, $matches);
+        $this->assertEquals('main()', $matches[0]['function']);
+        $this->assertEquals($data['wt'], $matches[0]['wt']);
+
+        $this->assertEquals('strpos()', $matches[1]['function']);
+        $this->assertEquals($data['wt'], $matches[1]['wt']);
+    }
+
 }

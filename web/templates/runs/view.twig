@@ -44,9 +44,9 @@
             </tr>
         </thead>
         <tbody>
-        {% for key, value in watches %}
+        {% for value in watches %}
         <tr>
-            <td>{{ key }}</td>
+            <td>{{ value.function }}</td>
             <td>{{ value.ct }}</td>
             <td>{{ value.ewt|as_time }}</td>
             <td>{{ value.emu|as_bytes }}</td>

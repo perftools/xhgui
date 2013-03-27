@@ -19,8 +19,9 @@ $memoryChart = $result->extractDimension('emu', $detailCount);
 $watches = new Xhgui_WatchFunctions($db->watches);
 $watchedFunctions = array();
 foreach ($watches->getAll() as $watch) {
-    if ($result->get($watch['name'])) {
-        $watchedFunctions[$watch['name']] = $result->get($watch['name']);
+    $matches = $result->getWatched($watch['name']);
+    if ($matches) {
+        $watchedFunctions = array_merge($watchedFunctions, $matches);
     }
 }
 

@@ -124,6 +124,32 @@ class Xhgui_Profile
     }
 
     /**
+     * Find a function matching a watched function.
+     *
+     * @param string $pattern The pattern to look for.
+     * @return null|array An list of matching functions
+     *    or null.
+     */
+    public function getWatched($pattern)
+    {
+        if (isset($this->_data['profile'][$pattern])) {
+            $data = $this->_data['profile'][$pattern];
+            $data['function'] = $pattern;
+            return array($data);
+        }
+        $matches = array();
+        $keys = array_keys($this->_data['profile']);
+        foreach ($keys as $func) {
+            if (preg_match('/^' . $pattern . '$/', $func)) {
+                $data = $this->_data['profile'][$func];
+                $data['function'] = $func;
+                $matches[] = $data;
+            }
+        }
+        return $matches;
+    }
+
+    /**
      * Find the parent and children method/functions for a given
      * symbol.
      *

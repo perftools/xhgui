@@ -24,7 +24,7 @@ to match multiple function names.
     <ul class="unstyled watch-list">
         {% for i, watch in watched %}
         <li>
-            <input name="watch[{{ i }}][_id]" type="hidden" value="{{ watch.id }}" />
+            <input name="watch[{{ i }}][_id]" type="hidden" value="{{ watch._id }}" />
             <input class="input-xlarge" name="watch[{{ i }}][name]" type="text" value="{{ watch.name }}" />
             <a href="#" class="btn btn-small btn-warning watch-delete">Remove</a>
         </li>

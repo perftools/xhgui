@@ -31,10 +31,9 @@ class Xhgui_WatchFunctions
             return true;
         }
 
-        $id = new MongoId($data['_id']);
-        unset($data['_id']);
+        $data['_id'] = new MongoId($data['_id']);
         $this->_collection->update(
-            array('_id' => $id),
+            array('_id' => $data['_id']),
             $data,
             array('w' => 1)
         );
@@ -49,7 +48,7 @@ class Xhgui_WatchFunctions
     public function getAll()
     {
         $cursor = $this->_collection->find();
-        return iterator_to_array($cursor);
+        return array_values(iterator_to_array($cursor));
     }
 
     /**
