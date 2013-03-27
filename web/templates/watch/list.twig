@@ -4,6 +4,11 @@
 {% block content %}
 <h1>Watch functions</h1>
 
+<p>
+Watch functions allow you to set function name/patterns that
+you want to see at the top of each run result page.
+</p>
+
 {% if saved %}
 <div class="alert alert-success">
     Watch functions updated.
@@ -51,6 +56,7 @@
 $(document).ready(function () {
     var template = $('#new-row-template').html();
     var list = $('.watch-list');
+    var placeholder = list.children().length - 1;
 
     $('.watch-delete').on('click', function () {
         $(this).parent().fadeOut('fast', function () {
@@ -60,7 +66,9 @@ $(document).ready(function () {
     });
 
     $('#add-new-watch').on('click', function () {
-        list.append('<li>' + template + '</li>');
+        var numElements = list.children().length;
+        var insert = template.replace(placeholder, numElements);
+        list.append('<li>' + insert + '</li>');
         return false;
     });
 });
