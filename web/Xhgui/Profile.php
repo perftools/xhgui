@@ -164,7 +164,7 @@ class Xhgui_Profile
      */
     public function getRelatives($symbol)
     {
-        $parents = $children = array();
+        $parents = array();
 
         // If the function doesn't exist, it won't have parents/children
         if (empty($this->_data['profile'][$symbol])) {
@@ -185,6 +185,19 @@ class Xhgui_Profile
             }
         }
 
+        $children = $this->_getChildren($symbol);
+        return array($parents, $current, $children);
+    }
+
+    /**
+     * Find symbols that are the children of the given name.
+     *
+     * @param string $symbol The name of the function to find children of.
+     * @return array An array of child methods.
+     */
+    protected function _getChildren($symbol) {
+        $children = array();
+
         // Find children with linear search.
         $childName = $symbol . '==>';
         foreach ($this->_data['original'] as $name => $data) {
@@ -193,7 +206,8 @@ class Xhgui_Profile
                 $children[] = $data + array('function' => $nameParts[1]);
             }
         }
-        return array($parents, $current, $children);
+
+        return $children;
     }
 
     /**
@@ -260,22 +274,18 @@ class Xhgui_Profile
             $data['epmu'] = $data['pmu'];
         }
         unset($data);
+        $exclusiveKeys = array('ewt', 'emu', 'ecpu', 'ect', 'epmu');
 
-        // Go over each method and remove each parents metrics
-        // from the children. We use the count of the parents to
-        // split the cost of any function amongst its callees.
+        // Go over each method and remove each childs metrics
+        // from the parent.
         foreach ($this->_data['profile'] as $name => $data) {
-            foreach ($data['parents'] as $parent) {
-                if (empty($this->_data['profile'][$parent])) {
-                    continue;
-                }
-                $parentData = $this->_data['profile'][$parent];
-                $parentCount = count($parentData['parents']);
-                $this->_data['profile'][$parent]['ewt'] -= ($data['wt'] / $parentCount);
-                $this->_data['profile'][$parent]['emu'] -= ($data['mu'] / $parentCount);
-                $this->_data['profile'][$parent]['ecpu'] -= ($data['cpu'] / $parentCount);
-                $this->_data['profile'][$parent]['ect'] -= ($data['ct'] / $parentCount);
-                $this->_data['profile'][$parent]['epmu'] -= ($data['pmu'] / $parentCount);
+            $children = $this->_getChildren($name);
+            foreach ($children as $child) {
+                $this->_data['profile'][$name]['ewt'] -= $child['wt'];
+                $this->_data['profile'][$name]['emu'] -= $child['mu'];
+                $this->_data['profile'][$name]['ecpu'] -= $child['cpu'];
+                $this->_data['profile'][$name]['ect'] -= $child['ct'];
+                $this->_data['profile'][$name]['epmu'] -= $child['pmu'];
             }
         }
         return $this;
