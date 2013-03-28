@@ -279,6 +279,7 @@ class Xhgui_Profile
         // Go over each method and remove each childs metrics
         // from the parent.
         foreach ($this->_data['profile'] as $name => $data) {
+            // TODO this is super slow, optimize this.
             $children = $this->_getChildren($name);
             foreach ($children as $child) {
                 $this->_data['profile'][$name]['ewt'] -= $child['wt'];
