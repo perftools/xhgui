@@ -169,9 +169,9 @@ class Xhgui_Profile
         // If the function doesn't exist, it won't have parents/children
         if (empty($this->_data['profile'][$symbol])) {
             return array(
-                $parents,
                 array(),
-                $children,
+                array(),
+                array(),
             );
         }
         $current = $this->_data['profile'][$symbol];

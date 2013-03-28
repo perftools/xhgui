@@ -180,24 +180,24 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $data = $profile->getProfile();
 
         $this->assertEmpty($profile->getWatched('not there'));
-        $matches = $profile->getWatched('strpos');
+        $matches = $profile->getWatched('strpos.*');
 
         $this->assertCount(1, $matches);
         $this->assertEquals('strpos()', $matches[0]['function']);
-        $this->assertEquals($data['wt'], $matches[0]['wt']);
+        $this->assertEquals($data['strpos()']['wt'], $matches[0]['wt']);
 
-        $match = $profile->getWatched('str.*');
+        $matches = $profile->getWatched('str.*');
         $this->assertCount(1, $matches);
         $this->assertEquals('strpos()', $matches[0]['function']);
-        $this->assertEquals($data['wt'], $matches[0]['wt']);
+        $this->assertEquals($data['strpos()']['wt'], $matches[0]['wt']);
 
-        $match = $profile->getWatched('[ms].*');
+        $matches = $profile->getWatched('[ms].*');
         $this->assertCount(2, $matches);
-        $this->assertEquals('main()', $matches[0]['function']);
-        $this->assertEquals($data['wt'], $matches[0]['wt']);
+        $this->assertEquals('strpos()', $matches[0]['function']);
+        $this->assertEquals($data['strpos()']['wt'], $matches[0]['wt']);
 
-        $this->assertEquals('strpos()', $matches[1]['function']);
-        $this->assertEquals($data['wt'], $matches[1]['wt']);
+        $this->assertEquals('main()', $matches[1]['function']);
+        $this->assertEquals($data['main()']['wt'], $matches[1]['wt']);
     }
 
 }
