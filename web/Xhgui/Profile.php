@@ -7,6 +7,8 @@
 class Xhgui_Profile
 {
     protected $_data;
+    protected $_original;
+    protected $_collapsed;
 
     protected $_keys = array('ct', 'wt', 'cpu', 'mu', 'pmu');
 
@@ -29,10 +31,10 @@ class Xhgui_Profile
      */
     protected function _process()
     {
-        $this->_data['original'] = $this->_data['profile'];
+        $this->_original = $this->_data['profile'];
 
         $result = array();
-        foreach ($this->_data['profile'] as $name => $values) {
+        foreach ($this->_original as $name => $values) {
             list($parent, $func) = $this->splitName($name);
             if (isset($result[$func])) {
                 $result[$func] = $this->_sumKeys($result[$func], $values);
@@ -42,7 +44,7 @@ class Xhgui_Profile
                 $result[$func]['parents'] = array($parent);
             }
         }
-        $this->_data['profile'] = $result;
+        $this->_collapsed = $result;
     }
 
     /**
@@ -70,7 +72,7 @@ class Xhgui_Profile
      */
     public function getProfile()
     {
-        return $this->_data['profile'];
+        return $this->_collapsed;
     }
 
     public function getId()
@@ -111,16 +113,16 @@ class Xhgui_Profile
      */
     public function get($key, $metric = null)
     {
-        if (!isset($this->_data['profile'][$key])) {
+        if (!isset($this->_collapsed[$key])) {
             return null;
         }
         if (empty($metric)) {
-            return $this->_data['profile'][$key];
+            return $this->_collapsed[$key];
         }
-        if (!isset($this->_data['profile'][$key][$metric])) {
+        if (!isset($this->_collapsed[$key][$metric])) {
             return null;
         }
-        return $this->_data['profile'][$key][$metric];
+        return $this->_collapsed[$key][$metric];
     }
 
     /**
@@ -132,16 +134,16 @@ class Xhgui_Profile
      */
     public function getWatched($pattern)
     {
-        if (isset($this->_data['profile'][$pattern])) {
-            $data = $this->_data['profile'][$pattern];
+        if (isset($this->_collapsed[$pattern])) {
+            $data = $this->_collapsed[$pattern];
             $data['function'] = $pattern;
             return array($data);
         }
         $matches = array();
-        $keys = array_keys($this->_data['profile']);
+        $keys = array_keys($this->_collapsed);
         foreach ($keys as $func) {
             if (preg_match('/^' . $pattern . '$/', $func)) {
-                $data = $this->_data['profile'][$func];
+                $data = $this->_collapsed[$func];
                 $data['function'] = $func;
                 $matches[] = $data;
             }
@@ -167,21 +169,21 @@ class Xhgui_Profile
         $parents = array();
 
         // If the function doesn't exist, it won't have parents/children
-        if (empty($this->_data['profile'][$symbol])) {
+        if (empty($this->_collapsed[$symbol])) {
             return array(
                 array(),
                 array(),
                 array(),
             );
         }
-        $current = $this->_data['profile'][$symbol];
+        $current = $this->_collapsed[$symbol];
         $current['function'] = $symbol;
 
         // Use the parents data to collect parents.
         $parentMethods = $current['parents'];
         foreach ($parentMethods as $parent) {
-            if (isset($this->_data['profile'][$parent])) {
-                $parents[] = array('function' => $parent) + $this->_data['profile'][$parent];
+            if (isset($this->_collapsed[$parent])) {
+                $parents[] = array('function' => $parent) + $this->_collapsed[$parent];
             }
         }
 
@@ -200,7 +202,7 @@ class Xhgui_Profile
 
         // Find children with linear search.
         $childName = $symbol . '==>';
-        foreach ($this->_data['original'] as $name => $data) {
+        foreach ($this->_original as $name => $data) {
             if (strpos($name, $childName) === 0) {
                 $nameParts = $this->splitName($name);
                 $children[] = $data + array('function' => $nameParts[1]);
@@ -225,7 +227,7 @@ class Xhgui_Profile
      */
     public function extractDimension($dimension, $limit)
     {
-        $profile = $this->sort($dimension, $this->_data['profile']);
+        $profile = $this->sort($dimension, $this->_collapsed);
         $slice = array_slice($profile, 0, $limit);
         $extract = array();
         foreach ($slice as $func => $funcData) {
@@ -266,7 +268,7 @@ class Xhgui_Profile
     public function calculateExclusive()
     {
         // Init exclusive values
-        foreach ($this->_data['profile'] as &$data) {
+        foreach ($this->_collapsed as &$data) {
             $data['ewt'] = $data['wt'];
             $data['emu'] = $data['mu'];
             $data['ecpu'] = $data['cpu'];
@@ -278,15 +280,15 @@ class Xhgui_Profile
 
         // Go over each method and remove each childs metrics
         // from the parent.
-        foreach ($this->_data['profile'] as $name => $data) {
+        foreach ($this->_collapsed as $name => $data) {
             // TODO this is super slow, optimize this.
             $children = $this->_getChildren($name);
             foreach ($children as $child) {
-                $this->_data['profile'][$name]['ewt'] -= $child['wt'];
-                $this->_data['profile'][$name]['emu'] -= $child['mu'];
-                $this->_data['profile'][$name]['ecpu'] -= $child['cpu'];
-                $this->_data['profile'][$name]['ect'] -= $child['ct'];
-                $this->_data['profile'][$name]['epmu'] -= $child['pmu'];
+                $this->_collapsed[$name]['ewt'] -= $child['wt'];
+                $this->_collapsed[$name]['emu'] -= $child['mu'];
+                $this->_collapsed[$name]['ecpu'] -= $child['cpu'];
+                $this->_collapsed[$name]['ect'] -= $child['ct'];
+                $this->_collapsed[$name]['epmu'] -= $child['pmu'];
             }
         }
         return $this;
