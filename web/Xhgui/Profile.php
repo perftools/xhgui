@@ -6,9 +6,14 @@
  */
 class Xhgui_Profile
 {
+    /**
+     * @const Key used for methods with no parent
+     */
+    const NO_PARENT = '__xhgui_top__';
+
     protected $_data;
-    protected $_original;
     protected $_collapsed;
+    protected $_indexed;
 
     protected $_keys = array('ct', 'wt', 'cpu', 'mu', 'pmu');
 
@@ -31,11 +36,11 @@ class Xhgui_Profile
      */
     protected function _process()
     {
-        $this->_original = $this->_data['profile'];
-
         $result = array();
-        foreach ($this->_original as $name => $values) {
+        foreach ($this->_data['profile'] as $name => $values) {
             list($parent, $func) = $this->splitName($name);
+
+            // Generate collapsed data.
             if (isset($result[$func])) {
                 $result[$func] = $this->_sumKeys($result[$func], $values);
                 $result[$func]['parents'][] = $parent;
@@ -43,6 +48,15 @@ class Xhgui_Profile
                 $result[$func] = $values;
                 $result[$func]['parents'] = array($parent);
             }
+
+            // Build the indexed data.
+            if ($parent === null) {
+                $parent = self::NO_PARENT;
+            }
+            if (!isset($this->_indexed[$parent])) {
+                $this->_indexed[$parent] = array();
+            }
+            $this->_indexed[$parent][$func] = $values;
         }
         $this->_collapsed = $result;
     }
@@ -199,16 +213,12 @@ class Xhgui_Profile
      */
     protected function _getChildren($symbol) {
         $children = array();
-
-        // Find children with linear search.
-        $childName = $symbol . '==>';
-        foreach ($this->_original as $name => $data) {
-            if (strpos($name, $childName) === 0) {
-                $nameParts = $this->splitName($name);
-                $children[] = $data + array('function' => $nameParts[1]);
-            }
+        if (!isset($this->_indexed[$symbol])) {
+            return $children;
         }
-
+        foreach ($this->_indexed[$symbol] as $name => $data) {
+            $children[] = $data + array('function' => $name);
+        }
         return $children;
     }
 
