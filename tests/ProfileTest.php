@@ -143,9 +143,9 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(null), $main['parents']);
 
         $func = $result['eat_burger()'];
-        $this->assertEquals(3, $func['ewt']);
-        $this->assertEquals(1900, $func['emu']);
-        $this->assertEquals(2350, $func['epmu']);
+        $this->assertEquals(2, $func['ewt']);
+        $this->assertEquals(1850, $func['emu']);
+        $this->assertEquals(2300, $func['epmu']);
         $this->assertEquals(array('main()'), $func['parents']);
     }
 
