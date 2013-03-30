@@ -13,6 +13,10 @@
             <tr>
                 <th>Function</th>
                 <th>Call Count</th>
+                <th>Exclusive Wall Time</th>
+                <th>Exclusive CPU</th>
+                <th>Exclusive Memory Usage</th>
+                <th>Exclusive Peak Memory Usage</th>
                 <th>Inclusive Wall Time</th>
                 <th>Inclusive CPU</th>
                 <th>Inclusive Memory Usage</th>
@@ -25,6 +29,11 @@
                 <a href="{{ url('/symbol.php', {'id': id, 'symbol': current.function}) }}">{{ current.function }}</a>
             </td>
             <td>{{ current.ct }}</td>
+            <td>{{ current.ewt|as_time }}</td>
+            <td>{{ current.ecpu|as_time }}</td>
+            <td>{{ current.emu|as_bytes }}</td>
+            <td>{{ current.epmu|as_bytes }}</td>
+
             <td>{{ current.wt|as_time }}</td>
             <td>{{ current.cpu|as_time }}</td>
             <td>{{ current.mu|as_bytes }}</td>
@@ -39,6 +48,11 @@
             <tr>
                 <th>Function</th>
                 <th>Call Count</th>
+                <th>Exclusive Wall Time</th>
+                <th>Exclusive CPU</th>
+                <th>Exclusive Memory Usage</th>
+                <th>Exclusive Peak Memory Usage</th>
+
                 <th>Inclusive Wall Time</th>
                 <th>Inclusive CPU</th>
                 <th>Inclusive Memory Usage</th>
@@ -52,6 +66,11 @@
                 <a href="{{ url('/symbol.php', {'id': id, 'symbol': parent.function}) }}">{{ parent.function }}</a>
             </td>
             <td>{{ parent.ct }}</td>
+            <td>{{ parent.ewt|as_time }}</td>
+            <td>{{ parent.ecpu|as_time }}</td>
+            <td>{{ parent.emu|as_bytes }}</td>
+            <td>{{ parent.epmu|as_bytes }}</td>
+
             <td>{{ parent.wt|as_time }}</td>
             <td>{{ parent.cpu|as_time }}</td>
             <td>{{ parent.mu|as_bytes }}</td>
@@ -67,6 +86,11 @@
             <tr>
                 <th>Function</th>
                 <th>Call Count</th>
+                <th>Exclusive Wall Time</th>
+                <th>Exclusive CPU</th>
+                <th>Exclusive Memory Usage</th>
+                <th>Exclusive Peak Memory Usage</th>
+
                 <th>Inclusive Wall Time</th>
                 <th>Inclusive CPU</th>
                 <th>Inclusive Memory Usage</th>
@@ -80,6 +104,11 @@
                 <a href="{{ url('/symbol.php', {'id': id, 'symbol': child.function}) }}">{{ child.function }}</a>
             </td>
             <td>{{ child.ct }}</td>
+            <td>{{ child.ewt|as_time }}</td>
+            <td>{{ child.ecpu|as_time }}</td>
+            <td>{{ child.emu|as_bytes }}</td>
+            <td>{{ child.epmu|as_bytes }}</td>
+
             <td>{{ child.wt|as_time }}</td>
             <td>{{ child.cpu|as_time }}</td>
             <td>{{ child.mu|as_bytes }}</td>

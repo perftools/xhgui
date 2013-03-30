@@ -8,6 +8,7 @@ $db = Xhgui_Db::connect();
 $profiles = new Xhgui_Profiles($db->results);
 
 $profile = $profiles->get($id);
+$profile->calculateExclusive();
 list($parents, $current, $children) = $profile->getRelatives($symbol);
 
 $template = Xhgui_Template::load('runs/symbol-view.twig');
