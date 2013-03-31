@@ -12,7 +12,7 @@
             <li class="nav-header">This Run</li>
             <li><strong>URL</strong> <a href="{{ url('/url.php', {'url': result.meta('url')|simple_url }) }}">{{ result.meta('url') }}</a></li>
             <li><strong>Time</strong> {{ result.meta('request_time.sec')|date('r') }}</li>
-            <li><strong>ID</strong> <a href="/custom_help.php?id={{ result.id }}">{{ result.id }}</a></li>
+            <li><strong>ID</strong> <a href="{{ url('/custom_help.php', {id: result.id|trim }) }}">{{ result.id }}</a></li>
             <li><strong>Wall Time</strong> {{ result.get('main()', 'wt')|as_time }}</li>
             <li><strong>CPU Time</strong> {{ result.get('main()', 'cpu')|as_time }}</li>
             <li><strong>Memory Usage</strong> {{ result.get('main()', 'mu')|as_bytes }}</li>
@@ -31,6 +31,10 @@
 <div class="span9">
 
     <div class="row-fluid">
+        <a href="{{ url('/compare.php', {id: result.id|trim }) }}" id="compare-button" class="btn back-link">
+            Compare this run
+        </a>
+
         <h2>Watch Functions</h2>
 
         <table class="table table-hover">
