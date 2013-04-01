@@ -8,8 +8,8 @@ $profiles = new Xhgui_Profiles($db->results);
 $baseRun = $headRun = $candidates = null;
 $pagination = null;
 
-if (!empty($_GET['id'])) {
-    $baseRun = $profiles->get($_GET['id']);
+if (!empty($_GET['base'])) {
+    $baseRun = $profiles->get($_GET['base']);
 }
 
 if ($baseRun && empty($_GET['head'])) {
