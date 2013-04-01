@@ -359,7 +359,11 @@ class Xhgui_Profile
      */
     public function getFunctionCount()
     {
-        // TODO implement
+        $total = 0;
+        foreach ($this->_collapsed as $data) {
+            $total += $data['ct'];
+        }
+        return $total;
     }
 
     /**
@@ -382,7 +386,7 @@ class Xhgui_Profile
                 $diff[$key] = $this->_diffKeys($emptyData, $baseData);
                 continue;
             }
-            $diff[$key] = $this->_diffKeys($baseData, $headData);
+            $diff[$key] = $this->_diffKeys($headData, $baseData);
         }
 
         return array(

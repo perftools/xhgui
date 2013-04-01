@@ -35,18 +35,18 @@
         <tr>
             <th>Difference</th>
             <td class="right">{{ comparison.diff.functionCount }}</td>
-            <td class="right">{{ comparison.diff.get('main()', 'wt') |as_time }}</td>
-            <td class="right">{{ comparison.diff.get('main()', 'cpu') |as_time }}</td>
-            <td class="right">{{ comparison.diff.get('main()', 'mu') |as_bytes }}</td>
-            <td class="right">{{ comparison.diff.get('main()', 'pmu') |as_bytes }}</td>
+            <td class="right">{{ comparison.diff['main()'].wt|as_time }}</td>
+            <td class="right">{{ comparison.diff['main()'].cpu|as_time }}</td>
+            <td class="right">{{ comparison.diff['main()'].mu|as_bytes }}</td>
+            <td class="right">{{ comparison.diff['main()'].pmu|as_bytes }}</td>
         </tr>
         <tr>
             <th>Difference %</th>
-            <td class="right">{{ comparison.diff.functionCount }}</td>
-            <td class="right">{{ comparison.diff.get('main()', 'wt') }}</td>
-            <td class="right">{{ comparison.diff.get('main()', 'cpu') }}</td>
-            <td class="right">{{ comparison.diff.get('main()', 'mu') }}</td>
-            <td class="right">{{ comparison.diff.get('main()', 'pmu') }}</td>
+            <td class="right">0</td>
+            <td class="right">0</td>
+            <td class="right">0</td>
+            <td class="right">0</td>
+            <td class="right">0</td>
         </tr>
     </tbody>
 </table>
