@@ -75,15 +75,15 @@
         <td class="text">
             <a href="{{ url('/symbol.php', {'id': comparison.base.id|trim, 'symbol': key}) }}">{{ key }}</a>
         </td>
-        <td class="right">{{ value.ct }}</td>
-        <td class="right">{{ value.ewt }}</td>
-        <td class="right">{{ value.ecpu }}</td>
-        <td class="right">{{ value.emu }}</td>
-        <td class="right">{{ value.epmu }}</td>
-        <td class="right">{{ value.wt }}</td>
-        <td class="right">{{ value.cpu }}</td>
-        <td class="right">{{ value.mu }}</td>
-        <td class="right">{{ value.pmu }}</td>
+        <td class="right">{{ value.ct|as_diff }}</td>
+        <td class="right">{{ value.ewt|as_diff }}</td>
+        <td class="right">{{ value.ecpu|as_diff }}</td>
+        <td class="right">{{ value.emu|as_diff }}</td>
+        <td class="right">{{ value.epmu|as_diff }}</td>
+        <td class="right">{{ value.wt|as_diff }}</td>
+        <td class="right">{{ value.cpu|as_diff }}</td>
+        <td class="right">{{ value.mu|as_diff }}</td>
+        <td class="right">{{ value.pmu|as_diff }}</td>
     </tr>
     {% endfor %}
     </tbody>
