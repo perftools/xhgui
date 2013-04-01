@@ -200,4 +200,53 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($data['main()']['wt'], $matches[1]['wt']);
     }
 
+    public function testGetFunctionCount()
+    {
+        $fixture = $this->_fixture[0];
+        $profile = new Xhgui_Profile($fixture);
+
+        $this->assertEquals(11, $profile->getFunctionCount());
+    }
+
+    public function testCompareAllTheSame()
+    {
+        $fixture = $this->_fixture[0];
+        $base = new Xhgui_Profile($fixture);
+        $head = new Xhgui_Profile($fixture);
+
+        $result = $base->compare($head);
+        $this->assertArrayHasKey('diff', $result);
+        $this->assertArrayHasKey('head', $result);
+        $this->assertArrayHasKey('base', $result);
+
+        $this->assertSame($base, $result['base']);
+        $this->assertSame($head, $result['head']);
+
+        $this->assertEquals(0, $result['diff']['main()']['ewt']);
+        $this->assertEquals(0, $result['diff']['functionCount']);
+        $this->assertEquals(0, $result['diff']['strpos()']['ewt']);
+    }
+
+    public function testCompareWithDifferences()
+    {
+        $fixture = $this->_fixture[0];
+        $base = new Xhgui_Profile($this->_fixture[3]);
+        $head = new Xhgui_Profile($this->_fixture[4]);
+        $result = $base->compare($head);
+
+        $this->assertEquals(0, $result['diff']['main()']['ct']);
+        $this->assertEquals(9861, $result['diff']['main()']['wt']);
+
+        $this->assertEquals(
+            -10,
+            $result['diff']['strpos()']['wt'],
+            'Missing functions should show as negative'
+        );
+        $this->assertEquals(
+            -10,
+            $result['diff']['strpos()']['ewt'],
+            'Should include exclusives'
+        );
+    }
+
 }

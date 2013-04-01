@@ -1,0 +1,46 @@
+{% extends 'layout/base.twig' %}
+{% import 'macros/helpers.twig' as helpers %}
+
+{% block content %}
+<h1>Compare runs for {{ base_run.meta.simple_url }}</h1>
+
+{% if not base_run %}
+<div class="row-fluid row-spaced">
+    <p class="alert alert-error">
+        You must select a base run to start a comparison.
+    </p>
+</div>
+{% else %}
+    <div class="row-fluid row-spaced">
+        <span class="badge compare-base">
+            base: {{ base_run.meta.simple_url }} - {{ base_run.meta.SERVER.REQUEST_TIME|date(date_format) }}
+        </span>
+        <span class="compare-elipsis">&hellip;</span>
+
+        {% if head_run %}
+        <span class="badge compare-head">
+            head: {{ head_run.meta.simple_url }} - {{ head_run.meta.SERVER.REQUEST_TIME|date(date_format) }}
+        </span>
+        <a class="btn btn-mini" href="{{ url('/compare.php', {id: base_run.id|trim }) }}">change</a>
+        {% else %}
+        <span class="badge">Choose a run below</span>
+        {% endif %}
+    </div>
+
+    {% if candidates|length %}
+    <div class="row-fluid row-spaced">
+        <h3>Other runs with {{ base_run.meta.simple_url }}</h3>
+        {% include 'runs/paginated-list.twig' with {runs: candidates.results, show_compare_link: true} %}
+        {{ helpers.pagination('/compare.php', candidates.page, candidates.totalPages, url_params) }}
+    </div>
+    {% endif %}
+
+    {% if comparison %}
+        <div class="row-fluid row-spaced">
+        {% include 'runs/compare-details.twig' %}
+        </div>
+    {% endif %}
+
+{% endif %}
+
+{% endblock %}

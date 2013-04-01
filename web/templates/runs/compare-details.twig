@@ -1,0 +1,83 @@
+{# Template fragment for comparing two runs. #}
+<h3>Summary</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th class="right">Number of function calls</th>
+            <th class="right">Inclusive Wall time</th>
+            <th class="right">Inclusive CPU</th>
+            <th class="right">Inclusive Memory</th>
+            <th class="right">Inclusive Peak Memory</th>
+    <tbody>
+        <tr>
+            <th>
+                <span class="badge compare-base">base</span>
+                <a target="_blank" href="{{ url('/run.php', {id: comparison.base.id|trim}) }}">{{ comparison.base.id }}</a>
+            </th>
+            <td class="right">{{ comparison.base.functionCount }}</td>
+            <td class="right">{{ comparison.base.get('main()', 'wt') |as_time }}</td>
+            <td class="right">{{ comparison.base.get('main()', 'cpu') |as_time }}</td>
+            <td class="right">{{ comparison.base.get('main()', 'mu') |as_bytes }}</td>
+            <td class="right">{{ comparison.base.get('main()', 'pmu') |as_bytes }}</td>
+        </tr>
+        <tr>
+            <th>
+                <span class="badge compare-head">head</span>
+                <a target="_blank" href="{{ url('/run.php', {id: comparison.head.id|trim}) }}">{{ comparison.head.id }}</a>
+            </th>
+            <td class="right">{{ comparison.head.functionCount }}</td>
+            <td class="right">{{ comparison.head.get('main()', 'wt') |as_time }}</td>
+            <td class="right">{{ comparison.head.get('main()', 'cpu') |as_time }}</td>
+            <td class="right">{{ comparison.head.get('main()', 'mu') |as_bytes }}</td>
+            <td class="right">{{ comparison.head.get('main()', 'pmu') |as_bytes }}</td>
+        </tr>
+        <tr>
+            <th>Difference</th>
+            <td class="right">{{ comparison.diff.functionCount }}</td>
+            <td class="right">{{ comparison.diff['main()'].wt|as_time }}</td>
+            <td class="right">{{ comparison.diff['main()'].cpu|as_time }}</td>
+            <td class="right">{{ comparison.diff['main()'].mu|as_bytes }}</td>
+            <td class="right">{{ comparison.diff['main()'].pmu|as_bytes }}</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<h3>Details</h3>
+
+<table class="table table-hover table-sort">
+    <thead>
+        <tr>
+            <th>Function</th>
+            <th>Call Count</th>
+            <th>Exclusive Wall Time</th>
+            <th>Exclusive CPU</th>
+            <th>Exclusive Memory Usage</th>
+            <th>Exclusive Peak Memory Usage</th>
+            <th>Inclusive Wall Time</th>
+            <th>Inclusive CPU</th>
+            <th>Inclusive Memory Usage</th>
+            <th>Inclusive Peak Memory Usage</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for key, value in comparison.diff %}
+    <tr>
+        <td class="text">
+            <a href="{{ url('/symbol.php', {'id': comparison.base.id|trim, 'symbol': key}) }}">{{ key }}</a>
+        </td>
+        <td class="right">{{ value.ct|as_diff }}</td>
+        <td class="right">{{ value.ewt|as_diff }}</td>
+        <td class="right">{{ value.ecpu|as_diff }}</td>
+        <td class="right">{{ value.emu|as_diff }}</td>
+        <td class="right">{{ value.epmu|as_diff }}</td>
+        <td class="right">{{ value.wt|as_diff }}</td>
+        <td class="right">{{ value.cpu|as_diff }}</td>
+        <td class="right">{{ value.mu|as_diff }}</td>
+        <td class="right">{{ value.pmu|as_diff }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+

@@ -21,6 +21,13 @@
 }
 
 /**
+ * Grid extensions
+ */
+.row-spaced {
+    margin-bottom: 20px;
+}
+
+/**
  * Typography
  */
 h1, h2, h3 {
@@ -211,9 +218,31 @@ tr .no-results {
     fill: #d46245;
 }
 
+/**
+ * Run details
+ */
 .back-link {
     float: right;
     margin-top: 20px;
+}
+
+/**
+ * Compare runs
+ */
+.compare-base {
+    background: #e9814f;
+}
+.compare-head {
+    background: #59bdd2;
+}
+.diff-up {
+    color: #d46245;
+}
+.diff-down {
+    color: #637964;
+}
+.diff-same {
+    color: #999;
 }
 
 /**
