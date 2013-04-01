@@ -2,6 +2,7 @@
     <table class="table table-hover table-sort">
         <thead>
             <tr>
+                <th>&nbsp;</th>
                 <th>URL</th>
                 <th>Time</th>
                 <th class="right"><span class="tip" title="Wall time">wt</span></th>
@@ -13,6 +14,13 @@
         <tbody>
         {% for result in runs %}
         <tr>
+            {% if show_compare_link %}
+            <td>
+                <a class="btn btn-small" href="{{ url('/compare.php', {id: base_run.id|trim, head: result.id|trim}) }}">
+                Compare
+                </a>
+            </td>
+            {% endif %}
             <td><a href="{{ url('/url.php', {'url': result.meta.url}) }}">{{ result.meta.url }}</a></td>
             <td><a href="{{ url('/run.php', {'id': result.id|trim }) }}">{{ result.meta.SERVER.REQUEST_TIME|date(date_format) }}</a></td>
             <td class="right">{{ result.get('main()', 'wt') |as_time }}</td>

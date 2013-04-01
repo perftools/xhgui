@@ -4,4 +4,37 @@
 {% block content %}
 <h1>Compare runs</h1>
 
+{% if not base_run %}
+<div class="row-fluid row-spaced">
+    <p class="alert alert-error">
+        You must select a base run to start a comparison.
+    </p>
+</div>
+{% else %}
+    <div class="row-fluid row-spaced">
+        <span class="badge badge-info compare-base">
+            base: {{ base_run.meta.simple_url }} - {{ base_run.meta.date|date(date_format) }}
+        </span>
+        <span class="compare-elipsis">&hellip;</span>
+
+        {% if head_run %}
+        <span class="badge badge-info compare-head">
+            head: {{ head_run.meta.simple_url }} - {{ head_run.meta.date|date(date_format) }}
+        </span>
+        <a class="btn btn-mini" href="{{ url('/compare.php', {id: base_run.id|trim }) }}">change</a>
+        {% else %}
+        <span class="badge">Choose a run below</span>
+        {% endif %}
+    </div>
+
+    {% if candidates|length %}
+    <div class="row-fluid row-spaced">
+        <h3>Other runs with {{ base_run.meta.simple_url }}</h3>
+        {% include 'runs/paginated-list.twig' with {runs: candidates.results, show_compare_link: true} %}
+        {{ helpers.pagination('/compare.php', candidates.page, candidates.totalPages, url_params) }}
+    </div>
+    {% endif %}
+
+{% endif %}
+
 {% endblock %}

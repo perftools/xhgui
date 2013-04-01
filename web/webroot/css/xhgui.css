@@ -21,6 +21,13 @@
 }
 
 /**
+ * Grid extensions
+ */
+.row-spaced {
+    margin-bottom: 20px;
+}
+
+/**
  * Typography
  */
 h1, h2, h3 {
