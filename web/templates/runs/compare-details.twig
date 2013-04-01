@@ -35,10 +35,10 @@
         <tr>
             <th>Difference</th>
             <td class="right">{{ comparison.diff.functionCount }}</td>
-            <td class="right">{{ comparison.diff.main.wt|as_time }}</td>
-            <td class="right">{{ comparison.diff.main.cpu|as_time }}</td>
-            <td class="right">{{ comparison.diff.main.mu|as_bytes }}</td>
-            <td class="right">{{ comparison.diff.main.pmu|as_bytes }}</td>
+            <td class="right">{{ comparison.diff['main()'].wt|as_time }}</td>
+            <td class="right">{{ comparison.diff['main()'].cpu|as_time }}</td>
+            <td class="right">{{ comparison.diff['main()'].mu|as_bytes }}</td>
+            <td class="right">{{ comparison.diff['main()'].pmu|as_bytes }}</td>
         </tr>
         <tr>
             <th>Difference %</th>

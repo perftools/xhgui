@@ -394,7 +394,6 @@ class Xhgui_Profile
             $diff[$key] = $this->_diffKeys($headData, $baseData);
         }
 
-        $diff['main'] = $diff['main()'];
         $diff['functionCount'] = $head->getFunctionCount() - $this->getFunctionCount();
 
         return array(
