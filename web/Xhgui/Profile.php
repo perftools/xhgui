@@ -339,4 +339,29 @@ class Xhgui_Profile
         return array(null, $a[0]);
     }
 
+    /**
+     * Get the total number of tracked function calls in this run.
+     *
+     * @return int
+     */
+    public function getFunctionCount()
+    {
+        // TODO implement
+    }
+
+    /**
+     * Compare this run to another run.
+     *
+     * @param Xhgui_Profile $head The other run to compare with
+     * @return array An array of comparison data.
+     */
+    public function compare(Xhgui_Profile $head) {
+        // TODO implement
+        return array(
+            'base' => $this,
+            'head' => $head,
+            'diff' => array()
+        );
+    }
+
 }

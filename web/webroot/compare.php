@@ -6,7 +6,6 @@ $db = Xhgui_Db::connect();
 $profiles = new Xhgui_Profiles($db->results);
 
 $baseRun = $headRun = $candidates = null;
-$pagination = null;
 
 if (!empty($_GET['base'])) {
     $baseRun = $profiles->get($_GET['base']);
@@ -28,6 +27,10 @@ if (!empty($_GET['head'])) {
     $headRun = $profiles->get($_GET['head']);
 }
 
+if ($baseRun && $headRun) {
+    $comparison = $baseRun->compare($headRun);
+}
+
 $template = Xhgui_Template::load('runs/compare.twig');
 echo $template->display(array(
     'base_run' => $baseRun,
@@ -35,4 +38,5 @@ echo $template->display(array(
     'candidates' => $candidates,
     'url_params' => $_GET,
     'date_format' => Xhgui_Config::read('date.format'),
+    'comparison' => $comparison
 ));

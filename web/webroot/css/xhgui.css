@@ -218,9 +218,22 @@ tr .no-results {
     fill: #d46245;
 }
 
+/**
+ * Run details
+ */
 .back-link {
     float: right;
     margin-top: 20px;
+}
+
+/**
+ * Compare runs
+ */
+.compare-base {
+    background: #e9814f;
+}
+.compare-head {
+    background: #59bdd2;
 }
 
 /**
