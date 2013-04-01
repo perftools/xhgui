@@ -17,6 +17,7 @@ class Xhgui_Profile
 
     protected $_keys = array('ct', 'wt', 'cpu', 'mu', 'pmu');
     protected $_exclusiveKeys = array('ewt', 'ecpu', 'emu', 'epmu');
+    protected $_functionCount;
 
     public function __construct($profile, $convert = true)
     {
@@ -359,11 +360,15 @@ class Xhgui_Profile
      */
     public function getFunctionCount()
     {
+        if ($this->_functionCount) {
+            return $this->_functionCount;
+        }
         $total = 0;
         foreach ($this->_collapsed as $data) {
             $total += $data['ct'];
         }
-        return $total;
+        $this->_functionCount = $total;
+        return $this->_functionCount;
     }
 
     /**
@@ -388,6 +393,9 @@ class Xhgui_Profile
             }
             $diff[$key] = $this->_diffKeys($headData, $baseData);
         }
+
+        $diff['main'] = $diff['main()'];
+        $diff['functionCount'] = $head->getFunctionCount() - $this->getFunctionCount();
 
         return array(
             'base' => $this,

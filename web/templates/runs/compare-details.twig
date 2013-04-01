@@ -15,7 +15,7 @@
                 <span class="badge compare-base">base</span>
                 <a target="_blank" href="{{ url('/run.php', {id: comparison.base.id|trim}) }}">{{ comparison.base.id }}</a>
             </th>
-            <td class="right">{{ comparison.head.functionCount }}</td>
+            <td class="right">{{ comparison.base.functionCount }}</td>
             <td class="right">{{ comparison.base.get('main()', 'wt') |as_time }}</td>
             <td class="right">{{ comparison.base.get('main()', 'cpu') |as_time }}</td>
             <td class="right">{{ comparison.base.get('main()', 'mu') |as_bytes }}</td>
@@ -35,10 +35,10 @@
         <tr>
             <th>Difference</th>
             <td class="right">{{ comparison.diff.functionCount }}</td>
-            <td class="right">{{ comparison.diff['main()'].wt|as_time }}</td>
-            <td class="right">{{ comparison.diff['main()'].cpu|as_time }}</td>
-            <td class="right">{{ comparison.diff['main()'].mu|as_bytes }}</td>
-            <td class="right">{{ comparison.diff['main()'].pmu|as_bytes }}</td>
+            <td class="right">{{ comparison.diff.main.wt|as_time }}</td>
+            <td class="right">{{ comparison.diff.main.cpu|as_time }}</td>
+            <td class="right">{{ comparison.diff.main.mu|as_bytes }}</td>
+            <td class="right">{{ comparison.diff.main.pmu|as_bytes }}</td>
         </tr>
         <tr>
             <th>Difference %</th>
