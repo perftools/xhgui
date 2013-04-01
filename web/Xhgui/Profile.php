@@ -16,6 +16,7 @@ class Xhgui_Profile
     protected $_indexed;
 
     protected $_keys = array('ct', 'wt', 'cpu', 'mu', 'pmu');
+    protected $_exclusiveKeys = array('ewt', 'ecpu', 'emu', 'epmu');
 
     public function __construct($profile, $convert = true)
     {
@@ -72,6 +73,18 @@ class Xhgui_Profile
     {
         foreach ($this->_keys as $key) {
             $a[$key] += $b[$key];
+        }
+        return $a;
+    }
+
+    protected function _diffKeys($a, $b, $includeExclusive = true)
+    {
+        $keys = $this->_keys;
+        if ($includeExclusive) {
+            $keys = array_merge($keys, $this->_exclusiveKeys);
+        }
+        foreach ($keys as $key) {
+            $a[$key] -= $b[$key];
         }
         return $a;
     }
@@ -356,11 +369,26 @@ class Xhgui_Profile
      * @return array An array of comparison data.
      */
     public function compare(Xhgui_Profile $head) {
-        // TODO implement
+        $this->calculateExclusive();
+        $head->calculateExclusive();
+
+        $keys = array_merge($this->_keys, $this->_exclusiveKeys);
+        $emptyData = array_fill_keys($keys, 0);
+
+        $diff = array();
+        foreach ($this->_collapsed as $key => $baseData) {
+            $headData = $head->get($key);
+            if (!$headData) {
+                $diff[$key] = $this->_diffKeys($emptyData, $baseData);
+                continue;
+            }
+            $diff[$key] = $this->_diffKeys($baseData, $headData);
+        }
+
         return array(
             'base' => $this,
             'head' => $head,
-            'diff' => array()
+            'diff' => $diff
         );
     }
 
