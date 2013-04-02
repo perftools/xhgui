@@ -14,6 +14,7 @@ $sort = isset($_GET['sort']) ? $_GET['sort'] : null;
 $result = $profiles->getAll(array(
     'sort' => $sort,
     'page' => isset($_GET['page']) ? $_GET['page'] : null,
+    'direction' => isset($_GET['direction']) ? $_GET['direction'] : null,
     'perPage' => Xhgui_Config::read('page.limit'),
     'conditions' => $search
 ));

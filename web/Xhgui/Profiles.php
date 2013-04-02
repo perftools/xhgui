@@ -64,6 +64,7 @@ class Xhgui_Profiles
         return array(
             'results' => $this->_wrap($cursor),
             'sort' => $opts['sort'],
+            'direction' => $opts['direction'],
             'page' => $page,
             'perPage' => $opts['perPage'],
             'totalPages' => $totalPages

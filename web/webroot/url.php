@@ -7,6 +7,7 @@ $profiles = new Xhgui_Profiles($db->results);
 
 $pagination = array(
     'sort' => isset($_GET['sort']) ? $_GET['sort'] : null,
+    'direction' => isset($_GET['direction']) ? $_GET['direction'] : null,
     'page' => isset($_GET['page']) ? $_GET['page'] : null,
     'perPage' => Xhgui_Config::read('page.limit'),
 );
