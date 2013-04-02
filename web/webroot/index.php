@@ -32,9 +32,11 @@ if (isset($titleMap[$sort])) {
 
 $template = Xhgui_Template::load('runs/list.twig');
 echo $template->render(array(
+    'base_url' => '/index.php',
     'runs' => $result['results'],
     'page' => $result['page'],
     'sort' => $result['sort'],
+    'direction' => $result['direction'],
     'total_pages' => $result['totalPages'],
     'date_format' => Xhgui_Config::read('date.format'),
     'search' => $search,

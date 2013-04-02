@@ -11,6 +11,17 @@
 </dl>
 {% endmacro %}
 
+{% macro sort_link(text, url, sort, direction, search) %}
+{% set search = search|default({}) %}
+{%- if direction == 'asc' -%}
+    {% set direction = 'desc' %}
+{%- else -%}
+    {% set direction = 'asc' %}
+{%- endif -%}
+{% set params = {'direction': direction, 'sort': sort}|merge(search) %}
+<a class="sort-{{ direction }}" href="{{ url(url, params) }}">{{ text }}</a>
+{% endmacro %}
+
 {% macro pagination(url, page, total_pages, search) %}
 
 {# Hard code because I'm lazy #}

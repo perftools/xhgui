@@ -1,17 +1,18 @@
 {# Template fragment for outputting a list of runs #}
+{% import 'macros/helpers.twig' as helpers %}
 <div class="row-fluid">
-    <table class="table table-hover table-sort">
+    <table class="table table-hover">
         <thead>
             <tr>
                 {% if show_compare_link %}
                 <th>&nbsp;</th>
                 {% endif %}
-                <th>URL</th>
-                <th>Time</th>
-                <th class="right"><span class="tip" title="Wall time">wt</span></th>
-                <th class="right"><span class="tip" title="CPU time">cpu</span></th>
-                <th class="right"><span class="tip" title="Memory Usage">mu</span></th>
-                <th class="right"><span class="tip" title="Peak Memory Usage">pmu</span></th>
+                <th>{{ helpers.sort_link('URL', base_url, 'url', direction, search) }}</th>
+                <th>{{ helpers.sort_link('Time', base_url, 'date', direction, search) }}</th>
+                <th class="right"><span class="tip" title="Wall time">{{ helpers.sort_link('wt', base_url, 'wt', direction, search) }}</span></th>
+                <th class="right"><span class="tip" title="CPU time">{{ helpers.sort_link('cpu', base_url, 'cpu', direction, search) }}</span></th>
+                <th class="right"><span class="tip" title="Memory Usage">{{ helpers.sort_link('mu', base_url, 'mu', direction, search) }}</span></th>
+                <th class="right"><span class="tip" title="Peak Memory Usage">{{ helpers.sort_link('pmu', base_url, 'pmu', direction, search) }}</span></th>
             </tr>
         </thead>
         <tbody>
