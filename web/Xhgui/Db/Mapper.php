@@ -14,11 +14,13 @@ class Xhgui_Db_Mapper
         $result = array(
             'conditions' => array(),
             'sort' => null,
+            'direction' => null,
             'perPage' => 25
         );
         if (isset($options['conditions'])) {
             $result['conditions'] = $this->_conditions($options['conditions']);
         }
+        $result['direction'] = $this->_direction($options);
         $result['sort'] = $this->_sort($options);
 
         if (isset($options['perPage'])) {
@@ -60,6 +62,17 @@ class Xhgui_Db_Mapper
         return $conditions;
     }
 
+    protected function _direction($options)
+    {
+        if (empty($options['direction'])) {
+            return 'desc';
+        }
+        $valid = array('desc', 'asc');
+        if (in_array($options['direction'], $valid, true)) {
+            return $options['direction'];
+        }
+        return 'desc';
+    }
     /**
      * Get sort options for a paginated set.
      *
@@ -71,12 +84,8 @@ class Xhgui_Db_Mapper
     protected function _sort($options)
     {
         $direction = -1;
-        $validDirections = array('desc' => -1, 'asc' => 1);
-        if (
-            isset($options['direction']) &&
-            isset($validDirections[$options['direction']])
-        ) {
-            $direction = $validDirections[$options['direction']];
+        if (isset($options['direction']) && $options['direction'] === 'asc') {
+            $direction = 1;
         }
 
         $valid = array('wt', 'mu', 'cpu');
