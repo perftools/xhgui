@@ -30,14 +30,17 @@ if (isset($titleMap[$sort])) {
     $title = $titleMap[$sort];
 }
 
+$paging = array(
+    'total_pages' => $result['totalPages'],
+    'page' => $result['page'],
+    'sort' => $sort,
+    'direction' => $result['direction']
+);
 $template = Xhgui_Template::load('runs/list.twig');
 echo $template->render(array(
+    'paging' => $paging,
     'base_url' => '/index.php',
     'runs' => $result['results'],
-    'page' => $result['page'],
-    'sort' => $result['sort'],
-    'direction' => $result['direction'],
-    'total_pages' => $result['totalPages'],
     'date_format' => Xhgui_Config::read('date.format'),
     'search' => $search,
     'has_search' => strlen(implode('', $search)) > 0,

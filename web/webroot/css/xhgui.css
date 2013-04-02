@@ -144,21 +144,27 @@ th {
     text-align: center;
 }
 
+th.right,
 td.right {
     text-align: right;
-}
-th.right {
-    text-align: right;
-    padding-right: 30px;
 }
 th.header {
     background: url(../img/bg.gif) center right no-repeat;
     cursor: pointer;
     padding-right: 18px;
 }
+.sort-desc,
+.sort-asc {
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
+    padding-right: 18px;
+}
+.sort-desc,
 th.headerSortDown {
     background-image: url(../img/desc.gif);
 }
+.sort-asc,
 th.headerSortUp {
     background-image: url(../img/asc.gif);
 }

@@ -46,7 +46,7 @@
 {% endif %}
 
 {% if runs|length %}
-    {{ helpers.pagination('/index.php', page, total_pages, search) }}
+    {{ helpers.pagination('/index.php', paging, search) }}
 {% endif %}
 
 {% endblock %}

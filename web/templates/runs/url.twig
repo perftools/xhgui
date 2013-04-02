@@ -11,7 +11,7 @@
 
 {% include 'runs/paginated-list.twig' %}
 
-{{ helpers.pagination(url('/url.php', {'url': url}), page, total_pages) }}
+{{ helpers.pagination(url('/url.php', {'url': url}), paging) }}
 
 {% endblock %}
 

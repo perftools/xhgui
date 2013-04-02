@@ -15,14 +15,17 @@ $runs = $profiles->getForUrl($_GET['url'], $pagination);
 
 $chartData = $profiles->getAvgsForUrl($_GET['url']);
 
+$paging = array(
+    'total_pages' => $runs['totalPages'],
+    'sort' => $pagination['sort'],
+    'page' => $runs['page'],
+    'direction' => $runs['direction']
+);
 $template = Xhgui_Template::load('runs/url.twig');
 echo $template->render(array(
+    'paging' => $paging,
     'base_url' => '/url.php',
     'runs' => $runs['results'],
-    'page' => $runs['page'],
-    'sort' => $runs['sort'],
-    'direction' => $runs['direction'],
-    'total_pages' => $runs['totalPages'],
     'url' => $_GET['url'],
     'chart_data' => $chartData,
     'date_format' => Xhgui_Config::read('date.format')
