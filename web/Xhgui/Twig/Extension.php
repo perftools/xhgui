@@ -20,6 +20,7 @@ class Xhgui_Twig_Extension extends Twig_Extension
             'simple_url' => new Twig_Filter_Function('Xhgui_Util::simpleUrl'),
             'as_bytes' => new Twig_Filter_Method($this, 'formatBytes', array('is_safe' => array('html'))),
             'as_time' => new Twig_Filter_Method($this, 'formatTime', array('is_safe' => array('html'))),
+            'as_diff' => new Twig_Filter_Method($this, 'formatDiff', array('is_safe' => array('html'))),
         );
     }
 
@@ -59,6 +60,20 @@ class Xhgui_Twig_Extension extends Twig_Extension
     public function formatTime($value)
     {
         return number_format((float)$value) . ' <span class="units">µs</span>';
+    }
+
+    public function formatDiff($value)
+    {
+        $class = 'diff-same';
+        $class = $value > 0 ? 'diff-up' : 'diff-down';
+        if ($value == 0) {
+            $class = 'diff-same';
+        }
+        return sprintf(
+            '<span class="%s">%s</span>',
+            $class,
+            number_format((float)$value)
+        );
     }
 
 }

@@ -42,37 +42,7 @@
 {% endif %}
 
 {% if runs|length or has_search %}
-<table class="table table-hover table-sort">
-    <thead>
-        <tr>
-            <th>URL</th>
-            <th>Time</th>
-            <th class="right"><span class="tip" title="Wall time">wt</span></th>
-            <th class="right"><span class="tip" title="CPU time">cpu</span></th>
-            <th class="right"><span class="tip" title="Memory Usage">mu</span></th>
-            <th class="right"><span class="tip" title="Peak Memory Usage">pmu</span></th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for result in runs %}
-    <tr>
-        <td><a href="{{ url('/url.php', {'url': result.meta.url|simple_url }) }}">{{ result.meta.url }}</a></td>
-        <td><a href="{{ url('/run.php', {'id': result.id|trim }) }}">{{ result.meta.SERVER.REQUEST_TIME|date(date_format) }}</a></td>
-        <td class="right">{{ result.get('main()', 'wt') |as_time }}</td>
-        <td class="right">{{ result.get('main()', 'cpu') |as_bytes }}</td>
-        <td class="right">{{ result.get('main()', 'mu') |as_bytes }}</td>
-        <td class="right">{{ result.get('main()', 'pmu') |as_bytes }}</td>
-    </tr>
-    {% else %}
-    <tr>
-        <td colspan="6" class="no-results">
-            Your search conditions matched no runs. Try changing you search criteria.
-        </td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
+    {% include 'runs/paginated-list.twig' %}
 {% endif %}
 
 {% if runs|length %}

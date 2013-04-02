@@ -12,7 +12,7 @@
             <li class="nav-header">This Run</li>
             <li><strong>URL</strong> <a href="{{ url('/url.php', {'url': result.meta('url')|simple_url }) }}">{{ result.meta('url') }}</a></li>
             <li><strong>Time</strong> {{ result.meta('request_time.sec')|date('r') }}</li>
-            <li><strong>ID</strong> <a href="/custom_help.php?id={{ result.id }}">{{ result.id }}</a></li>
+            <li><strong>ID</strong> <a href="{{ url('/custom_help.php', {id: result.id|trim }) }}">{{ result.id }}</a></li>
             <li><strong>Wall Time</strong> {{ result.get('main()', 'wt')|as_time }}</li>
             <li><strong>CPU Time</strong> {{ result.get('main()', 'cpu')|as_time }}</li>
             <li><strong>Memory Usage</strong> {{ result.get('main()', 'mu')|as_bytes }}</li>
@@ -31,6 +31,10 @@
 <div class="span9">
 
     <div class="row-fluid">
+        <a href="{{ url('/compare.php', {base: result.id|trim }) }}" id="compare-button" class="btn back-link">
+            Compare this run
+        </a>
+
         <h2>Watch Functions</h2>
 
         <table class="table table-hover">
@@ -46,11 +50,11 @@
         <tbody>
         {% for value in watches %}
         <tr>
-            <td>{{ value.function }}</td>
-            <td>{{ value.ct }}</td>
-            <td>{{ value.ewt|as_time }}</td>
-            <td>{{ value.emu|as_bytes }}</td>
-            <td>{{ value.epmu|as_bytes }}</td>
+            <td class="right">{{ value.function }}</td>
+            <td class="right">{{ value.ct }}</td>
+            <td class="right">{{ value.ewt|as_time }}</td>
+            <td class="right">{{ value.emu|as_bytes }}</td>
+            <td class="right">{{ value.epmu|as_bytes }}</td>
         </tr>
         {% endfor %}
         </tbody>
@@ -110,15 +114,15 @@
         <td class="text">
             <a href="{{ url('/symbol.php', {'id': result.id|trim, 'symbol': key}) }}">{{ key }}</a>
         </td>
-        <td>{{ value.ct }}</td>
-        <td>{{ value.ewt|as_time }}</td>
-        <td>{{ value.ecpu|as_time }}</td>
-        <td>{{ value.emu|as_bytes }}</td>
-        <td>{{ value.epmu|as_bytes }}</td>
-        <td>{{ value.wt|as_time }}</td>
-        <td>{{ value.cpu|as_time }}</td>
-        <td>{{ value.mu|as_bytes }}</td>
-        <td>{{ value.pmu|as_bytes }}</td>
+        <td class="right">{{ value.ct }}</td>
+        <td class="right">{{ value.ewt|as_time }}</td>
+        <td class="right">{{ value.ecpu|as_time }}</td>
+        <td class="right">{{ value.emu|as_bytes }}</td>
+        <td class="right">{{ value.epmu|as_bytes }}</td>
+        <td class="right">{{ value.wt|as_time }}</td>
+        <td class="right">{{ value.cpu|as_time }}</td>
+        <td class="right">{{ value.mu|as_bytes }}</td>
+        <td class="right">{{ value.pmu|as_bytes }}</td>
     </tr>
     {% endfor %}
     </tbody>
