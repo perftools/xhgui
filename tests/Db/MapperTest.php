@@ -100,6 +100,7 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
             array('profile.main().wt' => 1),
             $result['sort']
         );
+        $this->assertEquals('asc', $result['direction']);
 
         $options = array(
             'sort' => 'wt',
@@ -110,6 +111,7 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
             array('profile.main().wt' => -1),
             $result['sort']
         );
+        $this->assertEquals('desc', $result['direction']);
 
         $options = array(
             'sort' => 'wt',
@@ -120,6 +122,7 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
             array('profile.main().wt' => -1),
             $result['sort']
         );
+        $this->assertEquals('desc', $result['direction']);
 
         $options = array(
             'sort' => 'barf',
