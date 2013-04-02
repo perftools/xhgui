@@ -92,6 +92,36 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
         );
 
         $options = array(
+            'sort' => 'wt',
+            'direction' => 'asc'
+        );
+        $result = $this->mapper->convert($options);
+        $this->assertEquals(
+            array('profile.main().wt' => 1),
+            $result['sort']
+        );
+
+        $options = array(
+            'sort' => 'wt',
+            'direction' => 'desc'
+        );
+        $result = $this->mapper->convert($options);
+        $this->assertEquals(
+            array('profile.main().wt' => -1),
+            $result['sort']
+        );
+
+        $options = array(
+            'sort' => 'wt',
+            'direction' => 'farts'
+        );
+        $result = $this->mapper->convert($options);
+        $this->assertEquals(
+            array('profile.main().wt' => -1),
+            $result['sort']
+        );
+
+        $options = array(
             'sort' => 'barf',
         );
         $result = $this->mapper->convert($options);

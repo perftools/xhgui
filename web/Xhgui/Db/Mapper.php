@@ -70,19 +70,28 @@ class Xhgui_Db_Mapper
      */
     protected function _sort($options)
     {
+        $direction = -1;
+        $validDirections = array('desc' => -1, 'asc' => 1);
+        if (
+            isset($options['direction']) &&
+            isset($validDirections[$options['direction']])
+        ) {
+            $direction = $validDirections[$options['direction']];
+        }
+
         $valid = array('wt', 'mu', 'cpu');
         if (
             empty($options['sort']) ||
             (isset($options['sort']) && !in_array($options['sort'], $valid))
         ) {
-            return array('meta.SERVER.REQUEST_TIME' => -1);
+            return array('meta.SERVER.REQUEST_TIME' => $direction);
         }
         if ($options['sort'] == 'wt') {
-            return array('profile.main().wt' => -1);
+            return array('profile.main().wt' => $direction);
         } elseif ($options['sort'] == 'mu') {
-            return array('profile.main().mu' => -1);
+            return array('profile.main().mu' => $direction);
         } elseif ($options['sort'] == 'cpu') {
-           return array('profile.main().cpu' => -1);
+           return array('profile.main().cpu' => $direction);
         }
     }
 
