@@ -35,7 +35,7 @@ Installing the xhgui ui
   You'll need to update `web/config/config.php` so that it can connect to mongod.
 * You may wish to add indexes (recommended but optional) to improve the performance, you'll need to do this by using mongo console
   
-  On your command prompt (irrespective of Windows or *nix), open mongo shell using command 'mongo' and follow below commands to add the index
+  On your command prompt (irrespective of Windows or \*nix), open mongo shell using command 'mongo' and follow below commands to add the index
 
 		  $ mongo
 		  > use xhprof
