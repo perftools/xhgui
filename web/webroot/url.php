@@ -28,5 +28,6 @@ echo $template->render(array(
     'runs' => $runs['results'],
     'url' => $_GET['url'],
     'chart_data' => $chartData,
-    'date_format' => Xhgui_Config::read('date.format')
+    'date_format' => Xhgui_Config::read('date.format'),
+    'search' => array('url' => $_GET['url'])
 ));

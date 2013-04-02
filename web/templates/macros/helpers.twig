@@ -58,7 +58,7 @@
 {% endif %}
 
 {% for i in start..end %}
-    {% if i == page %}
+    {% if i == paging.page %}
     <li class="active"><span>{{ i }}</span></li>
     {% else %}
     <li><a href="{{ url(url, search|merge({'page': i})) }}">{{ i }}</a></li>
