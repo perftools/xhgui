@@ -6,6 +6,7 @@ $db = Xhgui_Db::connect();
 $profiles = new Xhgui_Profiles($db->results);
 
 $baseRun = $headRun = $candidates = $comparison = null;
+$paging = array();
 
 if (!empty($_GET['base'])) {
     $baseRun = $profiles->get($_GET['base']);
@@ -13,6 +14,7 @@ if (!empty($_GET['base'])) {
 
 if ($baseRun && empty($_GET['head'])) {
     $pagination = array(
+        'direction' => isset($_GET['direction']) ? $_GET['direction'] : null,
         'sort' => isset($_GET['sort']) ? $_GET['sort'] : null,
         'page' => isset($_GET['page']) ? $_GET['page'] : null,
         'perPage' => Xhgui_Config::read('page.limit'),
@@ -20,6 +22,13 @@ if ($baseRun && empty($_GET['head'])) {
     $candidates = $profiles->getForUrl(
         $baseRun->getMeta('simple_url'),
         $pagination
+    );
+
+    $paging = array(
+        'total_pages' => $candidates['totalPages'],
+        'sort' => $pagination['sort'],
+        'page' => $candidates['page'],
+        'direction' => $candidates['direction']
     );
 }
 
@@ -31,6 +40,7 @@ if ($baseRun && $headRun) {
     $comparison = $baseRun->compare($headRun);
 }
 
+
 $template = Xhgui_Template::load('runs/compare.twig');
 echo $template->display(array(
     'base_run' => $baseRun,
@@ -38,5 +48,6 @@ echo $template->display(array(
     'candidates' => $candidates,
     'url_params' => $_GET,
     'date_format' => Xhgui_Config::read('date.format'),
-    'comparison' => $comparison
+    'comparison' => $comparison,
+    'paging' => $paging,
 ));
