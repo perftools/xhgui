@@ -5,7 +5,7 @@ $db = Xhgui_Db::connect();
 
 $profiles = new Xhgui_Profiles($db->results);
 
-$baseRun = $headRun = $candidates = null;
+$baseRun = $headRun = $candidates = $comparison = null;
 
 if (!empty($_GET['base'])) {
     $baseRun = $profiles->get($_GET['base']);
