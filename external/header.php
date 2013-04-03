@@ -63,5 +63,5 @@ function Xhgui_recordXHProfData()
 
     $db = Xhgui_Db::connect();
     $profiles = new Xhgui_Profiles($db->results);
-    $profiles->insert($data);
+    $profiles->insert($data, array('w' => false));
 }
