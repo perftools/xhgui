@@ -215,6 +215,8 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $head = new Xhgui_Profile($fixture);
 
         $result = $base->compare($head);
+
+        $this->assertArrayHasKey('diffPercent', $result);
         $this->assertArrayHasKey('diff', $result);
         $this->assertArrayHasKey('head', $result);
         $this->assertArrayHasKey('base', $result);
@@ -247,6 +249,7 @@ class ProfileTest extends PHPUnit_Framework_TestCase
             $result['diff']['strpos()']['ewt'],
             'Should include exclusives'
         );
+        $this->assertEquals(0.5, $result['diffPercent']['functionCount']);
     }
 
 }
