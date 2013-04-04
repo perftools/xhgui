@@ -90,6 +90,23 @@ class Xhgui_Profile
         return $a;
     }
 
+    protected function _diffPercentKeys($a, $b, $includeExclusive = true)
+    {
+        $out = array();
+        $keys = $this->_keys;
+        if ($includeExclusive) {
+            $keys = array_merge($keys, $this->_exclusiveKeys);
+        }
+        foreach ($keys as $key) {
+            if ($b[$key] != 0) {
+                $out[$key] = $a[$key] / $b[$key];
+            } else {
+                $out[$key] = -1;
+            }
+        }
+        return $out;
+    }
+
     /**
      * Get the profile run data.
      *
@@ -384,6 +401,7 @@ class Xhgui_Profile
         $keys = array_merge($this->_keys, $this->_exclusiveKeys);
         $emptyData = array_fill_keys($keys, 0);
 
+        $diffPercent = array();
         $diff = array();
         foreach ($this->_collapsed as $key => $baseData) {
             $headData = $head->get($key);
@@ -392,14 +410,20 @@ class Xhgui_Profile
                 continue;
             }
             $diff[$key] = $this->_diffKeys($headData, $baseData);
+
+            if ($key === 'main()') {
+                $diffPercent[$key] = $this->_diffPercentKeys($headData, $baseData);
+            }
         }
 
         $diff['functionCount'] = $head->getFunctionCount() - $this->getFunctionCount();
+        $diffPercent['functionCount'] = $head->getFunctionCount() / $this->getFunctionCount();
 
         return array(
             'base' => $this,
             'head' => $head,
-            'diff' => $diff
+            'diff' => $diff,
+            'diffPercent' => $diffPercent,
         );
     }
 

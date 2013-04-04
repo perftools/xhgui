@@ -21,6 +21,7 @@ class Xhgui_Twig_Extension extends Twig_Extension
             'as_bytes' => new Twig_Filter_Method($this, 'formatBytes', array('is_safe' => array('html'))),
             'as_time' => new Twig_Filter_Method($this, 'formatTime', array('is_safe' => array('html'))),
             'as_diff' => new Twig_Filter_Method($this, 'formatDiff', array('is_safe' => array('html'))),
+            'as_percent' => new Twig_Filter_Method($this, 'formatPercent', array('is_safe' => array('html'))),
         );
     }
 
@@ -76,4 +77,8 @@ class Xhgui_Twig_Extension extends Twig_Extension
         );
     }
 
+    public function formatPercent($value)
+    {
+        return number_format((float)$value * 100, 0) . ' <span class="units">%</span>';
+    }
 }

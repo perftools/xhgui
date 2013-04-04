@@ -40,6 +40,14 @@
             <td class="right">{{ comparison.diff['main()'].mu|as_bytes }}</td>
             <td class="right">{{ comparison.diff['main()'].pmu|as_bytes }}</td>
         </tr>
+        <tr>
+            <th>Difference %</th>
+            <td class="right">{{ comparison.diffPercent.functionCount|as_percent }}</td>
+            <td class="right">{{ comparison.diffPercent['main()'].wt|as_percent }}</td>
+            <td class="right">{{ comparison.diffPercent['main()'].cpu|as_percent }}</td>
+            <td class="right">{{ comparison.diffPercent['main()'].mu|as_percent }}</td>
+            <td class="right">{{ comparison.diffPercent['main()'].pmu|as_percent }}</td>
+        </tr>
     </tbody>
 </table>
 
