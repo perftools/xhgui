@@ -88,14 +88,16 @@ class Xhgui_Db_Mapper
             $direction = 1;
         }
 
-        $valid = array('wt', 'mu', 'cpu');
+        $valid = array('time', 'wt', 'mu', 'cpu');
         if (
             empty($options['sort']) ||
             (isset($options['sort']) && !in_array($options['sort'], $valid))
         ) {
             return array('meta.SERVER.REQUEST_TIME' => $direction);
         }
-        if ($options['sort'] == 'wt') {
+        if ($options['sort'] == 'time') {
+            return array('meta.SERVER.REQUEST_TIME' => $direction);
+        } elseif ($options['sort'] == 'wt') {
             return array('profile.main().wt' => $direction);
         } elseif ($options['sort'] == 'mu') {
             return array('profile.main().mu' => $direction);

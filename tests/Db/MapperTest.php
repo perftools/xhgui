@@ -83,6 +83,15 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
     public function testConvertSort()
     {
         $options = array(
+            'sort' => 'time',
+        );
+        $result = $this->mapper->convert($options);
+        $this->assertEquals(
+            array('meta.SERVER.REQUEST_TIME' => -1),
+            $result['sort']
+        );
+
+        $options = array(
             'sort' => 'wt',
         );
         $result = $this->mapper->convert($options);

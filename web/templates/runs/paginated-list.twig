@@ -8,18 +8,28 @@
                 <th>&nbsp;</th>
                 {% endif %}
                 <th>URL</th>
-                <th>Time</th>
-                <th class="right">
-                    <span class="tip" title="Wall time">{{ helpers.sort_link('wt', base_url, 'wt', paging, search) }}</span>
+                <th>
+                    {{ helpers.sort_link('Time', base_url, 'time', paging, search) }}
                 </th>
                 <th class="right">
-                    <span class="tip" title="CPU time">{{ helpers.sort_link('cpu', base_url, 'cpu', paging, search) }}</span>
+                    <span class="tip" title="Wall time">
+                        {{ helpers.sort_link('wt', base_url, 'wt', paging, search) }}
+                    </span>
                 </th>
                 <th class="right">
-                    <span class="tip" title="Memory Usage">{{ helpers.sort_link('mu', base_url, 'mu', paging, search) }}</span>
+                    <span class="tip" title="CPU time">
+                        {{ helpers.sort_link('cpu', base_url, 'cpu', paging, search) }}
+                    </span>
                 </th>
                 <th class="right">
-                    <span class="tip" title="Peak Memory">{{ helpers.sort_link('pmu', base_url, 'pmu', paging, search) }}</span>
+                    <span class="tip" title="Memory Usage">
+                        {{ helpers.sort_link('mu', base_url, 'mu', paging, search) }}
+                    </span>
+                </th>
+                <th class="right">
+                    <span class="tip" title="Peak Memory">
+                        {{ helpers.sort_link('pmu', base_url, 'pmu', paging, search) }}
+                    </span>
                 </th>
             </tr>
         </thead>
