@@ -143,6 +143,9 @@ h1, h2, h3, h4, h5, h6,
 th {
     text-align: center;
 }
+thead th {
+    border-bottom: 1px solid #aaa;
+}
 
 th.right,
 td.right {
