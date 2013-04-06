@@ -1,6 +1,10 @@
 {% extends 'layout/base.twig' %}
 {% import 'macros/helpers.twig' as helpers %}
 
+{% block title %}
+Profile - {{ result.meta.url }}
+{% endblock %}
+
 {% block content %}
 <div class="row-fluid">
     <h1>Profile data for {{ result.meta('SERVER.REQUEST_METHOD')}} {{ result.meta('url') }}</h1>

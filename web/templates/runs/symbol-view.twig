@@ -1,6 +1,10 @@
 {% extends 'layout/base.twig' %}
 {% import 'macros/helpers.twig' as helpers %}
 
+{% block title %}
+Symbol - {{ symbol }}
+{% endblock %}
+
 {% block content %}
 <div class="row-fluid">
     <a class="back-link" href="{{ url('/run.php', {'id': id}) }}">&laquo; Back to run</a>

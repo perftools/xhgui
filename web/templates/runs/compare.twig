@@ -1,6 +1,10 @@
 {% extends 'layout/base.twig' %}
 {% import 'macros/helpers.twig' as helpers %}
 
+{% block title %}
+Compare - {{ base_run.meta.simple_url }}
+{% endblock %}
+
 {% block content %}
 <h1>Compare runs for {{ base_run.meta.simple_url }}</h1>
 
