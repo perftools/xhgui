@@ -23,7 +23,7 @@
 {% endif %}
 {% set params = {'direction': direction, 'sort': sort}|merge(search) %}
 
-<a class="{{ classname }}" href="{{ url(url, params) }}">{{ text }}</a>
+<a class="sort-link {{ classname }}" href="{{ url(url, params) }}">{{ text }}</a>
 {% endmacro %}
 
 {% macro pagination(url, paging, search) %}

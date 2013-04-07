@@ -146,6 +146,14 @@ th {
 thead th {
     border-bottom: 1px solid #aaa;
 }
+/* Sort link colors are reversed */
+thead .sort-link {
+    color: #2f99af;
+}
+thead .sort-link:hover {
+    color: #59bdd2;
+}
+
 
 th.right,
 td.right {
