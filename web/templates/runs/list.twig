@@ -10,7 +10,13 @@ Run list
 
 {% if runs|length or has_search %}
 <div class="searchbar clearfix">
-<form action="{{ url('/index.php') }}" method="get" class="form-inline">
+
+<a href="#" class="pull-right btn btn-small search-expand" title="Show search form">
+    <i class="icon-search"></i> Search
+</a>
+
+<form action="{{ url('/index.php') }}" method="get" class="hide search-form form-inline">
+    <a href="#" class="search-collapse close" title="Hide search form">&times;</a>
     <div class="control-group span4">
         <label class="control-label" for="start_date">Date range</label>
         <div class="controls">
@@ -55,3 +61,25 @@ Run list
 
 {% endblock %}
 
+{% block jsfoot %}
+<script type="text/javascript">
+$(document).ready(function () {
+    var searchForm = $('.search-form'),
+        searchExpand = $('.search-expand');
+
+    searchExpand.on('click', function () {
+        searchExpand.fadeOut('fast', function () {
+            searchForm.slideDown('fast');
+        });
+        return false;
+    });
+    $('.search-collapse').on('click', function () {
+        searchForm.slideUp('fast', function () {
+            searchExpand.show();
+        });
+        return false;
+    });
+
+});
+</script>
+{% endblock %}
