@@ -60,5 +60,14 @@ directive. This can be enabled system-wide through `php.ini`. Alternatively, you
         DocumentRoot "/Users/markstory/Sites/awesome-thing/app/webroot/"
         ServerName site.localhost
     </VirtualHost>
+    
+With Nginx in fastcgi mode you will have :
+
+    server {
+    	listen 80;
+    	server_name site.localhost;
+    	root /Users/markstory/Sites/awesome-thing/app/webroot/;
+        fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
+     }
 
 
