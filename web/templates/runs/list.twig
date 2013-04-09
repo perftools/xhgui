@@ -10,30 +10,29 @@ Run list
 
 {% if runs|length or has_search %}
 <div class="searchbar clearfix">
+    <a href="#" class="pull-right btn btn-small search-expand" title="Show search form">
+        <i class="icon-search"></i> Search
+    </a>
 
-<a href="#" class="pull-right btn btn-small search-expand" title="Show search form">
-    <i class="icon-search"></i> Search
-</a>
-
-<form action="{{ url('/index.php') }}" method="get" class="row hide search-form form-inline">
-    <a href="#" class="search-collapse close" title="Hide search form">&times;</a>
-    <div class="control-group span4">
-        <label class="control-label" for="start_date">Date range</label>
-        <div class="controls">
-            <input type="text" data-date-format="yyyy-mm-dd" id="date_start" name="date_start" class="datepicker span2" value="{{ search.date_start }}">
-            <input type="text" id="date_end" data-date-format="yyyy-mm-dd" name="date_end" class="datepicker span2" value="{{ search.date_end }}">
+    <form action="{{ url('/index.php') }}" method="get" class="row hide search-form form-inline">
+        <a href="#" class="search-collapse close" title="Hide search form">&times;</a>
+        <div class="control-group span4">
+            <label class="control-label" for="start_date">Date range</label>
+            <div class="controls">
+                <input type="text" data-date-format="yyyy-mm-dd" id="date_start" name="date_start" class="datepicker span2" value="{{ search.date_start }}">
+                <input type="text" id="date_end" data-date-format="yyyy-mm-dd" name="date_end" class="datepicker span2" value="{{ search.date_end }}">
+            </div>
         </div>
-    </div>
-    <div class="control-group span4">
-        <label class="control-label" for="url">URL</label>
-        <div class="controls">
-            <input type="text" id="url" name="url" value="{{ search.url }}">
+        <div class="control-group span4">
+            <label class="control-label" for="url">URL</label>
+            <div class="controls">
+                <input type="text" id="url" name="url" value="{{ search.url }}">
+            </div>
         </div>
-    </div>
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Search</button>
-    </div>
-</form>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
 </div>
 {% endif %}
 
@@ -59,28 +58,4 @@ Run list
     {{ helpers.pagination('/index.php', paging, search) }}
 {% endif %}
 
-{% endblock %}
-
-{% block jsfoot %}
-<script type="text/javascript">
-$(document).ready(function () {
-    var searchForm = $('.search-form'),
-        searchExpand = $('.search-expand');
-
-    searchExpand.on('click', function () {
-        searchExpand.fadeOut('fast', function () {
-            searchForm.slideDown('fast');
-        });
-        return false;
-    });
-
-    $('.search-collapse').on('click', function () {
-        searchForm.slideUp('fast', function () {
-            searchExpand.show();
-        });
-        return false;
-    });
-
-});
-</script>
 {% endblock %}

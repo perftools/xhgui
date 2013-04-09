@@ -11,8 +11,13 @@ $pagination = array(
     'page' => isset($_GET['page']) ? $_GET['page'] : null,
     'perPage' => Xhgui_Config::read('page.limit'),
 );
-$runs = $profiles->getForUrl($_GET['url'], $pagination);
 
+$search = array();
+$keys = array('date_start', 'date_end');
+foreach ($keys as $key) {
+    $search[$key] = !empty($_GET[$key]) ? $_GET[$key] : null;
+}
+$runs = $profiles->getForUrl($_GET['url'], $pagination, $search);
 $chartData = $profiles->getAvgsForUrl($_GET['url']);
 
 $paging = array(
@@ -21,6 +26,7 @@ $paging = array(
     'page' => $runs['page'],
     'direction' => $runs['direction']
 );
+
 $template = Xhgui_Template::load('runs/url.twig');
 echo $template->render(array(
     'paging' => $paging,
@@ -29,5 +35,5 @@ echo $template->render(array(
     'url' => $_GET['url'],
     'chart_data' => $chartData,
     'date_format' => Xhgui_Config::read('date.format'),
-    'search' => array('url' => $_GET['url'])
+    'search' => array_merge($search, array('url' => $_GET['url'])),
 ));
