@@ -31,14 +31,17 @@ class Xhgui_Profiles
      *
      * @param string $url The url to load profiles for.
      * @param array $options Pagination options to use.
+     * @param array $conditions The search options.
      * @return MongoCursor
      */
-    public function getForUrl($url, $options)
+    public function getForUrl($url, $options, $conditions = array())
     {
+        $conditions = array_merge(
+            (array)$conditions,
+            array('simple_url' => $url)
+        );
         $options = array_merge($options, array(
-            'conditions' => array(
-                'simple_url' => $url
-            )
+            'conditions' => $conditions,
         ));
         return $this->paginate($options);
     }

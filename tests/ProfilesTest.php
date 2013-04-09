@@ -78,6 +78,29 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
         $this->assertCount(0, $result['results']);
     }
 
+    public function testGetForUrlWithSearch()
+    {
+        $options = array(
+            'perPage' => 2
+        );
+        $search = array(
+            'date_start' => '2013-01-17',
+            'date_end' => '2013-01-17',
+        );
+        $result = $this->profiles->getForUrl('/', $options, $search);
+        $this->assertEquals(1, $result['page']);
+        $this->assertEquals(1, $result['totalPages']);
+        $this->assertEquals(2, $result['perPage']);
+        $this->assertCount(1, $result['results']);
+
+        $search = array(
+            'date_start' => '2013-01-01',
+            'date_end' => '2013-01-02',
+        );
+        $result = $this->profiles->getForUrl('/', $options, $search);
+        $this->assertCount(0, $result['results']);
+    }
+
     public function testGetAvgsForUrl()
     {
         $result = $this->profiles->getAvgsForUrl('/');
