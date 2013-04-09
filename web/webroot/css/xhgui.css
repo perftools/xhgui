@@ -101,6 +101,9 @@ h1, h2, h3, h4, h5, h6,
     background: -moz-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
     background: linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
 }
+.searchbar form {
+    margin-bottom: 0;
+}
 .searchbar .form-actions {
     margin: 0px;
     float: left;
