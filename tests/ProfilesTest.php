@@ -85,7 +85,7 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
         );
         $search = array(
             'date_start' => '2013-01-17',
-            'date_end' => '2013-01-17',
+            'date_end' => '2013-01-18',
         );
         $result = $this->profiles->getForUrl('/', $options, $search);
         $this->assertEquals(1, $result['page']);
