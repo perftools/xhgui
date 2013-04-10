@@ -90,10 +90,6 @@ Symbol - {{ symbol }}
             <tr>
                 <th>Function</th>
                 <th>Call Count</th>
-                <th>Exclusive Wall Time</th>
-                <th>Exclusive CPU</th>
-                <th>Exclusive Memory Usage</th>
-                <th>Exclusive Peak Memory Usage</th>
 
                 <th>Inclusive Wall Time</th>
                 <th>Inclusive CPU</th>
@@ -108,10 +104,6 @@ Symbol - {{ symbol }}
                 <a href="{{ url('/symbol.php', {'id': id, 'symbol': child.function}) }}">{{ child.function }}</a>
             </td>
             <td>{{ child.ct }}</td>
-            <td>{{ child.ewt|as_time }}</td>
-            <td>{{ child.ecpu|as_time }}</td>
-            <td>{{ child.emu|as_bytes }}</td>
-            <td>{{ child.epmu|as_bytes }}</td>
 
             <td>{{ child.wt|as_time }}</td>
             <td>{{ child.cpu|as_time }}</td>
