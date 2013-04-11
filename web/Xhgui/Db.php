@@ -23,16 +23,9 @@ class Xhgui_Db
         if (empty($db)) {
             $db = Xhgui_Config::read('db.db');
         }
-        try {
-            self::$_mongo = new MongoClient($host);
-            self::$_db = self::$_mongo->{$db};
-            return self::$_db;
-        } catch (Exception $e) {
-            echo "Unable to connect to Mongo<br>\n";
-            echo "Exception: " . $e->getMessage() ."<br>\n";
-            echo "You may want to ensure that Mongo has been started, and that the config file has the right connection information";
-            exit;
-        }
+        self::$_mongo = new MongoClient($host);
+        self::$_db = self::$_mongo->{$db};
+        return self::$_db;
     }
 
     /**

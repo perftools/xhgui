@@ -48,6 +48,7 @@ function Xhgui_recordXHProfData()
     $data['profile'] = xhprof_disable();
 
     if (!defined('XHGUI_ROOT_DIR')) {
+        define('XHGUI_DISABLE_EXCEPTION', true);
         require dirname(dirname(__FILE__)) . '/web/bootstrap.php';
     }
 
@@ -61,7 +62,11 @@ function Xhgui_recordXHProfData()
         'request_date' => date('Y-m-d', $_SERVER['REQUEST_TIME']),
     );
 
-    $db = Xhgui_Db::connect();
-    $profiles = new Xhgui_Profiles($db->results);
-    $profiles->insert($data, array('w' => false));
+    try {
+        $db = Xhgui_Db::connect();
+        $profiles = new Xhgui_Profiles($db->results);
+        $profiles->insert($data, array('w' => false));
+    } catch (Exception $e) {
+        error_log('xhgui - ' . $e->getMessage());
+    }
 }
