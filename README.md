@@ -33,26 +33,25 @@ Installing the xhgui ui
 
 * If your mongodb setup requires a username + password, or isn't running on the default port + host.
   You'll need to update `web/config/config.php` so that it can connect to mongod.
-* You may wish to add indexes (recommended but optional) to improve the performance, you'll need to do this by using mongo console
-  
-  On your command prompt (irrespective of Windows or \*nix), open mongo shell using command 'mongo' and follow below commands to add the index
+* You may wish to add indexes (recommended but optional) to improve the performance, you'll need to do this by using  mongo console
 
-		  $ mongo
-		  > use xhprof
-		  > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
-		  > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
-		  > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
-		  > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
-		  > db.results.ensureIndex( { 'meta.url' : 1 } )
-  
+  On your command prompt (irrespective of Windows or \*nix), open mongo shell using command 'mongo' and follow below  commands to add the index:
+
+      $ mongo
+      > use xhprof
+      > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
+      > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
+      > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
+      > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
+      > db.results.ensureIndex( { 'meta.url' : 1 } )
+
   That's it you added the indexes, you may notice now you are able navigate across pages faster
 
 Profiling an application / site
 -------------------------------
 
 The simplest way to get an application profiled, is to use `external/header.php`.
-This file is designed to be combined with PHP's [auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-prepend-file)
-directive. This can be enabled system-wide through `php.ini`. Alternatively, you can enable
+This file is designed to be combined with PHP's [auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-prepend-file) directive. This can be enabled system-wide through `php.ini`. Alternatively, you can enable
 `auto_prepend_file` per virtual host. With apache this would look like:
 
     <VirtualHost *:80>
@@ -60,14 +59,24 @@ directive. This can be enabled system-wide through `php.ini`. Alternatively, you
         DocumentRoot "/Users/markstory/Sites/awesome-thing/app/webroot/"
         ServerName site.localhost
     </VirtualHost>
-    
-With Nginx in fastcgi mode you will have :
+
+With Nginx in fastcgi mode you could use:
 
     server {
-    	listen 80;
-    	server_name site.localhost;
-    	root /Users/markstory/Sites/awesome-thing/app/webroot/;
+        listen 80;
+        server_name site.localhost;
+        root /Users/markstory/Sites/awesome-thing/app/webroot/;
         fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
      }
 
 
+License
+=======
+
+Copyright (c) 2013 Mark Story & Paul Reinheimer
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
