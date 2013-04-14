@@ -7,7 +7,7 @@
 
 {% block content %}
 <div class="row-fluid">
-    <h1>Profile data for {{ result.meta('SERVER.REQUEST_METHOD')}} {{ result.meta('url') }}</h1>
+    <h1>Profile data for {{ result.meta('SERVER.REQUEST_METHOD')}} {{ result.meta.url }}</h1>
 </div>
 <div class="row-fluid">
 <div class="span3">
@@ -37,6 +37,9 @@
     <div class="row-fluid">
         <a href="{{ url('/compare.php', {base: result.id|trim }) }}" id="compare-button" class="btn back-link">
             Compare this run
+        </a>
+        <a href="{{ url('/callgraph.php', {id: result.id|trim }) }}" class="btn back-link">
+            View Callgraph
         </a>
 
         <h2>Watch Functions</h2>

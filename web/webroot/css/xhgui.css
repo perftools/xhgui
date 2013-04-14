@@ -248,6 +248,7 @@ tr .no-results {
 .back-link {
     float: right;
     margin-top: 20px;
+    margin-left: 10px;
 }
 
 /**
