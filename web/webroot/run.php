@@ -33,5 +33,6 @@ echo $template->display(array(
     'result' => $result,
     'wall_time' => $timeChart,
     'memory' => $memoryChart,
-    'watches' => $watchedFunctions
+    'watches' => $watchedFunctions,
+    'date_format' => Xhgui_Config::read('date_format'),
 ));
