@@ -426,4 +426,13 @@ class Xhgui_Profile
         );
     }
 
+    /**
+     * Return a structured array suitable for generating callgraph visualizations.
+     *
+     * @return array
+     */
+    public function getCallgraph()
+    {
+    }
+
 }

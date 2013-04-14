@@ -1,0 +1,10 @@
+{% extends 'layout/base.twig' %}
+
+{% block title %}
+- Callgraph - {{ profile.meta.url }} - {{ profile.meta('request_time.sec')|date(date_format) }}</li>
+{% endblock %}
+
+{% block content %}
+<h1>Callgraph for {{ profile.meta.url }} on {{ profile.meta('request_time.sec')|date(date_format) }}</h1>
+
+{% endblock %}
