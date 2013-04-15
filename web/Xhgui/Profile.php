@@ -426,4 +426,28 @@ class Xhgui_Profile
         );
     }
 
+    public function getCallgraph()
+    {
+        return $this->_getChildFunctions(self::NO_PARENT);
+    }
+
+    protected function _getChildFunctions($parentName)
+    {
+        $children = $this->_indexed[$parentName];
+
+        // Leaf functions won't have children.
+        if (empty($children)) {
+            return array();
+        }
+        $graph = array();
+
+        foreach ($children as $childName => $metrics) {
+            $graph[] = array(
+                'name' => $childName,
+                'children' => $this->_getChildFunctions($childName)
+            );
+        }
+        return $graph;
+    }
+
 }

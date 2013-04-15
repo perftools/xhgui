@@ -252,4 +252,45 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0.5, $result['diffPercent']['functionCount']);
     }
 
+    public function testGetCallgraph()
+    {
+        $profile = new Xhgui_Profile($this->_fixture[1]);
+
+        $expected = array(
+            array(
+                'name' => 'main()',
+                'children' => array(
+                    array(
+                        'name' => 'eat_burger()',
+                        'children' => array(
+                            array(
+                                'name' => 'chew_food()',
+                                'children' => array()
+                            ),
+                            array(
+                                'name' => 'strlen()',
+                                'children' => array()
+                            ),
+                        ),
+                    ),
+                    array(
+                        'name' => 'drink_beer()',
+                        'children' => array(
+                            array(
+                                'name' => 'lift_glass()',
+                                'children' => array()
+                            ),
+                            array(
+                                'name' => 'strlen()',
+                                'children' => array()
+                            ),
+                        ),
+                    ),
+                ),
+            )
+        );
+        $result = $profile->getCallgraph();
+        $this->assertEquals($expected, $result);
+    }
+
 }
