@@ -438,12 +438,11 @@ class Xhgui_Profile
 
     protected function _getChildFunctions($parentName)
     {
-        $children = $this->_indexed[$parentName];
-
         // Leaf functions won't have children.
-        if (empty($children)) {
+        if (!isset($this->_indexed[$parentName])) {
             return array();
         }
+        $children = $this->_indexed[$parentName];
         $graph = array();
 
         foreach ($children as $childName => $metrics) {
