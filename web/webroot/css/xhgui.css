@@ -218,8 +218,8 @@ tr .no-results {
     position: relative;
 }
 .chart-container .popover {
-	min-width: 125px;
-	width: auto;
+    min-width: 125px;
+    width: auto;
 }
 
 .chart-axis path,
@@ -240,6 +240,23 @@ tr .no-results {
 
 .chart-bar {
     fill: #d46245;
+}
+
+/**
+ * Call graph chart
+ */
+.callgraph .node {
+    font: 10px sans-serif;
+}
+.callgraph .node circle {
+    fill: #fff;
+    stroke: #59bdd2;
+    stroke-width: 1.5px;
+}
+.callgraph .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
 }
 
 /**

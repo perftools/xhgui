@@ -7,4 +7,17 @@
 {% block content %}
 <h1>Callgraph for {{ profile.meta.url }} on {{ profile.meta('request_time.sec')|date(date_format) }}</h1>
 
+<p>Due to the limitations in how xhprof collects data, callgraphs are not 100% reflective of
+the actual method callgraph</p>
+
+<div id="callgraph-image"></div>
+{% endblock %}
+
+{% block jsfoot %}
+<script src="js/callgraph.js"></script>
+<script>
+$(document).ready(function () {
+    Xhgui.callgraph('#callgraph-image', {{ callgraph|json_encode|raw }});
+});
+</script>
 {% endblock %}
