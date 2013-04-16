@@ -433,7 +433,8 @@ class Xhgui_Profile
      */
     public function getCallgraph()
     {
-        return $this->_getChildFunctions(self::NO_PARENT);
+        $graph = $this->_getChildFunctions(self::NO_PARENT);
+        return $graph[0];
     }
 
     protected function _getChildFunctions($parentName)
