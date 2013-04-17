@@ -429,7 +429,7 @@ class Xhgui_Profile
     /**
      * Return a structured array suitable for generating callgraph visualizations.
      *
-     * Functions whose inclusive time is less than 1% of the total time will
+     * Functions whose inclusive time is less than 2% of the total time will
      * be excluded from the callgraph data.
      *
      * @return array
@@ -451,7 +451,7 @@ class Xhgui_Profile
         $graph = array();
 
         foreach ($children as $childName => $metrics) {
-            if ($metrics['wt'] / $totalTime <= 0.01) {
+            if ($metrics['wt'] / $totalTime <= 0.02) {
                 continue;
             }
             $graph[] = array(

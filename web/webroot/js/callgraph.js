@@ -4,10 +4,10 @@
 Xhgui.callgraph = function (container, data) {
     var el = $(container),
         width = el.width(),
-        height = 1024;
+        height = 2000;
 
     var cluster = d3.layout.cluster()
-        .size([height, width]);
+        .size([height, width - 160]);
 
     var diagonal = d3.svg.diagonal()
         .projection(function (d) { return [d.y, d.x]; });
@@ -39,8 +39,12 @@ Xhgui.callgraph = function (container, data) {
         .attr('r', 4.5);
 
     node.append('text')
-        .attr('dx', function (d) { return d.children ? -8 : 8; })
-        .attr('dy', 3)
+        .attr('dx', function (d) {
+            return d.children ? -5 : 5;
+        })
+        .attr('dy', function (d) {
+            return d.depth % 2 == 0 ? -12 : 12;
+        })
         .style('text-anchor', function (d) {
             return d.children ? 'end' : 'start';
         })
