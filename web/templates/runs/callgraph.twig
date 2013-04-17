@@ -7,10 +7,14 @@
 {% block content %}
 <h1>Callgraph for {{ profile.meta.url }} on {{ profile.meta('request_time.sec')|date(date_format) }}</h1>
 
+<p class="alert alert-info">Methods that represent 1% or less of the entire execution will be omitted
+from the callgraph result.</p>
+
+<div id="callgraph-image"></div>
+
 <p>Due to the limitations in how xhprof collects data, callgraphs are not 100% reflective of
 the actual method callgraph</p>
 
-<div id="callgraph-image"></div>
 {% endblock %}
 
 {% block jsfoot %}

@@ -429,15 +429,19 @@ class Xhgui_Profile
     /**
      * Return a structured array suitable for generating callgraph visualizations.
      *
+     * Functions whose inclusive time is less than 1% of the total time will
+     * be excluded from the callgraph data.
+     *
      * @return array
      */
     public function getCallgraph()
     {
-        $graph = $this->_getChildFunctions(self::NO_PARENT);
+        $totalTime = $this->_collapsed['main()']['wt'];
+        $graph = $this->_getChildFunctions(self::NO_PARENT, $totalTime);
         return $graph[0];
     }
 
-    protected function _getChildFunctions($parentName)
+    protected function _getChildFunctions($parentName, $totalTime)
     {
         // Leaf functions won't have children.
         if (!isset($this->_indexed[$parentName])) {
@@ -447,9 +451,12 @@ class Xhgui_Profile
         $graph = array();
 
         foreach ($children as $childName => $metrics) {
+            if ($metrics['wt'] / $totalTime <= 0.01) {
+                continue;
+            }
             $graph[] = array(
                 'name' => $childName,
-                'children' => $this->_getChildFunctions($childName)
+                'children' => $this->_getChildFunctions($childName, $totalTime)
             );
         }
         return $graph;
