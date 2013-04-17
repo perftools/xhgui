@@ -456,6 +456,7 @@ class Xhgui_Profile
             }
             $graph[] = array(
                 'name' => $childName,
+                'value' => ceil($metrics['wt'] / $totalTime * 100),
                 'children' => $this->_getChildFunctions($childName, $totalTime)
             );
         }
