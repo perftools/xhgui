@@ -1,5 +1,8 @@
 /**
  * Generate a callgraph visualization based on the provided data.
+ *
+ * @param String container
+ * @param Array data The profile data.
  */
 Xhgui.callgraph = function (container, data) {
     var el = d3.select(container),
@@ -65,23 +68,20 @@ Xhgui.callgraph = function (container, data) {
         }
     });
 
-    /*
     node.append('text')
-        .attr('dx', function (d) {
-            return d.children ? -5 : 5;
-        })
-        .attr('dy', function (d) {
-            return d.depth % 2 == 0 ? -12 : 12;
+        .attr({
+            dx: 0,
+            dy: 0
         })
         .style('display', function (d) {
-            return d.value > 5 ? 'block' : 'none';
+            return d.value > 15 ? 'block' : 'none';
         })
-        .style('text-anchor', function (d) {
-            return d.children ? 'end' : 'start';
+        .style({
+            'text-anchor': 'middle',
+            'vertical-align': 'middle'
         })
         .text(function (d) {
             return d.name;
         });
-        */
 
 };
