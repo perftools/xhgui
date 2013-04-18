@@ -2,8 +2,8 @@
  * Generate a callgraph visualization based on the provided data.
  */
 Xhgui.callgraph = function (container, data) {
-    var el = $(container),
-        width = el.width(),
+    var el = d3.select(container),
+        width = parseInt(el.style('width'), 10),
         height = 2000;
 
     var cluster = d3.layout.cluster()
@@ -35,11 +35,37 @@ Xhgui.callgraph = function (container, data) {
                 return "translate(" + d.y + "," + d.x + ")";
             });
 
-    node.append('circle')
+    var circle = node.append('circle')
         .attr('r', function (d) {
             return 1.2 * d.value;
         });
 
+    // Set tooltips on circles.
+    Xhgui.tooltip(el, {
+        bindTo: node,
+        positioner: function (d, i) {
+            // Use the transform property to
+            // find where the node is.
+            var transform = this.getAttribute('transform');
+            var match = transform.match(/translate\((.*),(.*)\)/);
+            var xOffset = parseFloat(match[1]);
+            var yOffset = parseFloat(match[2]);
+
+            return {
+                // 7 = 1/2 width of arrow, 40 = canvas translate
+                x: xOffset + 40 - 7,
+                // 30 = fudge factor.
+                y: yOffset - 30
+            };
+        },
+        formatter: function (d, i) {
+            var label = '<strong>' + d.name +
+                '</strong> ' + d.value + '%';
+            return label;
+        }
+    });
+
+    /*
     node.append('text')
         .attr('dx', function (d) {
             return d.children ? -5 : 5;
@@ -47,10 +73,15 @@ Xhgui.callgraph = function (container, data) {
         .attr('dy', function (d) {
             return d.depth % 2 == 0 ? -12 : 12;
         })
+        .style('display', function (d) {
+            return d.value > 5 ? 'block' : 'none';
+        })
         .style('text-anchor', function (d) {
             return d.children ? 'end' : 'start';
         })
         .text(function (d) {
             return d.name;
         });
+        */
+
 };
