@@ -36,7 +36,9 @@ Xhgui.callgraph = function (container, data) {
             });
 
     node.append('circle')
-        .attr('r', 4.5);
+        .attr('r', function (d) {
+            return 1.2 * d.value;
+        });
 
     node.append('text')
         .attr('dx', function (d) {
