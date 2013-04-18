@@ -38,9 +38,17 @@ Xhgui.callgraph = function (container, data) {
                 return "translate(" + d.y + "," + d.x + ")";
             });
 
+    // Color scale
+    var colors = d3.scale.linear()
+        .domain([0, 100])
+        .range(['#ffffff', '#b63c71']);
+
     var circle = node.append('circle')
         .attr('r', function (d) {
             return 1.2 * d.value;
+        })
+        .style('fill', function (d) {
+            return colors(d.value);
         });
 
     // Set tooltips on circles.
