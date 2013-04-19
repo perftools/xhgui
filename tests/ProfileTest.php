@@ -252,4 +252,92 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0.5, $result['diffPercent']['functionCount']);
     }
 
+    public function testGetCallgraph()
+    {
+        $profile = new Xhgui_Profile($this->_fixture[1]);
+
+        $expected = array(
+            'name' => 'main()',
+            'value' => 100,
+            'children' => array(
+                array(
+                    'name' => 'eat_burger()',
+                    'value' => 72,
+                    'children' => array(
+                        array(
+                            'name' => 'chew_food()',
+                            'value' => 63,
+                            'children' => array()
+                        ),
+                        array(
+                            'name' => 'strlen()',
+                            'value' => 3,
+                            'children' => array()
+                        ),
+                    ),
+                ),
+                array(
+                    'name' => 'drink_beer()',
+                    'value' => 40,
+                    'children' => array(
+                        array(
+                            'name' => 'lift_glass()',
+                            'value' => 29,
+                            'children' => array()
+                        ),
+                        array(
+                            'name' => 'strlen()',
+                            'value' => 3,
+                            'children' => array()
+                        ),
+                    ),
+                ),
+            ),
+        );
+        $result = $profile->getCallgraph();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testGetCallgraphNoDuplicates()
+    {
+        $profile = new Xhgui_Profile($this->_fixture[2]);
+
+        $expected = array(
+            'name' => 'main()',
+            'value' => 100,
+            'children' => array(
+                array(
+                    'name' => 'load_file()',
+                    'value' => 20,
+                    'children' => array(
+                        array(
+                            'name' => 'open()',
+                            'value' => 10,
+                            'children' => array(
+                                array(
+                                    'name' => 'strlen()',
+                                    'value' => 10,
+                                    'children' => array()
+                                )
+                            )
+                        ),
+                    ),
+                ),
+                array(
+                    'name' => 'parse_string()',
+                    'value' => 20,
+                    'children' => array(
+                        array(
+                            'name' => 'open()',
+                            'value' => 10,
+                            'children' => array()
+                        ),
+                    ),
+                ),
+            ),
+        );
+        $result = $profile->getCallgraph();
+        $this->assertEquals($expected, $result);
+    }
+
 }

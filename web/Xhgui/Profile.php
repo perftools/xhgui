@@ -14,6 +14,7 @@ class Xhgui_Profile
     protected $_data;
     protected $_collapsed;
     protected $_indexed;
+    protected $_visited;
 
     protected $_keys = array('ct', 'wt', 'cpu', 'mu', 'pmu');
     protected $_exclusiveKeys = array('ewt', 'ecpu', 'emu', 'epmu');
@@ -424,6 +425,52 @@ class Xhgui_Profile
             'diff' => $diff,
             'diffPercent' => $diffPercent,
         );
+    }
+
+    /**
+     * Return a structured array suitable for generating callgraph visualizations.
+     *
+     * Functions whose inclusive time is less than 2% of the total time will
+     * be excluded from the callgraph data.
+     *
+     * @return array
+     */
+    public function getCallgraph()
+    {
+        $totalTime = $this->_collapsed['main()']['wt'];
+        $this->_visited = array();
+        $graph = $this->_getChildFunctions(self::NO_PARENT, $totalTime);
+        $this->_visited = array();
+        return $graph[0];
+    }
+
+    protected function _getChildFunctions($parentName, $totalTime)
+    {
+        // Leaf functions won't have children.
+        if (!isset($this->_indexed[$parentName])) {
+            return array();
+        }
+        $children = $this->_indexed[$parentName];
+        $graph = array();
+
+        foreach ($children as $childName => $metrics) {
+            if ($metrics['wt'] / $totalTime <= 0.01) {
+                continue;
+            }
+            $children = array();
+            // Don't include functions multiple times.
+            // As xhprof doesn't handle grandchildren at all.
+            if (empty($this->_visited[$childName])) {
+                $this->_visited[$childName] = true;
+                $children = $this->_getChildFunctions($childName, $totalTime);
+            }
+            $graph[] = array(
+                'name' => $childName,
+                'value' => ceil($metrics['wt'] / $totalTime * 100),
+                'children' => $children,
+            );
+        }
+        return $graph;
     }
 
 }
