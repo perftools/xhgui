@@ -454,7 +454,7 @@ class Xhgui_Profile
         $graph = array();
 
         foreach ($children as $childName => $metrics) {
-            if ($metrics['wt'] / $totalTime <= 0.02) {
+            if ($metrics['wt'] / $totalTime <= 0.01) {
                 continue;
             }
             $children = array();

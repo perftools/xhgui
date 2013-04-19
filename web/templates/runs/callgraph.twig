@@ -7,7 +7,7 @@
 {% block content %}
 <h1>Callgraph for {{ profile.meta.url }} on {{ profile.meta('SERVER.REQUEST_TIME')|date(date_format) }}</h1>
 
-<p class="alert alert-info">Methods that represent 2% or less of the entire execution will be omitted
+<p class="alert alert-info">Methods that represent 1% or less of the entire execution will be omitted
 from the callgraph result.</p>
 
 <div class="chart-container" id="callgraph-image"></div>
