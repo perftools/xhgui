@@ -1,0 +1,27 @@
+{% extends 'layout/base.twig' %}
+
+{% block title %}
+- Callgraph - {{ profile.meta.url }} - {{ profile.meta('SERVER.REQUEST_TIME')|date(date_format) }}
+{% endblock %}
+
+{% block content %}
+<h1>Callgraph for {{ profile.meta.url }} on {{ profile.meta('SERVER.REQUEST_TIME')|date(date_format) }}</h1>
+
+<p class="alert alert-info">Methods that represent 1% or less of the entire execution will be omitted
+from the callgraph result.</p>
+
+<div class="chart-container" id="callgraph-image"></div>
+
+<p>Due to the limitations in how xhprof collects data, callgraphs are not 100% reflective of
+the actual method callgraph.</p>
+
+{% endblock %}
+
+{% block jsfoot %}
+<script src="js/callgraph.js"></script>
+<script>
+$(document).ready(function () {
+    Xhgui.callgraph('#callgraph-image', {{ callgraph|json_encode|raw }});
+});
+</script>
+{% endblock %}
