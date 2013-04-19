@@ -14,6 +14,7 @@ class Xhgui_Profile
     protected $_data;
     protected $_collapsed;
     protected $_indexed;
+    protected $_visited;
 
     protected $_keys = array('ct', 'wt', 'cpu', 'mu', 'pmu');
     protected $_exclusiveKeys = array('ewt', 'ecpu', 'emu', 'epmu');
@@ -437,7 +438,9 @@ class Xhgui_Profile
     public function getCallgraph()
     {
         $totalTime = $this->_collapsed['main()']['wt'];
+        $this->_visited = array();
         $graph = $this->_getChildFunctions(self::NO_PARENT, $totalTime);
+        $this->_visited = array();
         return $graph[0];
     }
 
@@ -454,10 +457,17 @@ class Xhgui_Profile
             if ($metrics['wt'] / $totalTime <= 0.02) {
                 continue;
             }
+            $children = array();
+            // Don't include functions multiple times.
+            // As xhprof doesn't handle grandchildren at all.
+            if (empty($this->_visited[$childName])) {
+                $this->_visited[$childName] = true;
+                $children = $this->_getChildFunctions($childName, $totalTime);
+            }
             $graph[] = array(
                 'name' => $childName,
                 'value' => ceil($metrics['wt'] / $totalTime * 100),
-                'children' => $this->_getChildFunctions($childName, $totalTime)
+                'children' => $children,
             );
         }
         return $graph;
