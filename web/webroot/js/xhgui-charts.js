@@ -354,11 +354,12 @@ Xhgui.linegraph = function (container, data, options) {
         if (d[options.xAxis] instanceof Date) {
             return d;
         }
-        var date = new Date(d[options.xAxis] + ' 00:00:00');
+        var dateParts = d[options.xAxis].split('-');
+        var date = new Date(dateParts[0], dateParts[1], dateParts[2], 0, 0, 0);
         d[options.xAxis] = date;
         return d;
     });
-
+    
     var xRange = d3.extent(data, function (d) {
         return d[options.xAxis];
     });
