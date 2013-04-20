@@ -3,8 +3,9 @@
  *
  * @param String container
  * @param Array data The profile data.
+ * @param Object options Additional options
  */
-Xhgui.callgraph = function (container, data) {
+Xhgui.callgraph = function (container, data, options) {
     var el = d3.select(container),
         width = parseInt(el.style('width'), 10),
         height = 2000;
@@ -70,8 +71,10 @@ Xhgui.callgraph = function (container, data) {
             };
         },
         formatter: function (d, i) {
+            var urlName = '&symbol=' + encodeURIComponent(d.name);
             var label = '<strong>' + d.name +
-                '</strong> ' + d.value + '%';
+                '</strong> ' + d.value + '% ' +
+                '<a href="' + options.baseUrl + urlName + '">view</a>';
             return label;
         }
     });
