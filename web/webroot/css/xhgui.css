@@ -250,7 +250,7 @@ tr .no-results {
 }
 .callgraph .node circle {
     fill: #fff;
-    stroke: #59bdd2;
+    stroke: #b63c71;
     stroke-width: 1.5px;
 }
 .callgraph .link {
