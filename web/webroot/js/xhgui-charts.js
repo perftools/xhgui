@@ -355,7 +355,7 @@ Xhgui.linegraph = function (container, data, options) {
             return d;
         }
         var dateParts = d[options.xAxis].split('-');
-        var date = new Date(dateParts[0], dateParts[1], dateParts[2], 0, 0, 0);
+        var date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], 0, 0, 0);
         d[options.xAxis] = date;
         return d;
     });
