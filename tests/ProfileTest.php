@@ -257,64 +257,42 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $profile = new Xhgui_Profile($this->_fixture[1]);
 
         $expected = array(
-            'nodes' => array(
-                array(
-                    'name' => 'main()',
-                    'value' => 100,
-                ),
+            'name' => 'main()',
+            'value' => 100,
+            'children' => array(
                 array(
                     'name' => 'eat_burger()',
                     'value' => 72,
-                ),
-                array(
-                    'name' => 'chew_food()',
-                    'value' => 63,
-                ),
-                array(
-                    'name' => 'strlen()',
-                    'value' => 3,
+                    'children' => array(
+                        array(
+                            'name' => 'chew_food()',
+                            'value' => 63,
+                            'children' => array()
+                        ),
+                        array(
+                            'name' => 'strlen()',
+                            'value' => 3,
+                            'children' => array()
+                        ),
+                    ),
                 ),
                 array(
                     'name' => 'drink_beer()',
                     'value' => 40,
-                ),
-                array(
-                    'name' => 'lift_glass()',
-                    'value' => 29,
+                    'children' => array(
+                        array(
+                            'name' => 'lift_glass()',
+                            'value' => 29,
+                            'children' => array()
+                        ),
+                        array(
+                            'name' => 'strlen()',
+                            'value' => 3,
+                            'children' => array()
+                        ),
+                    ),
                 ),
             ),
-            'links' => array(
-                array(
-                    'source' => 0,
-                    'target' => 1,
-                    'value' => 1,
-                ),
-                array(
-                    'source' => 1,
-                    'target' => 2,
-                    'value' => 1,
-                ),
-                array(
-                    'source' => 1,
-                    'target' => 3,
-                    'value' => 1,
-                ),
-                array(
-                    'source' => 0,
-                    'target' => 4,
-                    'value' => 1,
-                ),
-                array(
-                    'source' => 4,
-                    'target' => 5,
-                    'value' => 1,
-                ),
-                array(
-                    'source' => 4,
-                    'target' => 3,
-                    'value' => 1,
-                ),
-            )
         );
         $result = $profile->getCallgraph();
         $this->assertEquals($expected, $result);
@@ -325,55 +303,38 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $profile = new Xhgui_Profile($this->_fixture[2]);
 
         $expected = array(
-            'nodes' => array(
-                array(
-                    'name' => 'main()',
-                    'value' => 100,
-                ),
+            'name' => 'main()',
+            'value' => 100,
+            'children' => array(
                 array(
                     'name' => 'load_file()',
                     'value' => 20,
-                ),
-                array(
-                    'name' => 'open()',
-                    'value' => 10,
-                ),
-                array(
-                    'name' => 'strlen()',
-                    'value' => 10,
+                    'children' => array(
+                        array(
+                            'name' => 'open()',
+                            'value' => 10,
+                            'children' => array(
+                                array(
+                                    'name' => 'strlen()',
+                                    'value' => 10,
+                                    'children' => array()
+                                )
+                            )
+                        ),
+                    ),
                 ),
                 array(
                     'name' => 'parse_string()',
                     'value' => 20,
-                )
+                    'children' => array(
+                        array(
+                            'name' => 'open()',
+                            'value' => 10,
+                            'children' => array()
+                        ),
+                    ),
+                ),
             ),
-            'links' => array(
-                array(
-                    'source' => 0,
-                    'target' => 1,
-                    'value' => 1,
-                ),
-                array(
-                    'source' => 1,
-                    'target' => 2,
-                    'value' => 1,
-                ),
-                array(
-                    'source' => 2,
-                    'target' => 3,
-                    'value' => 1,
-                ),
-                array(
-                    'source' => 0,
-                    'target' => 4,
-                    'value' => 1,
-                ),
-                array(
-                    'source' => 4,
-                    'target' => 2,
-                    'value' => 1,
-                ),
-            )
         );
         $result = $profile->getCallgraph();
         $this->assertEquals($expected, $result);
