@@ -6,16 +6,39 @@
  * @param Object options Additional options
  */
 Xhgui.callgraph = function (container, data, options) {
+
+    var flatten = function (root) {
+        var nodes = [], i = 0;
+
+        function recurse(node) {
+            if (node.children) {
+                node.size = node.children.reduce(function (p, v) {
+                    return p + recurse(v);
+                }, 0);
+            }
+            if (!node.id) {
+                node.id = ++i;
+            }
+            nodes.push(node);
+            return node.size;
+        }
+
+        root.size = recurse(root);
+        return nodes;
+    };
+
     var el = d3.select(container),
         width = parseInt(el.style('width'), 10),
         height = 1000;
 
     var force = d3.layout.force()
         .charge(function(d) {
-            return -50 * Math.log(d.value);
+            return d._children ? -d.size / 100 : -30;
+            // return -50 * Math.log(d.value);
         })
         .linkDistance(function(d) {
-            return 5 * d.target.value;
+            return d.target._children ? 80 : 30;
+            // return 5 * d.target.value;
         })
         .size([width, height]);
 
@@ -24,12 +47,17 @@ Xhgui.callgraph = function (container, data, options) {
         .attr('width', width)
         .attr('height', height);
 
-    var nodes = force.nodes(data.nodes)
-        .links(data.links)
+    var nodes = flatten(data),
+        links = d3.layout.tree().links(nodes);
+
+    force.nodes(nodes)
+        .links(links)
         .start();
 
     var link = svg.selectAll('.link')
-        .data(data.links)
+        .data(links, function (d) {
+            return d.target.id;
+        })
         .enter().append('line')
             .style('stroke-width', function (d) {
                 return Math.max(1, Math.log(d.target.value));
@@ -42,7 +70,7 @@ Xhgui.callgraph = function (container, data, options) {
         .range(['#ffffff', '#b63c71']);
 
     var gnodes = svg.selectAll('g.node')
-        .data(data.nodes)
+        .data(nodes)
         .enter().append('g')
         .attr('class', 'node')
         .call(force.drag);
@@ -110,7 +138,4 @@ Xhgui.callgraph = function (container, data, options) {
         }
     });
 
-    /*
-
-    */
 };
