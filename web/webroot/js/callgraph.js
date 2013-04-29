@@ -12,10 +12,10 @@ Xhgui.callgraph = function (container, data, options) {
 
     var force = d3.layout.force()
         .charge(function(d) {
-            return -d.value * 4;
+            return -50 * Math.log(d.value);
         })
         .linkDistance(function(d) {
-            return d.target.value * 2;
+            return 5 * d.target.value;
         })
         .size([width, height]);
 
@@ -31,6 +31,9 @@ Xhgui.callgraph = function (container, data, options) {
     var link = svg.selectAll('.link')
         .data(data.links)
         .enter().append('line')
+            .style('stroke-width', function (d) {
+                return Math.max(1, Math.log(d.target.value));
+            })
             .attr('class', 'link');
 
     // Color scale
