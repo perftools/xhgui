@@ -364,6 +364,11 @@ class ProfileTest extends PHPUnit_Framework_TestCase
                     'value' => 1,
                 ),
                 array(
+                    'source' => 0,
+                    'target' => 4,
+                    'value' => 1,
+                ),
+                array(
                     'source' => 4,
                     'target' => 2,
                     'value' => 1,
