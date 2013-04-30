@@ -15,7 +15,7 @@ Xhgui.callgraph = function (container, data, options) {
             return -50 * Math.log(d.value);
         })
         .linkDistance(function(d) {
-            return 5 * d.target.value;
+            return d.target.weight;
         })
         .size([width, height]);
 
@@ -23,6 +23,11 @@ Xhgui.callgraph = function (container, data, options) {
         .attr('class', 'callgraph')
         .attr('width', width)
         .attr('height', height);
+
+    // Fix the main() node
+    data.nodes[0].fixed = true;
+    data.nodes[0].x = width / 2;
+    data.nodes[0].y = 60;
 
     var nodes = force.nodes(data.nodes)
         .links(data.links)
