@@ -438,10 +438,59 @@ class Xhgui_Profile
     public function getCallgraph()
     {
         $totalTime = $this->_collapsed['main()']['wt'];
-        $this->_visited = array();
-        $graph = $this->_getChildFunctions(self::NO_PARENT, $totalTime);
-        $this->_visited = array();
-        return $graph[0];
+        $this->_visited = $this->_nodes = $this->_links = array();
+        $this->_callgraphData(self::NO_PARENT, $totalTime);
+        $out = array(
+            'nodes' => $this->_nodes,
+            'links' => $this->_links
+        );
+        unset($this->_visited, $this->_nodes, $this->_links);
+        return $out;
+    }
+
+    protected function _callgraphData($parentName, $totalTime, $parentIndex = null)
+    {
+        // Leaves don't have children, and don't have links/nodes to add.
+        if (!isset($this->_indexed[$parentName])) {
+            return;
+        }
+
+        $children = $this->_indexed[$parentName];
+        foreach ($children as $childName => $metrics) {
+            if ($metrics['wt'] / $totalTime <= 0.01) {
+                continue;
+            }
+            $revisit = false;
+
+            // Keep track of which nodes we've visited and their position
+            // in the node list.
+            if (!isset($this->_visited[$childName])) {
+                $index = count($this->_nodes);
+                $this->_visited[$childName] = $index;
+
+                $this->_nodes[] = array(
+                    'name' => $childName,
+                    'value' => ceil($metrics['wt'] / $totalTime * 100)
+                );
+            } else {
+                $revisit = true;
+                $index = $this->_visited[$childName];
+            }
+
+            if ($parentIndex !== null) {
+                $this->_links[] = array(
+                    'source' => $parentIndex,
+                    'target' => $index,
+                    'value' => 1,
+                );
+            }
+
+            // If the current function has more children,
+            // walk that call subgraph.
+            if (isset($this->_indexed[$childName]) && !$revisit) {
+                $this->_callgraphData($childName, $totalTime, $index);
+            }
+        }
     }
 
     protected function _getChildFunctions($parentName, $totalTime)
