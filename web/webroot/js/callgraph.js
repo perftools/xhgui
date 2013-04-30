@@ -24,6 +24,22 @@ Xhgui.callgraph = function (container, data, options) {
         .attr('width', width)
         .attr('height', height);
 
+    // Append the defs and markers
+    var defs = svg.append('svg:defs');
+
+    defs.append('svg:marker')
+        .attr({
+            id: 'arrowhead',
+            viewBox: '0 0 10 10',
+            refX: 10,
+            refY: 6,
+            markerUnits: 'strokeWidth',
+            markerHeight: 4,
+            markerWidth: 4,
+            orient: 'auto'
+        }).append('path')
+            .attr('d', 'M 0 0 L 10 5 L 0 10 z');
+
     // Fix the main() node
     data.nodes[0].fixed = true;
     data.nodes[0].x = width / 2;
@@ -37,9 +53,12 @@ Xhgui.callgraph = function (container, data, options) {
         .data(data.links)
         .enter().append('line')
             .style('stroke-width', function (d) {
-                return Math.max(1, Math.log(d.target.value));
+                return Math.max(0.75, Math.log(d.target.value));
             })
-            .attr('class', 'link');
+            .attr({
+                'class': 'link',
+                'marker-end': "url(#arrowhead)"
+            });
 
     // Color scale
     var colors = d3.scale.linear()
@@ -63,10 +82,10 @@ Xhgui.callgraph = function (container, data, options) {
         });
 
     var text = gnodes.append('text')
-        .style('display', function (d) {
-            return d.value > 15 ? 'block' : 'none';
-        })
         .style({
+            'display': function (d) {
+                return d.value > 15 ? 'block' : 'none';
+            },
             'text-anchor': 'middle',
             'vertical-align': 'middle'
         })
@@ -92,6 +111,11 @@ Xhgui.callgraph = function (container, data, options) {
             .attr("y", function(d) { return d.y; });
     });
 
+    // Make nodes that are moved sticky.
+    gnodes.on('mousedown', function (d) {
+        d.fixed = true;
+    });
+
     // Set tooltips on circles.
     Xhgui.tooltip(el, {
         bindTo: circle,
@@ -115,7 +139,4 @@ Xhgui.callgraph = function (container, data, options) {
         }
     });
 
-    /*
-
-    */
 };

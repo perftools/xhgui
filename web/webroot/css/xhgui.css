@@ -258,6 +258,9 @@ tr .no-results {
     stroke: #ccc;
     stroke-width: 1.5px;
 }
+.callgraph #arrowhead {
+    fill: #bbb;
+}
 
 /**
  * Run details
