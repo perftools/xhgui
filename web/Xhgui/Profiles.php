@@ -85,6 +85,7 @@ class Xhgui_Profiles
      */
     public function getPercentileForUrl($url)
     {
+        //search for 95th position for each day
         $ranks = $this->_collection->aggregate(array(
             array('$match' => array('meta.simple_url' => $url)),
             array(
@@ -112,24 +113,23 @@ class Xhgui_Profiles
             )
         ));
         
+        //for each metrics per day, search the value at $rank position
         $results = array();
         foreach ($ranks['result'] as $rank) {
             $result = array('date'=>$rank['_id']);
-            $rest = $rank['r']-floor($rank['r']);
-            
+            $decimals = $rank['r']-floor($rank['r']);
             foreach (array('wt', 'cpu', 'mu', 'pmu') as $metric) {
-                $ops = array(array('$match' => array('meta.simple_url' => $url, 'meta.request_date'=>$rank['_id'])),
-                array(
-                    '$project' => array(
-                        'date' => '$meta.request_date',
-                        $metric => '$profile.main().'.$metric
-                    )
-                ),
-                array('$sort' => array($metric => 1)),
-                array('$skip' => floor($rank['r'])),
-                array('$limit'=>2));
-                $wt = $this->_collection->aggregate($ops);
-                $result['avg_'.$metric] = $wt['result'][0][$metric]+($rest*($wt['result'][1][$metric]-$wt['result'][0][$metric]));
+                $options = array('sort' => $metric, 'direction' => 'asc',);
+                $opts = $this->_mapper->convert($options);
+                
+                $cursor = $this->_collection->find(array('meta.simple_url' => $url, 'meta.request_date'=>$rank['_id']), array('profile.main().'.$metric))
+                    ->sort($opts['sort'])
+                    ->skip(floor($rank['r']))
+                    ->limit(2);
+                $first = $cursor->getNext()['profile']['main()'][$metric];
+                $second = $cursor->getNext()['profile']['main()'][$metric];
+                
+                $result['avg_'.$metric] = $first+($decimals*($second-$first));
             }
             
             $results[] = $result;
