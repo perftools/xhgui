@@ -73,6 +73,70 @@ class Xhgui_Profiles
             'totalPages' => $totalPages
         );
     }
+    
+    /**
+     * Get the 95th percentil metrics for a URL
+     *
+     * This will group data by date and returns only the
+     * 95th percentil + date, making the data ideal for time series graphs
+     *
+     * @param string $url
+     * @return array Array of metrics grouped by date
+     */
+    public function getPercentileForUrl($url)
+    {
+        $ranks = $this->_collection->aggregate(array(
+            array('$match' => array('meta.simple_url' => $url)),
+            array(
+                '$project' => array(
+                    'date' => '$meta.request_date',
+                )
+            ),
+            array(
+                '$group' => array(
+                    '_id' => '$date',
+                    'count' => array('$sum' => 1),
+                )
+            ),
+            array('$sort' => array('_id' => 1)),
+            array(
+                '$project' => array(
+                    'count' => '$count',
+                    'r' => array(
+                        '$multiply'=>array(
+                            array('$subtract'=> array('$count',1)),
+                            0.95    
+                        )
+                    ),
+                )
+            )
+        ));
+        
+        $results = array();
+        foreach ($ranks['result'] as $rank) {
+            $result = array('date'=>$rank['_id']);
+            $rest = $rank['r']-floor($rank['r']);
+            
+            foreach (array('wt', 'cpu', 'mu', 'pmu') as $metric) {
+                $ops = array(array('$match' => array('meta.simple_url' => $url, 'meta.request_date'=>$rank['_id'])),
+                array(
+                    '$project' => array(
+                        'date' => '$meta.request_date',
+                        $metric => '$profile.main().'.$metric
+                    )
+                ),
+                array('$sort' => array($metric => 1)),
+                array('$skip' => floor($rank['r'])),
+                array('$limit'=>2));
+                $wt = $this->_collection->aggregate($ops);
+                $result['avg_'.$metric] = $wt['result'][0][$metric]+($rest*($wt['result'][1][$metric]-$wt['result'][0][$metric]));
+            }
+            
+            $results[] = $result;
+        }
+        
+        return $results;
+    }
 
     /**
      * Get the Average metrics for a URL
