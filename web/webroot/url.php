@@ -18,7 +18,7 @@ foreach ($keys as $key) {
     $search[$key] = !empty($_GET[$key]) ? $_GET[$key] : null;
 }
 $runs = $profiles->getForUrl($_GET['url'], $pagination, $search);
-$chartData = $profiles->getAvgsForUrl($_GET['url']);
+$chartData = $profiles->getPercentileForUrl($_GET['url']);
 
 $paging = array(
     'total_pages' => $runs['totalPages'],

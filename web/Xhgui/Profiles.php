@@ -73,6 +73,70 @@ class Xhgui_Profiles
             'totalPages' => $totalPages
         );
     }
+    
+    /**
+     * Get the 95th percentil metrics for a URL
+     *
+     * This will group data by date and returns only the
+     * 95th percentil + date, making the data ideal for time series graphs
+     *
+     * @param string $url
+     * @return array Array of metrics grouped by date
+     */
+    public function getPercentileForUrl($url)
+    {
+        //search for 95th position for each day
+        $ranks = $this->_collection->aggregate(array(
+            array('$match' => array('meta.simple_url' => $url)),
+            array(
+                '$project' => array(
+                    'date' => '$meta.request_date',
+                )
+            ),
+            array(
+                '$group' => array(
+                    '_id' => '$date',
+                    'count' => array('$sum' => 1),
+                )
+            ),
+            array('$sort' => array('_id' => 1)),
+            array(
+                '$project' => array(
+                    'count' => '$count',
+                    'r' => array(
+                        '$multiply'=>array(
+                            array('$subtract'=> array('$count',1)),
+                            0.95    
+                        )
+                    ),
+                )
+            )
+        ));
+        
+        //for each metrics per day, search the value at $rank position
+        $results = array();
+        foreach ($ranks['result'] as $rank) {
+            $result = array('date'=>$rank['_id']);
+            $decimals = $rank['r']-floor($rank['r']);
+            foreach (array('wt', 'cpu', 'mu', 'pmu') as $metric) {
+                $options = array('sort' => $metric, 'direction' => 'asc',);
+                $opts = $this->_mapper->convert($options);
+                
+                $cursor = $this->_collection->find(array('meta.simple_url' => $url, 'meta.request_date'=>$rank['_id']), array('profile.main().'.$metric))
+                    ->sort($opts['sort'])
+                    ->skip(floor($rank['r']))
+                    ->limit(2);
+                $first = $cursor->getNext()['profile']['main()'][$metric];
+                $second = $cursor->getNext()['profile']['main()'][$metric];
+                
+                $result['avg_'.$metric] = $first+($decimals*($second-$first));
+            }
+            
+            $results[] = $result;
+        }
+        
+        return $results;
+    }
 
     /**
      * Get the Average metrics for a URL
