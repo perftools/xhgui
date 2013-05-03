@@ -257,30 +257,31 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $profile = new Xhgui_Profile($this->_fixture[1]);
 
         $expected = array(
+            'totalTime' => 35,
             'nodes' => array(
                 array(
                     'name' => 'main()',
-                    'value' => 100,
+                    'value' => 35,
                 ),
                 array(
                     'name' => 'eat_burger()',
-                    'value' => 72,
+                    'value' => 25,
                 ),
                 array(
                     'name' => 'chew_food()',
-                    'value' => 63,
+                    'value' => 22,
                 ),
                 array(
                     'name' => 'strlen()',
-                    'value' => 3,
+                    'value' => 1,
                 ),
                 array(
                     'name' => 'drink_beer()',
-                    'value' => 40,
+                    'value' => 14,
                 ),
                 array(
                     'name' => 'lift_glass()',
-                    'value' => 29,
+                    'value' => 10,
                 ),
             ),
             'links' => array(
@@ -325,26 +326,27 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $profile = new Xhgui_Profile($this->_fixture[2]);
 
         $expected = array(
+            'totalTime' => 50139,
             'nodes' => array(
                 array(
                     'name' => 'main()',
-                    'value' => 100,
+                    'value' => 50139,
                 ),
                 array(
                     'name' => 'load_file()',
-                    'value' => 20,
+                    'value' => 10000,
                 ),
                 array(
                     'name' => 'open()',
-                    'value' => 10,
+                    'value' => 5000,
                 ),
                 array(
                     'name' => 'strlen()',
-                    'value' => 10,
+                    'value' => 5000,
                 ),
                 array(
                     'name' => 'parse_string()',
-                    'value' => 20,
+                    'value' => 10000,
                 )
             ),
             'links' => array(

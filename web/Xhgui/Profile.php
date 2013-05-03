@@ -441,6 +441,7 @@ class Xhgui_Profile
         $this->_visited = $this->_nodes = $this->_links = array();
         $this->_callgraphData(self::NO_PARENT, $totalTime);
         $out = array(
+            'totalTime' => $totalTime,
             'nodes' => $this->_nodes,
             'links' => $this->_links
         );
@@ -470,7 +471,7 @@ class Xhgui_Profile
 
                 $this->_nodes[] = array(
                     'name' => $childName,
-                    'value' => ceil($metrics['wt'] / $totalTime * 100)
+                    'value' => $metrics['wt'],
                 );
             } else {
                 $revisit = true;
