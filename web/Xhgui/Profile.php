@@ -494,33 +494,4 @@ class Xhgui_Profile
         }
     }
 
-    protected function _getChildFunctions($parentName, $totalTime)
-    {
-        // Leaf functions won't have children.
-        if (!isset($this->_indexed[$parentName])) {
-            return array();
-        }
-        $children = $this->_indexed[$parentName];
-        $graph = array();
-
-        foreach ($children as $childName => $metrics) {
-            if ($metrics['wt'] / $totalTime <= 0.01) {
-                continue;
-            }
-            $children = array();
-            // Don't include functions multiple times.
-            // As xhprof doesn't handle grandchildren at all.
-            if (empty($this->_visited[$childName])) {
-                $this->_visited[$childName] = true;
-                $children = $this->_getChildFunctions($childName, $totalTime);
-            }
-            $graph[] = array(
-                'name' => $childName,
-                'value' => ceil($metrics['wt'] / $totalTime * 100),
-                'children' => $children,
-            );
-        }
-        return $graph;
-    }
-
 }
