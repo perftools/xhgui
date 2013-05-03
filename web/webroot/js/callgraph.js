@@ -45,6 +45,10 @@ Xhgui.callgraph = function (container, data, options) {
     data.nodes[0].x = width / 2;
     data.nodes[0].y = 60;
 
+    for (var i = 0, len = data.nodes.length; i < len; i++) {
+        data.nodes[i].ratio = Math.ceil(data.nodes[i].value / data.totalTime);
+    }
+
     var nodes = force.nodes(data.nodes)
         .links(data.links)
         .start();
@@ -53,7 +57,7 @@ Xhgui.callgraph = function (container, data, options) {
         .data(data.links)
         .enter().append('line')
             .style('stroke-width', function (d) {
-                return Math.max(0.75, Math.log(d.target.value));
+                return Math.max(0.75, Math.log(d.target.ratio));
             })
             .attr({
                 'class': 'link',
@@ -75,16 +79,16 @@ Xhgui.callgraph = function (container, data, options) {
     var circle = gnodes.append('circle')
         .attr('class', 'node')
         .attr('r', function (d) {
-            return d.value * 0.5;
+            return d.ratio * 0.5;
         })
         .style('fill', function (d) {
-            return colors(d.value);
+            return colors(d.ratio);
         });
 
     var text = gnodes.append('text')
         .style({
             'display': function (d) {
-                return d.value > 15 ? 'block' : 'none';
+                return d.ratio > 15 ? 'block' : 'none';
             },
             'text-anchor': 'middle',
             'vertical-align': 'middle'
@@ -133,7 +137,8 @@ Xhgui.callgraph = function (container, data, options) {
         formatter: function (d, i) {
             var urlName = '&symbol=' + encodeURIComponent(d.name);
             var label = '<strong>' + d.name +
-                '</strong> ' + d.value + '% ' +
+                '</strong> ' + d.ratio + '% ' +
+                ' ' + d.value + ' usec ' +
                 '<a href="' + options.baseUrl + urlName + '">view</a>';
             return label;
         }
