@@ -12,7 +12,7 @@ Xhgui.callgraph = function (container, data, options) {
 
     var force = d3.layout.force()
         .charge(function(d) {
-            return -50 * Math.log(d.value);
+            return -50 * Math.log(d.ratio);
         })
         .linkDistance(function(d) {
             return d.target.weight;
@@ -46,7 +46,7 @@ Xhgui.callgraph = function (container, data, options) {
     data.nodes[0].y = 60;
 
     for (var i = 0, len = data.nodes.length; i < len; i++) {
-        data.nodes[i].ratio = Math.ceil(data.nodes[i].value / data.totalTime);
+        data.nodes[i].ratio = Math.ceil(data.nodes[i].value / data.totalTime * 100);
     }
 
     var nodes = force.nodes(data.nodes)
@@ -136,10 +136,10 @@ Xhgui.callgraph = function (container, data, options) {
         },
         formatter: function (d, i) {
             var urlName = '&symbol=' + encodeURIComponent(d.name);
-            var label = '<strong>' + d.name +
-                '</strong> ' + d.ratio + '% ' +
-                ' ' + d.value + ' usec ' +
-                '<a href="' + options.baseUrl + urlName + '">view</a>';
+            var label = '<strong>' + d.name + '</strong>' +
+                ' <a href="' + options.baseUrl + urlName + '">view</a> <br />' +
+                d.ratio + '% ' +
+                ' ' + Xhgui.formatNumber(d.value) + ' <span class="units">µs</span> ';
             return label;
         }
     });
