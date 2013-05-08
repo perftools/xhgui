@@ -75,21 +75,50 @@ Xhgui.callgraph = function (container, data, options) {
         .attr('class', 'node')
         .call(force.drag);
 
+    // Make nodes that are moved sticky.
+    gnodes.on('mousedown', function (d) {
+        d.fixed = true;
+    });
+
+    function getChildLinks(parent, linkSet) {
+        var childLinks = link.filter(function (d) {
+            return d.source.index == parent.index;
+        });
+        if (!childLinks[0].length) {
+            return [[]];
+        }
+        childLinks.each(function (child) {
+            getChildLinks(child.target, linkSet);
+        });
+        for (var l in childLinks[0]) {
+            linkSet.push(childLinks[0][l]);
+        }
+        return linkSet;
+    }
+
     // Append dots and text.
     var circle = gnodes.append('circle')
-        .attr('class', 'node')
         .attr('r', function (d) {
             return d.ratio * 0.5;
         })
         .style('fill', function (d) {
             return colors(d.ratio);
+        })
+        .on('mouseover', function (d, ev) {
+            var node = nodes.nodes()[d.index];
+            var childLinks = getChildLinks(node, []);
+            d3.selectAll(childLinks).style('stroke', 'black');
+        }).on('mouseout', function (d, ev) {
+            var node = nodes.nodes()[d.index];
+            var childLinks = getChildLinks(node, []);
+            d3.selectAll(childLinks).style('stroke', '#ccc');
         });
 
     var text = gnodes.append('text')
         .style({
             'display': function (d) {
                 return d.ratio > 15 ? 'block' : 'none';
-            },
+            }
         })
         .text(function (d) {
             return d.name;
@@ -113,14 +142,9 @@ Xhgui.callgraph = function (container, data, options) {
             .attr("y", function(d) { return d.y; });
     });
 
-    // Make nodes that are moved sticky.
-    gnodes.on('mousedown', function (d) {
-        d.fixed = true;
-    });
-
     // Set tooltips on circles.
     Xhgui.tooltip(el, {
-        bindTo: circle,
+        bindTo: gnodes,
         positioner: function (d, i) {
             // Use the circle's bbox to position the tooltip.
             var position = this.getBBox();
