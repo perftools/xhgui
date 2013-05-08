@@ -67,7 +67,7 @@ Xhgui.callgraph = function (container, data, options) {
     // Color scale
     var colors = d3.scale.linear()
         .domain([0, 100])
-        .range(['#ffffff', '#b63c71']);
+        .range(['#ffe85e', '#b63c71']);
 
     var gnodes = svg.selectAll('g.node')
         .data(data.nodes)
@@ -90,8 +90,6 @@ Xhgui.callgraph = function (container, data, options) {
             'display': function (d) {
                 return d.ratio > 15 ? 'block' : 'none';
             },
-            'text-anchor': 'middle',
-            'vertical-align': 'middle'
         })
         .text(function (d) {
             return d.name;
