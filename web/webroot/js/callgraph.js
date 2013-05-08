@@ -152,8 +152,8 @@ Xhgui.callgraph = function (container, data, options) {
             return {
                 // 7 = 1/2 width of arrow
                 x: position.x + (position.width / 2) - 7,
-                // 20 = fudge factor.
-                y: position.y - 20
+                // 25 = fudge factor.
+                y: position.y - 25
             };
         },
         formatter: function (d, i) {
