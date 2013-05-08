@@ -85,7 +85,7 @@ Xhgui.callgraph = function (container, data, options) {
             return d.source.index == parent.index;
         });
         if (!childLinks[0].length) {
-            return [[]];
+            return [];
         }
         childLinks.each(function (child, i) {
             linkSet.push(childLinks[0][i]);
