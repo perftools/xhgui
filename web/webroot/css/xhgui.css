@@ -247,8 +247,10 @@ tr .no-results {
  */
 .callgraph .node {
     font: 10px sans-serif;
+    cursor: move;
 }
-.callgraph .node circle {
+
+.callgraph circle {
     fill: #fff;
     stroke: #b63c71;
     stroke-width: 1.5px;
