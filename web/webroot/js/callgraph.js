@@ -87,12 +87,10 @@ Xhgui.callgraph = function (container, data, options) {
         if (!childLinks[0].length) {
             return [[]];
         }
-        childLinks.each(function (child) {
+        childLinks.each(function (child, i) {
+            linkSet.push(childLinks[0][i]);
             getChildLinks(child.target, linkSet);
         });
-        for (var l in childLinks[0]) {
-            linkSet.push(childLinks[0][l]);
-        }
         return linkSet;
     }
 
