@@ -93,17 +93,52 @@ Xhgui.callgraph = function (container, data, options) {
         d.fixed = true;
     });
 
-    function getChildLinks(parent, linkSet) {
+    // Make an easier to traverse link list.
+    var linkMap = {};
+    link.each(function (linkData) {
+        var sourceIndex = linkData.source.index;
         var childLinks = link.filter(function (d) {
-            return d.source.index == parent.index;
+            return d.source.index == sourceIndex;
         });
-        if (!childLinks[0].length) {
+        if (childLinks[0].length) {
+            linkMap[sourceIndex] = childLinks;
+        }
+    });
+
+    function getChildLinks(parent) {
+        if (linkMap[parent.index] === undefined) {
             return [];
         }
-        childLinks.each(function (child, i) {
-            linkSet.push(childLinks[0][i]);
-            getChildLinks(child.target, linkSet);
-        });
+        // Use a simple queue to walk the graph
+        // without using recursion, as we could easily
+        // blow the browser stack frame limit
+        var queue = linkMap[parent.index].slice()
+        var linkSet = [];
+        var visited = {};
+        visited[parent.index] = true;
+
+        if (queue === undefined) {
+            return linkSet;
+        }
+        while (queue.length) {
+            var currentSet = queue.shift();
+            if (!currentSet.length) {
+                return linkSet;
+            }
+            // 'recurse' and append into the queue.
+            d3.selectAll(currentSet).each(function (datum) {
+                var nextIndex = datum.target.index;
+                if (visited[nextIndex]) {
+                    return;
+                }
+                linkSet.push(this);
+                visited[nextIndex] = true;
+                var nextNodes = linkMap[nextIndex];
+                if (nextNodes && nextNodes.length) {
+                    queue = queue.concat(linkMap[nextIndex]);
+                }
+            });
+        }
         return linkSet;
     }
 
@@ -118,14 +153,14 @@ Xhgui.callgraph = function (container, data, options) {
         // Mouse effects to highlight subtrees
         .on('mouseover', function (d, ev) {
             var node = nodes.nodes()[d.index];
-            var childLinks = getChildLinks(node, []);
+            var childLinks = getChildLinks(node);
             d3.selectAll(childLinks).attr({
                 'class': 'link active',
                 'marker-end': "url(#arrowhead-active)"
             });
         }).on('mouseout', function (d, ev) {
             var node = nodes.nodes()[d.index];
-            var childLinks = getChildLinks(node, []);
+            var childLinks = getChildLinks(node);
             d3.selectAll(childLinks).attr({
                 'class': 'link',
                 'marker-end': "url(#arrowhead)"
