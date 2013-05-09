@@ -40,6 +40,19 @@ Xhgui.callgraph = function (container, data, options) {
         }).append('path')
             .attr('d', 'M 0 0 L 10 5 L 0 10 z');
 
+    defs.append('svg:marker')
+        .attr({
+            id: 'arrowhead-active',
+            viewBox: '0 0 10 10',
+            refX: 10,
+            refY: 6,
+            markerUnits: 'strokeWidth',
+            markerHeight: 4,
+            markerWidth: 4,
+            orient: 'auto'
+        }).append('path')
+            .attr('d', 'M 0 0 L 10 5 L 0 10 z');
+
     // Fix the main() node
     data.nodes[0].fixed = true;
     data.nodes[0].x = width / 2;
@@ -102,14 +115,21 @@ Xhgui.callgraph = function (container, data, options) {
         .style('fill', function (d) {
             return colors(d.ratio);
         })
+        // Mouse effects to highlight subtrees
         .on('mouseover', function (d, ev) {
             var node = nodes.nodes()[d.index];
             var childLinks = getChildLinks(node, []);
-            d3.selectAll(childLinks).style('stroke', 'black');
+            d3.selectAll(childLinks).attr({
+                'class': 'link active',
+                'marker-end': "url(#arrowhead-active)"
+            });
         }).on('mouseout', function (d, ev) {
             var node = nodes.nodes()[d.index];
             var childLinks = getChildLinks(node, []);
-            d3.selectAll(childLinks).style('stroke', '#ccc');
+            d3.selectAll(childLinks).attr({
+                'class': 'link',
+                'marker-end': "url(#arrowhead)"
+            });
         });
 
     var text = gnodes.append('text')

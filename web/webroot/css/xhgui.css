@@ -260,8 +260,14 @@ tr .no-results {
     stroke: #ccc;
     stroke-width: 1.5px;
 }
+.callgraph .link.active {
+	stroke: #000;
+}
 .callgraph #arrowhead {
     fill: #bbb;
+}
+.callgraph #arrowhead-active {
+    fill: #000;
 }
 .callgraph .node text {
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
