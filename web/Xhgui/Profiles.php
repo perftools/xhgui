@@ -81,12 +81,20 @@ class Xhgui_Profiles
      * avg + date, making the data ideal for time series graphs
      *
      * @param string $url
+     * @param array $search Search options containing date_start and or date_end
      * @return array Array of metrics grouped by date
      */
-    public function getAvgsForUrl($url)
+    public function getAvgsForUrl($url, $search = array())
     {
+        $match = array('meta.simple_url' => $url);
+        if (isset($search['date_start'])) {
+            $match['meta.request_date']['$gte'] = (string)$search['date_start'];
+        }
+        if (isset($search['date_end'])) {
+            $match['meta.request_date']['$lte'] = (string)$search['date_end'];
+        }
         $results = $this->_collection->aggregate(array(
-            array('$match' => array('meta.simple_url' => $url)),
+            array('$match' => $match),
             array(
                 '$project' => array(
                     'date' => '$meta.request_date',
