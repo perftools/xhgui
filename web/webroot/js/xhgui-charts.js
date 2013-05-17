@@ -386,15 +386,19 @@ Xhgui.linegraph = function (container, data, options) {
         .range([height, 0])
         .domain(yDomain);
 
-    ticks = 1;
-    // If its a big date range show fewer ticks
-    if (xSpread / (86400 * 1000) > 5) {
-        ticks = 16;
+    // Default to daily scale.
+    var ticks = 1;
+    var tickScale = d3.time.days;
+
+    // If its a big date range show range in weeks
+    if (xSpread / (86400 * 1000) > 10) {
+        tickScale = d3.time.weeks;
+        ticks = 3;
     }
 
     var xAxis = d3.svg.axis()
         .scale(x)
-        .ticks(d3.time.days, ticks)
+        .ticks(tickScale, ticks)
         .tickFormat(d3.time.format('%Y-%m-%d'))
         .tickSize(9, 6, 0)
         .tickSubdivide(ticks - 1)
