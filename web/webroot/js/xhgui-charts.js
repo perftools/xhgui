@@ -370,17 +370,15 @@ Xhgui.linegraph = function (container, data, options) {
 
     var xSpread = xRange[1] - xRange[0];
 
-    // Get the mins/maxes for all series.
-    var mins = [];
+    // Get the maxes for all series.
     var maxes = [];
     options.series.forEach(function (key) {
-        var extent = d3.extent(data, function (d) {
+        var max = d3.max(data, function (d) {
             return d[key];
         });
-        mins.push(extent[0]);
-        maxes.push(extent[1]);
+        maxes.push(max);
     });
-    var yDomain = [d3.min(mins), d3.max(maxes)];
+    var yDomain = [0, d3.max(maxes)];
 
     var y = d3.scale.linear()
         .range([height, 0])
