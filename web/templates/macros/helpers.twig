@@ -33,21 +33,26 @@
 {% set midpoint = none %}
 {% set start = 1 %}
 {% set end = paging.total_pages|default(start) %}
+{% set total_pages = paging.total_pages|default(start) %}
 {% set search = search|default({}) %}
 {% set search = search|merge({direction: paging.direction, sort: paging.sort}) %}
 
 {# show a slice of pages in the middle #}
 {% if total_pages > num_pages %}
     {% set midpoint = (num_pages // 2) %}
-    {% set start = page - midpoint %}
+    {% set start = paging.page - midpoint %}
     {% if start < 1 %}
         {% set start = 1 %}
     {% endif %}
-    {% set end = page + midpoint %}
+    {% set end = paging.page + midpoint %}
+    {% if end < num_pages %}
+        {% set end = num_pages %}
+    {% endif %}
     {% if end > total_pages %}
         {% set end = total_pages %}
     {% endif %}
 {% endif %}
+
 
 <div class="pagination">
 <ul>
