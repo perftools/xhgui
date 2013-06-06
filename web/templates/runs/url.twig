@@ -45,7 +45,7 @@
 $(document).ready(function () {
     var graphData = {{ chart_data|json_encode|raw }};
     Xhgui.linegraph('#time-line-graph', graphData, {
-        series: ['avg_wt', 'avg_cpu'],
+        series: ['wt', 'cpu'],
         height: 300,
         xAxis: 'date',
         title: 'Time usage',
@@ -53,7 +53,7 @@ $(document).ready(function () {
         postfix: ' \u00b5s',
     });
     Xhgui.linegraph('#memory-line-graph', graphData, {
-        series: ['avg_mu', 'avg_pmu'],
+        series: ['mu', 'pmu'],
         height: 300,
         xAxis: 'date',
         title: 'Memory usage',
