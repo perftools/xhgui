@@ -75,6 +75,90 @@ class Xhgui_Profiles
     }
 
     /**
+     * Get the Percentile metrics for a URL
+     *
+     * This will group data by date and returns only the
+     * percentile + date, making the data ideal for time series graphs
+     *
+     * @param integer $percentile The percentile you want. e.g. 90.
+     * @param string $url
+     * @param array $search Search options containing date_start and or date_end
+     * @return array Array of metrics grouped by date
+     */
+    public function getPercentileForUrl($percentile, $url, $search = array())
+    {
+        $match = array('meta.simple_url' => $url);
+        if (isset($search['date_start'])) {
+            $match['meta.request_date']['$gte'] = (string)$search['date_start'];
+        }
+        if (isset($search['date_end'])) {
+            $match['meta.request_date']['$lte'] = (string)$search['date_end'];
+        }
+        $results = $this->_collection->aggregate(array(
+            array('$match' => $match),
+            array(
+                '$project' => array(
+                    'date' => '$meta.request_date',
+                    'profile.main()' => 1
+                )
+            ),
+            array(
+                '$group' => array(
+                    '_id' => '$date',
+                    'row_count' => array('$sum' => 1),
+                    'wall_times' => array('$push' => '$profile.main().wt'),
+                    'cpu_times' => array('$push' => '$profile.main().cpu'),
+                    'mu_times' => array('$push' => '$profile.main().mu'),
+                    'pmu_times' => array('$push' => '$profile.main().pmu'),
+                )
+            ),
+            array(
+                '$project' => array(
+                    'date' => '$date',
+                    'row_count' => '$row_count',
+                    'raw_index' => array(
+                        '$multiply' => array(
+                            '$row_count',
+                            $percentile / 100
+                        )
+                    ),
+                    'wall_times' => '$wall_times',
+                    'cpu_times' => '$cpu_times',
+                    'mu_times' => '$mu_times',
+                    'pmu_times' => '$pmu_times',
+                )
+            ),
+            array(
+                '$project' => array(
+                    'date' => '$date',
+                    'row_count' => '$row_count',
+                    'raw_index' => '$raw_index',
+                    'index' => array(
+                        '$subtract' => array(
+                            '$raw_index', array('$mod' => array('$raw_index', 1))
+                        )
+                    ),
+                    'wall_time' => '$wall_times',
+                    'cpu_times' => '$cpu_times',
+                    'mu_times' => '$mu_times',
+                    'pmu_times' => '$pmu_times',
+                )
+            ),
+            array('$sort' => array('_id' => 1)),
+        ));
+        return $results['result'];
+
+        if (empty($results['result'])) {
+            return array();
+        }
+        foreach ($results['result'] as $i => $result) {
+            $results['result'][$i]['date'] = $result['_id'];
+            unset($results['result'][$i]['_id']);
+        }
+        return $results['result'];
+    }
+
+    /**
      * Get the Average metrics for a URL
      *
      * This will group data by date and returns only the
