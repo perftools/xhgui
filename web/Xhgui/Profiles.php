@@ -128,32 +128,27 @@ class Xhgui_Profiles
                     'pmu_times' => '$pmu_times',
                 )
             ),
-            array(
-                '$project' => array(
-                    'date' => '$date',
-                    'row_count' => '$row_count',
-                    'raw_index' => '$raw_index',
-                    'index' => array(
-                        '$subtract' => array(
-                            '$raw_index', array('$mod' => array('$raw_index', 1))
-                        )
-                    ),
-                    'wall_time' => '$wall_times',
-                    'cpu_times' => '$cpu_times',
-                    'mu_times' => '$mu_times',
-                    'pmu_times' => '$pmu_times',
-                )
-            ),
             array('$sort' => array('_id' => 1)),
         ));
-        return $results['result'];
 
         if (empty($results['result'])) {
             return array();
         }
-        foreach ($results['result'] as $i => $result) {
-            $results['result'][$i]['date'] = $result['_id'];
-            unset($results['result'][$i]['_id']);
+        $keys = array(
+            'wall_times' => 'wt',
+            'cpu_times' => 'cpu',
+            'mu_times' => 'mu',
+            'pmu_times' => 'pmu'
+        );
+        foreach ($results['result'] as &$result) {
+            $result['date'] = $result['_id'];
+            unset($result['_id']);
+            $index = round($result['raw_index']) - 1;
+            foreach ($keys as $key => $out) {
+                sort($result[$key]);
+                $result[$out] = $result[$key][$index];
+                unset($result[$key]);
+            }
         }
         return $results['result'];
     }
