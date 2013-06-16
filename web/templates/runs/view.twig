@@ -141,7 +141,12 @@
 <script>
 $(document).ready(function () {
     var wallTime = {{ wall_time|json_encode|raw }};
-    Xhgui.columnchart('#wall-time-chart', wallTime, {
+    var other = {{ result.get('main()', 'wt') }};
+    for (var i = 0; i < wallTime.length; i++) {
+        other -= wallTime[i].value;
+    }
+    wallTime.push({'name' : 'Other', 'value' : other});
+    Xhgui.rosechart('#wall-time-chart', wallTime, {
         width: 350,
         height: 300,
         postfix: ' \u00b5s'
