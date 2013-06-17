@@ -143,7 +143,7 @@ class Xhgui_Profiles
         foreach ($results['result'] as &$result) {
             $result['date'] = $result['_id'];
             unset($result['_id']);
-            $index = round($result['raw_index']) - 1;
+            $index = max(round($result['raw_index']) - 1, 0);
             foreach ($keys as $key => $out) {
                 sort($result[$key]);
                 $result[$out] = $result[$key][$index];

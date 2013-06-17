@@ -129,6 +129,18 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('2013-01-18', $result[0]['date']);
     }
 
+    public function testGetPercentileForUrlWithSearch()
+    {
+        $search = array('date_start' => '2013-01-18', 'date_end' => '2013-01-18');
+        $result = $this->profiles->getPercentileForUrl(20, '/', $search);
+        $this->assertCount(1, $result);
+
+        $this->assertArrayHasKey('wt', $result[0]);
+        $this->assertArrayHasKey('cpu', $result[0]);
+        $this->assertArrayHasKey('mu', $result[0]);
+        $this->assertArrayHasKey('pmu', $result[0]);
+    }
+
     public function testGetAllConditions()
     {
         $result = $this->profiles->getAll(array(
