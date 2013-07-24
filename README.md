@@ -69,6 +69,15 @@ With Nginx in fastcgi mode you could use:
         fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
      }
 
+Limiting Mongo Disk Usage 
+-------------------------
+
+Disk usage can grow quickly, especially when profiling applications with large code bases, or that utilize larger frameworks. One technique to keep the growth in check is to have Mongo automatically delete profiling documents once they reach a certain age. Decide on a maximum profile document age in seconds, you may wish to choose a lower value in development (where you profile everything), than production (where you profile only a selection of documents). The following command instructs Mongo to delete documents over 5 days (432000 seconds) old.
+
+      $ mongo
+      > use xhprof
+      > db.results.ensureIndex( { "meta.request_ts" : 1 }, { expireAfterSeconds : 432000 } )
+
 
 License
 =======
