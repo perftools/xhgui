@@ -1,48 +1,27 @@
 <?php
 require dirname(__DIR__) . '/src/bootstrap.php';
 
-$db = Xhgui_Db::connect();
-$profiles = new Xhgui_Profiles($db->results);
+use Slim\Slim;
+use Slim\Views\Twig;
 
-$search = array();
-$keys = array('date_start', 'date_end', 'url');
-foreach ($keys as $key) {
-    $search[$key] = !empty($_GET[$key]) ? $_GET[$key] : null;
-}
-$sort = isset($_GET['sort']) ? $_GET['sort'] : null;
+$config = include XHGUI_ROOT_DIR . '/config/config.php';
+$app = new Slim($config);
 
-$result = $profiles->getAll(array(
-    'sort' => $sort,
-    'page' => isset($_GET['page']) ? $_GET['page'] : null,
-    'direction' => isset($_GET['direction']) ? $_GET['direction'] : null,
-    'perPage' => Xhgui_Config::read('page.limit'),
-    'conditions' => $search
-));
-
-
-$title = 'Recent runs';
-$titleMap = array(
-    'wt' => 'Longest wall time',
-    'cpu' => 'Most CPU time',
-    'mu' => 'Highest memory use',
+// Configure Twig view for slim
+$view = new Twig();
+$view->parserOptions = array(
+    'charset' => 'utf-8',
+    'cache' => XHGUI_ROOT_DIR . '/cache',
+    'auto_reload' => true,
+    'strict_variables' => false,
+    'autoescape' => true
 );
-if (isset($titleMap[$sort])) {
-    $title = $titleMap[$sort];
-}
-
-$paging = array(
-    'total_pages' => $result['totalPages'],
-    'page' => $result['page'],
-    'sort' => $sort,
-    'direction' => $result['direction']
+$view->parserExtensions = array(
+    new Xhgui_Twig_Extension()
 );
-$template = Xhgui_Template::load('runs/list.twig');
-echo $template->render(array(
-    'paging' => $paging,
-    'base_url' => '/index.php',
-    'runs' => $result['results'],
-    'date_format' => Xhgui_Config::read('date.format'),
-    'search' => $search,
-    'has_search' => strlen(implode('', $search)) > 0,
-    'title' => $title
-));
+$app->view($view);
+
+require XHGUI_ROOT_DIR . '/src/app/hooks.php';
+require XHGUI_ROOT_DIR . '/src/app/controllers/runs.php';
+
+$app->run();
