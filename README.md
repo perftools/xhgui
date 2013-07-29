@@ -29,21 +29,25 @@ Installing the xhgui ui
 * Set the permissions on `web/cache` to allow the webserver to create files.
   If you're lazy `0777` will work. Run
 
-      chmod -R 0777 web/cache
+  ```
+  chmod -R 0777 web/cache
+  ```
 
 * If your mongodb setup requires a username + password, or isn't running on the default port + host.
   You'll need to update `web/config/config.php` so that it can connect to mongod.
 * You may wish to add indexes (recommended but optional) to improve the performance, you'll need to do this by using  mongo console
 
   On your command prompt (irrespective of Windows or \*nix), open mongo shell using command 'mongo' and follow below  commands to add the index:
-
-      $ mongo
-      > use xhprof
-      > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
-      > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
-      > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
-      > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
-      > db.results.ensureIndex( { 'meta.url' : 1 } )
+  
+  ```
+  $ mongo
+  > use xhprof
+  > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
+  > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
+  > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
+  > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
+  > db.results.ensureIndex( { 'meta.url' : 1 } )
+  ```
 
   That's it you added the indexes, you may notice now you are able navigate across pages faster
 
