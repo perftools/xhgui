@@ -16,15 +16,15 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
-                <a class="brand" href="{{ url('/') }}">XHG</a>
+                <a class="brand" href="{{ url('home') }}">XHG</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
-                        <li><a href="{{ url('/') }}">Recent</a></li>
-                        <li><a href="{{ url('/', {'sort': 'wt'}) }}">Longest wall time</a></li>
-                        <li><a href="{{ url('/', {'sort': 'cpu'}) }}">Most CPU</a></li>
-                        <li><a href="{{ url('/', {'sort': 'mu'}) }}">Most memory</a></li>
-                        <li><a href="{{ url('/custom.php') }}">Custom View</a></li>
-                        <li><a href="{{ url('/watch.php') }}">Watch Functions</a></li>
+                        <li><a href="{{ url('home') }}">Recent</a></li>
+                        <li><a href="{{ url('home', {'sort': 'wt'}) }}">Longest wall time</a></li>
+                        <li><a href="{{ url('home', {'sort': 'cpu'}) }}">Most CPU</a></li>
+                        <li><a href="{{ url('home', {'sort': 'mu'}) }}">Most memory</a></li>
+                        <li><a href="{{ url('customview') }}">Custom View</a></li>
+                        <li><a href="{{ url('watch.list') }}">Watch Functions</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>

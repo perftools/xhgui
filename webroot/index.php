@@ -17,11 +17,13 @@ $view->parserOptions = array(
     'autoescape' => true
 );
 $view->parserExtensions = array(
-    new Xhgui_Twig_Extension()
+    new Xhgui_Twig_Extension($app)
 );
 $app->view($view);
 
 require XHGUI_ROOT_DIR . '/src/app/hooks.php';
 require XHGUI_ROOT_DIR . '/src/app/controllers/runs.php';
+require XHGUI_ROOT_DIR . '/src/app/controllers/custom.php';
+require XHGUI_ROOT_DIR . '/src/app/controllers/watch.php';
 
 $app->run();

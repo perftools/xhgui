@@ -14,7 +14,7 @@
         <i class="icon-search"></i> Search
     </a>
 
-    <form action="{{ url('/index.php') }}" method="get" class="row hide search-form form-inline">
+    <form action="{{ url('home') }}" method="get" class="row hide search-form form-inline">
         <a href="#" class="search-collapse close" title="Hide search form">&times;</a>
         <div class="control-group span4">
             <label class="control-label" for="start_date">Date range</label>
@@ -55,7 +55,7 @@
 {% endif %}
 
 {% if runs|length %}
-    {{ helpers.pagination('/index.php', paging, search) }}
+    {{ helpers.pagination('home', paging, search) }}
 {% endif %}
 
 {% endblock %}

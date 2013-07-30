@@ -43,7 +43,7 @@ $app->get('/', function () use ($app) {
 
     $app->render('runs/list.twig', array(
         'paging' => $paging,
-        'base_url' => '/index.php',
+        'base_url' => 'home',
         'runs' => $result['results'],
         'date_format' => $app->config('date.format'),
         'search' => $search,
@@ -51,3 +51,15 @@ $app->get('/', function () use ($app) {
         'title' => $title
     ));
 })->name('home');
+
+$app->get('/run/view', function () use ($app) {
+
+})->name('run.view');
+
+$app->get('/url/view', function () use ($app) {
+
+})->name('url.view');
+
+$app->get('/run/compare', function () use ($app) {
+
+})->name('run.compare');
