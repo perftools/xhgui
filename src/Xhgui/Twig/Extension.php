@@ -2,6 +2,13 @@
 
 class Xhgui_Twig_Extension extends Twig_Extension
 {
+    protected $_app;
+
+    public function __construct($app)
+    {
+        $this->_app = $app;
+    }
+
     public function getName()
     {
         return 'xhgui';
@@ -41,16 +48,13 @@ class Xhgui_Twig_Extension extends Twig_Extension
      * @param array $queryarg Additional querystring arguments.
      * @return string url.
      */
-    public function url($path, $queryargs = array())
+    public function url($name, $queryargs = array())
     {
-        $base = $this->_getBase();
         $query = '';
-        $q = strpos($path, '?') === false ? '?' : '&';
         if (!empty($queryargs)) {
-            $query = $q . http_build_query($queryargs);
+            $query = '?' . http_build_query($queryargs);
         }
-        $path = '/' . ltrim($path, '/');
-        return $base . $path . $query;
+        return $this->_app->urlFor($name)  . $query;
     }
 
     public function formatBytes($value)
