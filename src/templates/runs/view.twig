@@ -14,9 +14,9 @@
     <div class="sidebar-nav">
         <ul class="nav nav-list">
             <li class="nav-header">This Run</li>
-            <li><strong>URL</strong> <a href="{{ url('/url.php', {'url': result.meta('url')|simple_url }) }}">{{ result.meta('url') }}</a></li>
+            <li><strong>URL</strong> <a href="{{ url('url.view', {'url': result.meta('url')|simple_url }) }}">{{ result.meta('url') }}</a></li>
             <li><strong>Time</strong> {{ result.meta('SERVER.REQUEST_TIME')|date(date_format) }}</li>
-            <li><strong>ID</strong> <a href="{{ url('/custom_help.php', {id: result.id|trim }) }}">{{ result.id }}</a></li>
+            <li><strong>ID</strong> <a href="{{ url('custom.help', {id: result.id|trim }) }}">{{ result.id }}</a></li>
             <li><strong>Wall Time</strong> {{ result.get('main()', 'wt')|as_time }}</li>
             <li><strong>CPU Time</strong> {{ result.get('main()', 'cpu')|as_time }}</li>
             <li><strong>Memory Usage</strong> {{ result.get('main()', 'mu')|as_bytes }}</li>
@@ -35,10 +35,10 @@
 <div class="span9">
 
     <div class="row-fluid">
-        <a href="{{ url('/compare.php', {base: result.id|trim }) }}" id="compare-button" class="btn back-link">
+        <a href="{{ url('run.compare', {base: result.id|trim }) }}" id="compare-button" class="btn back-link">
             Compare this run
         </a>
-        <a href="{{ url('/callgraph.php', {id: result.id|trim }) }}" class="btn back-link">
+        <a href="{{ url('run.callgraph', {id: result.id|trim }) }}" class="btn back-link">
             View Callgraph
         </a>
 
@@ -119,7 +119,7 @@
     {% for key, value in profile %}
     <tr>
         <td class="text">
-            <a href="{{ url('/symbol.php', {'id': result.id|trim, 'symbol': key}) }}">{{ key }}</a>
+            <a href="{{ url('run.symbol', {'id': result.id|trim, 'symbol': key}) }}">{{ key }}</a>
         </td>
         <td class="right">{{ value.ct }}</td>
         <td class="right">{{ value.ewt|as_time }}</td>

@@ -18,6 +18,7 @@ class Xhgui_Twig_Extension extends Twig_Extension
     {
         return array(
             'url' => new Twig_Function_Method($this, 'url'),
+            'static' => new Twig_Function_Method($this, 'staticUrl'),
         );
     }
 
@@ -55,6 +56,11 @@ class Xhgui_Twig_Extension extends Twig_Extension
             $query = '?' . http_build_query($queryargs);
         }
         return $this->_app->urlFor($name)  . $query;
+    }
+
+    public function staticUrl($url)
+    {
+        return $this->_app->request()->getRootUri() . '/' . $url;
     }
 
     public function formatBytes($value)

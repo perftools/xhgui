@@ -52,14 +52,65 @@ $app->get('/', function () use ($app) {
     ));
 })->name('home');
 
-$app->get('/run/view', function () use ($app) {
 
+/**
+ * Display the data about a single run.
+ */
+$app->get('/run/view', function () use ($app) {
+    $request = $app->request();
+    $detailCount = $app->config('detail.count');
+
+    $profiles = new Xhgui_Profiles($app->db->results);
+    $result = $profiles->get($request->get('id'));
+
+    $result->calculateExclusive();
+
+    // Exclusive wall time graph
+    $timeChart = $result->extractDimension('ewt', $detailCount);
+
+    // Memory Block
+    $memoryChart = $result->extractDimension('emu', $detailCount);
+
+    // Watched Functions Block
+    $watches = new Xhgui_WatchFunctions($app->db->watches);
+    $watchedFunctions = array();
+    foreach ($watches->getAll() as $watch) {
+        $matches = $result->getWatched($watch['name']);
+        if ($matches) {
+            $watchedFunctions = array_merge($watchedFunctions, $matches);
+        }
+    }
+
+    $profile = $result->sort('ewt', $result->getProfile());
+    $app->render('runs/view.twig', array(
+        'profile' => $profile,
+        'result' => $result,
+        'wall_time' => $timeChart,
+        'memory' => $memoryChart,
+        'watches' => $watchedFunctions,
+        'date_format' => $app->config('date_format'),
+    ));
 })->name('run.view');
 
+
+/**
+ * Display the data about a single url.
+ */
 $app->get('/url/view', function () use ($app) {
 
 })->name('url.view');
 
+
 $app->get('/run/compare', function () use ($app) {
 
 })->name('run.compare');
+
+
+$app->get('/run/symbol', function () use ($app) {
+
+})->name('run.symbol');
+
+$app->get('/run/callgraph', function () use ($app) {
+
+})->name('run.callgraph');
+
