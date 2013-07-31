@@ -143,7 +143,23 @@ $app->get('/run/compare', function () use ($app) {
 
 
 $app->get('/run/symbol', function () use ($app) {
+	$request = $app->request();
+	$id = $request->get('id');
+	$symbol = $request->get('symbol');
 
+	$profiles = new Xhgui_Profiles($app->db->results);
+
+	$profile = $profiles->get($id);
+	$profile->calculateExclusive();
+	list($parents, $current, $children) = $profile->getRelatives($symbol);
+
+	$app->render('runs/symbol-view.twig', array(
+		'symbol' => $symbol,
+		'id' => $id,
+		'parents' => $parents,
+		'current' => $current,
+		'children' => $children,
+	));
 })->name('run.symbol');
 
 $app->get('/run/callgraph', function () use ($app) {
