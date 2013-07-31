@@ -97,7 +97,43 @@ $app->get('/run/view', function () use ($app) {
  * Display the data about a single url.
  */
 $app->get('/url/view', function () use ($app) {
+	$request = $app->request();
+	$perPage = $app->config('page.limit');
 
+	$db = Xhgui_Db::connect();
+	$profiles = new Xhgui_Profiles($app->db->results);
+
+	$pagination = array(
+		'sort' => $request->get('sort'),
+		'direction' => $request->get('direction'),
+		'page' => $request->get('page'),
+		'perPage' => $app->config('page.limit'),
+	);
+
+	$search = array();
+	$keys = array('date_start', 'date_end');
+	foreach ($keys as $key) {
+		$search[$key] = $request->get($key);
+	}
+	$runs = $profiles->getForUrl($request->get('url'), $pagination, $search);
+	$chartData = $profiles->getPercentileForUrl(90, $request->get('url'), $search);
+
+	$paging = array(
+		'total_pages' => $runs['totalPages'],
+		'sort' => $pagination['sort'],
+		'page' => $runs['page'],
+		'direction' => $runs['direction']
+	);
+
+	$app->render('runs/url.twig', array(
+		'paging' => $paging,
+		'base_url' => 'url.view',
+		'runs' => $runs['results'],
+		'url' => $request->get('url'),
+		'chart_data' => $chartData,
+		'date_format' => $app->config('date.format'),
+		'search' => array_merge($search, array('url' => $request->get('url'))),
+	));
 })->name('url.view');
 
 

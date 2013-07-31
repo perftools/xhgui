@@ -18,7 +18,7 @@
         <i class="icon-search"></i> Search
     </a>
 
-    <form action="{{ url('/url.php') }}" method="get" class="row hide search-form form-inline">
+    <form action="{{ url('url.view') }}" method="get" class="row hide search-form form-inline">
         <input type="hidden" name="url" value="{{ search.url }}" />
         <a href="#" class="search-collapse close" title="Hide search form">&times;</a>
         <div class="control-group span4">
@@ -36,7 +36,7 @@
 
 {% include 'runs/paginated-list.twig' %}
 
-{{ helpers.pagination(url('/url.php', {'url': url}), paging) }}
+{{ helpers.pagination('url.view', paging, {url: url}) }}
 
 {% endblock %}
 
