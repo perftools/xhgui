@@ -163,6 +163,14 @@ $app->get('/run/symbol', function () use ($app) {
 })->name('run.symbol');
 
 $app->get('/run/callgraph', function () use ($app) {
+	$request = $app->request();
+	$profiles = new Xhgui_Profiles($app->db->results);
+	$profile = $profiles->get($request->get('id'));
 
+	$app->render('runs/callgraph.twig', array(
+		'profile' => $profile,
+		'date_format' => $app->config('date_format'),
+		'callgraph' => $profile->getCallgraph(),
+	));
 })->name('run.callgraph');
 

@@ -18,14 +18,14 @@ the actual method callgraph.</p>
 {% endblock %}
 
 {% block jsfoot %}
-<script src="js/callgraph.js"></script>
+<script src="{{ static('js/callgraph.js') }}"></script>
 <script>
 $(document).ready(function () {
     Xhgui.callgraph(
         '#callgraph-image',
         {{ callgraph|json_encode|raw }},
         {
-            baseUrl: "{{ url('/symbol.php', {'id': profile.id|trim }) }}"
+            baseUrl: "{{ url('run.symbol', {'id': profile.id|trim }) }}"
         }
     );
 });
