@@ -72,6 +72,9 @@ h1, h2, h3, h4, h5, h6,
     -moz-box-shadow: 1px 0px 1px white;
     box-shadow: 1px 0px 1px white;
 }
+.flash {
+    margin-top: 20px;
+}
 
 /**
  * Sidebar navs

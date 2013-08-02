@@ -17,12 +17,6 @@ Watches can either be exact matches or use PCRE patterns
 to match multiple function names.
 </p>
 
-{% if flash.success %}
-<div class="alert alert-success">
-    {{ flash.success }}
-</div>
-{% endif %}
-
 <form class="form-stacked" action="{{ url('watch.save') }}" method="post">
 {% if watched|length %}
     <ul class="unstyled watch-list">

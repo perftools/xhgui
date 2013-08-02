@@ -32,6 +32,12 @@
     </div>
 
     <div class="container-fluid">
+        {% if flash.success %}
+        <div class="flash alert alert-success">
+            {{ flash.success }}
+        </div>
+        {% endif %}
+
         {% block content '' %}
 
         <hr>
