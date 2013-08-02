@@ -13,7 +13,7 @@
         <tr>
             <th>
                 <span class="badge compare-base">base</span>
-                <a target="_blank" href="{{ url('/run.php', {id: comparison.base.id|trim}) }}">{{ comparison.base.id }}</a>
+                <a target="_blank" href="{{ url('run.view', {id: comparison.base.id|trim}) }}">{{ comparison.base.id }}</a>
             </th>
             <td class="right">{{ comparison.base.functionCount }}</td>
             <td class="right">{{ comparison.base.get('main()', 'wt') |as_time }}</td>
@@ -24,7 +24,7 @@
         <tr>
             <th>
                 <span class="badge compare-head">head</span>
-                <a target="_blank" href="{{ url('/run.php', {id: comparison.head.id|trim}) }}">{{ comparison.head.id }}</a>
+                <a target="_blank" href="{{ url('run.view', {id: comparison.head.id|trim}) }}">{{ comparison.head.id }}</a>
             </th>
             <td class="right">{{ comparison.head.functionCount }}</td>
             <td class="right">{{ comparison.head.get('main()', 'wt') |as_time }}</td>
@@ -73,7 +73,7 @@
     {% for key, value in comparison.diff %}
     <tr>
         <td class="text">
-            <a href="{{ url('/symbol.php', {'id': comparison.base.id|trim, 'symbol': key}) }}">{{ key }}</a>
+            <a href="{{ url('run.symbol', {'id': comparison.base.id|trim, 'symbol': key}) }}">{{ key }}</a>
         </td>
         <td class="right">{{ value.ct|as_diff }}</td>
         <td class="right">{{ value.ewt|as_diff }}</td>
