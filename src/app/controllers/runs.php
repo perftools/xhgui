@@ -137,8 +137,60 @@ $app->get('/url/view', function () use ($app) {
 })->name('url.view');
 
 
+// Shows the compare view between two runs.
 $app->get('/run/compare', function () use ($app) {
+	$request = $app->request();
+	$profiles = new Xhgui_Profiles($app->db->results);
 
+	$baseRun = $headRun = $candidates = $comparison = null;
+	$paging = array();
+
+	if ($request->get('base')) {
+		$baseRun = $profiles->get($request->get('base'));
+	}
+
+	if ($baseRun && !$request->get('head')) {
+		$pagination = array(
+			'direction' => $request->get('direction'),
+			'sort' => $request->get('sort'),
+			'page' => $request->get('page'),
+			'perPage' => $app->config('page.limit'),
+		);
+		$candidates = $profiles->getForUrl(
+			$baseRun->getMeta('simple_url'),
+			$pagination
+		);
+
+		$paging = array(
+			'total_pages' => $candidates['totalPages'],
+			'sort' => $pagination['sort'],
+			'page' => $candidates['page'],
+			'direction' => $candidates['direction']
+		);
+	}
+
+	if ($request->get('head')) {
+		$headRun = $profiles->get($request->get('head'));
+	}
+
+	if ($baseRun && $headRun) {
+		$comparison = $baseRun->compare($headRun);
+	}
+
+	$app->render('runs/compare.twig', array(
+		'base_url' => 'run.compare',
+		'base_run' => $baseRun,
+		'head_run' => $headRun,
+		'candidates' => $candidates,
+		'url_params' => $request->get(),
+		'date_format' => $app->config('date.format'),
+		'comparison' => $comparison,
+		'paging' => $paging,
+		'search' => array(
+			'base' => $request->get('base'),
+			'head' => $request->get('head'),
+		)
+	));
 })->name('run.compare');
 
 
@@ -163,14 +215,14 @@ $app->get('/run/symbol', function () use ($app) {
 })->name('run.symbol');
 
 $app->get('/run/callgraph', function () use ($app) {
-	$request = $app->request();
-	$profiles = new Xhgui_Profiles($app->db->results);
-	$profile = $profiles->get($request->get('id'));
+    $request = $app->request();
+    $profiles = new Xhgui_Profiles($app->db->results);
+    $profile = $profiles->get($request->get('id'));
 
-	$app->render('runs/callgraph.twig', array(
-		'profile' => $profile,
-		'date_format' => $app->config('date_format'),
-		'callgraph' => $profile->getCallgraph(),
-	));
+    $app->render('runs/callgraph.twig', array(
+        'profile' => $profile,
+        'date_format' => $app->config('date_format'),
+        'callgraph' => $profile->getCallgraph(),
+    ));
 })->name('run.callgraph');
 

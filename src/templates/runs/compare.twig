@@ -25,8 +25,8 @@
         <span class="badge compare-head">
             head: {{ head_run.meta.simple_url }} - {{ head_run.meta.SERVER.REQUEST_TIME|date(date_format) }}
         </span>
-        <a class="btn btn-mini" href="{{ url('/compare.php', {'base': base_run.id|trim }) }}">change</a>
-        <a class="btn btn-mini" href="{{ url('/compare.php', {'base': head_run.id|trim, 'head': base_run.id|trim }) }}">reverse</a>
+        <a class="btn btn-mini" href="{{ url('run.compare', {'base': base_run.id|trim }) }}">change</a>
+        <a class="btn btn-mini" href="{{ url('run.compare', {'base': head_run.id|trim, 'head': base_run.id|trim }) }}">reverse</a>
         {% else %}
         <span class="badge">Choose a run below</span>
         {% endif %}
@@ -36,7 +36,7 @@
     <div class="row-fluid row-spaced">
         <h3>Other runs with {{ base_run.meta.simple_url }}</h3>
         {% include 'runs/paginated-list.twig' with {runs: candidates.results, show_compare_link: true} %}
-        {{ helpers.pagination('/compare.php', pagination, url_params) }}
+        {{ helpers.pagination('run.compare', pagination, url_params) }}
     </div>
     {% endif %}
 
