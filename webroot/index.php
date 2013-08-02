@@ -3,6 +3,7 @@ require dirname(__DIR__) . '/src/bootstrap.php';
 
 use Slim\Slim;
 use Slim\Views\Twig;
+use Slim\Middleware\SessionCookie;
 
 $config = include XHGUI_ROOT_DIR . '/config/config.php';
 $app = new Slim($config);
@@ -20,6 +21,11 @@ $view->parserExtensions = array(
     new Xhgui_Twig_Extension($app)
 );
 $app->view($view);
+
+// Enable cookie based sessions
+$app->add(new SessionCookie(array(
+    'httponly' => true,
+)));
 
 require XHGUI_ROOT_DIR . '/src/app/hooks.php';
 require XHGUI_ROOT_DIR . '/src/app/controllers/runs.php';

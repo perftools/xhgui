@@ -17,13 +17,13 @@ Watches can either be exact matches or use PCRE patterns
 to match multiple function names.
 </p>
 
-{% if saved %}
+{% if flash.success %}
 <div class="alert alert-success">
-    Watch functions updated.
+    {{ flash.success }}
 </div>
 {% endif %}
 
-<form class="form-stacked" action="{{ url('/watch.php') }}" method="post">
+<form class="form-stacked" action="{{ url('watch.save') }}" method="post">
 {% if watched|length %}
     <ul class="unstyled watch-list">
         {% for i, watch in watched %}
