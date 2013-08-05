@@ -3,7 +3,7 @@
  * Configuration for Xhgui
  */
 return array(
-    'debug' => true,
+    'debug' => false,
     'mode' => 'development',
     'db.host' => 'mongodb://localhost:27017',
     'db.db' => 'xhprof',
