@@ -31,7 +31,7 @@
  *
  */
 // Obtain the answer to life, the universe, and your application one time out of a hundred 
-if (true || rand(0, 100) === 42) {
+if (rand(0, 100) === 42) {
     xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
     register_shutdown_function('Xhgui_recordXHProfData');
 }
@@ -49,7 +49,7 @@ function Xhgui_recordXHProfData()
 
     if (!defined('XHGUI_ROOT_DIR')) {
         define('XHGUI_DISABLE_EXCEPTION', true);
-        require dirname(dirname(__FILE__)) . '/web/bootstrap.php';
+        require dirname(dirname(__FILE__)) . '/src/bootstrap.php';
     }
 
     $data['meta'] = array(
