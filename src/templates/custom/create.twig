@@ -95,7 +95,7 @@
         var query = $('#selection').val();
         var retrieve = $('#retrieve').val();
         $.ajax({
-            url: '/getvals.php',
+            url: '{{ url("custom.query") }}',
             type: 'POST',
         
             data: {'query' : query, 'retrieve' : retrieve},
