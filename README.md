@@ -29,27 +29,33 @@ Installing the xhgui ui
 * Set the permissions on the `cache` cache directory to allow the webserver to create files.
   If you're lazy `0777` will work. Run
 
-      chmod -R 0777 web/cache
+  ```
+  chmod -R 0777 web/cache
+  ```
 
 * If your mongodb setup requires a username + password, or isn't running on the default port + host.
   You'll need to update `config/config.php` so that it can connect to mongod.
 * You may wish to add indexes (recommended but optional) to improve the performance, you'll need to do this by using mongo console
 
-  On your command prompt (irrespective of Windows or \*nix), open mongo shell using command `mongo` and follow below  commands to add the index:
-
-      $ mongo
-      > use xhprof
-      > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
-      > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
-      > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
-      > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
-      > db.results.ensureIndex( { 'meta.url' : 1 } )
+  On your command prompt (irrespective of Windows or \*nix), open mongo shell using command 'mongo' and follow below  commands to add the index:
+  
+  ```
+  $ mongo
+  > use xhprof
+  > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
+  > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
+  > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
+  > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
+  > db.results.ensureIndex( { 'meta.url' : 1 } )
+  ```
 
   After adding indexes, you may notice you can navigate across pages faster.
 * Run the install script. This will download composer and use it to install the dependencies for xhgui.
 
+    ```
     cd path/to/xhgui
     php install.php
+    ```
 
 * Setup your webserver. See below for how to setup the rewrite rules for nginx + apache.
 
@@ -63,12 +69,15 @@ For Apache you can do the following to enable URL rewriting:
    set to All for the correct DocumentRoot.
 2. Make sure you are loading up mod_rewrite correctly. You should see something like:
 
-      LoadModule rewrite_module libexec/apache2/mod_rewrite.so
+    ```
+    LoadModule rewrite_module libexec/apache2/mod_rewrite.so
+    ```
 
 3. Xhgui comes with a `.htaccess` to enable the remaining rewrite rules.
 
 For nginx & fast-cgi you can the following snippet as a start:
 
+    ```
     server {
         listen   80;
         server_name example.com;
@@ -89,6 +98,7 @@ For nginx & fast-cgi you can the following snippet as a start:
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         }
     }
+    ```
 
 
 Profiling an application / site
