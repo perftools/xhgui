@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true" bootstrap="./web/bootstrap.php">
+<phpunit colors="true" bootstrap="./src/bootstrap.php">
     <!-- blacklist the tests and vendor directory from code coverage-->
     <filter>
         <blacklist>

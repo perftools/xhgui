@@ -1,11 +1,14 @@
 <?php
+use Slim\Slim;
+
 class Xhgui_Twig_ExtensionTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         parent::setUp();
-        Xhgui_Autoload::autoloadTwig();
-        $this->ext = new Xhgui_Twig_Extension();
+        $app = new Slim();
+        $app->get('/test', function () {})->name('test');
+        $this->ext = new Xhgui_Twig_Extension($app);
     }
 
     public function testFormatBytes()
@@ -27,23 +30,16 @@ class Xhgui_Twig_ExtensionTest extends PHPUnit_Framework_TestCase
         return array(
             // simple no query string
             array(
-                '/index.php',
+                'test',
                 null,
-                '/xhgui/index.php'
+                '/test'
             ),
             // simple with query string
             array(
-                '/index.php',
+                'test',
                 array('test' => 'value'),
-                '/xhgui/index.php?test=value'
+                '/test?test=value'
             ),
-            // url already has ? on it.
-            array(
-                '/index.php?foo=bar',
-                array('test' => 'value'),
-                '/xhgui/index.php?foo=bar&test=value'
-            ),
-
         );
     }
 
@@ -52,9 +48,15 @@ class Xhgui_Twig_ExtensionTest extends PHPUnit_Framework_TestCase
      */
     public function testUrl($url, $query, $expected)
     {
-        $_SERVER['PHP_SELF'] = '/xhgui/index.php';
+        $_SERVER['PHP_SELF'] = '/';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $_SERVER['REQUEST_URI'] = '/';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['SERVER_PORT'] = '80';
+
         $result = $this->ext->url($url, $query);
-        $this->assertEquals($expected, $result);
+        $this->assertStringEndsWith($expected, $result);
     }
 
 }

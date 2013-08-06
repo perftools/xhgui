@@ -1,0 +1,157 @@
+{% extends 'layout/base.twig' %}
+{% import 'macros/helpers.twig' as helpers %}
+
+{% block title %}
+- Profile - {{ result.meta.url }}
+{% endblock %}
+
+{% block content %}
+<div class="row-fluid">
+    <h1>Profile data for {{ result.meta('SERVER.REQUEST_METHOD')}} {{ result.meta.url }}</h1>
+</div>
+<div class="row-fluid">
+<div class="span3">
+    <div class="sidebar-nav">
+        <ul class="nav nav-list">
+            <li class="nav-header">This Run</li>
+            <li><strong>URL</strong> <a href="{{ url('url.view', {'url': result.meta('url')|simple_url }) }}">{{ result.meta('url') }}</a></li>
+            <li><strong>Time</strong> {{ result.meta('SERVER.REQUEST_TIME')|date(date_format) }}</li>
+            <li><strong>ID</strong> <a href="{{ url('custom.help', {id: result.id|trim }) }}">{{ result.id }}</a></li>
+            <li><strong>Wall Time</strong> {{ result.get('main()', 'wt')|as_time }}</li>
+            <li><strong>CPU Time</strong> {{ result.get('main()', 'cpu')|as_time }}</li>
+            <li><strong>Memory Usage</strong> {{ result.get('main()', 'mu')|as_bytes }}</li>
+            <li><strong>Peak Memory Usage</strong> {{ result.get('main()', 'pmu')|as_bytes }}</li>
+
+            <li class="nav-header">GET</li>
+            <li>{{ helpers.property_list('GET', result.meta('get')) }}</li>
+
+            <li class="nav-header">SERVER</li>
+            <li>{{ helpers.property_list('SERVER', result.meta('SERVER')) }}
+
+        </ul>
+    </div><!--/.well -->
+</div><!--/span-->
+
+<div class="span9">
+
+    <div class="row-fluid">
+        <a href="{{ url('run.compare', {base: result.id|trim }) }}" id="compare-button" class="btn back-link">
+            Compare this run
+        </a>
+        <a href="{{ url('run.callgraph', {id: result.id|trim }) }}" class="btn back-link">
+            View Callgraph
+        </a>
+
+        <h2>Watch Functions</h2>
+
+        <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Function</th>
+                <th class="right">Call Count</th>
+                <th class="right"><span class="tip" title="Exclusive wall time">ewt</span></th>
+                <th class="right"><span class="tip" title="Exclusive memory use">emu</span></th>
+                <th class="right"><span class="tip" title="Exclusive peak memory use">epmu</span></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for value in watches %}
+        <tr>
+            <td>{{ value.function }}</td>
+            <td class="right">{{ value.ct }}</td>
+            <td class="right">{{ value.ewt|as_time }}</td>
+            <td class="right">{{ value.emu|as_bytes }}</td>
+            <td class="right">{{ value.epmu|as_bytes }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span6">
+          <h2>Exclusive Wall Time</h2>
+          <div id="wall-time-chart" class="chart-container"></div>
+          <dl>
+          {% for value in wall_time %}
+              <dt class="text-wrap">{{ value.name }}</dt>
+              <dd>{{ value.value|as_time }}</dd>
+          {% endfor %}
+          </dl>
+        </div>
+
+        <div class="span6">
+          <h2>Memory Hogs</h2>
+          <div id="memory-usage-chart" class="chart-container"></div>
+          <dl>
+          {% for value in memory %}
+              <dt class="text-wrap">{{ value.name }}</dt>
+              <dd>{{ value.value|as_bytes }}</dd>
+          {% endfor %}
+          </dl>
+        </div>
+    </div>
+
+  </div><!--/row-->
+
+  <div class="row-fluid">
+  </div><!--/row-->
+
+</div>
+
+<div class="row-fluid">
+  <table class="table table-hover table-sort">
+    <thead>
+        <tr>
+            <th>Function</th>
+            <th>Call Count</th>
+            <th>Exclusive Wall Time</th>
+            <th>Exclusive CPU</th>
+            <th>Exclusive Memory Usage</th>
+            <th>Exclusive Peak Memory Usage</th>
+            <th>Inclusive Wall Time</th>
+            <th>Inclusive CPU</th>
+            <th>Inclusive Memory Usage</th>
+            <th>Inclusive Peak Memory Usage</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for key, value in profile %}
+    <tr>
+        <td class="text">
+            <a href="{{ url('run.symbol', {'id': result.id|trim, 'symbol': key}) }}">{{ key }}</a>
+        </td>
+        <td class="right">{{ value.ct }}</td>
+        <td class="right">{{ value.ewt|as_time }}</td>
+        <td class="right">{{ value.ecpu|as_time }}</td>
+        <td class="right">{{ value.emu|as_bytes }}</td>
+        <td class="right">{{ value.epmu|as_bytes }}</td>
+        <td class="right">{{ value.wt|as_time }}</td>
+        <td class="right">{{ value.cpu|as_time }}</td>
+        <td class="right">{{ value.mu|as_bytes }}</td>
+        <td class="right">{{ value.pmu|as_bytes }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div><!--/row-->
+{% endblock %}
+
+{% block jsfoot %}
+<script>
+$(document).ready(function () {
+    var wallTime = {{ wall_time|json_encode|raw }};
+    Xhgui.columnchart('#wall-time-chart', wallTime, {
+        width: 350,
+        height: 300,
+        postfix: ' \u00b5s'
+    });
+    var memoryData = {{ memory|json_encode|raw }};
+    Xhgui.columnchart('#memory-usage-chart', memoryData, {
+        width: 350,
+        height: 300,
+        postfix: ' bytes'
+    });
+});
+</script>
+{% endblock %}
