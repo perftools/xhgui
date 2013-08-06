@@ -48,8 +48,7 @@ function Xhgui_recordXHProfData()
     $data['profile'] = xhprof_disable();
 
     if (!defined('XHGUI_ROOT_DIR')) {
-        define('XHGUI_DISABLE_EXCEPTION', true);
-        require dirname(dirname(__FILE__)) . '/web/bootstrap.php';
+        require dirname(dirname(__FILE__)) . '/src/bootstrap.php';
     }
 
     $data['meta'] = array(

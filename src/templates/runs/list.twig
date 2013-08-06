@@ -1,0 +1,61 @@
+{% extends 'layout/base.twig' %}
+{% import 'macros/helpers.twig' as helpers %}
+
+{% block title %}
+- Run list
+{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+{% if runs|length or has_search %}
+<div class="searchbar clearfix">
+    <a href="#" class="pull-right btn btn-small search-expand" title="Show search form">
+        <i class="icon-search"></i> Search
+    </a>
+
+    <form action="{{ url('home') }}" method="get" class="row hide search-form form-inline">
+        <a href="#" class="search-collapse close" title="Hide search form">&times;</a>
+        <div class="control-group span4">
+            <label class="control-label" for="start_date">Date range</label>
+            <div class="controls">
+                <input type="text" data-date-format="yyyy-mm-dd" id="date_start" name="date_start" class="datepicker span2" value="{{ search.date_start }}">
+                <input type="text" id="date_end" data-date-format="yyyy-mm-dd" name="date_end" class="datepicker span2" value="{{ search.date_end }}">
+            </div>
+        </div>
+        <div class="control-group span4">
+            <label class="control-label" for="url">URL</label>
+            <div class="controls">
+                <input type="text" id="url" name="url" value="{{ search.url }}">
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+</div>
+{% endif %}
+
+{# No run data, and no search, must be just getting started #}
+{% if not runs|length and not has_search %}
+<div class="hero-unit">
+    <h3>Looks like you haven't done any profiling</h3>
+    <p>To get started with XHGUI you'll need to collect some profiling data.</p>
+    <p>The simplest way to get an application profiled, is to use <code>external/header.php</code>.
+        This file is designed to be combined with PHP's
+        <a href="http://www.php.net/manual/en/ini.core.php#ini.auto-prepend-file">auto_prepend_file</a>
+		directive. This can be enabled system-wide through <code>php.ini</code>. Alternatively, you can enable
+        <code>auto_prepend_file</code> per virtual host. See the README.md file for more details.
+    </p>
+</div>
+{% endif %}
+
+{% if runs|length or has_search %}
+    {% include 'runs/paginated-list.twig' %}
+{% endif %}
+
+{% if runs|length %}
+    {{ helpers.pagination('home', paging, search) }}
+{% endif %}
+
+{% endblock %}

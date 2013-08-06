@@ -1,0 +1,314 @@
+/**
+ * XHGui colors
+ *
+ * red - #d46245
+ * orange - #e9814f
+ * green - #637964
+ * yellow - #ffe85e
+ * blue - #59bdd2
+ * pink - #e3b7b3
+ * purple - #b63c71
+ */
+@font-face {
+    font-family: 'Chunkfive';
+    src: url('../fonts/Chunkfive-webfont.eot');
+    src: url('../fonts/Chunkfive-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Chunkfive-webfont.woff') format('woff'),
+         url('../fonts/Chunkfive-webfont.ttf') format('truetype'),
+         url('../fonts/Chunkfive-webfont.svg#MuseoSlab500') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/**
+ * Grid extensions
+ */
+.row-spaced {
+    margin-bottom: 20px;
+}
+
+/**
+ * Typography
+ */
+h1, h2, h3 {
+    margin: 15px 0;
+}
+h1, h2, h3, h4, h5, h6,
+.nav-header,
+.brand {
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Chunkfive';
+    font-weight: normal;
+}
+.units {
+    color: #999999;
+}
+.text-wrap {
+    word-break: break-all;
+}
+
+/**
+ * Top Navbar
+ */
+.navbar-inner {
+    background: -webkit-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
+    background: -moz-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
+    background: linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
+}
+.navbar-static-top .navbar-inner {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+.navbar .brand {
+    color: rgb(100, 100, 118);
+}
+.navbar .nav > li > a {
+    color: #444;
+}
+.navbar .brand {
+    border-right: 1px solid rgb(212, 212, 212);
+    -webkit-box-shadow: 1px 0px 1px white;
+    -moz-box-shadow: 1px 0px 1px white;
+    box-shadow: 1px 0px 1px white;
+}
+.flash {
+    margin-top: 20px;
+}
+
+/**
+ * Sidebar navs
+ */
+.sidebar-nav {
+    border-right: 1px solid rgb(221, 221, 221);
+}
+.nav-list dl {
+    margin: 0;
+}
+.sidebar-nav li a {
+    display: inline;
+    padding: 0;
+    margin: 0;
+}
+.sidebar-nav li a:hover {
+    background: transparent;
+}
+
+/**
+ * Search bar/box
+ */
+.searchbar {
+    margin: 10px;
+    padding: 10px;
+    background: -webkit-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
+    background: -moz-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
+    background: linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
+    -o-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+.searchbar form {
+    margin-bottom: 0;
+}
+.searchbar .form-actions {
+    margin: 0px;
+    float: left;
+    background: none;
+    padding: 25px 0 0 0;
+    border: none;
+}
+
+/**
+ * Pagination
+ *
+ * Remove the borders and boxshadows bootstrap applies.
+ */
+.pagination ul {
+    border: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.pagination > ul > li.active > span {
+    color: #d46245;
+}
+.pagination > ul > li > span,
+.pagination > ul > li > a {
+    border-top: 0;
+    border-bottom: 0;
+}
+.pagination ul > li:last-child > span,
+.pagination > ul > li:last-child > a {
+    border-right: 0;
+}
+.pagination ul > li:first-child > span,
+.pagination > ul > li:first-child > a {
+    border-left: 0;
+}
+
+/**
+ * Tables
+ */
+th {
+    text-align: center;
+}
+thead th {
+    border-bottom: 1px solid #aaa;
+}
+/* Sort link colors are reversed */
+thead .sort-link {
+    color: #2f99af;
+}
+thead .sort-link:hover {
+    color: #59bdd2;
+}
+
+
+th.right,
+td.right {
+    text-align: right;
+}
+th.header {
+    background: url(../img/bg.gif) center right no-repeat;
+    cursor: pointer;
+    padding-right: 18px;
+}
+.sort-desc,
+.sort-asc {
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
+    padding-right: 18px;
+}
+.sort-desc,
+th.headerSortDown {
+    background-image: url(../img/desc.gif);
+}
+.sort-asc,
+th.headerSortUp {
+    background-image: url(../img/asc.gif);
+}
+.tableFloatingHeader {
+    background-color: #fff;
+    border-bottom: 1px solid rgb(217, 217, 217);
+}
+.tableFloatingHeaderOriginal th {
+    border-top: none;
+}
+tr .no-results {
+    text-align: center;
+    font-size: 1.2em;
+}
+
+
+/**
+ * Watch lists
+ */
+.watch-list .btn {
+    vertical-align: top;
+    margin-top: 2px;
+    display: none;
+}
+.watch-list li:hover .btn {
+    display: inline-block;
+}
+
+/**
+ * Chart styles
+ */
+.chart-container {
+    position: relative;
+}
+.chart-container .popover {
+    min-width: 125px;
+    width: auto;
+}
+
+.chart-axis path,
+.chart-axis line {
+    fill: none;
+    stroke: #666;
+    shape-rendering: crispEdges;
+}
+.chart-line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+}
+.chart-dots circle {
+    stroke: white;
+    stroke-width: 1.5px;
+}
+
+.chart-bar {
+    fill: #d46245;
+}
+
+/**
+ * Call graph chart
+ */
+.callgraph .node {
+    font: 10px sans-serif;
+    cursor: move;
+}
+
+.callgraph circle {
+    fill: #fff;
+    stroke: #b63c71;
+    stroke-width: 1.5px;
+}
+.callgraph .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
+}
+.callgraph .link.active {
+	stroke: #000;
+}
+.callgraph #arrowhead {
+    fill: #bbb;
+}
+.callgraph #arrowhead-active {
+    fill: #000;
+}
+.callgraph .node text {
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    text-anchor: middle;
+    vertical-align: middle;
+}
+
+/**
+ * Run details
+ */
+.back-link {
+    float: right;
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+/**
+ * Compare runs
+ */
+.compare-base {
+    background: #e9814f;
+}
+.compare-head {
+    background: #59bdd2;
+}
+.diff-up {
+    color: #d46245;
+}
+.diff-down {
+    color: #637964;
+}
+.diff-same {
+    color: #999;
+}
+
+/**
+ * Footer
+ */
+.footer-text {
+    text-align: center;
+}
