@@ -51,6 +51,13 @@ class Xhgui_Db_Mapper
         if (isset($search['simple_url'])) {
             $conditions['meta.simple_url'] = (string)$search['simple_url'];
         }
+        if (isset($search['remote_addr'])) {
+            $conditions['meta.SERVER.REMOTE_ADDR'] = (string)$search['remote_addr'];
+        }
+        if (isset($search['cookie'])) {
+            $conditions['meta.SERVER.HTTP_COOKIE'] = (string)$search['cookie'];
+        }
+
         if (isset($search['url'])) {
             // Not sure if letting people use regex here
             // is a good idea. Only one way to find out.
