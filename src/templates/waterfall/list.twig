@@ -1,0 +1,201 @@
+{% extends 'layout/base.twig' %}
+{% import 'macros/helpers.twig' as helpers %}
+
+{% block title %}
+- Waterfall -
+{% endblock %}
+
+{% block content %}
+    <style>
+       .axis {
+            shape-rendering: crispEdges;
+        }
+        .x.axis line {
+            stroke: #ccc;
+        }
+        .x.axis .minor {
+            stroke-opacity: .5;
+        }
+        .x.axis path {
+            display: none;
+        }
+        .bar {
+            fill: steelblue;
+        }
+        text {
+            color: black;
+        }
+
+    
+}
+    </style>
+
+<div class="searchbar clearfix">
+    <a href="#" class="pull-right btn btn-small search-expand" title="Show search form">
+        <i class="icon-search"></i> Search
+    </a>
+
+    <form action="{{ url('waterfall') }}" method="get" class="row hide search-form form-inline">
+        <a href="#" class="search-collapse close" title="Hide search form">&times;</a>
+        <div class="control-group span4">
+            <label class="control-label" for="start_date">Date range</label>
+            <div class="controls">
+                <input type="text" name="request_start" value="{{ search.request_start }}">
+                <input type="text" name="request_end" value="{{ search.request_end }}">
+            </div>
+        </div>
+        <div class="control-group span4">
+            <label class="control-label" for="remote_addr">IP</label>
+            <div class="controls">
+                <input type="text" id="remote_addr" name="remote_addr" value="{{ search.remote_addr }}">
+            </div>
+        </div>
+        <div class="control-group span4">
+            <label class="control-label" for="cookie">Cookie</label>
+            <div class="controls">
+                <input type="text" id="cookie" name="cookie" value="{{ search.cookie }}">
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="row-fluid">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                {% if show_compare_link %}
+                <th>&nbsp;</th>
+                {% endif %}
+                <th>URL</th>
+                <th>
+                    {{ helpers.sort_link('Time', base_url, 'time', paging, search) }}
+                </th>
+                <th class="right">
+                    <span class="tip" title="Wall time">
+                        {{ helpers.sort_link('wt', base_url, 'wt', paging, search) }}
+                    </span>
+                </th>
+                <th class="right">
+                    <span class="tip" title="CPU time">
+                        {{ helpers.sort_link('cpu', base_url, 'cpu', paging, search) }}
+                    </span>
+                </th>
+                <th class="right">
+                    <span class="tip" title="Memory Usage">
+                        {{ helpers.sort_link('mu', base_url, 'mu', paging, search) }}
+                    </span>
+                </th>
+                <th class="right">
+                    <span class="tip" title="Peak Memory">
+                        {{ helpers.sort_link('pmu', base_url, 'pmu', paging, search) }}
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for result in runs %}
+        <tr>
+            {% if show_compare_link %}
+            <td>
+                <a class="btn btn-small" href="{{ url('run.compare', {base: base_run.id|trim, head: result.id|trim}) }}">
+                Compare
+                </a>
+            </td>
+            {% endif %}
+            <td><a href="{{ url('url.view', {'url': result.meta.url}) }}">{{ result.meta.url }}</a></td>
+            <td><a href="{{ url('run.view', {'id': result.id|trim }) }}">{{ result.meta.SERVER.REQUEST_TIME|date(date_format) }}</a></td>
+            <td class="right">{{ result.get('main()', 'wt') |as_time }}</td>
+            <td class="right">{{ result.get('main()', 'cpu') |as_time }}</td>
+            <td class="right">{{ result.get('main()', 'mu') |as_bytes }}</td>
+            <td class="right">{{ result.get('main()', 'pmu') |as_bytes }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6" class="no-results">
+                Your search conditions matched no runs. Try changing you search criteria.
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+    <div id="log"></div>
+    <svg id="waterfall">
+    </svg>
+ 
+
+
+
+{% endblock %}
+
+{% block jsfoot %}
+<script type="text/javascript" src="./lib/d3.js"></script>
+    <script type="text/javascript" src="./lib/underscore.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+            load();
+        });
+        function load() {
+            var w = 800,
+                h = {{ height }} ;
+            d3.json('/waterfall/data?remote_addr={{ remote_addr }}&request_start={{ request_start }}&request_end={{ request_end }}', function (data) {
+                data.forEach(function (d) {
+                    d.startdt = new Date(d.start);
+                    d.enddt = new Date(d.start + d.duration);
+                });
+                var x = d3.time.scale().range([0, w]),
+                    y = d3.scale.linear().range([0, h]),
+                    xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true),
+                    yAxis = d3.svg.axis().scale(y).ticks(4).orient("bottom");
+                var max = d3.max(_(data).pluck('enddt'));
+                
+                var seconds = max.getSeconds();
+                seconds++;
+                max.setSeconds(seconds);
+                x.domain([d3.min(_(data).pluck('startdt')), max]);
+                y.domain([0, data.length]);
+
+                var svg = d3.select('#waterfall');
+                svg
+                    .attr("width",w)
+                    .attr("height", h);
+                svg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + (h  - 20) + ")")
+
+                    .call(xAxis);
+                
+
+                var g = svg.selectAll('g.bar')
+                    .data(data).enter().append('g')
+                    .attr('class', 'bar')
+                    .attr('transform', function(d,i) {
+                        return 'translate(' + x(d.startdt) + ',' + y(i) + ')'
+                    })
+                g.append('rect')
+                    .attr('width', function (d) {
+                        return x(new Date(data[0].start + d.duration)) || 6;
+                    })
+                    .attr('height', function (d) {
+                        return 20
+                    })
+                g.append('text').text(function(d, i) {return d.title; })
+                        .attr('dy', '1em')
+                        .attr('fill','black')
+                        .attr("text-anchor", "left");
+                
+            });
+        }
+    </script>
+
+
+
+{% endblock %} 
