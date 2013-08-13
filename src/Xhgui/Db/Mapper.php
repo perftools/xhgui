@@ -51,6 +51,23 @@ class Xhgui_Db_Mapper
         if (isset($search['simple_url'])) {
             $conditions['meta.simple_url'] = (string)$search['simple_url'];
         }
+        if (isset($search['request_start']) && strlen($search['request_start']) > 0) {
+            $conditions['meta.SERVER.REQUEST_TIME']['$gte'] = (float)$search['request_start'];
+        }
+        if (isset($search['request_end']) && strlen($search['request_end']) > 0) {
+            $conditions['meta.SERVER.REQUEST_TIME']['$lte'] = (float)$search['request_end'];
+            header('XEND: Filtered' . (string)$search['request_end']);
+        }
+        
+        if (isset($search['remote_addr']) && strlen($search['remote_addr']) > 0) {
+            $conditions['meta.SERVER.REMOTE_ADDR'] = (string)$search['remote_addr'];
+            header('XIP: Filtered' . (string)$search['remote_addr']);
+        }
+        if (isset($search['cookie'])) {
+            $conditions['meta.SERVER.HTTP_COOKIE'] = (string)$search['cookie'];
+            header('XCOOKIE: Filtered');
+        }
+
         if (isset($search['url'])) {
             // Not sure if letting people use regex here
             // is a good idea. Only one way to find out.

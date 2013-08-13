@@ -16,6 +16,7 @@ $app->get('/', function () use ($app) {
     }
     $sort = $request->get('sort');
 
+
     $result = $profiles->getAll(array(
         'sort' => $sort,
         'page' => $request->get('page'),
@@ -80,6 +81,7 @@ $app->get('/run/view', function () use ($app) {
             $watchedFunctions = array_merge($watchedFunctions, $matches);
         }
     }
+
 
     $profile = $result->sort('ewt', $result->getProfile());
     $app->render('runs/view.twig', array(

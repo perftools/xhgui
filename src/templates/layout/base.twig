@@ -25,6 +25,7 @@
                         <li><a href="{{ url('home', {'sort': 'mu'}) }}">Most memory</a></li>
                         <li><a href="{{ url('custom.view') }}">Custom View</a></li>
                         <li><a href="{{ url('watch.list') }}">Watch Functions</a></li>
+                        <li><a href="{{ url('waterfall') }}">Waterfall</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -58,6 +59,8 @@
     <script src="{{ static('js/jquery.stickytableheaders.js') }}"></script>
     <script src="{{ static('js/xhgui-charts.js') }}"></script>
     <script src="{{ static('js/xhgui.js') }}"></script>
+    <script src="{{ static('js/bullet.js') }}"></script>
+    
     {% block jsfoot '' %}
 </body>
 </html>
