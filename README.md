@@ -132,6 +132,16 @@ Disk usage can grow quickly, especially when profiling applications with large c
       > use xhprof
       > db.results.ensureIndex( { "meta.request_ts" : 1 }, { expireAfterSeconds : 432000 } )
 
+Waterfall Display 
+-----------------
+The goal of the waterfall display is to recognize that concurrent requests can affect each other. Concurrent DB requests (or other resources), CPU intensive activies, or even locks on session files can become relevant. With an Ajax heavy applicaitons understanding the page build is far more complex than a single load, hopefully the waterfall can help. Remember: If you're only profiling a sample of requests the waterfall fills you with impolite lies. 
+
+Some Notes:
+
+ * There should probably be more indexes on MongoDB for this to be performant
+ * It introduces storage of a new request_ts_micro value, as second level granularity doesn't work well with waterfalls
+ * Still very much in alpha
+ * Feedback and pull requests welcome :)
 
 License
 =======
