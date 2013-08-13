@@ -10,6 +10,9 @@ $app = new Slim($config);
 
 // Configure Twig view for slim
 $view = new Twig();
+
+
+
 $view->parserOptions = array(
     'charset' => 'utf-8',
     'cache' => XHGUI_ROOT_DIR . '/cache',
@@ -31,6 +34,7 @@ require XHGUI_ROOT_DIR . '/src/app/hooks.php';
 require XHGUI_ROOT_DIR . '/src/app/controllers/runs.php';
 require XHGUI_ROOT_DIR . '/src/app/controllers/custom.php';
 require XHGUI_ROOT_DIR . '/src/app/controllers/watch.php';
+require XHGUI_ROOT_DIR . '/src/app/controllers/waterfall.php';
 require XHGUI_ROOT_DIR . '/src/app/controllers/error.php';
 
 $app->run();
