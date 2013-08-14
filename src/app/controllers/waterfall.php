@@ -13,7 +13,8 @@ $app->get('/waterfall', function () use ($app) {
 	$result = $profiles->getAll(array(        
 		'sort' => 'time',
 		'direction' => 'asc',
-		'conditions' => $search
+		'conditions' => $search,
+		'projection' => TRUE
     ));
 
     $count = count($result['results']);
@@ -50,7 +51,8 @@ $app->get('/waterfall/data', function () use ($app) {
 	$result = $profiles->getAll(array(        
 		'sort' => 'time',
 		'direction' => 'asc',
-		'conditions' => $search
+		'conditions' => $search,
+		'projection' => TRUE
     ));
     $datas = array();
     foreach($result['results'] as $r)
