@@ -22,7 +22,9 @@ $app->get('/', function () use ($app) {
         'page' => $request->get('page'),
         'direction' => $request->get('direction'),
         'perPage' => $app->config('page.limit'),
-        'conditions' => $search
+        'conditions' => $search,
+        'projection' => TRUE
+
     ));
 
     $title = 'Recent runs';

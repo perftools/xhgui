@@ -58,11 +58,32 @@ class Xhgui_Profiles
         if (isset($options['page'])) {
             $page = min(max($options['page'], 1), $totalPages);
         }
+        $projection = false;
+        if (isset($options['projection']))
+        {
+            if ($options['projection'] === true)
+            {
+                $projection = array('meta' => 1, 'profile.main()' => 1);
+            }else {
+                $projection = $options['projection'];
+            }
+        }
 
-        $cursor = $this->_collection->find($opts['conditions'])
-            ->sort($opts['sort'])
-            ->skip(($page - 1) * $opts['perPage'])
-            ->limit($opts['perPage']);
+
+        if ($projection === false)
+        {
+            $cursor = $this->_collection->find($opts['conditions'])
+                ->sort($opts['sort'])
+                ->skip(($page - 1) * $opts['perPage'])
+                ->limit($opts['perPage']);    
+        }else
+        {
+            $cursor = $this->_collection->find($opts['conditions'], $projection)
+                            ->sort($opts['sort'])
+                            ->skip(($page - 1) * $opts['perPage'])
+                            ->limit($opts['perPage']);    
+        }
+        
 
         return array(
             'results' => $this->_wrap($cursor),
