@@ -9,7 +9,7 @@ $(document).ready(function () {
                 return node.innerText;
             }
             var text = node.innerText || node.textContent;
-            return '' + parseInt(text.replace(',', ''), 10);
+            return '' + parseInt(text.replace(/,/g, ''), 10);
         }
     });
 
