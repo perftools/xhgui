@@ -4,6 +4,12 @@
  */
 require dirname(__DIR__) . '/src/bootstrap.php';
 
+$di = Xhgui_ServiceContainer::instance();
+
 // Use a test database.
-$dbname = Xhgui_Config::read('db.db');
-Xhgui_Config::write('db.db', 'test_' . $dbname);
+$config = $di['config'];
+$config['db.db'] = 'test_' . $config['db.db'];
+$di['config'] = $config;
+
+// Clean up globals.
+unset($di, $config);

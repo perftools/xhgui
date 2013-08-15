@@ -5,7 +5,7 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
     {
         Xhgui_Config::load(XHGUI_ROOT_DIR . '/config/config.php');
         $db = Xhgui_Db::connect();
-        $this->profiles = new Xhgui_Profiles($db->test_results);
+        $this->profiles = new Xhgui_Profiles($db->results);
         $this->profiles->truncate();
         $this->_loadFixture('tests/fixtures/results.json');
     }

@@ -4,8 +4,8 @@ class WatchFunctionsTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $db = Xhgui_Db::connect();
-        $this->watch = new Xhgui_WatchFunctions($db->test_watch);
+        $di = Xhgui_ServiceContainer::instance();
+        $this->watch = $di['watchFunctions'];
         $this->watch->truncate();
     }
 
