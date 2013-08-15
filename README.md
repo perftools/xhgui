@@ -30,7 +30,7 @@ Installing the xhgui ui
   If you're lazy `0777` will work. Run
 
   ```
-  chmod -R 0777 web/cache
+  chmod -R 0777 cache
   ```
 
 * If your mongodb setup requires a username + password, or isn't running on the default port + host.
