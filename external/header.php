@@ -62,9 +62,8 @@ function Xhgui_recordXHProfData()
     );
 
     try {
-        $db = Xhgui_Db::connect();
-        $profiles = new Xhgui_Profiles($db->results);
-        $profiles->insert($data, array('w' => false));
+        $container = Xhgui_ServiceContainer::instance();
+        $container['profiles']->insert($data, array('w' => false));
     } catch (Exception $e) {
         error_log('xhgui - ' . $e->getMessage());
     }
