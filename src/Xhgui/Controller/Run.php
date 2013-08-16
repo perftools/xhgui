@@ -95,8 +95,6 @@ class Xhgui_Controller_Run
         $request = $this->_app->request();
         $perPage = $this->_app->config('page.limit');
 
-        $db = Xhgui_Db::connect();
-
         $pagination = array(
             'sort' => $request->get('sort'),
             'direction' => $request->get('direction'),

@@ -30,7 +30,7 @@ $app->get('/run/symbol', function () use ($di) {
     $di['runController']->symbol();
 })->name('run.symbol');
 
-$app->get('/run/callgraph', function () use ($app) {
+$app->get('/run/callgraph', function () use ($di) {
     $di['runController']->callgraph();
 })->name('run.callgraph');
 
