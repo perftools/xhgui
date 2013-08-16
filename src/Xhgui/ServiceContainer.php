@@ -66,6 +66,10 @@ class Xhgui_ServiceContainer extends Pimple
         $this['watchFunctions'] = function ($c) {
             return new Xhgui_WatchFunctions($c['db']);
         };
+
+        $this['profiles'] = function ($c) {
+            return new Xhgui_Profiles($c['db']);
+        };
     }
 
     /**
@@ -75,6 +79,14 @@ class Xhgui_ServiceContainer extends Pimple
     {
         $this['watchController'] = $this->share(function ($c) {
             return new Xhgui_Controller_Watch($c['app'], $c['watchFunctions']);
+        });
+
+        $this['runController'] = $this->share(function ($c) {
+            return new Xhgui_Controller_Run($c['app'], $c['profiles']);
+        });
+
+        $this['customController'] = $this->share(function ($c) {
+            return new Xhgui_Controller_Custom($c['app'], $c['profiles']);
         });
     }
 
