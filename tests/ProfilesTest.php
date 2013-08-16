@@ -3,10 +3,8 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Xhgui_Config::load(XHGUI_ROOT_DIR . '/config/config.php');
-        $db = Xhgui_Db::connect();
-        $this->profiles = new Xhgui_Profiles($db->results);
-        $this->profiles->truncate();
+        $di = Xhgui_ServiceContainer::instance();
+        $this->profiles = $di['profiles'];
         $this->_loadFixture('tests/fixtures/results.json');
     }
 
