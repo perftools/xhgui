@@ -2,6 +2,9 @@
 
 class Xhgui_Controller_Custom
 {
+    protected $_app;
+    protected $_profiles;
+
     public function __construct($app, $profiles)
     {
         $this->_app = $app;

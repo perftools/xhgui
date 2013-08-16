@@ -3,6 +3,9 @@
 class Xhgui_Controller_Watch
 {
 
+    protected $_app;
+    protected $_watches;
+
     public function __construct($app, $watches)
     {
         $this->_app = $app;
