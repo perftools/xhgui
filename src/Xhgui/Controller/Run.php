@@ -16,7 +16,9 @@ class Xhgui_Controller_Run
         $search = array();
         $keys = array('date_start', 'date_end', 'url');
         foreach ($keys as $key) {
-            $search[$key] = $request->get($key);
+            if ($request->get($key)) {
+                $search[$key] = $request->get($key);
+            }
         }
         $sort = $request->get('sort');
 
