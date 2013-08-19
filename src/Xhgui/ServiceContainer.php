@@ -77,17 +77,17 @@ class Xhgui_ServiceContainer extends Pimple
      */
     protected function _controllers()
     {
-        $this['watchController'] = $this->share(function ($c) {
+        $this['watchController'] = function ($c) {
             return new Xhgui_Controller_Watch($c['app'], $c['watchFunctions']);
-        });
+        };
 
-        $this['runController'] = $this->share(function ($c) {
+        $this['runController'] = function ($c) {
             return new Xhgui_Controller_Run($c['app'], $c['profiles'], $c['watchFunctions']);
-        });
+        };
 
-        $this['customController'] = $this->share(function ($c) {
+        $this['customController'] = function ($c) {
             return new Xhgui_Controller_Custom($c['app'], $c['profiles']);
-        });
+        };
     }
 
 }
