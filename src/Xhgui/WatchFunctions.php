@@ -3,9 +3,9 @@ class Xhgui_WatchFunctions
 {
     protected $_collection;
 
-    public function __construct(MongoCollection $collection)
+    public function __construct(MongoDb $db)
     {
-        $this->_collection = $collection;
+        $this->_collection = $db->watches;
     }
 
     /**
@@ -23,6 +23,14 @@ class Xhgui_WatchFunctions
             return false;
         }
 
+        if (!empty($data['removed']) && isset($data['_id'])) {
+            $this->_collection->remove(
+                array('_id' => $data['_id']),
+                array('w' => 1)
+            );
+            return true;
+        }
+
         if (empty($data['_id'])) {
             $this->_collection->insert(
                 $data,
@@ -30,6 +38,7 @@ class Xhgui_WatchFunctions
             );
             return true;
         }
+
 
         $data['_id'] = new MongoId($data['_id']);
         $this->_collection->update(
