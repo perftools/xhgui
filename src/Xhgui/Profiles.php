@@ -5,12 +5,31 @@
 class Xhgui_Profiles
 {
     protected $_collection;
+
     protected $_mapper;
 
-    public function __construct(MongoCollection $collection)
+    public function __construct(MongoDb $db)
     {
-        $this->_collection = $collection;
+        $this->_collection = $db->results;
         $this->_mapper = new Xhgui_Db_Mapper();
+    }
+
+    /**
+     * Get the latest profile data.
+     *
+     * @return Xhgui_Profile
+     */
+    public function latest()
+    {
+        $cursor = $this->_collection->find()
+            ->sort(array('meta.request_date' => -1))
+            ->limit(1);
+        return $this->_wrap($cursor);
+    }
+
+    public function query($conditions, $fields = null)
+    {
+        return $this->_collection->find($conditions, $fields);
     }
 
     /**
