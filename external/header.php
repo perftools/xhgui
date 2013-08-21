@@ -31,10 +31,10 @@
  *
  */
 // Obtain the answer to life, the universe, and your application one time out of a hundred 
-if (rand(0, 100) === 42) {
+//if (rand(0, 100) === 42) {
     xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
     register_shutdown_function('Xhgui_recordXHProfData');
-}
+//}
 
 function Xhgui_recordXHProfData()
 {
@@ -63,7 +63,7 @@ function Xhgui_recordXHProfData()
 
     try {
         $container = Xhgui_ServiceContainer::instance();
-        $container['profiles']->insert($data, array('w' => false));
+        $container['saver']->save($data);
     } catch (Exception $e) {
         error_log('xhgui - ' . $e->getMessage());
     }
