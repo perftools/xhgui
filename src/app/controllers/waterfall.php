@@ -31,9 +31,6 @@ $app->get('/waterfall', function () use ($app) {
     );
 
     $app->render('waterfall/list.twig', array(
-        'remote_addr' => $search['remote_addr'],
-        'request_start' => $search['request_start'],
-        'request_end' => $search['request_end'],
         'height' => $height,
         'runs' => $result['results'],
         'search' => $search,
