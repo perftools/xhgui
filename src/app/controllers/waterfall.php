@@ -7,7 +7,7 @@ $app->get('/waterfall', function () use ($app) {
     $profiles = new Xhgui_Profiles($app->db->results);
     $requestTimes = array();
     $search = array();
-    $keys = array("remote_addr", 'request_start', 'request_end');
+    $keys = array("remote_addr", 'date_start', 'date_end');
     foreach ($keys as $key) {
         if ($request->get($key)) {
             $search[$key] = $request->get($key);
@@ -15,9 +15,9 @@ $app->get('/waterfall', function () use ($app) {
     }
     $result = $profiles->getAll(array(
         'sort' => 'time',
-        'direction' => 'asc',
+        'direction' => 'desc',
         'conditions' => $search,
-        'projection' => TRUE
+        'projection' => true
     ));
 
     $count = count($result['results']);
@@ -45,7 +45,7 @@ $app->get('/waterfall/data', function () use ($app) {
     $profiles = new Xhgui_Profiles($app->db->results);
     $requestTimes = array();
     $search = array();
-    $keys = array("remote_addr", 'request_start', 'request_end');
+    $keys = array("remote_addr", 'date_start', 'date_end');
     foreach ($keys as $key) {
         $search[$key] = $request->get($key);
     }
@@ -74,5 +74,4 @@ $app->get('/waterfall/data', function () use ($app) {
     }
     $response->body(json_encode($datas));
     $response['Content-Type'] = 'application/json';
-    echo json_encode($datas);
 })->name('waterfall.data');

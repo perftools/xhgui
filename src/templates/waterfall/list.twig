@@ -40,8 +40,8 @@
         <div class="control-group span4">
             <label class="control-label" for="start_date">Date range</label>
             <div class="controls">
-                <input type="text" name="request_start" value="{{ search.request_start }}">
-                <input type="text" name="request_end" value="{{ search.request_end }}">
+                <input type="text" name="date_start" value="{{ search.date_start }}">
+                <input type="text" name="date_end" value="{{ search.date_end }}">
             </div>
         </div>
         <div class="control-group span4">
@@ -125,9 +125,9 @@
 
 
 
-    <div id="log"></div>
-    <svg id="waterfall">
-    </svg>
+<div id="log"></div>
+<svg id="waterfall">
+</svg>
  
 
 
@@ -146,7 +146,7 @@
         function load() {
             var w = 800,
                 h = {{ height }} ;
-            d3.json('/waterfall/data?remote_addr={{ search.remote_addr }}&request_start={{ search.request_start }}&request_end={{ search.request_end }}', function (data) {
+            d3.json('/waterfall/data?remote_addr={{ search.remote_addr }}&date_start={{ search.date_start }}&date_end={{ search.date_end }}', function (data) {
                 data.forEach(function (d) {
                     d.startdt = new Date(d.start);
                     d.enddt = new Date(d.start + d.duration);
@@ -196,6 +196,4 @@
         }
     </script>
 
-
-
-{% endblock %} 
+{% endblock %}
