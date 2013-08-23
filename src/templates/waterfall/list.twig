@@ -135,9 +135,7 @@
 {% endblock %}
 
 {% block jsfoot %}
-<script type="text/javascript" src="/js/d3.js"></script>
-    <script type="text/javascript" src="/js/underscore.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
+<script type="text/javascript" src="{{ static('js/underscore.js') }}"></script>
 
     <script>
     $(document).ready(function() {
