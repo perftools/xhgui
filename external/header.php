@@ -32,20 +32,14 @@
  */
 // Obtain the answer to life, the universe, and your application one time out of a hundred 
 if (1) {
-    if (!isset($_SERVER['REQUEST_TIME_FLOAT']))
-    {
-        $_SERVER['REQUEST_TIME_FLOAT'] = microtime_float();
-    } 
+    if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
+        $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
+    }
     xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
     register_shutdown_function('Xhgui_recordXHProfData');
 
 }
 
-function microtime_float()
-{
-    list($usec, $sec) = explode(" ", microtime());
-    return ((float)$usec + (float)$sec);
-}
 
 function Xhgui_recordXHProfData()
 {
