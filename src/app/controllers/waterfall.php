@@ -74,5 +74,4 @@ $app->get('/waterfall/data', function () use ($app) {
     }
     $response->body(json_encode($datas));
     $response['Content-Type'] = 'application/json';
-    echo json_encode($datas);
 })->name('waterfall.data');
