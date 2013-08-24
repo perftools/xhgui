@@ -131,47 +131,47 @@ function load() {
             d.startdt = new Date(d.start);
             d.enddt = new Date(d.start + d.duration);
         });
+
         var x = d3.time.scale().range([0, w]),
             y = d3.scale.linear().range([0, h]),
             xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true),
             yAxis = d3.svg.axis().scale(y).ticks(4).orient("bottom");
+
         var max = d3.max(_(data).pluck('enddt'));
-        
+
         var seconds = max.getSeconds();
         seconds++;
         max.setSeconds(seconds);
+
         x.domain([d3.min(_(data).pluck('startdt')), max]);
         y.domain([0, data.length]);
 
         var svg = d3.select('#waterfall');
-        svg
-            .attr("width",w)
+        svg.attr("width", w)
             .attr("height", h);
+
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + (h  - 20) + ")")
-
             .call(xAxis);
-        
 
         var g = svg.selectAll('g.bar')
             .data(data).enter().append('g')
             .attr('class', 'bar')
             .attr('transform', function(d,i) {
                 return 'translate(' + x(d.startdt) + ',' + y(i) + ')'
-            })
+            });
         g.append('rect')
             .attr('width', function (d) {
                 return x(new Date(data[0].start + d.duration)) || 6;
             })
             .attr('height', function (d) {
                 return 20
-            })
+            });
         g.append('text').text(function(d, i) {return d.title; })
-                .attr('dy', '1em')
-                .attr('fill','black')
-                .attr("text-anchor", "left");
-        
+            .attr('dy', '1em')
+            .attr('fill','black')
+            .attr("text-anchor", "left");
     });
 }
 </script>
