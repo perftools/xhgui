@@ -57,3 +57,14 @@ $app->get('/custom/help', function () use ($di) {
 $app->post('/custom/query', function () use ($di) {
     $di['customController']->query();
 })->name('custom.query');
+
+
+// Waterfall routes
+$app->get('/waterfall', function () use ($di) {
+    $di['waterfallController']->index();
+})->name('waterfall.list');
+
+$app->get('/waterfall/data', function () use ($di) {
+    $di['waterfallController']->query();
+})->name('waterfall.data');
+
