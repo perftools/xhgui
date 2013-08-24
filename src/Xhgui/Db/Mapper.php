@@ -82,6 +82,9 @@ class Xhgui_Db_Mapper
             return (float) $dateString;
         }
         $date = DateTime::createFromFormat('Y-m-d H:i:s', $dateString);
+        if (!$date) {
+            return $date;
+        }
         return $date->getTimestamp();
     }
 
