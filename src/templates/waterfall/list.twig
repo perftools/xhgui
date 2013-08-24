@@ -121,7 +121,12 @@ $(document).ready(function() {
 function load() {
     var w = 800,
         h = {{ height }};
-    d3.json('/waterfall/data?remote_addr={{ search.remote_addr }}&request_start={{ search.request_start }}&request_end={{ search.request_end }}', function (data) {
+    {% set query = {
+        remote_addr: search.remote_addr,
+        request_start: search.request_start,
+        request_end: search.request_end
+    } %}
+    d3.json("{{ url('waterfall.data', query) }}", function (data) {
         data.forEach(function (d) {
             d.startdt = new Date(d.start);
             d.enddt = new Date(d.start + d.duration);
