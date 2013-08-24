@@ -98,7 +98,7 @@ h1, h2, h3, h4, h5, h6,
  * Search bar/box
  */
 .searchbar {
-    margin: 10px;
+    margin: 10px 0;
     padding: 10px;
     background: -webkit-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
     background: -moz-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
