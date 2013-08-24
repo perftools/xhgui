@@ -18,14 +18,71 @@ function out($out) {
     }
 }
 
+function runProcess($cmd, $input = null) {
+    $descriptorSpec = array(
+        0 => array('pipe', 'r'),
+        1 => array('pipe', 'w'),
+        2 => array('pipe', 'w')
+    );
+    $process = proc_open(
+        $cmd,
+        $descriptorSpec,
+        $pipes
+    );
+    if (!is_resource($process)) {
+        return 'ERROR - Could not start subprocess.';
+    }
+    $output = $error = '';
+    fwrite($pipes[0], $input);
+    fclose($pipes[0]);
+
+    $output = stream_get_contents($pipes[1]);
+    fclose($pipes[1]);
+
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[2]);
+    proc_close($process);
+    if (strlen($error)) {
+        return 'ERROR - ' . $error;
+    }
+    return $output;
+}
+
+/**
+ * Composer setup.
+ */
 if (!file_exists('./composer.phar')) {
     out("Downloading composer.");
-    exec("php -r \"eval('?>'.file_get_contents('https://getcomposer.org/installer'));\"", $output);
+    $cmd = "php -r \"eval('?>'.file_get_contents('https://getcomposer.org/installer'));\"";
+    $output = runProcess($cmd);
     out($output);
 } else {
     out("Composer already installed.");
 }
 
 out("Installing dependencies.");
-exec('php ./composer.phar update', $output);
+$cmd = 'php ./composer.phar update --prefer-dist';
+$output = runProcess($cmd);
 out($output);
+
+
+/**
+ * File permissions.
+ */
+out('Checking permissions for cache directory.');
+$worldWritable = bindec('0110000000');
+
+// Get current permissions in decimal format so we can bitmask it.
+$currentPerms = octdec(substr(sprintf('%o', fileperms('./cache')), -4));
+
+if (($currentPerms & $worldWritable) != $worldWritable) {
+	out('Attempting to set permissions on cache/');
+	$result = chmod('./cache', $currentPerms | $worldWritable);
+	if ($result) {
+		out('Permissions set on cache/');
+	} else {
+		out('Failed to set permissions on cache/ you must do it yourself.');
+	}
+} else {
+	out('Permissions on cache/ are ok.');
+}

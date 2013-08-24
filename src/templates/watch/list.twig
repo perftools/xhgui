@@ -23,6 +23,7 @@ to match multiple function names.
         {% for i, watch in watched %}
         <li>
             <input name="watch[{{ i }}][_id]" type="hidden" value="{{ watch._id }}" />
+            <input name="watch[{{ i }}][removed]" type="hidden" class="removed" value="0" />
             <input class="input-xlarge" name="watch[{{ i }}][name]" type="text" value="{{ watch.name }}" />
             <a href="#" class="btn btn-small btn-warning watch-delete">Remove</a>
         </li>
@@ -62,8 +63,9 @@ $(document).ready(function () {
     var placeholder = list.children().length - 1;
 
     $('.watch-list').on('click', '.watch-delete', function () {
-        $(this).parent().fadeOut('fast', function () {
-            $(this).remove();
+        var row = $(this).parent();
+        row.fadeOut('fast', function () {
+            row.find('.removed').val(1);
         });
         return false;
     });

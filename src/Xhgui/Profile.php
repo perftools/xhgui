@@ -494,4 +494,9 @@ class Xhgui_Profile
         }
     }
 
+    public function toArray()
+    {
+        return $this->_data;
+    }
+
 }
