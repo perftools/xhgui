@@ -25,11 +25,8 @@ class Xhgui_Controller_Waterfall
             'sort' => 'time',
             'direction' => 'asc',
             'conditions' => $search,
-            'projection' => TRUE
+            'projection' => true
         ));
-
-        $count = count($result['results']);
-        $height = 50 + (30 * $count);
 
         $paging = array(
             'total_pages' => $result['totalPages'],
@@ -39,7 +36,6 @@ class Xhgui_Controller_Waterfall
         );
 
         $this->_app->render('waterfall/list.twig', array(
-            'height' => $height,
             'runs' => $result['results'],
             'search' => $search,
             'paging' => $paging,
