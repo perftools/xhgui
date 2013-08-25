@@ -2,7 +2,10 @@
  * Render a waterfall chart into el using the data from url
  */
 Xhgui.waterfall = function (el, url) {
-    var w = 800;
+    var svg = d3.select(el);
+
+    // Use the containing element to get the width.
+    var w = parseInt(d3.select(svg.node().parentNode).style('width'), 10);
 
     d3.json(url, function (data) {
         var h = 50 + (30 * data.length),
@@ -43,7 +46,6 @@ Xhgui.waterfall = function (el, url) {
         x.domain([min, max]);
         y.domain([0, data.length]);
 
-        var svg = d3.select(el);
         svg.attr("width", w)
             .attr("height", h);
 
