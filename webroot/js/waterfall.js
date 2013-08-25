@@ -1,13 +1,13 @@
 /**
  * Render a waterfall chart into el using the data from url
  */
-Xhgui.waterfall = function (el, url) {
-    var svg = d3.select(el);
+Xhgui.waterfall = function (el, options) {
+    el = d3.select(el);
 
     // Use the containing element to get the width.
-    var w = parseInt(d3.select(svg.node().parentNode).style('width'), 10);
+    var w = parseInt(el.style('width'), 10);
 
-    d3.json(url, function (data) {
+    d3.json(options.dataUrl, function (data) {
         var h = 50 + (30 * data.length),
             endTimes = [],
             startTimes = [];
@@ -19,7 +19,7 @@ Xhgui.waterfall = function (el, url) {
             endTimes.push(d.enddt);
             startTimes.push(d.startdt);
         });
-        
+
         // Sort the set so it looks like a waterfall.
         data.sort(function (a, b) {
             if (a.start < b.start) {
@@ -46,7 +46,8 @@ Xhgui.waterfall = function (el, url) {
         x.domain([min, max]);
         y.domain([0, data.length]);
 
-        svg.attr("width", w)
+        var svg = el.append('svg')
+            .attr("width", w)
             .attr("height", h);
 
         svg.append("g")
@@ -72,5 +73,32 @@ Xhgui.waterfall = function (el, url) {
             .attr('dy', '1em')
             .attr('fill','black')
             .attr("text-anchor", "left");
+
+
+        // Set tooltips on circles.
+        Xhgui.tooltip(el, {
+            bindTo: g,
+            positioner: function (d, i) {
+                // Use the translate attribute to position the tooltip.
+                var transform = this.getAttribute('transform');
+                var position = this.getBBox();
+
+                var match = /translate\(([^,]+),([^\)]+)\)/.exec(transform);
+
+                return {
+                    // 7 = 1/2 width of arrow
+                    x: parseFloat(match[1]) + (position.width / 2) - 7,
+                    // 25 = fudge factor.
+                    y: parseFloat(match[2]) - 25
+                };
+            },
+            formatter: function (d, i) {
+                var urlName = '?id=' + encodeURIComponent(d.id);
+                var label = '<strong>' + d.title + '</strong>' +
+                    ' <a href="' + options.baseUrl + urlName + '">view</a> <br />' +
+                    ' Duration ' + Xhgui.formatNumber(d.duration) + ' <span class="units">µs</span> ';
+                return label;
+            }
+        });
     });
 };

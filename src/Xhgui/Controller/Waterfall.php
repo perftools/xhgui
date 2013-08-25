@@ -14,7 +14,7 @@ class Xhgui_Controller_Waterfall
     public function index()
     {
         $request = $this->_app->request();
-        $requestTimes = $search = array();
+        $search = array();
         $keys = array("remote_addr", 'request_start', 'request_end');
         foreach ($keys as $key) {
             if ($request->get($key)) {
@@ -47,7 +47,6 @@ class Xhgui_Controller_Waterfall
     {
         $request = $this->_app->request();
         $response = $this->_app->response();
-        $requestTimes = array();
         $search = array();
         $keys = array("remote_addr", 'request_start', 'request_end');
         foreach ($keys as $key) {
@@ -62,19 +61,16 @@ class Xhgui_Controller_Waterfall
         $datas = array();
         foreach ($result['results'] as $r) {
             $meta = $r->getMeta();
-            $profile = $r->getProfile();
-            $requestTimes[] = $meta['SERVER']['REQUEST_TIME'];
-            $duration = $profile['main()']['wt'];
-            $start = $meta['SERVER']['REQUEST_TIME'];
+            $duration = $r->get('main()', 'wt');
+            $start = $r->getMeta('SERVER.REQUEST_TIME');
             $end = $start + ($duration / 1000000);
-            $title = $meta['url'];
-            $data = array(
+            $title = $r->getMeta('url');
+            $datas[] = array(
+                'id' => (string)$r->getId(),
                 'title' => $title,
-                'subtitle' => '',
                 'start' => ($start + rand(1,1000) / 1000) * 1000,
                 'duration' => $duration / 1000      //Convert to correct scale
             );
-            $datas[] = $data;
         }
         $response->body(json_encode($datas));
         $response['Content-Type'] = 'application/json';

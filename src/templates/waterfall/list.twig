@@ -48,7 +48,7 @@
         <p>You need to do a search in order to see a waterfall graph.</p>
     </div>
     {% else %}
-    <svg id="waterfall" class="waterfall"></svg>
+    <div id="waterfall" class="chart-container waterfall"></div>
     {% endif %}
 </div>
 
@@ -126,7 +126,10 @@ $(document).ready(function() {
         request_start: search.request_start,
         request_end: search.request_end
     } %}
-    Xhgui.waterfall('#waterfall', '{{ url("waterfall.data", query)|raw }}');
+    Xhgui.waterfall('#waterfall', {
+        dataUrl: '{{ url("waterfall.data", query)|raw }}',
+        baseUrl: '{{ url("run.view") }}'
+    });
 });
 </script>
 {% endblock %} 
