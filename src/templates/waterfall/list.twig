@@ -126,7 +126,7 @@ $(document).ready(function() {
         request_start: search.request_start,
         request_end: search.request_end
     } %}
-    Xhgui.waterfall('#waterfall', '{{ url("waterfall.data", query) }}');
+    Xhgui.waterfall('#waterfall', '{{ url("waterfall.data", query)|raw }}');
 });
 </script>
 {% endblock %} 
