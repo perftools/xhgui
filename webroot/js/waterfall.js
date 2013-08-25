@@ -16,18 +16,31 @@ Xhgui.waterfall = function (el, url) {
             endTimes.push(d.enddt);
             startTimes.push(d.startdt);
         });
+        
+        // Sort the set so it looks like a waterfall.
+        data.sort(function (a, b) {
+            if (a.start < b.start) {
+                return -1;
+            }
+            if (a.start > b.start) {
+                return 1;
+            }
+            return 0;
+        });
 
-        var x = d3.time.scale().range([0, w]),
+
+        var x = d3.time.scale().rangeRound([0, w]).nice(d3.time.second),
             y = d3.scale.linear().range([0, h]),
             xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true),
             yAxis = d3.svg.axis().scale(y).ticks(4).orient("bottom");
 
         var max = d3.max(endTimes);
+        var min = d3.min(startTimes);
 
         var seconds = max.getSeconds();
         max.setSeconds(seconds + 1);
 
-        x.domain([d3.min(startTimes), max]);
+        x.domain([min, max]);
         y.domain([0, data.length]);
 
         var svg = d3.select(el);
@@ -49,7 +62,7 @@ Xhgui.waterfall = function (el, url) {
         g.append('rect')
             .attr('width', function (d) {
                 var width = x(new Date(data[0].start + d.duration));
-                return width > 2 ? width : 6;
+                return width > 2 ? width : 3;
             })
             .attr('height', 20);
 
