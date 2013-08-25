@@ -27,7 +27,8 @@ class Xhgui_Controller_Run
             'page' => $request->get('page'),
             'direction' => $request->get('direction'),
             'perPage' => $this->_app->config('page.limit'),
-            'conditions' => $search
+            'conditions' => $search,
+            'projection' => true,
         ));
 
         $title = 'Recent runs';
