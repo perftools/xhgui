@@ -294,7 +294,7 @@ tr .no-results {
     display: none;
 }
 .waterfall .bar {
-    fill: steelblue;
+    fill: #b63c71;
 }
 .waterfall text {
     color: black;
