@@ -98,7 +98,7 @@ h1, h2, h3, h4, h5, h6,
  * Search bar/box
  */
 .searchbar {
-    margin: 10px;
+    margin: 10px 0;
     padding: 10px;
     background: -webkit-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
     background: -moz-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
@@ -264,7 +264,7 @@ tr .no-results {
     stroke-width: 1.5px;
 }
 .callgraph .link.active {
-	stroke: #000;
+    stroke: #000;
 }
 .callgraph #arrowhead {
     fill: #bbb;
@@ -276,6 +276,28 @@ tr .no-results {
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
     text-anchor: middle;
     vertical-align: middle;
+}
+
+/**
+ * Waterfall chart
+ */
+.waterfall .axis {
+    shape-rendering: crispEdges;
+}
+.waterfall .x.axis line {
+    stroke: #ccc;
+}
+.waterfall .x.axis .minor {
+    stroke-opacity: .5;
+}
+.waterfall .x.axis path {
+    display: none;
+}
+.waterfall .bar {
+    fill: #b63c71;
+}
+.waterfall text {
+    color: black;
 }
 
 /**

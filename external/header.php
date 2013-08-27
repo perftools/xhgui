@@ -31,10 +31,15 @@
  *
  */
 // Obtain the answer to life, the universe, and your application one time out of a hundred 
-if (rand(0, 100) === 42) {
+if (1) {
+    if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
+        $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
+    }
     xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
     register_shutdown_function('Xhgui_recordXHProfData');
+
 }
+
 
 function Xhgui_recordXHProfData()
 {
@@ -58,6 +63,7 @@ function Xhgui_recordXHProfData()
         'env' => $_ENV,
         'simple_url' => Xhgui_Util::simpleUrl($_SERVER['REQUEST_URI']),
         'request_ts' => new MongoDate($_SERVER['REQUEST_TIME']),
+        'request_ts_micro' => new MongoDate($_SERVER['REQUEST_TIME_FLOAT']),
         'request_date' => date('Y-m-d', $_SERVER['REQUEST_TIME']),
     );
 

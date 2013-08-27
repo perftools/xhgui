@@ -28,6 +28,9 @@
             <li class="nav-header">SERVER</li>
             <li>{{ helpers.property_list('SERVER', result.meta('SERVER')) }}
 
+            <li class="nav-header">Waterfall</li>
+            <li><strong>By IP</strong> <a href="/waterfall?remote_addr={{ result.meta.SERVER.REMOTE_ADDR }}&amp;request_start={{ result.meta.SERVER.REQUEST_TIME - 5 }}&amp;request_end={{ result.meta.SERVER.REQUEST_TIME + 15}}">{{ result.meta.SERVER.REMOTE_ADDR }}</a></li>
+
         </ul>
     </div><!--/.well -->
 </div><!--/span-->

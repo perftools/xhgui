@@ -51,7 +51,14 @@ class Xhgui_Db_Mapper
         if (isset($search['simple_url'])) {
             $conditions['meta.simple_url'] = (string)$search['simple_url'];
         }
-        if (isset($search['remote_addr'])) {
+        if (!empty($search['request_start'])) {
+            $conditions['meta.SERVER.REQUEST_TIME']['$gte'] = $this->_convertDate($search['request_start']);
+        }
+        if (!empty($search['request_end'])) {
+            $conditions['meta.SERVER.REQUEST_TIME']['$lte'] = $this->_convertDate($search['request_end']);
+        }
+
+        if (!empty($search['remote_addr'])) {
             $conditions['meta.SERVER.REMOTE_ADDR'] = (string)$search['remote_addr'];
         }
         if (isset($search['cookie'])) {
@@ -67,6 +74,18 @@ class Xhgui_Db_Mapper
             );
         }
         return $conditions;
+    }
+
+    protected function _convertDate($dateString)
+    {
+        if (is_numeric($dateString)) {
+            return (float) $dateString;
+        }
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $dateString);
+        if (!$date) {
+            return $date;
+        }
+        return $date->getTimestamp();
     }
 
     protected function _direction($options)

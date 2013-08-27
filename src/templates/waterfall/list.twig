@@ -1,0 +1,135 @@
+{% extends 'layout/base.twig' %}
+{% import 'macros/helpers.twig' as helpers %}
+
+{% block title %}
+- Waterfall -
+{% endblock %}
+
+{% block content %}
+<h1>Waterfall visualization</h1>
+
+<div class="searchbar clearfix">
+    <a href="#" class="pull-right btn btn-small search-expand" title="Show search form">
+        <i class="icon-search"></i> Search
+    </a>
+
+    <form action="{{ url('waterfall.list') }}" method="get" class="row hide search-form form-inline">
+        <a href="#" class="search-collapse close" title="Hide search form">&times;</a>
+        <div class="control-group span4">
+            <label class="control-label" for="start_date">Date/time range</label>
+            <div class="controls">
+                <input type="text" class="span2" name="request_start" value="{{ search.request_start }}">
+                <input type="text" class="span2" name="request_end" value="{{ search.request_end }}">
+                <small class="muted">Either unix timestamps or date time string formatted as YYYY-MM-DD H:i:s</small>
+            </div>
+        </div>
+        <div class="control-group span4">
+            <label class="control-label" for="remote_addr">IP</label>
+            <div class="controls">
+                <input type="text" id="remote_addr" name="remote_addr" value="{{ search.remote_addr }}">
+            </div>
+        </div>
+        <div class="control-group span4">
+            <label class="control-label" for="cookie">Cookie</label>
+            <div class="controls">
+                <input type="text" id="cookie" name="cookie" value="{{ search.cookie }}">
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="row-fluid">
+    {% if search is empty %}
+    <div class="alert alert-info alert-block">
+        <h4>No data</h4>
+        <p>You need to do a search in order to see a waterfall graph.</p>
+    </div>
+    {% else %}
+    <div id="waterfall" class="chart-container waterfall"></div>
+    {% endif %}
+</div>
+
+<div class="row-fluid">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                {% if show_compare_link %}
+                <th>&nbsp;</th>
+                {% endif %}
+                <th>URL</th>
+                <th>
+                    {{ helpers.sort_link('Time', base_url, 'time', paging, search) }}
+                </th>
+                <th class="right">
+                    <span class="tip" title="Wall time">
+                        {{ helpers.sort_link('wt', base_url, 'wt', paging, search) }}
+                    </span>
+                </th>
+                <th class="right">
+                    <span class="tip" title="CPU time">
+                        {{ helpers.sort_link('cpu', base_url, 'cpu', paging, search) }}
+                    </span>
+                </th>
+                <th class="right">
+                    <span class="tip" title="Memory Usage">
+                        {{ helpers.sort_link('mu', base_url, 'mu', paging, search) }}
+                    </span>
+                </th>
+                <th class="right">
+                    <span class="tip" title="Peak Memory">
+                        {{ helpers.sort_link('pmu', base_url, 'pmu', paging, search) }}
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for result in runs %}
+        <tr>
+            {% if show_compare_link %}
+            <td>
+                <a class="btn btn-small" href="{{ url('run.compare', {base: base_run.id|trim, head: result.id|trim}) }}">
+                Compare
+                </a>
+            </td>
+            {% endif %}
+            <td><a href="{{ url('url.view', {'url': result.meta.url}) }}">{{ result.meta.url }}</a></td>
+            <td><a href="{{ url('run.view', {'id': result.id|trim }) }}">{{ result.meta.SERVER.REQUEST_TIME|date(date_format) }}</a></td>
+            <td class="right">{{ result.get('main()', 'wt') |as_time }}</td>
+            <td class="right">{{ result.get('main()', 'cpu') |as_time }}</td>
+            <td class="right">{{ result.get('main()', 'mu') |as_bytes }}</td>
+            <td class="right">{{ result.get('main()', 'pmu') |as_bytes }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6" class="no-results">
+                Your search conditions matched no runs. Try changing you search criteria.
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+{% endblock %}
+
+{% block jsfoot %}
+<script type="text/javascript" src="{{ static('js/waterfall.js') }}"></script>
+<script>
+$(document).ready(function() {
+    {% set query = {
+        remote_addr: search.remote_addr,
+        request_start: search.request_start,
+        request_end: search.request_end
+    } %}
+    Xhgui.waterfall('#waterfall', {
+        dataUrl: '{{ url("waterfall.data", query)|raw }}',
+        baseUrl: '{{ url("run.view") }}'
+    });
+});
+</script>
+{% endblock %} 
