@@ -11,7 +11,7 @@
  * auto_prepend_file directive http://php.net/manual/en/ini.core.php#ini.auto-prepend-file
  */
 
- 
+
 /* xhprof_enable()
  * See: http://php.net/manual/en/xhprof.constants.php
  *
@@ -30,41 +30,56 @@
  * Use bitwise operators to combine, so XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY to profile CPU and Memory
  *
  */
-// Obtain the answer to life, the universe, and your application one time out of a hundred 
-if (rand(0, 100) === 42) {
-    xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
-    register_shutdown_function('Xhgui_recordXHProfData');
+// Obtain the answer to life, the universe, and your application one time out of a hundred
+
+// this file should not - under no circumstances - interfere with any other application
+if (!extension_loaded('xhprof')) {
+    error_log('xhgui - extension xhprof not loaded');
+    return;
 }
 
-function Xhgui_recordXHProfData()
-{
-    // ignore_user_abort(true) allows your PHP script to continue executing, even if the user has terminated their request.
-    // Further Reading: http://blog.preinheimer.com/index.php?/archives/248-When-does-a-user-abort.html
-    // flush() asks PHP to send any data remaining in the output buffers. This is normally done when the script completes, but
-    // since we're delaying that a bit by dealing with the xhprof stuff, we'll do it now to avoid making the user wait.
-    ignore_user_abort(true);
-    flush();
-
-    $data['profile'] = xhprof_disable();
-
-    if (!defined('XHGUI_ROOT_DIR')) {
-        require dirname(dirname(__FILE__)) . '/src/bootstrap.php';
-    }
-
-    $data['meta'] = array(
-        'url' => $_SERVER['REQUEST_URI'],
-        'SERVER' => $_SERVER,
-        'get' => $_GET,
-        'env' => $_ENV,
-        'simple_url' => Xhgui_Util::simpleUrl($_SERVER['REQUEST_URI']),
-        'request_ts' => new MongoDate($_SERVER['REQUEST_TIME']),
-        'request_date' => date('Y-m-d', $_SERVER['REQUEST_TIME']),
-    );
-
-    try {
-        $container = Xhgui_ServiceContainer::instance();
-        $container['profiles']->insert($data, array('w' => false));
-    } catch (Exception $e) {
-        error_log('xhgui - ' . $e->getMessage());
-    }
+if (!extension_loaded('mongo')) {
+    error_log('xhgui - extension mongo not loaded');
+    return;
 }
+
+if (rand(0, 100) !== 42) {
+    return;
+}
+
+xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+register_shutdown_function(
+    function() {
+        // ignore_user_abort(true) allows your PHP script to continue executing, even if the user has terminated their request.
+        // Further Reading: http://blog.preinheimer.com/index.php?/archives/248-When-does-a-user-abort.html
+        // flush() asks PHP to send any data remaining in the output buffers. This is normally done when the script completes, but
+        // since we're delaying that a bit by dealing with the xhprof stuff, we'll do it now to avoid making the user wait.
+        ignore_user_abort(true);
+        flush();
+
+        $data['profile'] = xhprof_disable();
+
+        if (!defined('XHGUI_ROOT_DIR')) {
+            require dirname(dirname(__FILE__)) . '/src/bootstrap.php';
+        }
+
+        $uri  = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : null;
+        $time = array_key_exists('REQUEST_TIME', $_SERVER) ? $_SERVER['REQUEST_TIME'] : null;
+        $data['meta'] = array(
+            'url'          => $uri,
+            'SERVER'       => $_SERVER,
+            'get'          => $_GET,
+            'env'          => $_ENV,
+            'simple_url'   => Xhgui_Util::simpleUrl($uri),
+            'request_ts'   => new MongoDate($time),
+            'request_date' => date('Y-m-d', $time),
+        );
+
+        try {
+            $container = Xhgui_ServiceContainer::instance();
+            $container['profiles']->insert($data, array('w' => false));
+        } catch (Exception $e) {
+            error_log('xhgui - ' . $e->getMessage());
+        }
+    }
+);
