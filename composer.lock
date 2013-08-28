@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ded732545bca8d35ee94d9570c29d324",
+    "hash": "3a2e1f19903bdf509a0088dd034dbb97",
     "packages": [
         {
             "name": "pimple/pimple",
@@ -446,12 +446,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1237d5d94b4fdc28fd1884bd70b2096050c12391"
+                "reference": "780cdb1d5f693e2c8a9b7ce30b790ecb3e8194e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1237d5d94b4fdc28fd1884bd70b2096050c12391",
-                "reference": "1237d5d94b4fdc28fd1884bd70b2096050c12391",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/780cdb1d5f693e2c8a9b7ce30b790ecb3e8194e1",
+                "reference": "780cdb1d5f693e2c8a9b7ce30b790ecb3e8194e1",
                 "shasum": ""
             },
             "require": {
@@ -512,7 +512,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-08-13 02:54:29"
+            "time": "2013-08-26 13:31:34"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -565,17 +565,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.3.3",
+            "version": "v2.3.4",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "v2.3.3"
+                "reference": "5a279f1b5f5e1045a6c432354d9ea727ff3a9847"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/v2.3.3",
-                "reference": "v2.3.3",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/5a279f1b5f5e1045a6c432354d9ea727ff3a9847",
+                "reference": "5a279f1b5f5e1045a6c432354d9ea727ff3a9847",
                 "shasum": ""
             },
             "require": {
@@ -608,7 +608,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2013-07-21 12:12:18"
+            "time": "2013-08-24 15:26:22"
         }
     ],
     "aliases": [
@@ -618,9 +618,11 @@
     "stability-flags": {
         "phpunit/phpunit": 20
     },
-    "platform": [
-
-    ],
+    "platform": {
+        "php": ">=5.3.0",
+        "ext-xhprof": "*",
+        "ext-mongo": "~1.3"
+    },
     "platform-dev": [
 
     ]
