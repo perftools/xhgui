@@ -63,15 +63,15 @@ register_shutdown_function(
             require dirname(dirname(__FILE__)) . '/src/bootstrap.php';
         }
 
-        $uri  = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : null;
+        $uri = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : null;
         $time = array_key_exists('REQUEST_TIME', $_SERVER) ? $_SERVER['REQUEST_TIME'] : null;
         $data['meta'] = array(
-            'url'          => $uri,
-            'SERVER'       => $_SERVER,
-            'get'          => $_GET,
-            'env'          => $_ENV,
-            'simple_url'   => Xhgui_Util::simpleUrl($uri),
-            'request_ts'   => new MongoDate($time),
+            'url' => $uri,
+            'SERVER' => $_SERVER,
+            'get' => $_GET,
+            'env' => $_ENV,
+            'simple_url' => Xhgui_Util::simpleUrl($uri),
+            'request_ts' => new MongoDate($time),
             'request_date' => date('Y-m-d', $time),
         );
 
