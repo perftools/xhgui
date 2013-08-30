@@ -16,7 +16,9 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
                 'url' => 'tasks',
                 'date_start' => '2013-01-20',
                 'date_end' => '2013-01-21',
-
+                'request_start' => '2013-02-13 12:22:00',
+                'request_end' => '2013-02-13 14:22:00',
+                'remote_addr' => '127.0.0.1',
             )
         );
         $result = $this->mapper->convert($opts);
@@ -30,6 +32,11 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
                 '$gte' => '2013-01-20',
                 '$lte' => '2013-01-21'
             ),
+            'meta.SERVER.REQUEST_TIME' => array(
+                '$gte' => strtotime($opts['conditions']['request_start']),
+                '$lte' => strtotime($opts['conditions']['request_end']),
+            ),
+            'meta.SERVER.REMOTE_ADDR' => '127.0.0.1',
         );
         $this->assertEquals($expected, $result['conditions']);
     }
