@@ -59,10 +59,14 @@ register_shutdown_function(function() {
     // Further Reading: http://blog.preinheimer.com/index.php?/archives/248-When-does-a-user-abort.html
     // flush() asks PHP to send any data remaining in the output buffers. This is normally done when the script completes, but
     // since we're delaying that a bit by dealing with the xhprof stuff, we'll do it now to avoid making the user wait.
+    $data['profile'] = xhprof_disable();
+
     ignore_user_abort(true);
     flush();
 
-    $data['profile'] = xhprof_disable();
+    if (!defined('XHGUI_ROOT_DIR')) {
+        require dirname(dirname(__FILE__)) . '/src/bootstrap.php';
+    }
 
     $uri = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : null;
     $time = array_key_exists('REQUEST_TIME', $_SERVER) ? $_SERVER['REQUEST_TIME'] : null;
