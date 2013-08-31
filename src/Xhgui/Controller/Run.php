@@ -1,6 +1,6 @@
 <?php
 
-class Xhgui_Controller_Run
+class Xhgui_Controller_Run extends Xhgui_Controller
 {
     public function __construct($app, $profiles, $watches)
     {
@@ -48,7 +48,8 @@ class Xhgui_Controller_Run
             'direction' => $result['direction']
         );
 
-        $this->_app->render('runs/list.twig', array(
+        $this->_template = 'runs/list.twig';
+        $this->set(array(
             'paging' => $paging,
             'base_url' => 'home',
             'runs' => $result['results'],

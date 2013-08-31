@@ -11,7 +11,9 @@ $app->error(function (Exception $e) use ($app) {
 
 // Profile Runs routes
 $app->get('/', function () use ($di) {
-    $di['runController']->index();
+    $c = $di['runController'];
+    $c->index();
+    $c->render();
 })->name('home');
 
 $app->get('/run/view', function () use ($di) {
