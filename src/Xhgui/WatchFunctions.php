@@ -25,7 +25,7 @@ class Xhgui_WatchFunctions
 
         if (!empty($data['removed']) && isset($data['_id'])) {
             $this->_collection->remove(
-                array('_id' => $data['_id']),
+                array('_id' => new MongoId($data['_id'])),
                 array('w' => 1)
             );
             return true;
