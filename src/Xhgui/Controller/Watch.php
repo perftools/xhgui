@@ -1,6 +1,6 @@
 <?php
 
-class Xhgui_Controller_Watch
+class Xhgui_Controller_Watch extends Xhgui_Controller
 {
 
     protected $_app;
@@ -16,9 +16,8 @@ class Xhgui_Controller_Watch
     {
         $watched = $this->_watches->getAll();
 
-        $this->_app->render('watch/list.twig', array(
-            'watched' => $watched,
-        ));
+        $this->_template = 'watch/list.twig';
+        $this->set(array('watched' => $watched));
     }
 
     public function post()

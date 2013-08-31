@@ -37,11 +37,15 @@ $app->get('/run/callgraph', function () use ($di) {
 
 // Watch function routes.
 $app->get('/watch', function () use ($di) {
-    $di['watchController']->get();
+    $c = $di['watchController'];
+    $c->get();
+    $c->render();
 })->name('watch.list');
 
 $app->post('/watch', function () use ($di) {
-    $di['watchController']->post();
+    $c = $di['watchController'];
+    $c->post();
+    $c->render();
 })->name('watch.save');
 
 

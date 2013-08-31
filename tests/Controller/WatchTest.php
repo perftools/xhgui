@@ -16,7 +16,7 @@ class Controller_WatchTest extends PHPUnit_Framework_TestCase
        $di['app'] = $di->share(function ($c) {
            return $this->getMock(
                'Slim\Slim',
-               array('redirect', 'render', 'urlFor'),
+               array('redirect', 'urlFor'),
                array($c['config'])
            );
        });
@@ -28,11 +28,9 @@ class Controller_WatchTest extends PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $this->app->expects($this->once())
-            ->method('render')
-            ->with('watch/list.twig', array('watched' => array()));
-
         $this->watches->get();
+        $result = $this->watches->templateVars();
+        $this->assertEquals(array(), $result['watched']);
     }
 
     public function testPostAdd()
