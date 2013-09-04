@@ -70,7 +70,7 @@ out($output);
  * File permissions.
  */
 out('Checking permissions for cache directory.');
-$worldWritable = bindec('0110000000');
+$worldWritable = bindec('0000000111');
 
 // Get current permissions in decimal format so we can bitmask it.
 $currentPerms = octdec(substr(sprintf('%o', fileperms('./cache')), -4));
