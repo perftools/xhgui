@@ -188,7 +188,7 @@ class Xhgui_Profile
         $matches = array();
         $keys = array_keys($this->_collapsed);
         foreach ($keys as $func) {
-            if (preg_match('/^' . $pattern . '$/', $func)) {
+            if (preg_match('`^' . $pattern . '$`', $func)) {
                 $data = $this->_collapsed[$func];
                 $data['function'] = $func;
                 $matches[] = $data;
