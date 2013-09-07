@@ -42,4 +42,50 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result['paging']);
     }
 
+    public function testIndexSortedWallTime()
+    {
+        Environment::mock(array(
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/',
+            'QUERY_STRING' => 'sort=wt',
+        ));
+
+        $this->runs->index();
+        $result = $this->runs->templateVars();
+        $this->assertEquals('Longest wall time', $result['title']);
+        $this->assertEquals('wt', $result['paging']['sort']);
+    }
+
+    public function testIndexSortedCpu()
+    {
+        Environment::mock(array(
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/',
+            'QUERY_STRING' => 'sort=cpu&direction=desc',
+        ));
+
+        $this->runs->index();
+        $result = $this->runs->templateVars();
+        $this->assertEquals('Most CPU time', $result['title']);
+        $this->assertEquals('cpu', $result['paging']['sort']);
+        $this->assertEquals('desc', $result['paging']['direction']);
+    }
+
+    public function testIndexWithSearch()
+    {
+        Environment::mock(array(
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/',
+            'QUERY_STRING' => 'sort=mu&direction=asc&url=index.php',
+        ));
+
+        $this->runs->index();
+        $result = $this->runs->templateVars();
+        $this->assertEquals('Highest memory use', $result['title']);
+        $this->assertEquals('mu', $result['paging']['sort']);
+        $this->assertEquals('asc', $result['paging']['direction']);
+        $this->assertEquals(array('url' => 'index.php'), $result['search']);
+        $this->assertTrue($result['has_search']);
+    }
+
 }
