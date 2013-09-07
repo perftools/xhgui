@@ -62,13 +62,13 @@ class Xhgui_Controller_Waterfall
         foreach ($result['results'] as $r) {
             $meta = $r->getMeta();
             $duration = $r->get('main()', 'wt');
-            $start = $r->getMeta('SERVER.REQUEST_TIME');
+            $start = $r->getMeta('SERVER.REQUEST_TIME_FLOAT');
             $end = $start + ($duration / 1000000);
             $title = $r->getMeta('url');
             $datas[] = array(
                 'id' => (string)$r->getId(),
                 'title' => $title,
-                'start' => ($start + rand(1,1000) / 1000) * 1000,
+                'start' => $start*  1000,
                 'duration' => $duration / 1000      //Convert to correct scale
             );
         }
