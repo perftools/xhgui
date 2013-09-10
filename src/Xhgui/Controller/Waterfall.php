@@ -68,7 +68,7 @@ class Xhgui_Controller_Waterfall
             $datas[] = array(
                 'id' => (string)$r->getId(),
                 'title' => $title,
-                'start' => $start*  1000,
+                'start' => $start * 1000,
                 'duration' => $duration / 1000      //Convert to correct scale
             );
         }
