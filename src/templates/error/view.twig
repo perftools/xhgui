@@ -6,8 +6,13 @@
 <p>{{ message }}</p>
 
 <p>
-You may want to ensure that Mongo has been started, and that the config file has the right connection information.
+You should check the following things:
 </p>
+<ul>
+    <li>Ensure that Mongo has been started</li>
+    <li>That <code>config/config.php</code> has the right connection information.</li>
+    <li>That the <code>cache/</code> directory has the correct permissions.</li>
+</ul>
 
 <h5>Stack trace</h5>
 <pre>{{ stack_trace }}</pre>
