@@ -26,14 +26,7 @@ class Xhgui_ServiceContainer extends Pimple
     // Create the Slim app.
     protected function _slimApp()
     {
-        $this['app'] = $this->share(function ($c) {
-            $app = new Slim($c['config']);
-
-            // Enable cookie based sessions
-            $app->add(new SessionCookie(array(
-                'httponly' => true,
-            )));
-
+        $this['view'] = function ($c) {
             // Configure Twig view for slim
             $view = new Twig();
             $view->parserOptions = array(
@@ -43,6 +36,18 @@ class Xhgui_ServiceContainer extends Pimple
                 'strict_variables' => false,
                 'autoescape' => true
             );
+            return $view;
+        };
+
+        $this['app'] = $this->share(function ($c) {
+            $app = new Slim($c['config']);
+
+            // Enable cookie based sessions
+            $app->add(new SessionCookie(array(
+                'httponly' => true,
+            )));
+
+            $view = $c['view'];
             $view->parserExtensions = array(
                 new Xhgui_Twig_Extension($app)
             );

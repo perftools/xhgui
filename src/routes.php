@@ -2,7 +2,14 @@
 /**
  * Routes for Xhgui
  */
-$app->error(function (Exception $e) use ($app) {
+$app->error(function (Exception $e) use ($di, $app) {
+    $view = $di['view'];
+    $view->parserOptions['cache'] = false;
+    $view->parserExtensions = array(
+        new Xhgui_Twig_Extension($app)
+    );
+
+    $app->view($view);
     $app->render('error/view.twig', array(
         'message' => $e->getMessage(),
         'stack_trace' => $e->getTraceAsString(),
