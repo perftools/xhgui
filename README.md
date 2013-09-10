@@ -12,6 +12,7 @@ System Requirements
  * [XHProf](http://pecl.php.net/package/xhprof) to actually profile the data
  * [MongoDB PHP](http://pecl.php.net/package/mongo) MongoDB PHP extension
  * [MongoDB](http://www.mongodb.org/) MongoDB Itself
+ * [mcrypt] (http://php.net/manual/en/book.mcrypt.php) PHP must be configured with mcrypt (which is a dependency of Slim)
 
 
 Installation
