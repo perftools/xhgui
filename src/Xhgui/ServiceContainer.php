@@ -81,7 +81,6 @@ class Xhgui_ServiceContainer extends Pimple
                     return new Xhgui_Saver_File($config['save.handler.filename']);
                     break;
             }
-            
         };
     }
 
