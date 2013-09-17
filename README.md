@@ -123,6 +123,15 @@ With Nginx in fastcgi mode you could use:
         fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
      }
 
+If your site cannot directly connect to your mongodb instance, you can choose to save your data on a temporary file for a later import to xhgui's mongo database.
+Change the `save.handler` setting to `file` and define your file's path with `save.handler.filename`. 
+To import a file inside mongodb use the `external/import.php`
+```
+php external/import.php -f /path/to/file
+```
+Be careful, importing the same file twice will load twice the run datas inside mongo, resulting with duplicate profiles
+
+
 Limiting Mongo Disk Usage 
 -------------------------
 
