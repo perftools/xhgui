@@ -244,6 +244,39 @@ Xhgui.piechart = function (container, data, options) {
  * @param object options
  */
 Xhgui.columnchart = function (container, data, options) {
+
+    data = [{
+        key:'test',
+        values:data
+    }];
+
+    options = options || {};
+    var height = options.height || 400,
+        width = options.width || 400,
+        margin = {top: 20, right: 20, bottom: 30, left: 50};
+
+    nv.addGraph(function() {
+      var chart = nv.models.discreteBarChart()
+          .x(function(d) { return d.label})
+          .y(function(d) { return d.value })
+          .staggerLabels(true)
+          .tooltips(true)
+          .showValues(true)
+          .color([])
+
+      d3.select(container).append('svg')
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+          .datum(data)
+        .transition().duration(500)
+          .call(chart);
+
+      nv.utils.windowResize(chart.update);
+
+      return chart;
+    });
+    return;    
+
     options = options || {};
     var height = options.height || 400,
         width = options.width || 400,
@@ -251,7 +284,6 @@ Xhgui.columnchart = function (container, data, options) {
 
     var y = d3.scale.linear()
         .range([height, 0]);
-
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width], 0.1);
 
