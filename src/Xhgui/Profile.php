@@ -274,7 +274,7 @@ class Xhgui_Profile
         $extract = array();
         foreach ($slice as $func => $funcData) {
             $extract[] = array(
-                'label' => $func,
+                'name' => $func,
                 'value' => $funcData[$dimension]
             );
         }

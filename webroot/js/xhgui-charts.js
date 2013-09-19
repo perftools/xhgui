@@ -257,12 +257,15 @@ Xhgui.columnchart = function (container, data, options) {
 
     nv.addGraph(function() {
       var chart = nv.models.discreteBarChart()
-          .x(function(d) { return d.label})
+          .x(function(d) { return d.name})
           .y(function(d) { return d.value })
           .staggerLabels(true)
           .tooltips(true)
-          .showValues(true)
+          .showValues(false)
           .color([])
+
+      chart.yAxis
+        .tickFormat(d3.format('s'));
 
       d3.select(container).append('svg')
         .attr("width", width + margin.left + margin.right)
