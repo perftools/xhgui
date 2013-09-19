@@ -22,7 +22,7 @@ if (!$fp) {
 }
 
 $container = Xhgui_ServiceContainer::instance();
-$saver = new Xhgui_Saver_Mongo($container['profiles']);
+$saver = $container['saverMongo'];
 
 
 while (!feof($fp)) {
