@@ -217,8 +217,19 @@ tr .no-results {
 /**
  * Chart styles
  */
+.chart-container .nv-x text {
+    display: none;
+}
+.nv-x.nv-axis line {
+  stroke: none;
+  fill: none;
+}
+.nv-y.nv-axis line {
+  stroke: none;
+  fill: none;
+}
 .chart-container {
-    position: relative;
+    /*position: relative;*/
 }
 .chart-container .popover {
     min-width: 125px;

@@ -246,7 +246,7 @@ Xhgui.piechart = function (container, data, options) {
 Xhgui.columnchart = function (container, data, options) {
 
     data = [{
-        key:'test',
+        key:'',
         values:data
     }];
 
@@ -274,76 +274,6 @@ Xhgui.columnchart = function (container, data, options) {
       nv.utils.windowResize(chart.update);
 
       return chart;
-    });
-    return;    
-
-    options = options || {};
-    var height = options.height || 400,
-        width = options.width || 400,
-        margin = {top: 20, right: 20, bottom: 30, left: 50};
-
-    var y = d3.scale.linear()
-        .range([height, 0]);
-    var x = d3.scale.ordinal()
-        .rangeRoundBands([0, width], 0.1);
-
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .tickFormat(d3.format('2s'))
-        .tickSize(6, 6, 0)
-        .orient("left");
-
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .tickSize(6, 6, 0)
-        .orient("bottom");
-
-    container = d3.select(container);
-
-    var svg = container.append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    x.domain(data.map(function(d, i) { return i + 1; }));
-    y.domain([0, d3.max(data, function(d) { return d.value; })]);
-
-    svg.append("g")
-        .attr("class", "chart-axis x-axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-
-    svg.append("g")
-        .attr("class", "chart-axis y-axis")
-        .call(yAxis);
-
-    svg.selectAll('.chart-bar')
-        .data(data)
-    .enter().append("rect")
-        .attr("class", "chart-bar")
-        .attr("x", function(d) { return x(d.value); })
-        .attr("width", x.rangeBand())
-        .attr("y", function(d) { return y(d.value); })
-        .attr("height", function(d) { return height - y(d.value); });
-
-    Xhgui.tooltip(container, {
-        bindTo: svg.selectAll('.chart-bar'),
-        positioner: function (d, i) {
-            var position, x, y;
-            position = this.getBBox();
-
-            // Recalculate base on outer transform.
-            // 7 is a magic number. It offsets the arrow.
-            x = position.x + (position.width * 1.5) - 7;
-            return {x: x, y: position.y};
-        },
-        formatter: function (d, i) {
-            var label = '<strong>' + d.name +
-                '</strong><br />' +
-                Xhgui.formatNumber(d.value, 0) + options.postfix;
-            return label;
-        }
     });
 };
 
