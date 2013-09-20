@@ -3,7 +3,7 @@
 {% for k, v in data %}
     <dt>{{ k }}</dt>
     <dd class="text-wrap">
-        {{ v }}
+        {{ v|join(' ') }}
     </dd>
 {% else %}
     <dt>No {{ name }} data</dt>
