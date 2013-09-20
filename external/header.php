@@ -69,14 +69,19 @@ register_shutdown_function(function() {
     }
 
     $uri = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : null;
+    if (empty($uri) && isset($_SERVER['argv'])) {
+        $cmd = basename($_SERVER['argv'][0]);
+        $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
+    }
+
     $time = array_key_exists('REQUEST_TIME', $_SERVER) ? $_SERVER['REQUEST_TIME'] : null;
     $data['meta'] = array(
-        'url' => $_SERVER['REQUEST_URI'],
+        'url' => $uri,
         'SERVER' => $_SERVER,
         'get' => $_GET,
         'env' => $_ENV,
         'simple_url' => Xhgui_Util::simpleUrl($uri),
-        'request_ts' => new MongoDate($_SERVER['REQUEST_TIME']),
+        'request_ts' => new MongoDate($time),
         'request_ts_micro' => new MongoDate($_SERVER['REQUEST_TIME_FLOAT']),
         'request_date' => date('Y-m-d', $time),
     );
