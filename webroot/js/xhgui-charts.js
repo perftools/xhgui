@@ -262,6 +262,7 @@ Xhgui.columnchart = function (container, data, options) {
           .staggerLabels(true)
           .tooltips(true)
           .showValues(false)
+          .showXAxis(false)
           .color([])
 
       chart.yAxis
@@ -298,6 +299,47 @@ Xhgui.columnchart = function (container, data, options) {
  * @param object options The options to use. Needs to define xAxis & series
  */
 Xhgui.linegraph = function (container, data, options) {
+ 
+    data = data.filter(function(elt) {
+        return options.series.indexOf(elt.key) >= 0;
+    });
+
+    container = d3.select(container);
+
+    var margin = {top: 30, right: 20, bottom: 40, left: 50},
+        height = options.height || (parseInt(container.style('height'), 10) - margin.top - margin.bottom),
+        width = options.width || (parseInt(container.style('width'), 10) - margin.left - margin.right),
+        lastIndex = data.length - 1;
+    
+    nv.addGraph(function() {
+        var chart = nv.models.lineChart();
+        
+        chart.x(function(d,i) { return d[0]; })
+            .y(function(d) { return d[1]; });
+        chart.xAxis
+          .tickFormat(function(d) {
+            return Xhgui.formatDate(new Date(d))
+        });
+        chart.yAxis
+            .tickFormat(d3.format('s'))
+            .showMaxMin(false)
+            .axisLabel(options.postfix);
+
+        container.append('svg')
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .datum(data)
+          .transition().duration(500)
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+        return chart;
+    });
+
+
+    return;
+    
+
     options = options || {};
     if (!options.xAxis || !options.series) {
         throw new Exception('You need to define series & xAxis');
