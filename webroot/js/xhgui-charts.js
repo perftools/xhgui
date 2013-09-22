@@ -165,12 +165,23 @@ Xhgui.linegraph = function (container, data, options) {
             return '<div class="top"><strong>'+x+'</strong>'
                    +'<br />'+Xhgui.formatNumber(value)+' '+options.postfix+'</div>';
         });
-        container.append('svg')
-            .attr("width", width + margin.left + margin.right)
+        var svg = container.append('svg');
+
+        svg.attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .datum(data)
           .transition().duration(500)
             .call(chart);
+
+        console.log(options.title);
+        if (options.title) {
+           svg.append('text')
+             .attr('y', 50)
+                .attr('x', width / 2)
+                .style('text-anchor', 'middle')
+                .text(options.title)
+                .attr('transform', 'translate(0, ' + (margin.top * -1) + ')');
+        }
 
         nv.utils.windowResize(chart.update);
         return chart;
