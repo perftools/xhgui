@@ -225,6 +225,11 @@ tr .no-results {
   stroke: none;
   fill: none;
 }
+.nvtooltip {
+    text-align: center;
+    border-radius: 5px;
+    padding: 2px;
+}
 .chart-container {
     /*position: relative;*/
 }
