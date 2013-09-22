@@ -47,9 +47,10 @@ Xhgui.tooltip = function (container, options) {
     ) {
         throw new Exception('You need the formatter, positioner & bindTo options.');
     }
-
+    
     options.bindTo.on('mouseover', function (d, i) {
         var content, position;
+        nv.tooltip.cleanup();
 
         // Get the tooltip content.
         content = options.formatter.call(this, d, i);
@@ -59,7 +60,7 @@ Xhgui.tooltip = function (container, options) {
         
         nv.tooltip.show([position.x, position.y], content, null, null, this.parentNode);
 
-        d3.select(document).on('mouseout', nv.tooltip.cleanup);
+        d3.select(document).on('mouseout', hide);
     });
 };
 
