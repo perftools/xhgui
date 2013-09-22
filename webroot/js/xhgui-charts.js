@@ -173,7 +173,6 @@ Xhgui.linegraph = function (container, data, options) {
           .transition().duration(500)
             .call(chart);
 
-        console.log(options.title);
         if (options.title) {
            svg.append('text')
              .attr('y', 50)

@@ -230,9 +230,6 @@ tr .no-results {
     border-radius: 5px;
     padding: 2px;
 }
-.chart-container {
-    /*position: relative;*/
-}
 .chart-container .popover {
     min-width: 125px;
     width: auto;
