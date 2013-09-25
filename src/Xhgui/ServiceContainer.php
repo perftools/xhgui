@@ -64,7 +64,11 @@ class Xhgui_ServiceContainer extends Pimple
     {
         $this['db'] = $this->share(function ($c) {
             $config = $c['config'];
-            $mongo = new MongoClient($config['db.host']);
+            if (empty($config['db.options'])) {                                                                                                  
+                $config['db.options'] = array();
+            }
+            $mongo = new MongoClient($config['db.host'], $config['db.options']);
+
             return $mongo->{$config['db.db']};
         });
 
