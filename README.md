@@ -13,6 +13,7 @@ System Requirements
  * [MongoDB PHP](http://pecl.php.net/package/mongo) MongoDB PHP extension
  * [MongoDB](http://www.mongodb.org/) MongoDB Itself
  * [mcrypt] (http://php.net/manual/en/book.mcrypt.php) PHP must be configured with mcrypt (which is a dependency of Slim)
+ * [dom] (http://php.net/manual/en/book.dom.php) If you are running the tests you'll need the DOM extension (which is a dependency of PHPUnit)
 
 
 Installation
