@@ -16,6 +16,7 @@
         "pimple/pimple": "1.0.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.x-dev"
+        "phpunit/phpunit": "3.7.x-dev",
+        "ext-dom": "*"
     }
 }
