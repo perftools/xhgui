@@ -3,7 +3,10 @@ xhgui
 
 A graphical interface for XHProf data built on MongoDB.
 
-This tool requires that [XHProf](http://pecl.php.net/package/xhprof) is installed, which is a PHP Extension that records and provides profiling data. XHGui (this tool) takes that information, saves it in MongoDB, and provides a convienent GUI for working with it.
+This tool requires that [XHProf](http://pecl.php.net/package/xhprof) is
+installed, which is a PHP Extension that records and provides profiling data.
+XHGui (this tool) takes that information, saves it in MongoDB, and provides
+a convienent GUI for working with it.
 
 
 System Requirements
@@ -12,21 +15,25 @@ System Requirements
  * [XHProf](http://pecl.php.net/package/xhprof) to actually profile the data
  * [MongoDB PHP](http://pecl.php.net/package/mongo) MongoDB PHP extension
  * [MongoDB](http://www.mongodb.org/) MongoDB Itself
- * [mcrypt] (http://php.net/manual/en/book.mcrypt.php) PHP must be configured with mcrypt (which is a dependency of Slim)
- * [dom] (http://php.net/manual/en/book.dom.php) If you are running the tests you'll need the DOM extension (which is a dependency of PHPUnit)
+ * [mcrypt] (http://php.net/manual/en/book.mcrypt.php) PHP must be configured
+   with mcrypt (which is a dependency of Slim)
+ * [dom] (http://php.net/manual/en/book.dom.php) If you are running the tests
+   you'll need the DOM extension (which is a dependency of PHPUnit)
 
 
 Installation
 ============
 
-Installing Xhgui requires 2 main steps. First is installing the `xhgui` front-end, and the second is profiling a web application/site.
+Installing Xhgui requires 2 main steps. First is installing the `xhgui`
+front-end, and the second is profiling a web application/site.
 
 
 Installing the xhgui ui
 -----------------------
 
 * Clone or download `xhgui` from github.
-* You'll need to install `mongodb`, and `php-mongodb`, at least version 1.3.0 of the php extension is required.
+* You'll need to install `mongodb`, and `php-mongodb`, at least version 1.3.0
+  of the php extension is required.
 * Point your webserver to the `webroot` directory.
 * Set the permissions on the `cache` cache directory to allow the webserver to create files.
   If you're lazy `0777` will work. Run
@@ -37,9 +44,11 @@ Installing the xhgui ui
 
 * If your mongodb setup requires a username + password, or isn't running on the default port + host.
   You'll need to update `config/config.php` so that it can connect to mongod.
-* You may wish to add indexes (recommended but optional) to improve the performance, you'll need to do this by using mongo console
+* You may wish to add indexes (recommended but optional) to improve the
+  performance, you'll need to do this by using mongo console
 
-  On your command prompt (irrespective of Windows or \*nix), open mongo shell using command 'mongo' and follow below  commands to add the index:
+  On your command prompt (irrespective of Windows or \*nix), open mongo shell
+  using command 'mongo' and follow below  commands to add the index:
   
   ```
   $ mongo
@@ -106,9 +115,12 @@ For nginx & fast-cgi you can the following snippet as a start:
 Profiling an application / site
 -------------------------------
 
-The simplest way to get an application profiled, is to use `external/header.php`.
-This file is designed to be combined with PHP's [auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-prepend-file) directive. This can be enabled system-wide through `php.ini`. Alternatively, you can enable
-`auto_prepend_file` per virtual host. With apache this would look like:
+The simplest way to get an application profiled, is to use
+`external/header.php`.  This file is designed to be combined with PHP's
+[auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-prepend-file)
+directive. This can be enabled system-wide through `php.ini`. Alternatively,
+you can enable `auto_prepend_file` per virtual host. With apache this would
+look like:
 
     <VirtualHost *:80>
         php_admin_value auto_prepend_file "/Users/markstory/Sites/xhgui/external/header.php"
@@ -125,32 +137,51 @@ With Nginx in fastcgi mode you could use:
         fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
      }
 
-If your site cannot directly connect to your mongodb instance, you can choose to save your data on a temporary file for a later import to xhgui's mongo database.
-Change the `save.handler` setting to `file` and define your file's path with `save.handler.filename`. 
-To import a file inside mongodb use the `external/import.php`
+If your site cannot directly connect to your mongodb instance, you can choose
+to save your data on a temporary file for a later import to xhgui's mongo
+database.  Change the `save.handler` setting to `file` and define your file's
+path with `save.handler.filename`.  To import a file inside mongodb use the
+`external/import.php`
+
 ```
 php external/import.php -f /path/to/file
 ```
-Be careful, importing the same file twice will load twice the run datas inside mongo, resulting with duplicate profiles
+
+Be careful, importing the same file twice will load twice the run datas inside
+mongo, resulting with duplicate profiles
 
 
 Limiting Mongo Disk Usage 
 -------------------------
 
-Disk usage can grow quickly, especially when profiling applications with large code bases, or that utilize larger frameworks. One technique to keep the growth in check is to have Mongo automatically delete profiling documents once they reach a certain age. Decide on a maximum profile document age in seconds, you may wish to choose a lower value in development (where you profile everything), than production (where you profile only a selection of documents). The following command instructs Mongo to delete documents over 5 days (432000 seconds) old.
+Disk usage can grow quickly, especially when profiling applications with large
+code bases, or that utilize larger frameworks. One technique to keep the growth
+in check is to have Mongo automatically delete profiling documents once they
+reach a certain age. Decide on a maximum profile document age in seconds, you
+may wish to choose a lower value in development (where you profile everything),
+than production (where you profile only a selection of documents). The
+following command instructs Mongo to delete documents over 5 days (432000
+seconds) old.
 
       $ mongo
       > use xhprof
       > db.results.ensureIndex( { "meta.request_ts" : 1 }, { expireAfterSeconds : 432000 } )
 
-Waterfall Display 
+Waterfall Display
 -----------------
-The goal of the waterfall display is to recognize that concurrent requests can affect each other. Concurrent DB requests (or other resources), CPU intensive activies, or even locks on session files can become relevant. With an Ajax heavy applicaitons understanding the page build is far more complex than a single load, hopefully the waterfall can help. Remember: If you're only profiling a sample of requests the waterfall fills you with impolite lies. 
+
+The goal of the waterfall display is to recognize that concurrent requests can
+affect each other. Concurrent DB requests (or other resources), CPU intensive
+activies, or even locks on session files can become relevant. With an Ajax
+heavy applicaitons understanding the page build is far more complex than
+a single load, hopefully the waterfall can help. Remember: If you're only
+profiling a sample of requests the waterfall fills you with impolite lies. 
 
 Some Notes:
 
  * There should probably be more indexes on MongoDB for this to be performant
- * It introduces storage of a new request_ts_micro value, as second level granularity doesn't work well with waterfalls
+ * It introduces storage of a new request_ts_micro value, as second level
+   granularity doesn't work well with waterfalls
  * Still very much in alpha
  * Feedback and pull requests welcome :)
 
