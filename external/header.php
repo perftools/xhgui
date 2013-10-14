@@ -88,7 +88,7 @@ register_shutdown_function(function() {
 
     try {
         $container = Xhgui_ServiceContainer::instance();
-        $container['profiles']->insert($data, array('w' => false));
+        $container['saver']->save($data);
     } catch (Exception $e) {
         error_log('xhgui - ' . $e->getMessage());
     }
