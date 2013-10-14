@@ -359,12 +359,12 @@ Xhgui.linegraph = function (container, data, options) {
         d[options.xAxis] = date;
         return d;
     });
-    
+
     var xRange = d3.extent(data, function (d) {
         return d[options.xAxis];
     });
 
-    var x = d3.time.scale()
+    var x = d3.scale.linear()
         .range([0, width])
         .domain(xRange);
 
@@ -384,23 +384,19 @@ Xhgui.linegraph = function (container, data, options) {
         .range([height, 0])
         .domain(yDomain);
 
-    // Default to daily scale.
-    var ticks = 1;
-    var tickScale = d3.time.days;
-
-    // If its a big date range show range in weeks
-    if (xSpread / (86400 * 1000) > 10) {
-        tickScale = d3.time.weeks;
-        ticks = 3;
-    }
+    var dateFormatter = d3.time.format('%Y-%m-%d');
 
     var xAxis = d3.svg.axis()
         .scale(x)
-        .ticks(tickScale, ticks)
-        .tickFormat(d3.time.format('%Y-%m-%d'))
+        .tickFormat(function (d) {
+            return dateFormatter(new Date(d));
+        })
         .tickSize(9, 6, 0)
-        .tickSubdivide(ticks - 1)
         .orient('bottom');
+
+        // Only show as many ticks as will fit.
+        // Assume tick labels are 70px wide
+        xAxis.ticks(Math.abs(x.range()[1] - x.range()[0]) / 70);
 
     var yAxis = d3.svg.axis()
         .scale(y)
@@ -421,12 +417,13 @@ Xhgui.linegraph = function (container, data, options) {
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    // Add axis
+    // Add X-axis
     svg.append("g")
       .attr("class", "chart-axis x-axis")
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
 
+    // Add Y-axis
     svg.append("g")
       .attr("class", "chart-axis y-axis")
       .call(yAxis);
