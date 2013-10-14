@@ -217,8 +217,18 @@ tr .no-results {
 /**
  * Chart styles
  */
-.chart-container {
-    position: relative;
+.nv-x.nv-axis line {
+  stroke: none;
+  fill: none;
+}
+.nv-y.nv-axis line {
+  stroke: none;
+  fill: none;
+}
+.nvtooltip {
+    text-align: center;
+    border-radius: 5px;
+    padding: 2px;
 }
 .chart-container .popover {
     min-width: 125px;
@@ -241,7 +251,7 @@ tr .no-results {
     stroke-width: 1.5px;
 }
 
-.chart-bar {
+.nv-bar {
     fill: #d46245;
 }
 

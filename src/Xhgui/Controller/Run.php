@@ -116,11 +116,24 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             $pagination,
             $search
         );
-        $chartData = $this->_profiles->getPercentileForUrl(
+        $percentiles = $this->_profiles->getPercentileForUrl(
             90,
             $request->get('url'),
             $search
         );
+        
+        $chartData = array(
+            array('key' => 'wt', 'values' => array()),
+            array('key' => 'cpu', 'values' => array()),
+            array('key' => 'mu', 'values' => array()),
+            array('key' => 'pmu', 'values' => array())
+        );
+        foreach ($percentiles as $percentile) {
+            $tstamp = (int)(strtotime($percentile['date']).'000');
+            foreach ($chartData as &$line) {
+                $line['values'][] = array($tstamp, $percentile[$line['key']]);
+            }
+        }
 
         $paging = array(
             'total_pages' => $runs['totalPages'],
