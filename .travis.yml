@@ -1,0 +1,17 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+
+services:
+  - mongod
+
+before_script:
+  - composer install --prefer-dist --dev
+  - chmod -R 0777 cache/
+  - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - phpenv rehash
+
+script: phpunit
