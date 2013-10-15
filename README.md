@@ -141,7 +141,9 @@ If your site cannot directly connect to your mongodb instance, you can choose
 to save your data on a temporary file for a later import to xhgui's mongo
 database.  Change the `save.handler` setting to `file` and define your file's
 path with `save.handler.filename`.  To import a file inside mongodb use the
-`external/import.php`
+`external/import.php`. Be aware of file locking. Depending on your workload, 
+you may need to change the `save.handler.filename` file path to avoid file locking
+
 
 ```
 php external/import.php -f /path/to/file
