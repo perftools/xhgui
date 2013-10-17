@@ -107,10 +107,22 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         );
 
         $search = array();
-        $keys = array('date_start', 'date_end');
+        $keys = array('date_start', 'date_end', 'limit');
         foreach ($keys as $key) {
             $search[$key] = $request->get($key);
         }
+
+        $format = "Y-m-d H:i:s";
+        $search['limits'] = array(
+            'thirtym' => date($format, time() - (30 * 60)),
+            'onehr' => date($format, time() - (60 * 60)),
+            'twohr' => date($format, time() - (60 * 60 * 2)),
+            'twelvehr' => date($format, time() - (86400 / 2)),
+            'twentyfourhr' => date($format, time() - 86400),
+            'onew' => date($format, time() - (86400 * 7)),
+            'twow' => date($format, time() - (86400 * 14)),
+            'thirtyd' => date($format, time() - (86400 * 30)),
+        );
         $runs = $this->_profiles->getForUrl(
             $request->get('url'),
             $pagination,

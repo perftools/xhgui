@@ -28,6 +28,22 @@
                 <input type="text" id="date_end" data-date-format="yyyy-mm-dd" name="date_end" class="datepicker span2" value="{{ search.date_end }}">
             </div>
         </div>
+        <div class="control-group span4">
+            <label class="control-label" for="limit">Show Last:</label>
+            <div class="controls">
+                <select id="limit" name="limit">
+                    <option value="-1"></option>
+                    <option value="{{ search.limits.thirtym }}">30 Minutes</option>
+                    <option value="{{ search.limits.onehr }}">1 Hour</option>
+                    <option value="{{ search.limits.twohr }}">2 Hours</option>
+                    <option value="{{ search.limits.twelvehr }}">12 Hours</option>
+                    <option value="{{ search.limits.twentyfourhr }}">24 Hours</option>
+                    <option value="{{ search.limits.onew }}">1 Week</option>
+                    <option value="{{ search.limits.twow }}">2 Weeks</option>
+                    <option value="{{ search.limits.thirtyd }}">30 Days</option>
+                </select>
+            </div>
+        </div>
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Search</button>
         </div>
@@ -50,7 +66,7 @@ $(document).ready(function () {
         xAxis: 'date',
         title: 'Time usage',
         legend: ['Wall time', 'CPU time'],
-        postfix: ' \u00b5s',
+        postfix: ' \u00b5s'
     });
     Xhgui.linegraph('#memory-line-graph', graphData, {
         series: ['mu', 'pmu'],
