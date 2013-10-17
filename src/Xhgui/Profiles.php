@@ -122,17 +122,23 @@ class Xhgui_Profiles
      */
     public function getPercentileForUrl($percentile, $url, $search = array())
     {
+        $col = '$meta.request_date';
         $match = array('meta.simple_url' => $url);
         if (isset($search['date_start']) && (!isset($search['limit']) || $search['limit'] == -1)) {
             $match['meta.request_date']['$gte'] = (string)$search['date_start'];
-            $col = '$meta.request_date';
         }
         if (isset($search['date_end']) && (!isset($search['limit']) || $search['limit'] == -1)) {
             $match['meta.request_date']['$lte'] = (string)$search['date_end'];
-            $col = '$meta.request_date';
         }
-        if (isset($search['limit']) && $search['limit'] != -1) {
-            $match['meta.request_ts']['$gte'] = new MongoDate(strtotime($search['limit']));
+        if (isset($search['limit']) && !empty($search['limit']) && $search['limit'][0] == "P") {
+            $date = new DateTime();
+            try {
+                $date->sub(new DateInterval($search['limit']));
+                $match['meta.request_ts']['$gte'] = new MongoDate($date->getTimestamp());
+            } catch (\Exception $e) {
+                // Match a day in the future so we match nothing, as it's likely an invalid format
+                $match['meta.request_ts']['$gte'] = new MongoDate(time() + 86400);
+            }
             $col = '$meta.request_ts';
         }
 

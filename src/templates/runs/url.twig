@@ -33,15 +33,19 @@
             <div class="controls">
                 <select id="limit" name="limit">
                     <option value="-1"></option>
-                    <option value="{{ search.limits.thirtym }}">30 Minutes</option>
-                    <option value="{{ search.limits.onehr }}">1 Hour</option>
-                    <option value="{{ search.limits.twohr }}">2 Hours</option>
-                    <option value="{{ search.limits.twelvehr }}">12 Hours</option>
-                    <option value="{{ search.limits.twentyfourhr }}">24 Hours</option>
-                    <option value="{{ search.limits.onew }}">1 Week</option>
-                    <option value="{{ search.limits.twow }}">2 Weeks</option>
-                    <option value="{{ search.limits.thirtyd }}">30 Days</option>
+                    <option value="PT30M" {% if search.limit == "PT30M" %}selected="selected"{% endif %}>30 Minutes</option>
+                    <option value="PT1H" {% if search.limit == "PT1H" %}selected="selected"{% endif %}>1 Hour</option>
+                    <option value="PT2H" {% if search.limit == "PT2H" %}selected="selected"{% endif %}>2 Hours</option>
+                    <option value="PT12H" {% if search.limit == "PT12H" %}selected="selected"{% endif %}>12 Hours</option>
+                    <option value="P1D" {% if search.limit == "P1D" %}selected="selected"{% endif %}>24 Hours</option>
+                    <option value="P1W" {% if search.limit == "P1W" %}selected="selected"{% endif %}>1 Week</option>
+                    <option value="P2W" {% if search.limit == "P2W" %}selected="selected"{% endif %}>2 Weeks</option>
+                    <option value="P30D" {% if search.limit == "P30D" %}selected="selected"{% endif %}>30 Days</option>
                 </select>
+                <br>
+                <label class="control-label" for="limit_custom">or custom:</label> <small>(<a target="_blank" href="http://us3.php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters">more info</a>)</small>
+                <br>
+                <input type="text" id="limit_custom" name="limit_custom" value="{{ search.limit_custom }}">
             </div>
         </div>
         <div class="form-actions">
@@ -59,6 +63,25 @@
 {% block jsfoot %}
 <script>
 $(document).ready(function () {
+    $('#limit').change(function() {
+        $('#limit_custom').val("");
+        $('#date_start').val("");
+        $('#date_end').val("");
+    });
+    $('#limit_custom').focus(function() {
+        $('#limit').val("");
+        $('#date_start').val("");
+        $('#date_end').val("");
+    });
+    $('#date_start').focus(function() {
+        $('#limit').val("");
+        $('#limit_custom').val("");
+    });
+    $('#date_end').focus(function() {
+        $('#limit').val("");
+        $('#limit_custom').val("");
+    });
+
     var graphData = {{ chart_data|json_encode|raw }};
     Xhgui.linegraph('#time-line-graph', graphData, {
         series: ['wt', 'cpu'],
