@@ -107,15 +107,21 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         );
 
         $search = array();
-        $keys = array('date_start', 'date_end');
+        $keys = array('date_start', 'date_end', 'limit', 'limit_custom');
         foreach ($keys as $key) {
             $search[$key] = $request->get($key);
         }
+
         $runs = $this->_profiles->getForUrl(
             $request->get('url'),
             $pagination,
             $search
         );
+
+        if (isset($search['limit_custom']) && strlen($search['limit_custom']) > 0 && $search['limit_custom'][0] == 'P') {
+            $search['limit'] = $search['limit_custom'];
+        }
+
         $chartData = $this->_profiles->getPercentileForUrl(
             90,
             $request->get('url'),

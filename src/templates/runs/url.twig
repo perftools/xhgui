@@ -28,6 +28,26 @@
                 <input type="text" id="date_end" data-date-format="yyyy-mm-dd" name="date_end" class="datepicker span2" value="{{ search.date_end }}">
             </div>
         </div>
+        <div class="control-group span4">
+            <label class="control-label" for="limit">Show Last:</label>
+            <div class="controls">
+                <select id="limit" name="limit">
+                    <option value="-1"></option>
+                    <option value="PT30M" {% if search.limit == "PT30M" %}selected="selected"{% endif %}>30 Minutes</option>
+                    <option value="PT1H" {% if search.limit == "PT1H" %}selected="selected"{% endif %}>1 Hour</option>
+                    <option value="PT2H" {% if search.limit == "PT2H" %}selected="selected"{% endif %}>2 Hours</option>
+                    <option value="PT12H" {% if search.limit == "PT12H" %}selected="selected"{% endif %}>12 Hours</option>
+                    <option value="P1D" {% if search.limit == "P1D" %}selected="selected"{% endif %}>24 Hours</option>
+                    <option value="P1W" {% if search.limit == "P1W" %}selected="selected"{% endif %}>1 Week</option>
+                    <option value="P2W" {% if search.limit == "P2W" %}selected="selected"{% endif %}>2 Weeks</option>
+                    <option value="P30D" {% if search.limit == "P30D" %}selected="selected"{% endif %}>30 Days</option>
+                </select>
+                <br>
+                <label class="control-label" for="limit_custom">or custom:</label> <small>(<a target="_blank" href="http://us3.php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters">more info</a>)</small>
+                <br>
+                <input type="text" id="limit_custom" name="limit_custom" value="{{ search.limit_custom }}">
+            </div>
+        </div>
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Search</button>
         </div>
@@ -43,6 +63,32 @@
 {% block jsfoot %}
 <script>
 $(document).ready(function () {
+    var formElements = {
+        'limit': $('#limit'),
+        'limit_custom': $('#limit_custom'),
+        'date_start': $('#date_start'),
+        'date_end': $('#date_end')
+    };
+
+    formElements.limit.change(function() {
+        formElements.limit_custom.val("");
+        formElements.date_start.val("");
+        formElements.date_end.val("");
+    });
+    formElements.limit_custom.focus(function() {
+        formElements.limit.val("");
+        formElements.date_start.val("");
+        formElements.date_end.val("");
+    });
+    formElements.date_start.focus(function() {
+        formElements.limit.val("");
+        formElements.limit_custom.val("");
+    });
+    formElements.date_end.focus(function() {
+        formElements.limit.val("");
+        formElements.limit_custom.val("");
+    });
+
     var graphData = {{ chart_data|json_encode|raw }};
     Xhgui.linegraph('#time-line-graph', graphData, {
         series: ['wt', 'cpu'],
@@ -50,7 +96,7 @@ $(document).ready(function () {
         xAxis: 'date',
         title: 'Time usage',
         legend: ['Wall time', 'CPU time'],
-        postfix: ' \u00b5s',
+        postfix: ' \u00b5s'
     });
     Xhgui.linegraph('#memory-line-graph', graphData, {
         series: ['mu', 'pmu'],

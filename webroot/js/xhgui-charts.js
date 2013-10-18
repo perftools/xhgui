@@ -22,7 +22,12 @@ Xhgui.colors = function () {
  * @param Date date The date to format.
  * @return String Formatted date string.
  */
-Xhgui.formatDate = d3.time.format('%Y-%m-%d');
+Xhgui.formatDate = d3.time.format('%y-%m-%d %H:%M:%S');
+
+/**
+ * Dynamic date/time format based on date being shown
+ */
+Xhgui.dateTimeFormat;
 
 /**
  * Format a number to have thousand separators + decimal places.
@@ -354,8 +359,22 @@ Xhgui.linegraph = function (container, data, options) {
         if (d[options.xAxis] instanceof Date) {
             return d;
         }
-        var dateParts = d[options.xAxis].split('-');
-        var date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], 0, 0, 0);
+
+        var col = d[options.xAxis];
+
+        // If it contains a colon it has a timestamp also
+        if (col.indexOf(" ") != -1) {
+            var dateTimeParts = col.split(" ");
+            var dateParts = dateTimeParts[0].split('-');
+            var timeParts = dateTimeParts[1].split(':');
+            Xhgui.dateTimeFormat = '%H:%M:%S'
+        } else {
+            var dateParts = d[options.xAxis].split('-');
+            var timeParts = [0, 0, 0];
+            Xhgui.dateTimeFormat = '%y-%m-%d'
+        }
+
+        var date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], timeParts[0], timeParts[1], timeParts[2]);
         d[options.xAxis] = date;
         return d;
     });
@@ -384,7 +403,7 @@ Xhgui.linegraph = function (container, data, options) {
         .range([height, 0])
         .domain(yDomain);
 
-    var dateFormatter = d3.time.format('%Y-%m-%d');
+    var dateFormatter = d3.time.format(Xhgui.dateTimeFormat);
 
     var xAxis = d3.svg.axis()
         .scale(x)

@@ -122,18 +122,31 @@ class Xhgui_Profiles
      */
     public function getPercentileForUrl($percentile, $url, $search = array())
     {
+        $col = '$meta.request_date';
         $match = array('meta.simple_url' => $url);
-        if (isset($search['date_start'])) {
+        if (isset($search['date_start']) && (!isset($search['limit']) || $search['limit'] == -1)) {
             $match['meta.request_date']['$gte'] = (string)$search['date_start'];
         }
-        if (isset($search['date_end'])) {
+        if (isset($search['date_end']) && (!isset($search['limit']) || $search['limit'] == -1)) {
             $match['meta.request_date']['$lte'] = (string)$search['date_end'];
         }
+        if (!empty($search['limit']) && $search['limit'][0] == "P") {
+            $date = new DateTime();
+            try {
+                $date->sub(new DateInterval($search['limit']));
+                $match['meta.request_ts']['$gte'] = new MongoDate($date->getTimestamp());
+            } catch (\Exception $e) {
+                // Match a day in the future so we match nothing, as it's likely an invalid format
+                $match['meta.request_ts']['$gte'] = new MongoDate(time() + 86400);
+            }
+            $col = '$meta.request_ts';
+        }
+
         $results = $this->_collection->aggregate(array(
             array('$match' => $match),
             array(
                 '$project' => array(
-                    'date' => '$meta.request_date',
+                    'date' => $col,
                     'profile.main()' => 1
                 )
             ),
@@ -176,7 +189,7 @@ class Xhgui_Profiles
             'pmu_times' => 'pmu'
         );
         foreach ($results['result'] as &$result) {
-            $result['date'] = $result['_id'];
+            $result['date'] = ($result['_id'] instanceof MongoDate) ? date('Y-m-d h:i:s', $result['_id']->sec) : $result['_id'];
             unset($result['_id']);
             $index = max(round($result['raw_index']) - 1, 0);
             foreach ($keys as $key => $out) {
