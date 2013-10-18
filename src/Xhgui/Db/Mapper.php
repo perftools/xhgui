@@ -42,10 +42,10 @@ class Xhgui_Db_Mapper
     protected function _conditions($search)
     {
         $conditions = array();
-        if (isset($search['date_start']) && !empty($search['date_start'])) {
+        if (!empty($search['date_start'])) {
             $conditions['meta.request_date']['$gte'] = (string)$search['date_start'];
         }
-        if (isset($search['date_end']) && !empty($search['date_end'])) {
+        if (!empty($search['date_end'])) {
             $conditions['meta.request_date']['$lte'] = (string)$search['date_end'];
         }
         if (isset($search['simple_url'])) {
@@ -65,11 +65,11 @@ class Xhgui_Db_Mapper
             $conditions['meta.SERVER.HTTP_COOKIE'] = (string)$search['cookie'];
         }
 
-        if (isset($search['limit_custom']) && !empty($search['limit_custom']) && $search['limit_custom'][0] == "P") {
+        if (!empty($search['limit_custom']) && $search['limit_custom'][0] == "P") {
             $search['limit'] = $search['limit_custom'];
         }
 
-        if (isset($search['limit']) && !empty($search['limit']) && $search['limit'][0] == "P") {
+        if (!empty($search['limit']) && $search['limit'][0] == "P") {
             $date = new DateTime();
             try {
                 $date->sub(new DateInterval($search['limit']));

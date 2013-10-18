@@ -130,7 +130,7 @@ class Xhgui_Profiles
         if (isset($search['date_end']) && (!isset($search['limit']) || $search['limit'] == -1)) {
             $match['meta.request_date']['$lte'] = (string)$search['date_end'];
         }
-        if (isset($search['limit']) && !empty($search['limit']) && $search['limit'][0] == "P") {
+        if (!empty($search['limit']) && $search['limit'][0] == "P") {
             $date = new DateTime();
             try {
                 $date->sub(new DateInterval($search['limit']));

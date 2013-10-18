@@ -63,23 +63,30 @@
 {% block jsfoot %}
 <script>
 $(document).ready(function () {
-    $('#limit').change(function() {
-        $('#limit_custom').val("");
-        $('#date_start').val("");
-        $('#date_end').val("");
+    var formElements = {
+        'limit': $('#limit'),
+        'limit_custom': $('#limit_custom'),
+        'date_start': $('#date_start'),
+        'date_end': $('#date_end')
+    };
+
+    formElements.limit.change(function() {
+        formElements.limit_custom.val("");
+        formElements.date_start.val("");
+        formElements.date_end.val("");
     });
-    $('#limit_custom').focus(function() {
-        $('#limit').val("");
-        $('#date_start').val("");
-        $('#date_end').val("");
+    formElements.limit_custom.focus(function() {
+        formElements.limit.val("");
+        formElements.date_start.val("");
+        formElements.date_end.val("");
     });
-    $('#date_start').focus(function() {
-        $('#limit').val("");
-        $('#limit_custom').val("");
+    formElements.date_start.focus(function() {
+        formElements.limit.val("");
+        formElements.limit_custom.val("");
     });
-    $('#date_end').focus(function() {
-        $('#limit').val("");
-        $('#limit_custom').val("");
+    formElements.date_end.focus(function() {
+        formElements.limit.val("");
+        formElements.limit_custom.val("");
     });
 
     var graphData = {{ chart_data|json_encode|raw }};
