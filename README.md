@@ -187,6 +187,12 @@ Some Notes:
  * Still very much in alpha
  * Feedback and pull requests welcome :)
 
+Releases/Changelog
+==================
+
+See the [releases](https://github.com/preinheimer/xhgui/releases) for changelogs,
+and release information.
+
 License
 =======
 
