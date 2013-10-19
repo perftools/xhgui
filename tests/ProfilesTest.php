@@ -139,6 +139,13 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('pmu', $result[0]);
     }
 
+    public function testGetPercentileForUrlWithLimit()
+    {
+        $search = array('limit' => 'P1D');
+        $result = $this->profiles->getPercentileForUrl(20, '/', $search);
+        $this->assertCount(0, $result);
+    }
+
     public function testGetAllConditions()
     {
         $result = $this->profiles->getAll(array(

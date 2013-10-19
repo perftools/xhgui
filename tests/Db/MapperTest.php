@@ -41,6 +41,49 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result['conditions']);
     }
 
+    public function testConvertConditionsLimit()
+    {
+        $opts = array(
+            'conditions' => array(
+                'simple_url' => '/tasks',
+                'limit' => 'P1D'
+            )
+        );
+        $date = new DateTime();
+        $date->sub(new DateInterval('P1D'));
+
+        $result = $this->mapper->convert($opts);
+        $expected = array(
+            'meta.request_ts' => array(
+                '$gte' => new MongoDate($date->getTimestamp()),
+            ),
+            'meta.simple_url' => '/tasks'
+        );
+        $this->assertEquals($expected, $result['conditions']);
+    }
+
+    public function testConvertConditionsLimitIgnoreDateStart()
+    {
+        $opts = array(
+            'conditions' => array(
+                'simple_url' => '/tasks',
+                'limit' => 'P1D',
+                'date_start' => '2013-10-16',
+            )
+        );
+        $date = new DateTime();
+        $date->sub(new DateInterval('P1D'));
+
+        $result = $this->mapper->convert($opts);
+        $expected = array(
+            'meta.request_ts' => array(
+                '$gte' => new MongoDate($date->getTimestamp()),
+            ),
+            'meta.simple_url' => '/tasks'
+        );
+        $this->assertEquals($expected, $result['conditions']);
+    }
+
     public function testConditionsPartial()
     {
         $result = $this->mapper->convert(array(

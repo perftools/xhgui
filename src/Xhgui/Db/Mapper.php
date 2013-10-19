@@ -41,11 +41,16 @@ class Xhgui_Db_Mapper
      */
     protected function _conditions($search)
     {
+        if (!empty($search['limit_custom']) && $search['limit_custom'][0] == "P") {
+            $search['limit'] = $search['limit_custom'];
+        }
+        $hasLimit = (!empty($search['limit']) && $search['limit'] != -1);
+
         $conditions = array();
-        if (!empty($search['date_start'])) {
+        if (!empty($search['date_start']) && !$hasLimit) {
             $conditions['meta.request_date']['$gte'] = (string)$search['date_start'];
         }
-        if (!empty($search['date_end'])) {
+        if (!empty($search['date_end']) && !$hasLimit) {
             $conditions['meta.request_date']['$lte'] = (string)$search['date_end'];
         }
         if (isset($search['simple_url'])) {
@@ -65,11 +70,7 @@ class Xhgui_Db_Mapper
             $conditions['meta.SERVER.HTTP_COOKIE'] = (string)$search['cookie'];
         }
 
-        if (!empty($search['limit_custom']) && $search['limit_custom'][0] == "P") {
-            $search['limit'] = $search['limit_custom'];
-        }
-
-        if (!empty($search['limit']) && $search['limit'][0] == "P") {
+        if ($hasLimit && $search['limit'][0] == "P") {
             $date = new DateTime();
             try {
                 $date->sub(new DateInterval($search['limit']));
