@@ -63,30 +63,21 @@
 {% block jsfoot %}
 <script>
 $(document).ready(function () {
-    var formElements = {
-        'limit': $('#limit'),
-        'limit_custom': $('#limit_custom'),
-        'date_start': $('#date_start'),
-        'date_end': $('#date_end')
-    };
+    var limit = $('#limit'),
+        limitCustom = $('#limit_custom'),
+        dateInputs = $('#date_start, #date_end');
 
-    formElements.limit.change(function() {
-        formElements.limit_custom.val("");
-        formElements.date_start.val("");
-        formElements.date_end.val("");
+    limit.on('change', function() {
+        limitCustom.val("");
+        dateInputs.val('');
     });
-    formElements.limit_custom.focus(function() {
-        formElements.limit.val("");
-        formElements.date_start.val("");
-        formElements.date_end.val("");
+    limitCustom.on('focus', function() {
+        limit.val("");
+        dateInputs.val('');
     });
-    formElements.date_start.focus(function() {
-        formElements.limit.val("");
-        formElements.limit_custom.val("");
-    });
-    formElements.date_end.focus(function() {
-        formElements.limit.val("");
-        formElements.limit_custom.val("");
+    dateInputs.on('focus', function () {
+        limit.val("");
+        limitCustom.val("");
     });
 
     var graphData = {{ chart_data|json_encode|raw }};
