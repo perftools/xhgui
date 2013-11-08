@@ -137,6 +137,12 @@ With Nginx in fastcgi mode you could use:
         fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
      }
 
+**Note** By default Xhgui will only capture profile information for 1 in 100 requests. If you'd
+like to customize this, you can modify the conditions in `external/header.php`.
+
+Saving & importing profiles
+---------------------------
+
 If your site cannot directly connect to your mongodb instance, you can choose
 to save your data on a temporary file for a later import to xhgui's mongo
 database.  Change the `save.handler` setting to `file` and define your file's
