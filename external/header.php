@@ -42,10 +42,21 @@ if (!extension_loaded('mongo')) {
     return;
 }
 
-// Obtain the answer to life, the universe, and your application one time out of a hundred
-if (rand(0, 100) !== 42) {
+// Use the callbacks defined in the configuration file
+// to determine whether or not XHgui should enable profiling.
+//
+// Only load the config class so we don't pollute the host application's
+// autoloaders.
+$dir = dirname(__DIR__);
+require_once $dir . '/src/Xhgui/Config.php';
+Xhgui_Config::load($dir . '/config/config.default.php');
+Xhgui_Config::load($dir . '/config/config.php');
+unset($root);
+
+if (!Xhgui_Config::shouldRun()) {
     return;
 }
+
 
 if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
@@ -61,12 +72,12 @@ register_shutdown_function(function() {
     // since we're delaying that a bit by dealing with the xhprof stuff, we'll do it now to avoid making the user wait.
     $data['profile'] = xhprof_disable();
 
-    ignore_user_abort(true);
-    flush();
-
     if (!defined('XHGUI_ROOT_DIR')) {
         require dirname(dirname(__FILE__)) . '/src/bootstrap.php';
     }
+
+    ignore_user_abort(true);
+    flush();
 
     $uri = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : null;
     if (empty($uri) && isset($_SERVER['argv'])) {
