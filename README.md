@@ -137,8 +137,17 @@ With Nginx in fastcgi mode you could use:
         fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
      }
 
-**Note** By default Xhgui will only capture profile information for 1 in 100 requests. If you'd
-like to customize this, you can modify the conditions in `external/header.php`.
+**Note** The default sample size is 100. This means that 1 in 100 requests will
+be profiled. To change this rate, set the `XHGUI_SAMPLE_SIZE` environment
+variable. If you use Apache, you can add the following to your `.htaccess` file:
+
+```
+SetEnv XHGUI_SAMPLE_SIZE 42
+```
+
+A sample size of 42 means that 1 in every 42 requests will be profiled. If you
+wish to profile all requests (not recommended in production environments), set
+`XHGUI_SAMPLE_SIZE` to 1.
 
 Saving & importing profiles
 ---------------------------
