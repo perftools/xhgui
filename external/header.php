@@ -42,8 +42,9 @@ if (!extension_loaded('mongo')) {
     return;
 }
 
-// Obtain the answer to life, the universe, and your application one time out of a hundred
-if (rand(0, 100) !== 42) {
+// By default, profile 1 out of 100 requests. If you want to increase the
+// sample size, set the XHGUI_SAMPLE_SIZE environment variable.
+if (rand(1, \getenv('XHGUI_SAMPLE_SIZE') ?: 100) !== 1) {
     return;
 }
 
