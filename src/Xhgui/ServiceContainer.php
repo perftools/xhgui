@@ -17,7 +17,7 @@ class Xhgui_ServiceContainer extends Pimple
 
     public function __construct()
     {
-        $this['config'] = include XHGUI_ROOT_DIR . '/config/config.php';
+        $this['config'] = Xhgui_Config::all();
         $this->_slimApp();
         $this->_services();
         $this->_controllers();
