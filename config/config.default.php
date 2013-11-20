@@ -24,7 +24,7 @@ return array(
 
     // Profile 1 in 100 requests.
     'profiler.enable' => function () {
-        return rand(100) === 42;
+        return rand(0, 100) === 42;
     }
 
 );
