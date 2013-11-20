@@ -72,12 +72,12 @@ register_shutdown_function(function() {
     // since we're delaying that a bit by dealing with the xhprof stuff, we'll do it now to avoid making the user wait.
     $data['profile'] = xhprof_disable();
 
+    ignore_user_abort(true);
+    flush();
+
     if (!defined('XHGUI_ROOT_DIR')) {
         require dirname(dirname(__FILE__)) . '/src/bootstrap.php';
     }
-
-    ignore_user_abort(true);
-    flush();
 
     $uri = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : null;
     if (empty($uri) && isset($_SERVER['argv'])) {
