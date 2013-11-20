@@ -17,7 +17,7 @@ class Xhgui_ServiceContainer extends Pimple
 
     public function __construct()
     {
-        $this['config'] = include XHGUI_ROOT_DIR . '/config/config.php';
+        $this['config'] = Xhgui_Config::all();
         $this->_slimApp();
         $this->_services();
         $this->_controllers();
@@ -64,7 +64,7 @@ class Xhgui_ServiceContainer extends Pimple
     {
         $this['db'] = $this->share(function ($c) {
             $config = $c['config'];
-            if (empty($config['db.options'])) {                                                                                                  
+            if (empty($config['db.options'])) {
                 $config['db.options'] = array();
             }
             $mongo = new MongoClient($config['db.host'], $config['db.options']);
@@ -79,7 +79,7 @@ class Xhgui_ServiceContainer extends Pimple
         $this['profiles'] = function ($c) {
             return new Xhgui_Profiles($c['db']);
         };
-        
+
         $this['saver'] = function($c) {
             $config = $c['config'];
             switch ($config['save.handler']) {

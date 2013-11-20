@@ -42,10 +42,21 @@ if (!extension_loaded('mongo')) {
     return;
 }
 
-// Obtain the answer to life, the universe, and your application one time out of a hundred
-if (rand(0, 100) !== 42) {
+// Use the callbacks defined in the configuration file
+// to determine whether or not XHgui should enable profiling.
+//
+// Only load the config class so we don't pollute the host application's
+// autoloaders.
+$dir = dirname(__DIR__);
+require_once $dir . '/src/Xhgui/Config.php';
+Xhgui_Config::load($dir . '/config/config.default.php');
+Xhgui_Config::load($dir . '/config/config.php');
+unset($root);
+
+if (!Xhgui_Config::shouldRun()) {
     return;
 }
+
 
 if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);

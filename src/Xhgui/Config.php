@@ -16,7 +16,7 @@ class Xhgui_Config
     public static function load($file)
     {
         $config = include($file);
-        self::$_config = $config;
+        self::$_config = array_merge(self::$_config, $config);
     }
 
     /**
@@ -34,6 +34,16 @@ class Xhgui_Config
     }
 
     /**
+     * Get all the configuration options.
+     *
+     * @return array
+     */
+    public static function all()
+    {
+        return self::$_config;
+    }
+
+    /**
      * Write a config value.
      *
      * @param string $name The name of the config variable
@@ -45,9 +55,31 @@ class Xhgui_Config
         self::$_config[$name] = $value;
     }
 
+    /**
+     * Clear out the data stored in the config class.
+     *
+     * @return void
+     */
     public static function clear()
     {
         self::$_config = array();
+    }
+
+    /**
+     * Called during profiler initialization
+     *
+     * Allows arbitrary conditions to be added configuring how
+     * Xhgui profiles runs.
+     *
+     * @return boolean
+     */
+    public static function shouldRun()
+    {
+        $callback = self::read('profiler.enable');
+        if (!is_callable($callback)) {
+            return false;
+        }
+        return (bool)$callback();
     }
 
 }
