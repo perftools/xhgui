@@ -28,22 +28,23 @@ Installing Xhgui requires 2 main steps. First is installing the `xhgui`
 front-end, and the second is profiling a web application/site.
 
 
-Installing the xhgui ui
------------------------
+Installing Xhgui
+----------------
 
 * Clone or download `xhgui` from github.
 * You'll need to install `mongodb`, and `php-mongodb`, at least version 1.3.0
   of the php extension is required.
 * Point your webserver to the `webroot` directory.
-* Set the permissions on the `cache` cache directory to allow the webserver to create files.
-  If you're lazy `0777` will work. Run
+* Set the permissions on the `cache` cache directory to allow the webserver to
+  create files.  If you're lazy `0777` will work. Run:
 
   ```
   chmod -R 0777 cache
   ```
 
-* If your mongodb setup requires a username + password, or isn't running on the default port + host.
-  You'll need to update `config/config.php` so that it can connect to mongod.
+* If your mongodb setup requires a username + password, or isn't running on the
+  default port + host.  You'll need to update `config/config.php` so that it
+  can connect to mongod.
 * You may wish to add indexes (recommended but optional) to improve the
   performance, you'll need to do this by using mongo console
 
@@ -61,7 +62,8 @@ Installing the xhgui ui
   ```
 
   After adding indexes, you may notice you can navigate across pages faster.
-* Run the install script. This will download composer and use it to install the dependencies for xhgui.
+* Run the install script. This will download composer and use it to install the
+  dependencies for xhgui.
 
     ```
     cd path/to/xhgui
@@ -69,6 +71,14 @@ Installing the xhgui ui
     ```
 
 * Setup your webserver. See below for how to setup the rewrite rules for nginx + apache.
+
+Configure Xhgui profiling rate
+-------------------------------
+
+After installing Xhgui you may want to do change how frequently you profile the
+host application. The `profiler.enable` configuration option allows you to
+provide a callback function that determines which requests are profiled. By
+default 1 in 100 requests are profiled.
 
 Configure webserver re-write rules
 ----------------------------------
@@ -88,28 +98,28 @@ For Apache you can do the following to enable URL rewriting:
 
 For nginx & fast-cgi you can the following snippet as a start:
 
-    ```
-    server {
-        listen   80;
-        server_name example.com;
+```
+server {
+    listen   80;
+    server_name example.com;
 
-        # root directive should be global
-        root   /var/www/example.com/public/xhgui/webroot/;
-        index  index.php;
+    # root directive should be global
+    root   /var/www/example.com/public/xhgui/webroot/;
+    index  index.php;
 
-        location / {
-            try_files $uri $uri/ /index.php?$uri&$args;
-        }
-
-        location ~ \.php$ {
-            try_files $uri =404;
-            include /etc/nginx/fastcgi_params;
-            fastcgi_pass    127.0.0.1:9000;
-            fastcgi_index   index.php;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        }
+    location / {
+        try_files $uri $uri/ /index.php?$uri&$args;
     }
-    ```
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        include /etc/nginx/fastcgi_params;
+        fastcgi_pass    127.0.0.1:9000;
+        fastcgi_index   index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+}
+```
 
 
 Profiling an application / site
@@ -136,9 +146,6 @@ With Nginx in fastcgi mode you could use:
         root /Users/markstory/Sites/awesome-thing/app/webroot/;
         fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
      }
-
-**Note** By default Xhgui will only capture profile information for 1 in 100 requests. If you'd
-like to customize this, you can modify the conditions in `external/header.php`.
 
 Saving & importing profiles
 ---------------------------
