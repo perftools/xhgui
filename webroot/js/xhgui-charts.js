@@ -365,7 +365,7 @@ Xhgui.linegraph = function (container, data, options) {
         var col = d[options.xAxis];
 
         // If it contains a colon it has a timestamp also
-        if (col.indexOf(" ") != -1) {
+        if (col.indexOf(":") != -1) {
             var dateTimeParts = col.split(" ");
             var dateParts = dateTimeParts[0].split('-');
             var timeParts = dateTimeParts[1].split(':');
