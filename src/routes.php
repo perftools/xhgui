@@ -17,44 +17,45 @@ $app->error(function (Exception $e) use ($di, $app) {
 });
 
 // Profile Runs routes
-$app->get('/', function () use ($di) {
-    $c = $di['runController'];
-    $c->index();
-    $c->render();
+$app->get('/', function () use ($di, $app) {
+    $app->controller = $di['runController'];
+    $app->controller->index();
 })->name('home');
 
-$app->get('/run/view', function () use ($di) {
-    $di['runController']->view();
+$app->get('/run/view', function () use ($di, $app) {
+    $app->controller = $di['runController'];
+    $app->controller->view();
 })->name('run.view');
 
-$app->get('/url/view', function () use ($di) {
-    $di['runController']->url();
+$app->get('/url/view', function () use ($di, $app) {
+    $app->controller = $di['runController'];
+    $app->controller->url();
 })->name('url.view');
 
-$app->get('/run/compare', function () use ($di) {
-    $di['runController']->compare();
+$app->get('/run/compare', function () use ($di, $app) {
+    $app->controller = $di['runController'];
+    $app->controller->compare();
 })->name('run.compare');
 
-$app->get('/run/symbol', function () use ($di) {
-    $di['runController']->symbol();
+$app->get('/run/symbol', function () use ($di, $app) {
+    $app->controller = $di['runController'];
+    $app->controller->symbol();
 })->name('run.symbol');
 
-$app->get('/run/callgraph', function () use ($di) {
-    $di['runController']->callgraph();
+$app->get('/run/callgraph', function () use ($di, $app) {
+    $app->controller = $di['runController'];
+    $app->controller->callgraph();
 })->name('run.callgraph');
 
 
 // Watch function routes.
-$app->get('/watch', function () use ($di) {
-    $c = $di['watchController'];
-    $c->get();
-    $c->render();
+$app->get('/watch', function () use ($di, $app) {
+    $app->controller = $di['watchController'];
+    $app->controller->get();
 })->name('watch.list');
 
 $app->post('/watch', function () use ($di) {
-    $c = $di['watchController'];
-    $c->post();
-    $c->render();
+    $di['watchController']->post();
 })->name('watch.save');
 
 

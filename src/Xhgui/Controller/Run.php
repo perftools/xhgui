@@ -84,7 +84,9 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         }
 
         $profile = $result->sort('ewt', $result->getProfile());
-        $this->_app->render('runs/view.twig', array(
+
+        $this->_template = 'runs/view.twig';
+        $this->set(array(
             'profile' => $profile,
             'result' => $result,
             'wall_time' => $timeChart,
@@ -135,7 +137,8 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'direction' => $runs['direction']
         );
 
-        $this->_app->render('runs/url.twig', array(
+        $this->_template = 'runs/url.twig';
+        $this->set(array(
             'paging' => $paging,
             'base_url' => 'url.view',
             'runs' => $runs['results'],
@@ -185,7 +188,8 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             $comparison = $baseRun->compare($headRun);
         }
 
-        $this->_app->render('runs/compare.twig', array(
+        $this->_template = 'runs/compare.twig';
+        $this->set(array(
             'base_url' => 'run.compare',
             'base_run' => $baseRun,
             'head_run' => $headRun,
@@ -211,7 +215,8 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $profile->calculateExclusive();
         list($parents, $current, $children) = $profile->getRelatives($symbol);
 
-        $this->_app->render('runs/symbol-view.twig', array(
+        $this->_template = 'runs/symbol-view.twig';
+        $this->set(array(
             'symbol' => $symbol,
             'id' => $id,
             'parents' => $parents,
@@ -225,7 +230,8 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $request = $this->_app->request();
         $profile = $this->_profiles->get($request->get('id'));
 
-        $this->_app->render('runs/callgraph.twig', array(
+        $this->_template = 'runs/callgraph.twig';
+        $this->set(array(
             'profile' => $profile,
             'date_format' => $this->_app->config('date_format'),
             'callgraph' => $profile->getCallgraph(),
