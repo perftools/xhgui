@@ -47,6 +47,9 @@ class Xhgui_ServiceContainer extends Pimple
                 'httponly' => true,
             )));
 
+            // Add renderer.
+            $app->add(new Xhgui_Middleware_Render());
+
             $view = $c['view'];
             $view->parserExtensions = array(
                 new Xhgui_Twig_Extension($app)
