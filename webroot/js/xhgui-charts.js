@@ -135,7 +135,7 @@ Xhgui.tooltip = function (container, options) {
         return {frame: popover, content: content};
     }
 
-    var tooltip = createTooltip(container);
+    var tooltip = createTooltip(d3.select(document.body));
 
     function hide() {
         tooltip.frame.transition().style('opacity', 0);
@@ -162,10 +162,12 @@ Xhgui.tooltip = function (container, options) {
         tooltipWidth = parseInt(tooltip.frame.style('width'), 10);
         tooltipHeight = parseInt(tooltip.frame.style('height'), 10);
 
+        var containerNode = container.node();
+
         // Recalculate based on width/height of tooltip.
         // arrow is 10x10, so 7 & 5 are magic numbers
-        top = position.y - (tooltipHeight / 2) - 7;
-        left = position.x - (tooltipWidth / 2) + 5;
+        top = containerNode.offsetTop + position.y - (tooltipHeight / 2) - 7;
+        left = containerNode.offsetLeft + position.x - (tooltipWidth / 2) + 5;
 
         tooltip.frame.style({
             top: top + 'px',
