@@ -60,12 +60,14 @@ $app->post('/watch', function () use ($di) {
 
 
 // Custom report routes.
-$app->get('/custom', function () use ($di) {
-    $di['customController']->get();
+$app->get('/custom', function () use ($di, $app) {
+    $app->controller = $di['customController'];
+    $app->controller->get();
 })->name('custom.view');
 
-$app->get('/custom/help', function () use ($di) {
-    $di['customController']->help();
+$app->get('/custom/help', function () use ($di, $app) {
+    $app->controller = $di['customController'];
+    $app->controller->help();
 })->name('custom.help');
 
 $app->post('/custom/query', function () use ($di) {
@@ -74,8 +76,9 @@ $app->post('/custom/query', function () use ($di) {
 
 
 // Waterfall routes
-$app->get('/waterfall', function () use ($di) {
-    $di['waterfallController']->index();
+$app->get('/waterfall', function () use ($di, $app) {
+    $app->controller = $di['waterfallController'];
+    $app->controller->index();
 })->name('waterfall.list');
 
 $app->get('/waterfall/data', function () use ($di) {

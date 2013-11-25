@@ -1,6 +1,6 @@
 <?php
 
-class Xhgui_Controller_Waterfall
+class Xhgui_Controller_Waterfall extends Xhgui_Controller
 {
     protected $_app;
     protected $_profiles;
@@ -35,7 +35,8 @@ class Xhgui_Controller_Waterfall
             'direction' => $result['direction']
         );
 
-        $this->_app->render('waterfall/list.twig', array(
+        $this->_template = 'waterfall/list.twig';
+        $this->set(array(
             'runs' => $result['results'],
             'search' => $search,
             'paging' => $paging,

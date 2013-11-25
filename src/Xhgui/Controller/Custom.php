@@ -1,6 +1,6 @@
 <?php
 
-class Xhgui_Controller_Custom
+class Xhgui_Controller_Custom extends Xhgui_Controller
 {
     protected $_app;
     protected $_profiles;
@@ -13,13 +13,14 @@ class Xhgui_Controller_Custom
 
     public function get()
     {
-        $this->_app->render('custom/create.twig');
+        $this->_template = 'custom/create.twig';
     }
 
     public function help()
     {
         $res = $this->_profiles->latest();
-        $this->_app->render('custom/help.twig', array(
+        $this->_template = 'custom/help.twig';
+        $this->set(array(
             'data' => print_r($res[0]->toArray(), 1)
         ));
     }
