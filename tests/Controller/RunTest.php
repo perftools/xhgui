@@ -89,4 +89,44 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result['has_search']);
     }
 
+    public function testUrl()
+    {
+        $this->markTestIncomplete('Not done');
+    }
+
+    public function testUrlWithSearch()
+    {
+        $this->markTestIncomplete('Not done');
+    }
+
+    public function testUrlWithSearchInterval()
+    {
+        $this->markTestIncomplete('Not done');
+    }
+
+    public function testCompareNoBase()
+    {
+        $this->markTestIncomplete('Not done');
+    }
+
+    public function testCompareWithBase()
+    {
+        $this->markTestIncomplete('Not done');
+    }
+
+    public function testCompareWithBaseAndHead()
+    {
+        $this->markTestIncomplete('Not done');
+    }
+
+    public function testSymbol()
+    {
+        $this->markTestIncomplete('Not done');
+    }
+
+    public function testCallgraph()
+    {
+        $this->markTestIncomplete('Not done');
+    }
+
 }
