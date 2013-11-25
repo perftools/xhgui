@@ -10,15 +10,16 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/'
         ));
-        $di = Xhgui_ServiceContainer::instance();
-        unset($di['app']);
 
-        $di['app'] = $di->share(function ($c) {
-            return $this->getMock(
+        $di = Xhgui_ServiceContainer::instance();
+        $mock = $this->getMock(
                 'Slim\Slim',
                 array('redirect', 'render', 'urlFor'),
-                array($c['config'])
+                array($di['config'])
             );
+
+        $di['app'] = $di->share(function ($c) use ($mock) {
+            return $mock;
         });
         $this->runs = $di['runController'];
         $this->app = $di['app'];
