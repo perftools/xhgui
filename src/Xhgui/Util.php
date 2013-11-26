@@ -13,8 +13,11 @@ class Xhgui_Util
      */
     public static function simpleUrl($url)
     {
-        $url = preg_replace('/\=\d+/', '', $url);
-        // TODO Add hooks for customizing this.
-        return $url;
+        $callable = Xhgui_Config::read('profiler.simple_url');
+        if (is_callable($callable)) {
+            return call_user_func($callable, $url);
+        }
+        return preg_replace('/\=\d+/', '', $url);
     }
+
 }

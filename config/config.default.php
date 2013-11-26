@@ -23,8 +23,12 @@ return array(
     'page.limit' => 25,
 
     // Profile 1 in 100 requests.
-    'profiler.enable' => function () {
+    'profiler.enable' => function() {
         return rand(0, 100) === 42;
+    },
+
+    'profiler.simple_url' => function($url) {
+        return preg_replace('/\=\d+/', '', $url);
     }
 
 );
