@@ -15,14 +15,14 @@
 /* xhprof_enable()
  * See: http://php.net/manual/en/xhprof.constants.php
  *
- * 
+ *
  * XHPROF_FLAGS_NO_BUILTINS
  *  Omit built in functions from return
  *  This can be useful to simplify the output, but there's some value in seeing that you've called strpos() 2000 times
- *  
+ *
  * XHPROF_FLAGS_CPU
  *  Include CPU profiling information in output
- *  
+ *
  * XHPROF_FLAGS_MEMORY (integer)
  *  Include Memory profiling information in output
  *
