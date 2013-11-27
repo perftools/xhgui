@@ -220,7 +220,7 @@ tr .no-results {
 .chart-container {
     position: relative;
 }
-.chart-container .popover {
+.popover {
     min-width: 125px;
     width: auto;
 }
