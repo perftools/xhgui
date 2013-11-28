@@ -50,7 +50,7 @@ Installing Xhgui
 
   On your command prompt (irrespective of Windows or \*nix), open mongo shell
   using command 'mongo' and follow below  commands to add the index:
-  
+
   ```
   $ mongo
   > use xhprof
@@ -72,13 +72,8 @@ Installing Xhgui
 
 * Setup your webserver. See below for how to setup the rewrite rules for nginx + apache.
 
-Configure Xhgui profiling rate
--------------------------------
-
-After installing Xhgui you may want to do change how frequently you profile the
-host application. The `profiler.enable` configuration option allows you to
-provide a callback function that determines which requests are profiled. By
-default 1 in 100 requests are profiled.
+Configuration
+=============
 
 Configure webserver re-write rules
 ----------------------------------
@@ -122,8 +117,38 @@ server {
 ```
 
 
-Profiling an application / site
+Configure Xhgui profiling rate
 -------------------------------
+
+After installing Xhgui you may want to do change how frequently you profile the
+host application. The `profiler.enable` configuration option allows you to
+provide a callback function that determines which requests are profiled. By
+default 1 in 100 requests are profiled.
+
+Configure how 'simple' URLs are created
+---------------------------------------
+
+Xhgui generates 'simple' URLs for each profile collected. These simple URLs are used to generate
+the aggregate data used on the URL view. Since different applications have different requirements
+for how URLs map to logical blocks of code, a configuration option allows you to provide custom
+logic to generate the simple URL. By default all numeric values in the query string are removed. To
+provide custom logic you define the `profiler.simple_url` configuration option:
+
+```php
+// In config/config.php
+return array(
+    // Other config
+    'profile.simple_url' => function($url) {
+        // Your code goes here.
+    }
+);
+```
+
+The URL argument is the `REQUEST_URI` or `argv` value.
+
+
+Profiling an application / site
+===============================
 
 The simplest way to get an application profiled, is to use
 `external/header.php`.  This file is designed to be combined with PHP's
@@ -166,7 +191,7 @@ Be careful, importing the same file twice will load twice the run datas inside
 mongo, resulting with duplicate profiles
 
 
-Limiting Mongo Disk Usage 
+Limiting Mongo Disk Usage
 -------------------------
 
 Disk usage can grow quickly, especially when profiling applications with large
