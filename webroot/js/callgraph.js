@@ -66,16 +66,29 @@ Xhgui.callgraph = function (container, data, options) {
         .links(data.links)
         .start();
 
-    var link = svg.selectAll('.link')
+    var linkGroup = svg.selectAll('.link-g')
         .data(data.links)
-        .enter().append('line')
-            .style('stroke-width', function (d) {
-                return Math.max(0.75, Math.log(d.target.ratio));
-            })
-            .attr({
-                'class': 'link',
-                'marker-end': "url(#arrowhead)"
-            });
+        .enter()
+        .append('g')
+        .attr('class', 'link-g');
+
+    var link = linkGroup.append('line')
+        .style('stroke-width', function (d) {
+            return Math.max(0.75, Math.log(d.target.ratio));
+        })
+        .attr({
+            'class': 'link',
+            'marker-end': "url(#arrowhead)"
+        });
+
+    // Text displayed by connecting lines.
+    var linkText = linkGroup.append('text')
+        .style('display', function(d) {
+            return d.target.ratio > 5 ? 'block' : 'none';
+        })
+        .text(function(d) {
+            return d.target.callCount + ' calls';
+        });
 
     // Color scale
     var colors = d3.scale.linear()
@@ -188,6 +201,14 @@ Xhgui.callgraph = function (container, data, options) {
             .attr("x2", function(d) { return d.target.x; })
             .attr("y2", function(d) { return d.target.y; });
 
+        // Position call count text along line.
+        // 5 gives a decent margin.
+        linkText.attr('x', function(d) {
+            return d.source.x - 5 + (d.target.x - d.source.x) / 2;
+        }).attr('y', function(d) {
+            return d.source.y - 5 + (d.target.y - d.source.y) / 2;
+        });
+
         circle.attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; });
 
@@ -205,8 +226,8 @@ Xhgui.callgraph = function (container, data, options) {
             return {
                 // 7 = 1/2 width of arrow
                 x: position.x + (position.width / 2) - 7,
-                // 25 = fudge factor.
-                y: position.y - 25
+                // 28 = fudge factor.
+                y: position.y - 28
             };
         },
         formatter: function (d, i) {
