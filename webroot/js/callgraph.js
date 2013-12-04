@@ -227,8 +227,8 @@ Xhgui.callgraph = function (container, data, options) {
             return {
                 // 7 = 1/2 width of arrow
                 x: position.x + (position.width / 2) - 7,
-                // 28 = fudge factor.
-                y: position.y - 28
+                // 45 = fudge factor.
+                y: position.y - 45
             };
         },
         formatter: function (d, i) {
@@ -236,6 +236,8 @@ Xhgui.callgraph = function (container, data, options) {
             var label = '<h5>' + d.name + '</h5>' +
                 '<strong>Wall time:</strong> ' + d.ratio + '% ' +
                 ' (' + Xhgui.formatNumber(d.value) + ' <span class="units">µs</span>) ' +
+                '<br />' +
+                '<strong>Call count:</strong> ' + d.callCount +
                 '<br />' +
                 ' <a href="' + options.baseUrl + urlName + '">View symbol</a> <br />';
             return label;
