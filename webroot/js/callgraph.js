@@ -64,6 +64,8 @@ Xhgui.callgraph = function (container, data, options) {
 
     var nodes = force.nodes(data.nodes)
         .links(data.links)
+        .charge(-200)
+        .linkDistance(20)
         .start();
 
     var linkGroup = svg.selectAll('.link-g')
