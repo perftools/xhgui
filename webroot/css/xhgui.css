@@ -246,6 +246,18 @@ tr .no-results {
 }
 
 /**
+ * Popover styles.
+ */
+.popover h5 {
+    font-weight: bold;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.popover h5:first-child {
+    margin-top: 0;
+}
+
+
+/**
  * Call graph chart
  */
 .callgraph .node {

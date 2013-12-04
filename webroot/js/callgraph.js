@@ -233,10 +233,11 @@ Xhgui.callgraph = function (container, data, options) {
         },
         formatter: function (d, i) {
             var urlName = '&symbol=' + encodeURIComponent(d.name);
-            var label = '<strong>' + d.name + '</strong>' +
-                ' <a href="' + options.baseUrl + urlName + '">view</a> <br />' +
-                d.ratio + '% ' +
-                ' ' + Xhgui.formatNumber(d.value) + ' <span class="units">µs</span> ';
+            var label = '<h5>' + d.name + '</h5>' +
+                '<strong>Wall time:</strong> ' + d.ratio + '% ' +
+                ' (' + Xhgui.formatNumber(d.value) + ' <span class="units">µs</span>) ' +
+                '<br />' +
+                ' <a href="' + options.baseUrl + urlName + '">View symbol</a> <br />';
             return label;
         }
     });
