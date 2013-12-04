@@ -272,7 +272,8 @@ tr .no-results {
 .callgraph #arrowhead-active {
     fill: #000;
 }
-.callgraph .node text {
+.callgraph text {
+    font-size: 11px;
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
     text-anchor: middle;
     vertical-align: middle;

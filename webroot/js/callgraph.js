@@ -87,7 +87,8 @@ Xhgui.callgraph = function (container, data, options) {
             return d.target.ratio > 5 ? 'block' : 'none';
         })
         .text(function(d) {
-            return d.target.callCount + ' calls';
+            var text = d.target.callCount == 1 ? ' call' : ' calls';
+            return d.target.callCount + text;
         });
 
     // Color scale
