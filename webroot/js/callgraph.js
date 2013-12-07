@@ -161,7 +161,7 @@ Xhgui.callgraph = function (container, data, options) {
     // Append dots and text.
     var circle = gnodes.append('circle')
         .attr('r', function (d) {
-            return d.ratio * 0.5;
+            return Math.max(d.ratio * 0.5, 4);
         })
         .style('fill', function (d) {
             return colors(d.ratio);
