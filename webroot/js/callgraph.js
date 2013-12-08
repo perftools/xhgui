@@ -158,11 +158,15 @@ Xhgui.callgraph = function (container, data, options) {
         return linkSet;
     }
 
+    // Used to generate the radius of the circles
+    // also used to adjust link line positions.
+    var radiusCalculator = function(d) {
+        return Math.max(d.ratio * 0.5, 4);
+    };
+
     // Append dots and text.
     var circle = gnodes.append('circle')
-        .attr('r', function (d) {
-            return Math.max(d.ratio * 0.5, 4);
-        })
+        .attr('r', radiusCalculator)
         .style('fill', function (d) {
             return colors(d.ratio);
         })
@@ -193,6 +197,20 @@ Xhgui.callgraph = function (container, data, options) {
             return d.name;
         });
 
+    // Get the angle of the line that
+    // will connection d.target + d.source.
+    // We need the angle to make adjustments to the
+    // line termination
+    var slopeInfo = function(d) {
+        var run = d.target.x - d.source.x;
+        var rise = Math.abs(d.target.y - d.source.y);
+        var slope = rise / run;
+        return {
+            run: run,
+            angle: Math.atan(slope)
+        };
+    };
+
     // Position lines / dots.
     force.on("tick", function() {
         link.attr("x1", function(d) {
@@ -201,8 +219,26 @@ Xhgui.callgraph = function (container, data, options) {
             .attr("y1", function(d) {
                 return d.source.y;
             })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; });
+            .attr("x2", function(d) {
+                var slope = slopeInfo(d);
+                var radius = radiusCalculator(d.target);
+                var adjacent = Math.cos(slope.angle) * radius;
+                if (slope.run > 0) {
+                    return d.target.x - adjacent;
+                }
+                return d.target.x + adjacent;
+
+                return d.target.x;
+            })
+            .attr("y2", function(d) {
+                var slope = slopeInfo(d);
+                var radius = radiusCalculator(d.target);
+                var opposite = Math.sin(slope.angle) * radius;
+                if (slope.run > 0) {
+                    return d.target.y - opposite;
+                }
+                return d.target.y + opposite;
+            });
 
         // Position call count text along line.
         // 5 gives a decent margin.
