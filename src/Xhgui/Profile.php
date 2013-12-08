@@ -471,6 +471,7 @@ class Xhgui_Profile
 
                 $this->_nodes[] = array(
                     'name' => $childName,
+                    'callCount' => $metrics['ct'],
                     'value' => $metrics['wt'],
                 );
             } else {

@@ -64,18 +64,34 @@ Xhgui.callgraph = function (container, data, options) {
 
     var nodes = force.nodes(data.nodes)
         .links(data.links)
+        .charge(-200)
+        .linkDistance(20)
         .start();
 
-    var link = svg.selectAll('.link')
+    var linkGroup = svg.selectAll('.link-g')
         .data(data.links)
-        .enter().append('line')
-            .style('stroke-width', function (d) {
-                return Math.max(0.75, Math.log(d.target.ratio));
-            })
-            .attr({
-                'class': 'link',
-                'marker-end': "url(#arrowhead)"
-            });
+        .enter()
+        .append('g')
+        .attr('class', 'link-g');
+
+    var link = linkGroup.append('line')
+        .style('stroke-width', function (d) {
+            return Math.max(0.75, Math.log(d.target.ratio));
+        })
+        .attr({
+            'class': 'link',
+            'marker-end': "url(#arrowhead)"
+        });
+
+    // Text displayed by connecting lines.
+    var linkText = linkGroup.append('text')
+        .style('display', function(d) {
+            return d.target.ratio > 5 ? 'block' : 'none';
+        })
+        .text(function(d) {
+            var text = d.target.callCount == 1 ? ' call' : ' calls';
+            return d.target.callCount + text;
+        });
 
     // Color scale
     var colors = d3.scale.linear()
@@ -142,11 +158,15 @@ Xhgui.callgraph = function (container, data, options) {
         return linkSet;
     }
 
+    // Used to generate the radius of the circles
+    // also used to adjust link line positions.
+    var radiusCalculator = function(d) {
+        return Math.max(d.ratio * 0.5, 4);
+    };
+
     // Append dots and text.
     var circle = gnodes.append('circle')
-        .attr('r', function (d) {
-            return d.ratio * 0.5;
-        })
+        .attr('r', radiusCalculator)
         .style('fill', function (d) {
             return colors(d.ratio);
         })
@@ -177,7 +197,21 @@ Xhgui.callgraph = function (container, data, options) {
             return d.name;
         });
 
-    // Position lines / dots.
+    // Get the angle of the line that
+    // will connect d.target + d.source.
+    // We need the angle to make adjustments to the
+    // line termination so the arrows show.
+    var slopeInfo = function(d) {
+        var run = d.target.x - d.source.x;
+        var rise = Math.abs(d.target.y - d.source.y);
+        var slope = rise / run;
+        return {
+            run: run,
+            angle: Math.atan(slope)
+        };
+    };
+
+    // Position lines / dots on each tick of the graph.
     force.on("tick", function() {
         link.attr("x1", function(d) {
                 return d.source.x;
@@ -185,8 +219,37 @@ Xhgui.callgraph = function (container, data, options) {
             .attr("y1", function(d) {
                 return d.source.y;
             })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; });
+            .attr("x2", function(d) {
+                // Use slope, radius and trigonometry to reposition the end
+                // of the line to where it would intersect with the circle.
+                var slope = slopeInfo(d);
+                var radius = radiusCalculator(d.target);
+                var adjacent = Math.cos(slope.angle) * radius;
+                if (slope.run > 0) {
+                    return d.target.x - adjacent;
+                }
+                return d.target.x + adjacent;
+
+                return d.target.x;
+            })
+            .attr("y2", function(d) {
+                // See x2 above.
+                var slope = slopeInfo(d);
+                var radius = radiusCalculator(d.target);
+                var opposite = Math.sin(slope.angle) * radius;
+                if (slope.run > 0) {
+                    return d.target.y - opposite;
+                }
+                return d.target.y + opposite;
+            });
+
+        // Position call count text along line.
+        // 5 gives a decent margin.
+        linkText.attr('x', function(d) {
+            return d.source.x - 5 + (d.target.x - d.source.x) / 2;
+        }).attr('y', function(d) {
+            return d.source.y - 5 + (d.target.y - d.source.y) / 2;
+        });
 
         circle.attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; });
@@ -205,16 +268,19 @@ Xhgui.callgraph = function (container, data, options) {
             return {
                 // 7 = 1/2 width of arrow
                 x: position.x + (position.width / 2) - 7,
-                // 25 = fudge factor.
-                y: position.y - 25
+                // 45 = fudge factor.
+                y: position.y - 45
             };
         },
         formatter: function (d, i) {
             var urlName = '&symbol=' + encodeURIComponent(d.name);
-            var label = '<strong>' + d.name + '</strong>' +
-                ' <a href="' + options.baseUrl + urlName + '">view</a> <br />' +
-                d.ratio + '% ' +
-                ' ' + Xhgui.formatNumber(d.value) + ' <span class="units">µs</span> ';
+            var label = '<h5>' + d.name + '</h5>' +
+                '<strong>Wall time:</strong> ' + d.ratio + '% ' +
+                ' (' + Xhgui.formatNumber(d.value) + ' <span class="units">µs</span>) ' +
+                '<br />' +
+                '<strong>Call count:</strong> ' + d.callCount +
+                '<br />' +
+                ' <a href="' + options.baseUrl + urlName + '">View symbol</a> <br />';
             return label;
         }
     });

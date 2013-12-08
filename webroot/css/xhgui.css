@@ -246,6 +246,18 @@ tr .no-results {
 }
 
 /**
+ * Popover styles.
+ */
+.popover h5 {
+    font-weight: bold;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.popover h5:first-child {
+    margin-top: 0;
+}
+
+
+/**
  * Call graph chart
  */
 .callgraph .node {
@@ -272,7 +284,8 @@ tr .no-results {
 .callgraph #arrowhead-active {
     fill: #000;
 }
-.callgraph .node text {
+.callgraph text {
+    font-size: 11px;
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
     text-anchor: middle;
     vertical-align: middle;
