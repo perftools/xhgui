@@ -198,9 +198,9 @@ Xhgui.callgraph = function (container, data, options) {
         });
 
     // Get the angle of the line that
-    // will connection d.target + d.source.
+    // will connect d.target + d.source.
     // We need the angle to make adjustments to the
-    // line termination
+    // line termination so the arrows show.
     var slopeInfo = function(d) {
         var run = d.target.x - d.source.x;
         var rise = Math.abs(d.target.y - d.source.y);
@@ -211,7 +211,7 @@ Xhgui.callgraph = function (container, data, options) {
         };
     };
 
-    // Position lines / dots.
+    // Position lines / dots on each tick of the graph.
     force.on("tick", function() {
         link.attr("x1", function(d) {
                 return d.source.x;
@@ -220,6 +220,8 @@ Xhgui.callgraph = function (container, data, options) {
                 return d.source.y;
             })
             .attr("x2", function(d) {
+                // Use slope, radius and trigonometry to reposition the end
+                // of the line to where it would intersect with the circle.
                 var slope = slopeInfo(d);
                 var radius = radiusCalculator(d.target);
                 var adjacent = Math.cos(slope.angle) * radius;
@@ -231,6 +233,7 @@ Xhgui.callgraph = function (container, data, options) {
                 return d.target.x;
             })
             .attr("y2", function(d) {
+                // See x2 above.
                 var slope = slopeInfo(d);
                 var radius = radiusCalculator(d.target);
                 var opposite = Math.sin(slope.angle) * radius;
