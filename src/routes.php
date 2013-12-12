@@ -9,6 +9,9 @@ $app->error(function (Exception $e) use ($di, $app) {
         new Xhgui_Twig_Extension($app)
     );
 
+    // Remove the controller so we don't render it.
+    unset($app->controller);
+
     $app->view($view);
     $app->render('error/view.twig', array(
         'message' => $e->getMessage(),
