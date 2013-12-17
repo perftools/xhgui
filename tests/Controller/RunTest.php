@@ -91,7 +91,19 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
 
     public function testUrl()
     {
-        $this->markTestIncomplete('Not done');
+        Environment::mock(array(
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/url/view',
+            'QUERY_STRING' => 'url=%2Ftasks',
+        ));
+
+        $this->runs->url();
+
+        $result = $this->runs->templateVars();
+        $this->assertEquals('url.view', $result['base_url']);
+        $this->assertEquals('/tasks', $result['url']);
+        $this->assertArrayHasKey('chart_data', $result);
+        $this->assertArrayHasKey('runs', $result);
     }
 
     public function testUrlWithSearch()
