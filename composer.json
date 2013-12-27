@@ -1,6 +1,7 @@
 {
     "name": "perftools/xhgui",
     "version": "0.1",
+    "licence": "MIT",
     "autoload": {
         "psr-0": {
             "Xhgui_": "src/"
