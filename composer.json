@@ -1,5 +1,5 @@
 {
-    "name": "Xhgui 2",
+    "name": "perftools/xhgui",
     "version": "0.1",
     "autoload": {
         "psr-0": {
