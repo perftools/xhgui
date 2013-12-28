@@ -6,7 +6,7 @@ php:
   - 5.5
 
 services:
-  - mongod
+  - mongodb
 
 before_script:
   - pecl install xhprof-beta
