@@ -9,10 +9,12 @@ services:
   - mongod
 
 before_script:
+  - pecl install mongo
+  - pecl install xhprof-beta
+  - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "extension = xhprof.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - phpenv rehash
   - composer install --prefer-dist --dev
   - chmod -R 0777 cache/
-  - pecl install mongo
-  - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - phpenv rehash
 
 script: phpunit
