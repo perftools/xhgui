@@ -234,8 +234,18 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $this->set(array(
             'profile' => $profile,
             'date_format' => $this->_app->config('date_format'),
-            'callgraph' => $profile->getCallgraph(),
         ));
+    }
+
+    public function callgraphData()
+    {
+        $request = $this->_app->request();
+        $response = $this->_app->response();
+        $profile = $this->_profiles->get($request->get('id'));
+        $callgraph = $profile->getCallgraph();
+
+        $response['Content-Type'] = 'application/json';
+        return $response->body(json_encode($callgraph));
     }
 
 }

@@ -152,6 +152,22 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey('callgraph', $result);
     }
 
+    public function testCallgraphData()
+    {
+        loadFixture($this->profiles, 'tests/fixtures/results.json');
+        Environment::mock(array(
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/',
+            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
+        ));
+
+        $this->runs->callgraphData();
+        $response = $this->app->response();
+
+        $this->assertEquals('application/json', $response['Content-Type']);
+        $this->assertStringStartsWith('{"', $response->body());
+    }
+
     public function testCallgraphMissing()
     {
         $this->markTestIncomplete('Not done');
