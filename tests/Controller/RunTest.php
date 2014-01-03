@@ -168,9 +168,4 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
         $this->assertStringStartsWith('{"', $response->body());
     }
 
-    public function testCallgraphMissing()
-    {
-        $this->markTestIncomplete('Not done');
-    }
-
 }
