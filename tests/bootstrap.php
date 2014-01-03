@@ -25,6 +25,9 @@ function loadFixture($profiles, $file) {
             $time = strtotime($record['meta']['request_time']);
             $record['meta']['request_time'] = new MongoDate($time);
         }
+        if (isset($record['_id'])) {
+            $record['_id'] = new MongoId($record['_id']);
+        }
         $profiles->insert($record);
     }
 }
