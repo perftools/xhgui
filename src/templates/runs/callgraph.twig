@@ -21,13 +21,15 @@ the actual method callgraph.</p>
 <script src="{{ static('js/callgraph.js') }}"></script>
 <script>
 $(document).ready(function () {
-    Xhgui.callgraph(
-        '#callgraph-image',
-        {{ callgraph|json_encode|raw }},
-        {
-            baseUrl: "{{ url('run.symbol', {'id': profile.id|trim }) }}"
-        }
-    );
+    $.getJSON("{{ url('run.callgraph.data', {'id': profile.id|trim}) }}", function (data) {
+        Xhgui.callgraph(
+            '#callgraph-image',
+            data,
+            {
+                baseUrl: "{{ url('run.symbol', {'id': profile.id|trim }) }}"
+            }
+        );
+    });
 });
 </script>
 {% endblock %}
