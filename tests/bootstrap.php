@@ -13,3 +13,18 @@ $di['config'] = $config;
 
 // Clean up globals.
 unset($di, $config);
+
+/**
+ * Load a fixture into the database.
+ */
+function loadFixture($profiles, $file) {
+    $contents = file_get_contents($file);
+    $data = json_decode($contents, true);
+    foreach ($data as $record) {
+        if (isset($record['meta']['request_time'])) {
+            $time = strtotime($record['meta']['request_time']);
+            $record['meta']['request_time'] = new MongoDate($time);
+        }
+        $profiles->insert($record);
+    }
+}
