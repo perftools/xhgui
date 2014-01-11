@@ -130,13 +130,15 @@ Xhgui.tooltip = function (container, options) {
     }
 
     function createTooltip(container) {
-        var exists = container.select('.popover'),
-            popover, content;
+        var exists = container.select('#chart-popover'),
+            popover,
+            content;
 
         if (exists.empty()) {
             popover = container.append('div');
 
             popover.attr('class', 'popover top')
+                .attr('id', 'chart-popover')
                 .append('div').attr('class', 'arrow');
 
             content = popover.append('div')
