@@ -67,11 +67,10 @@ $(document).ready(function () {
     var popover = $('#metric-popover');
     var ok = popover.find('.btn');
 
-    // Hack in place.
-    popover.css({left: -120, top: 20});
-
     gear.on('click', function(e) {
-        popover.toggle();
+        // Hack in place.
+        popover.show();
+        popover.css({left: -120, top: 20});
         return false;
     });
 
