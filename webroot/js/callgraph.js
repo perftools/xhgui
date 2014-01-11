@@ -275,7 +275,7 @@ Xhgui.callgraph = function (container, data, options) {
         formatter: function (d, i) {
             var urlName = '&symbol=' + encodeURIComponent(d.name);
             var label = '<h5>' + d.name + '</h5>' +
-                '<strong>Wall time:</strong> ' + d.ratio + '% ' +
+                '<strong>' + Xhgui.metricName(data.metric) + ':</strong> ' + d.ratio + '% ' +
                 ' (' + Xhgui.formatNumber(d.value) + ' <span class="units">µs</span>) ' +
                 '<br />' +
                 '<strong>Call count:</strong> ' + d.callCount +

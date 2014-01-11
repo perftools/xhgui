@@ -7,29 +7,96 @@
 {% block content %}
 <h1>Callgraph for {{ profile.meta.url }} on {{ profile.meta('SERVER.REQUEST_TIME')|date(date_format) }}</h1>
 
-<p class="alert alert-info">Methods that represent 1% or less of the entire execution will be omitted
+<div class="btn-group pull-right">
+    <a href="#" id="customize-graph" class="btn btn-default btn-small">
+        Gear
+    </a>
+    <div class="popover bottom" id="metric-popover">
+        <div class="arrow"></div>
+        <div class="popover-content">
+            <h4>Metric</h4>
+            <div class="control-group">
+                <label>
+                    <input type="radio" name="metric" value="wt">
+                    Wall time
+                </label>
+                <label>
+                    <input type="radio" name="metric" value="cpu">
+                    CPU time
+                </label>
+                <label>
+                    <input type="radio" name="metric" value="mu">
+                    Memory use
+                </label>
+                <label>
+                    <input type="radio" name="metric" value="ewt">
+                    Exclusive wall time
+                </label>
+                <label>
+                    <input type="radio" name="metric" value="ecpu">
+                    Exclusive CPU time
+                </label>
+                <label>
+                    <input type="radio" name="metric" value="emu">
+                    Exclusive memory use
+                </label>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary">Apply</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p class="alert alert-info clear">
+Methods that represent 1% or less of the entire execution will be omitted
 from the callgraph result.</p>
 
 <div class="chart-container" id="callgraph-image"></div>
 
 <p>Due to the limitations in how xhprof collects data, callgraphs are not 100% reflective of
 the actual method callgraph.</p>
-
 {% endblock %}
 
 {% block jsfoot %}
 <script src="{{ static('js/callgraph.js') }}"></script>
 <script>
 $(document).ready(function () {
-    $.getJSON("{{ url('run.callgraph.data', {'id': profile.id|trim}) }}", function (data) {
+    var gear = $('#customize-graph');
+    var radios = $('input[name=metric]');
+    var popover = $('#metric-popover');
+    var ok = popover.find('.btn');
+
+    // Hack in place.
+    popover.css({left: -120, top: 20});
+
+    gear.on('click', function(e) {
+        popover.toggle();
+        return false;
+    });
+
+    ok.on('click', function(e) {
+        var metric = radios.filter(':checked').val();
+        popover.hide();
+        loadCallgraph(metric);
+        return false;
+    });
+
+    loadCallgraph('wt');
+});
+
+function loadCallgraph(metric) {
+    var url = "{{ url('run.callgraph.data', {'id': profile.id|trim}) }}";
+    var baseUrl = "{{ url('run.symbol', {'id': profile.id|trim }) }}";
+    $.getJSON(url + '&metric=' + metric, function (data) {
+        $('#callgraph-image').empty();
+
         Xhgui.callgraph(
             '#callgraph-image',
             data,
-            {
-                baseUrl: "{{ url('run.symbol', {'id': profile.id|trim }) }}"
-            }
+            {baseUrl: baseUrl}
         );
     });
-});
+}
 </script>
 {% endblock %}

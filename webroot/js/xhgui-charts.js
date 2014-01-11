@@ -1,5 +1,22 @@
 window.Xhgui = {};
 
+Xhgui.metricName = function (metric) {
+    var map = {
+        pmu: "Peak Memory Use",
+        mu: "Memory Use",
+        cpu: "CPU time",
+        wt: "Wall time",
+        epmu: "Exclusive peak memory use",
+        emu: "Exclusive memory use",
+        ecpu: "Exclusive CPU",
+        ewt: "Exclusive wall time"
+    };
+    if (!map[metric]) {
+        return "Unknown";
+    }
+    return map[metric];
+};
+
 /**
  * Color generator for graphs.
  */

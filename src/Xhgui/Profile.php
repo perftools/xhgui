@@ -437,13 +437,15 @@ class Xhgui_Profile
      */
     public function getCallgraph($metric = 'wt')
     {
-        if (!in_array($metric, $this->_keys)) {
+        $valid = array_merge($this->_keys, $this->_exclusiveKeys);
+        if (!in_array($metric, $valid)) {
             throw new Exception("Unknown metric '$metric'. Cannot generate callgraph.");
         }
         $main = $this->_collapsed['main()'][$metric];
         $this->_visited = $this->_nodes = $this->_links = array();
         $this->_callgraphData(self::NO_PARENT, $main, $metric);
         $out = array(
+            'metric' => $metric,
             'total' => $main,
             'nodes' => $this->_nodes,
             'links' => $this->_links
