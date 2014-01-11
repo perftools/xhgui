@@ -59,7 +59,7 @@ Xhgui.callgraph = function (container, data, options) {
     data.nodes[0].y = 60;
 
     for (var i = 0, len = data.nodes.length; i < len; i++) {
-        data.nodes[i].ratio = Math.ceil(data.nodes[i].value / data.totalTime * 100);
+        data.nodes[i].ratio = Math.ceil(data.nodes[i].value / data.total * 100);
     }
 
     var nodes = force.nodes(data.nodes)

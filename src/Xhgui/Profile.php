@@ -435,13 +435,16 @@ class Xhgui_Profile
      *
      * @return array
      */
-    public function getCallgraph()
+    public function getCallgraph($metric = 'wt')
     {
-        $totalTime = $this->_collapsed['main()']['wt'];
+        if (!in_array($metric, $this->_keys)) {
+            throw new Exception("Unknown metric '$metric'. Cannot generate callgraph.");
+        }
+        $main = $this->_collapsed['main()'][$metric];
         $this->_visited = $this->_nodes = $this->_links = array();
-        $this->_callgraphData(self::NO_PARENT, $totalTime);
+        $this->_callgraphData(self::NO_PARENT, $main, $metric);
         $out = array(
-            'totalTime' => $totalTime,
+            'total' => $main,
             'nodes' => $this->_nodes,
             'links' => $this->_links
         );
@@ -449,7 +452,7 @@ class Xhgui_Profile
         return $out;
     }
 
-    protected function _callgraphData($parentName, $totalTime, $parentIndex = null)
+    protected function _callgraphData($parentName, $main, $metric, $parentIndex = null)
     {
         // Leaves don't have children, and don't have links/nodes to add.
         if (!isset($this->_indexed[$parentName])) {
@@ -458,7 +461,7 @@ class Xhgui_Profile
 
         $children = $this->_indexed[$parentName];
         foreach ($children as $childName => $metrics) {
-            if ($metrics['wt'] / $totalTime <= 0.01) {
+            if ($metrics[$metric] / $main <= 0.01) {
                 continue;
             }
             $revisit = false;
@@ -472,7 +475,7 @@ class Xhgui_Profile
                 $this->_nodes[] = array(
                     'name' => $childName,
                     'callCount' => $metrics['ct'],
-                    'value' => $metrics['wt'],
+                    'value' => $metrics[$metric],
                 );
             } else {
                 $revisit = true;
@@ -490,7 +493,7 @@ class Xhgui_Profile
             // If the current function has more children,
             // walk that call subgraph.
             if (isset($this->_indexed[$childName]) && !$revisit) {
-                $this->_callgraphData($childName, $totalTime, $index);
+                $this->_callgraphData($childName, $main, $metric, $index);
             }
         }
     }
