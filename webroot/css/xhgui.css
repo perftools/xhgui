@@ -290,6 +290,12 @@ tr .no-results {
     text-anchor: middle;
     vertical-align: middle;
 }
+#metric-popover {
+    left: auto;
+    right: 50px;
+    width: 250px;
+    top: -58px;
+}
 
 /**
  * Waterfall chart
