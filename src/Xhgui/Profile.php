@@ -441,7 +441,9 @@ class Xhgui_Profile
         if (!in_array($metric, $valid)) {
             throw new Exception("Unknown metric '$metric'. Cannot generate callgraph.");
         }
+        $this->calculateExclusive();
         $main = $this->_collapsed['main()'][$metric];
+
         $this->_visited = $this->_nodes = $this->_links = array();
         $this->_callgraphData(self::NO_PARENT, $main, $metric);
         $out = array(
@@ -463,10 +465,10 @@ class Xhgui_Profile
 
         $children = $this->_indexed[$parentName];
         foreach ($children as $childName => $metrics) {
+            $metrics = $this->_collapsed[$childName];
             if ($metrics[$metric] / $main <= 0.01) {
                 continue;
             }
-            $metrics = $this->_collapsed[$childName];
             $revisit = false;
 
             // Keep track of which nodes we've visited and their position
