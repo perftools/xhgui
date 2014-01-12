@@ -257,7 +257,8 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $profile = new Xhgui_Profile($this->_fixture[1]);
 
         $expected = array(
-            'totalTime' => 35,
+            'metric' => 'wt',
+            'total' => 35,
             'nodes' => array(
                 array(
                     'name' => 'main()',
@@ -276,8 +277,8 @@ class ProfileTest extends PHPUnit_Framework_TestCase
                 ),
                 array(
                     'name' => 'strlen()',
-                    'value' => 1,
-                    'callCount' => 1,
+                    'value' => 2,
+                    'callCount' => 2,
                 ),
                 array(
                     'name' => 'drink_beer()',
@@ -332,7 +333,8 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $profile = new Xhgui_Profile($this->_fixture[2]);
 
         $expected = array(
-            'totalTime' => 50139,
+            'metric' => 'wt',
+            'total' => 50139,
             'nodes' => array(
                 array(
                     'name' => 'main()',
@@ -346,8 +348,8 @@ class ProfileTest extends PHPUnit_Framework_TestCase
                 ),
                 array(
                     'name' => 'open()',
-                    'value' => 5000,
-                    'callCount' => 1,
+                    'value' => 10000,
+                    'callCount' => 2,
                 ),
                 array(
                     'name' => 'strlen()',

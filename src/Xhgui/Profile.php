@@ -466,6 +466,7 @@ class Xhgui_Profile
             if ($metrics[$metric] / $main <= 0.01) {
                 continue;
             }
+            $metrics = $this->_collapsed[$childName];
             $revisit = false;
 
             // Keep track of which nodes we've visited and their position
