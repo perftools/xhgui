@@ -428,6 +428,24 @@ class Xhgui_Profile
     }
 
     /**
+     * Get the max value for any give metric.
+     *
+     * @param string $metric The metric to get a max value for.
+     */
+    protected function _maxValue($metric)
+    {
+        return array_reduce(
+            $this->_collapsed,
+            function($result, $item) use ($metric) {
+                if ($item[$metric] > $result) {
+                    return $result;
+                }
+            },
+            0
+        );
+    }
+
+    /**
      * Return a structured array suitable for generating callgraph visualizations.
      *
      * Functions whose inclusive time is less than 2% of the total time will
@@ -442,7 +460,13 @@ class Xhgui_Profile
             throw new Exception("Unknown metric '$metric'. Cannot generate callgraph.");
         }
         $this->calculateExclusive();
-        $main = $this->_collapsed['main()'][$metric];
+
+        // Non exclusive metrics are always main() because it is the root call scope.
+        if (in_array($metric, $this->_exclusiveKeys)) {
+            $main = $this->_maxValue($metric);
+        } else {
+            $main = $this->_collapsed['main()'][$metric];
+        }
 
         $this->_visited = $this->_nodes = $this->_links = array();
         $this->_callgraphData(self::NO_PARENT, $main, $metric);
