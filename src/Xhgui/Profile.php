@@ -318,7 +318,6 @@ class Xhgui_Profile
             $data['epmu'] = $data['pmu'];
         }
         unset($data);
-        $exclusiveKeys = array('ewt', 'emu', 'ecpu', 'ect', 'epmu');
 
         // Go over each method and remove each childs metrics
         // from the parent.
@@ -438,8 +437,9 @@ class Xhgui_Profile
             $this->_collapsed,
             function($result, $item) use ($metric) {
                 if ($item[$metric] > $result) {
-                    return $result;
+                    return $item[$metric];
                 }
+                return $result;
             },
             0
         );
