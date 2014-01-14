@@ -31,7 +31,7 @@
                 <div class="control-group">
                     <label>
                         Threshold
-                        <input type="number" value="0.01" step="0.001">
+                        <input type="number" name="threshold" value="0.01" step="0.001">
                     </label>
                 </div>
                 <div class="btn-group">
@@ -63,6 +63,8 @@ $(document).ready(function () {
     var gear = $('#customize-graph');
     var select = $('select[name=metric]');
     var popover = $('#metric-popover');
+    var threshold = $('input[name=threshold]');
+    var thresholdDisplay = $('#threshold-display');
     var ok = popover.find('.btn');
 
     gear.on('click', function(e) {
@@ -79,19 +81,30 @@ $(document).ready(function () {
 
     ok.on('click', function(e) {
         var metric = select.val();
+        var thresh = threshold.val();
         popover.hide();
-        loadCallgraph(metric);
+        loadCallgraph(metric, thresh);
         return false;
     });
 
     loadCallgraph('wt');
 });
 
-function loadCallgraph(metric) {
+function updateThreshold(value) {
+    var display = $('#threshold-display');
+    display.text(parseFloat(value) * 100);
+}
+
+function loadCallgraph(metric, threshold) {
+    if (threshold === undefined) {
+        threshold = 0.01;
+    }
     var url = "{{ url('run.callgraph.data', {'id': profile.id|trim}) }}";
     var baseUrl = "{{ url('run.symbol', {'id': profile.id|trim }) }}";
-    $.getJSON(url + '&metric=' + metric, function (data) {
+    $.getJSON(url + '&metric=' + metric + '&threshold=' + threshold, function (data) {
         $('#callgraph-image').empty();
+
+        updateThreshold(threshold);
 
         Xhgui.callgraph(
             '#callgraph-image',
