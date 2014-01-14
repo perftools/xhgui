@@ -273,10 +273,14 @@ Xhgui.callgraph = function (container, data, options) {
             };
         },
         formatter: function (d, i) {
+            var units = 'µs';
+            if (data.metric.indexOf('mu') !== -1) {
+              units = 'bytes';
+            }
             var urlName = '&symbol=' + encodeURIComponent(d.name);
             var label = '<h5>' + d.name + '</h5>' +
                 '<strong>' + Xhgui.metricName(data.metric) + ':</strong> ' + d.ratio + '% ' +
-                ' (' + Xhgui.formatNumber(d.value) + ' <span class="units">µs</span>) ' +
+                ' (' + Xhgui.formatNumber(d.value) + ' <span class="units">' + units + '</span>) ' +
                 '<br />' +
                 '<strong>Call count:</strong> ' + d.callCount +
                 '<br />' +
