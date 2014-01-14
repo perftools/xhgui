@@ -242,7 +242,8 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $request = $this->_app->request();
         $response = $this->_app->response();
         $profile = $this->_profiles->get($request->get('id'));
-        $callgraph = $profile->getCallgraph($request->get('metric', 'wt'));
+        $metric = $request->get('metric') ?: 'wt';
+        $callgraph = $profile->getCallgraph($metric);
 
         $response['Content-Type'] = 'application/json';
         return $response->body(json_encode($callgraph));
