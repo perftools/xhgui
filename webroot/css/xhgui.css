@@ -217,6 +217,7 @@ tr .no-results {
 /**
  * Chart styles
  */
+.relative-box,
 .chart-container {
     position: relative;
 }
@@ -292,9 +293,7 @@ tr .no-results {
 }
 #metric-popover {
     left: auto;
-    right: 50px;
     width: 250px;
-    top: -58px;
 }
 
 /**
