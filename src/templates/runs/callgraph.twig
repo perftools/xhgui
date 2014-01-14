@@ -42,7 +42,7 @@
     </div>
 
     <p class="alert alert-info pull-left">
-        Methods that represent <span id="threshold-display">1</span>% or less of the entire execution will be omitted
+        Methods that represent <span id="threshold-display"></span>% or less of the entire execution will be omitted
     from the callgraph result.</p>
 
 </div>
@@ -87,7 +87,7 @@ $(document).ready(function () {
         return false;
     });
 
-    loadCallgraph('wt');
+    loadCallgraph('wt', 0.01);
 });
 
 function updateThreshold(value) {
@@ -96,9 +96,6 @@ function updateThreshold(value) {
 }
 
 function loadCallgraph(metric, threshold) {
-    if (threshold === undefined) {
-        threshold = 0.01;
-    }
     var url = "{{ url('run.callgraph.data', {'id': profile.id|trim}) }}";
     var baseUrl = "{{ url('run.symbol', {'id': profile.id|trim }) }}";
     $.getJSON(url + '&metric=' + metric + '&threshold=' + threshold, function (data) {
