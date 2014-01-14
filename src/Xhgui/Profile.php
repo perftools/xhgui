@@ -453,7 +453,7 @@ class Xhgui_Profile
      *
      * @return array
      */
-    public function getCallgraph($metric = 'wt')
+    public function getCallgraph($metric = 'wt', $threshold = 0.01)
     {
         $valid = array_merge($this->_keys, $this->_exclusiveKeys);
         if (!in_array($metric, $valid)) {
@@ -469,7 +469,7 @@ class Xhgui_Profile
         }
 
         $this->_visited = $this->_nodes = $this->_links = array();
-        $this->_callgraphData(self::NO_PARENT, $main, $metric);
+        $this->_callgraphData(self::NO_PARENT, $main, $metric, $threshold);
         $out = array(
             'metric' => $metric,
             'total' => $main,
@@ -480,7 +480,7 @@ class Xhgui_Profile
         return $out;
     }
 
-    protected function _callgraphData($parentName, $main, $metric, $parentIndex = null)
+    protected function _callgraphData($parentName, $main, $metric, $threshold, $parentIndex = null)
     {
         // Leaves don't have children, and don't have links/nodes to add.
         if (!isset($this->_indexed[$parentName])) {
@@ -490,7 +490,7 @@ class Xhgui_Profile
         $children = $this->_indexed[$parentName];
         foreach ($children as $childName => $metrics) {
             $metrics = $this->_collapsed[$childName];
-            if ($metrics[$metric] / $main <= 0.01) {
+            if ($metrics[$metric] / $main <= $threshold) {
                 continue;
             }
             $revisit = false;
@@ -522,7 +522,7 @@ class Xhgui_Profile
             // If the current function has more children,
             // walk that call subgraph.
             if (isset($this->_indexed[$childName]) && !$revisit) {
-                $this->_callgraphData($childName, $main, $metric, $index);
+                $this->_callgraphData($childName, $main, $metric, $threshold, $index);
             }
         }
     }
