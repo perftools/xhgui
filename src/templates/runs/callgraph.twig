@@ -28,6 +28,12 @@
                         <option value="epmu">Exclusive peak memory use</option>
                     </select>
                 </div>
+                <div class="control-group">
+                    <label>
+                        Threshold
+                        <input type="number" value="0.01" step="0.001">
+                    </label>
+                </div>
                 <div class="btn-group">
                     <button class="btn btn-primary">Apply</button>
                 </div>
@@ -36,7 +42,7 @@
     </div>
 
     <p class="alert alert-info pull-left">
-    Methods that represent 1% or less of the entire execution will be omitted
+        Methods that represent <span id="threshold-display">1</span>% or less of the entire execution will be omitted
     from the callgraph result.</p>
 
 </div>
