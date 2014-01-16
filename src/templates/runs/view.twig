@@ -15,7 +15,7 @@
         <ul class="nav nav-list">
             <li class="nav-header">This Run</li>
             <li><strong>URL</strong> <a href="{{ url('url.view', {'url': result.meta('url')|simple_url }) }}">{{ result.meta('url') }}</a></li>
-            <li><strong>Time</strong> {{ result.meta('SERVER.REQUEST_TIME')|date(date_format) }}</li>
+            <li><strong>Time</strong> {{ result.date|date(date_format) }}</li>
             <li><strong>ID</strong> <a href="{{ url('custom.help', {id: result.id|trim }) }}">{{ result.id }}</a></li>
             <li><strong>Wall Time</strong> {{ result.get('main()', 'wt')|as_time }}</li>
             <li><strong>CPU Time</strong> {{ result.get('main()', 'cpu')|as_time }}</li>

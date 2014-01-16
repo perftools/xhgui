@@ -44,7 +44,7 @@
             </td>
             {% endif %}
             <td><a href="{{ url('url.view', {'url': result.meta.simple_url}) }}">{{ result.meta.url }}</a></td>
-            <td><a href="{{ url('run.view', {'id': result.id|trim }) }}">{{ result.meta.SERVER.REQUEST_TIME|date(date_format) }}</a></td>
+            <td><a href="{{ url('run.view', {'id': result.id|trim }) }}">{{ result.date|date(date_format) }}</a></td>
             <td class="right">{{ result.get('main()', 'wt') |as_time }}</td>
             <td class="right">{{ result.get('main()', 'cpu') |as_time }}</td>
             <td class="right">{{ result.get('main()', 'mu') |as_bytes }}</td>
