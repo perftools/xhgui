@@ -12,8 +12,12 @@
     <tbody>
         <tr>
             <th>
-                <span class="badge compare-base">base</span>
-                <a target="_blank" href="{{ url('run.view', {id: comparison.base.id|trim}) }}">{{ comparison.base.id }}</a>
+                <span class="badge compare-base">
+                    base - {{ comparison.base.date|date(date_format) }}
+                </span>
+                <a target="_blank" href="{{ url('run.view', {id: comparison.base.id|trim}) }}">
+                    {{ comparison.base.id }}
+                </a>
             </th>
             <td class="right">{{ comparison.base.functionCount }}</td>
             <td class="right">{{ comparison.base.get('main()', 'wt') |as_time }}</td>
@@ -23,8 +27,12 @@
         </tr>
         <tr>
             <th>
-                <span class="badge compare-head">head</span>
-                <a target="_blank" href="{{ url('run.view', {id: comparison.head.id|trim}) }}">{{ comparison.head.id }}</a>
+                <span class="badge compare-head">
+                    head - {{ comparison.head.date|date(date_format) }}
+                </span>
+                <a target="_blank" href="{{ url('run.view', {id: comparison.head.id|trim}) }}">
+                    {{ comparison.head.id }}
+                </a>
             </th>
             <td class="right">{{ comparison.head.functionCount }}</td>
             <td class="right">{{ comparison.head.get('main()', 'wt') |as_time }}</td>

@@ -17,13 +17,13 @@
 {% else %}
     <div class="row-fluid row-spaced">
         <span class="badge compare-base">
-            base: {{ base_run.meta.simple_url }} - {{ base_run.meta.SERVER.REQUEST_TIME|date(date_format) }}
+            base: {{ base_run.meta.simple_url }} - {{ base_run.date|date(date_format) }}
         </span>
         <span class="compare-elipsis">&hellip;</span>
 
         {% if head_run %}
         <span class="badge compare-head">
-            head: {{ head_run.meta.simple_url }} - {{ head_run.meta.SERVER.REQUEST_TIME|date(date_format) }}
+            head: {{ head_run.meta.simple_url }} - {{ head_run.date|date(date_format) }}
         </span>
         <a class="btn btn-mini" href="{{ url('run.compare', {'base': base_run.id|trim }) }}">change</a>
         <a class="btn btn-mini" href="{{ url('run.compare', {'base': head_run.id|trim, 'head': base_run.id|trim }) }}">reverse</a>

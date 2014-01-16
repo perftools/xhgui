@@ -126,6 +126,11 @@ class Xhgui_Profile
         return $this->_data['_id'];
     }
 
+    public function getDate()
+    {
+        return new DateTime('@' . $this->getMeta('SERVER.REQUEST_TIME'));
+    }
+
     /**
      * Get meta data about the profile. Read's a . split path
      * out of the meta data in a profile. For example `SERVER.REQUEST_TIME`
