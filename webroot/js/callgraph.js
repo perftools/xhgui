@@ -59,7 +59,7 @@ Xhgui.callgraph = function (container, data, options) {
     data.nodes[0].y = 60;
 
     for (var i = 0, len = data.nodes.length; i < len; i++) {
-        data.nodes[i].ratio = Math.ceil(data.nodes[i].value / data.totalTime * 100);
+        data.nodes[i].ratio = Math.ceil(data.nodes[i].value / data.total * 100);
     }
 
     var nodes = force.nodes(data.nodes)
@@ -273,10 +273,14 @@ Xhgui.callgraph = function (container, data, options) {
             };
         },
         formatter: function (d, i) {
+            var units = 'µs';
+            if (data.metric.indexOf('mu') !== -1) {
+              units = 'bytes';
+            }
             var urlName = '&symbol=' + encodeURIComponent(d.name);
             var label = '<h5>' + d.name + '</h5>' +
-                '<strong>Wall time:</strong> ' + d.ratio + '% ' +
-                ' (' + Xhgui.formatNumber(d.value) + ' <span class="units">µs</span>) ' +
+                '<strong>' + Xhgui.metricName(data.metric) + ':</strong> ' + d.ratio + '% ' +
+                ' (' + Xhgui.formatNumber(d.value) + ' <span class="units">' + units + '</span>) ' +
                 '<br />' +
                 '<strong>Call count:</strong> ' + d.callCount +
                 '<br />' +

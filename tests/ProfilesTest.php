@@ -5,20 +5,7 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
     {
         $di = Xhgui_ServiceContainer::instance();
         $this->profiles = $di['profiles'];
-        $this->_loadFixture('tests/fixtures/results.json');
-    }
-
-    protected function _loadFixture($file)
-    {
-        $contents = file_get_contents($file);
-        $data = json_decode($contents, true);
-        foreach ($data as $record) {
-            if (isset($record['meta']['request_time'])) {
-                $time = strtotime($record['meta']['request_time']);
-                $record['meta']['request_time'] = new MongoDate($time);
-            }
-            $this->profiles->insert($record);
-        }
+        loadFixture($this->profiles, 'tests/fixtures/results.json');
     }
 
     public function testPagination()

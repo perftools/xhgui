@@ -282,6 +282,10 @@ class Xhgui_Profiles
      */
     protected function _wrap($data)
     {
+        if ($data === null) {
+            throw new Exception('No profile data found.');
+        }
+
         if (is_array($data)) {
             return new Xhgui_Profile($data);
         }

@@ -234,8 +234,20 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $this->set(array(
             'profile' => $profile,
             'date_format' => $this->_app->config('date_format'),
-            'callgraph' => $profile->getCallgraph(),
         ));
+    }
+
+    public function callgraphData()
+    {
+        $request = $this->_app->request();
+        $response = $this->_app->response();
+        $profile = $this->_profiles->get($request->get('id'));
+        $metric = $request->get('metric') ?: 'wt';
+        $threshold = (float)$request->get('threshold') ?: 0.01;
+        $callgraph = $profile->getCallgraph($metric, $threshold);
+
+        $response['Content-Type'] = 'application/json';
+        return $response->body(json_encode($callgraph));
     }
 
 }

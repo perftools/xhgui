@@ -138,7 +138,34 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
 
     public function testCallgraph()
     {
-        $this->markTestIncomplete('Not done');
+        loadFixture($this->profiles, 'tests/fixtures/results.json');
+        Environment::mock(array(
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/',
+            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
+        ));
+
+        $this->runs->callgraph();
+        $result = $this->runs->templateVars();
+        $this->assertArrayHasKey('profile', $result);
+        $this->assertArrayHasKey('date_format', $result);
+        $this->assertArrayNotHasKey('callgraph', $result);
+    }
+
+    public function testCallgraphData()
+    {
+        loadFixture($this->profiles, 'tests/fixtures/results.json');
+        Environment::mock(array(
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/',
+            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
+        ));
+
+        $this->runs->callgraphData();
+        $response = $this->app->response();
+
+        $this->assertEquals('application/json', $response['Content-Type']);
+        $this->assertStringStartsWith('{"', $response->body());
     }
 
 }
