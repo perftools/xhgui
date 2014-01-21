@@ -24,7 +24,8 @@ class Xhgui_Profiles
         $cursor = $this->_collection->find()
             ->sort(array('meta.request_date' => -1))
             ->limit(1);
-        return $this->_wrap($cursor);
+        $result = $cursor->getNext();
+        return $this->_wrap($result);
     }
 
     public function query($conditions, $fields = null)
@@ -36,7 +37,7 @@ class Xhgui_Profiles
      * Get a single profile run by id.
      *
      * @param string $id The id of the profile to get.
-     * @return MongoCursor
+     * @return Xhgui_Profile
      */
     public function get($id)
     {

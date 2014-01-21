@@ -18,10 +18,15 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
 
     public function help()
     {
-        $res = $this->_profiles->latest();
+        $request = $this->_app->request();
+        if ($request->get('id')) {
+            $res = $this->_profiles->get($request->get('id'));
+        } else {
+            $res = $this->_profiles->latest();
+        }
         $this->_template = 'custom/help.twig';
         $this->set(array(
-            'data' => print_r($res[0]->toArray(), 1)
+            'data' => print_r($res->toArray(), 1)
         ));
     }
 
