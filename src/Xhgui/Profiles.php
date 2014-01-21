@@ -180,7 +180,7 @@ class Xhgui_Profiles
             'pmu_times' => 'pmu'
         );
         foreach ($results['result'] as &$result) {
-            $result['date'] = ($result['_id'] instanceof MongoDate) ? date('Y-m-d h:i:s', $result['_id']->sec) : $result['_id'];
+            $result['date'] = ($result['_id'] instanceof MongoDate) ? date('Y-m-d H:i:s', $result['_id']->sec) : $result['_id'];
             unset($result['_id']);
             $index = max(round($result['raw_index']) - 1, 0);
             foreach ($keys as $key => $out) {
