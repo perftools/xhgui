@@ -148,4 +148,11 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
         $this->assertCount(2, $result['results']);
     }
 
+    public function testLatest()
+    {
+        $result = $this->profiles->latest();
+        $this->assertInstanceOf('Xhgui_Profile', $result);
+        $this->assertEquals('2013-01-21', $result->getDate()->format('Y-m-d'));
+    }
+
 }
