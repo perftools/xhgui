@@ -60,7 +60,9 @@
         <tbody>
         {% for value in watches %}
         <tr>
-            <td>{{ value.function }}</td>
+            <td>
+                <a href="{{ url('run.symbol', {id: result.id|trim, symbol: value.function}) }}">{{ value.function }}</a>
+            </td>
             <td class="right">{{ value.ct }}</td>
             <td class="right">{{ value.ewt|as_time }}</td>
             <td class="right">{{ value.emu|as_bytes }}</td>
