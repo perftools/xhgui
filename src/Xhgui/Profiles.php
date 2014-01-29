@@ -70,8 +70,9 @@ class Xhgui_Profiles
     {
         $opts = $this->_mapper->convert($options);
 
-        $totalRows = $this->_collection->find($opts['conditions'])
-            ->count();
+        $totalRows = $this->_collection->find(
+            $opts['conditions'],
+            array('_id' => 1))->count();
 
         $totalPages = max(ceil($totalRows / $opts['perPage']), 1);
         $page = 1;
