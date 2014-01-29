@@ -30,6 +30,7 @@ class Xhgui_Twig_Extension extends Twig_Extension
             'as_time' => new Twig_Filter_Method($this, 'formatTime', array('is_safe' => array('html'))),
             'as_diff' => new Twig_Filter_Method($this, 'formatDiff', array('is_safe' => array('html'))),
             'as_percent' => new Twig_Filter_Method($this, 'formatPercent', array('is_safe' => array('html'))),
+            'truncate' => new Twig_Filter_Method($this, 'truncate'),
         );
     }
 
@@ -40,6 +41,14 @@ class Xhgui_Twig_Extension extends Twig_Extension
             return '';
         }
         return $base;
+    }
+
+    public function truncate($input, $length = 50)
+    {
+        if (strlen($input) < $length) {
+            return $input;
+        }
+        return substr($input, 0, $length) . "\xe2\x80\xa6";
     }
 
     /**
