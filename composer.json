@@ -1,7 +1,8 @@
 {
     "name": "perftools/xhgui",
+    "description": "A web based interface for viewing profile data collected by XHProf."
     "version": "0.1",
-    "licence": "MIT",
+    "license": "MIT",
     "autoload": {
         "psr-0": {
             "Xhgui_": "src/"
