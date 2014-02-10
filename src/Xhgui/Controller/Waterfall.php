@@ -61,16 +61,14 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
         ));
         $datas = array();
         foreach ($result['results'] as $r) {
-            $meta = $r->getMeta();
             $duration = $r->get('main()', 'wt');
             $start = $r->getMeta('SERVER.REQUEST_TIME_FLOAT');
-            $end = $start + ($duration / 1000000);
             $title = $r->getMeta('url');
             $datas[] = array(
                 'id' => (string)$r->getId(),
                 'title' => $title,
                 'start' => $start * 1000,
-                'duration' => $duration / 1000      //Convert to correct scale
+                'duration' => $duration / 1000 // Convert to correct scale
             );
         }
         $response->body(json_encode($datas));

@@ -26,7 +26,7 @@ class Xhgui_ServiceContainer extends Pimple
     // Create the Slim app.
     protected function _slimApp()
     {
-        $this['view'] = function ($c) {
+        $this['view'] = function () {
             // Configure Twig view for slim
             $view = new Twig();
             $view->parserOptions = array(

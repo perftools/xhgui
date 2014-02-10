@@ -99,8 +99,6 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     public function url()
     {
         $request = $this->_app->request();
-        $perPage = $this->_app->config('page.limit');
-
         $pagination = array(
             'sort' => $request->get('sort'),
             'direction' => $request->get('direction'),
