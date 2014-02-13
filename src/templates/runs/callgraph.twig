@@ -1,11 +1,11 @@
 {% extends 'layout/base.twig' %}
 
 {% block title %}
-- Callgraph - {{ profile.meta.url }} - {{ profile.meta('SERVER.REQUEST_TIME')|date(date_format) }}
+- Callgraph - {{ profile.meta.url }} - {{ profile.meta('request_ts').sec|date(date_format) }}
 {% endblock %}
 
 {% block content %}
-<h1>Callgraph for {{ profile.meta.url }} on {{ profile.meta('SERVER.REQUEST_TIME')|date(date_format) }}</h1>
+<h1>Callgraph for {{ profile.meta.url }} on {{ profile.meta('request_ts').sec|date(date_format) }}</h1>
 
 <div class="row-fluid">
     <div class="pull-right relative-box">

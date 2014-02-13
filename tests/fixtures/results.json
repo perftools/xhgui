@@ -7,7 +7,8 @@
             "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358787612},
-            "request_date": "2013-01-21"
+            "request_date": "2013-01-21",
+            "request_ts": 1358787612
         },
         "profile": {
             "main()==>strpos()": {
@@ -34,7 +35,8 @@
             "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358701212},
-            "request_date": "2013-01-20"
+            "request_date": "2013-01-20",
+            "request_ts": 1358701212
         },
         "profile": {
             "main()": {
@@ -96,7 +98,8 @@
             "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358614812},
-            "request_date": "2013-01-19"
+            "request_date": "2013-01-19",
+            "request_ts": 1358614812
         },
         "profile": {
             "main()": {
@@ -151,7 +154,8 @@
             "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358528412},
-            "request_date": "2013-01-18"
+            "request_date": "2013-01-18",
+            "request_ts": 1358528412
         },
         "profile": {
             "main()": {
@@ -178,7 +182,8 @@
             "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358614812},
-            "request_date": "2013-01-19"
+            "request_date": "2013-01-19",
+            "request_ts": 1358614812
         },
         "profile": {
             "main()": {
