@@ -86,6 +86,7 @@ register_shutdown_function(function() {
     }
 
     $time = array_key_exists('REQUEST_TIME', $_SERVER) ? $_SERVER['REQUEST_TIME'] : null;
+    $microtime = isset($_SERVER['REQUEST_TIME_FLOAT']) ? $_SERVER['REQUEST_TIME_FLOAT'] : microtime(true);
     $data['meta'] = array(
         'url' => $uri,
         'SERVER' => $_SERVER,
@@ -93,7 +94,7 @@ register_shutdown_function(function() {
         'env' => $_ENV,
         'simple_url' => Xhgui_Util::simpleUrl($uri),
         'request_ts' => new MongoDate($time),
-        'request_ts_micro' => new MongoDate($_SERVER['REQUEST_TIME_FLOAT']),
+        'request_ts_micro' => new MongoDate($microtime, ($microtime - floor($microtime)) * 1000),
         'request_date' => date('Y-m-d', $time),
     );
 
