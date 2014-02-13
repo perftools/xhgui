@@ -21,9 +21,9 @@ function loadFixture($profiles, $file) {
     $contents = file_get_contents($file);
     $data = json_decode($contents, true);
     foreach ($data as $record) {
-        if (isset($record['meta']['request_time'])) {
-            $time = strtotime($record['meta']['request_time']);
-            $record['meta']['request_time'] = new MongoDate($time);
+        if (isset($record['meta']['request_ts'])) {
+            $time = $record['meta']['request_ts'];
+            $record['meta']['request_ts'] = new MongoDate($time);
         }
         if (isset($record['_id'])) {
             $record['_id'] = new MongoId($record['_id']);
