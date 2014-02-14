@@ -32,9 +32,9 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
                 '$gte' => '2013-01-20',
                 '$lte' => '2013-01-21'
             ),
-            'meta.SERVER.REQUEST_TIME' => array(
-                '$gte' => strtotime($opts['conditions']['request_start']),
-                '$lte' => strtotime($opts['conditions']['request_end']),
+            'meta.request_ts' => array(
+                '$gte' => new MongoDate(strtotime($opts['conditions']['request_start'])),
+                '$lte' => new MongoDate(strtotime($opts['conditions']['request_end'])),
             ),
             'meta.SERVER.REMOTE_ADDR' => '127.0.0.1',
         );
@@ -137,7 +137,7 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
         );
         $result = $this->mapper->convert($options);
         $this->assertEquals(
-            array('meta.SERVER.REQUEST_TIME' => -1),
+            array('meta.request_ts' => -1),
             $result['sort']
         );
 
@@ -188,7 +188,7 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
         );
         $result = $this->mapper->convert($options);
         $this->assertEquals(
-            array('meta.SERVER.REQUEST_TIME' => -1),
+            array('meta.request_ts' => -1),
             $result['sort']
         );
     }

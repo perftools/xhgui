@@ -54,7 +54,7 @@ Installing Xhgui
   ```
   $ mongo
   > use xhprof
-  > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
+  > db.results.ensureIndex( { 'meta.request_ts' : -1 } )
   > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
   > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
   > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
@@ -179,7 +179,7 @@ If your site cannot directly connect to your mongodb instance, you can choose
 to save your data on a temporary file for a later import to xhgui's mongo
 database.  Change the `save.handler` setting to `file` and define your file's
 path with `save.handler.filename`.  To import a file inside mongodb use the
-`external/import.php`. Be aware of file locking. Depending on your workload, 
+`external/import.php`. Be aware of file locking. Depending on your workload,
 you may need to change the `save.handler.filename` file path to avoid file locking
 
 
@@ -215,7 +215,7 @@ affect each other. Concurrent DB requests (or other resources), CPU intensive
 activies, or even locks on session files can become relevant. With an Ajax
 heavy applicaitons understanding the page build is far more complex than
 a single load, hopefully the waterfall can help. Remember: If you're only
-profiling a sample of requests the waterfall fills you with impolite lies. 
+profiling a sample of requests the waterfall fills you with impolite lies.
 
 Some Notes:
 
