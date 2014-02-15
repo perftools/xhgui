@@ -50,7 +50,9 @@ if (!extension_loaded('mongo')) {
 $dir = dirname(__DIR__);
 require_once $dir . '/src/Xhgui/Config.php';
 Xhgui_Config::load($dir . '/config/config.default.php');
-Xhgui_Config::load($dir . '/config/config.php');
+if (file_exists($dir . '/config/config.php')) {
+    Xhgui_Config::load($dir . '/config/config.php');
+}
 unset($root);
 
 if (!Xhgui_Config::shouldRun()) {
