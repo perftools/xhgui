@@ -45,11 +45,12 @@
             {% endif %}
             <td>
                 {% set addr = result.meta.url %}
-                <a {% if addr|length > 50 %}class="tip"{% endif %}
-                    title="{{ addr }}"
-                    href="{{ url('url.view', {'url': result.meta.simple_url}) }}">
-                    {{ addr|truncate(50) }}
-                </a>
+                {{ helpers.tip_link(
+                    addr,
+                    50,
+                    'url.view',
+                    {'url': result.meta.simple_url}
+                ) }}
             </td>
             <td><a href="{{ url('run.view', {'id': result.id|trim }) }}">{{ result.date|date(date_format) }}</a></td>
             <td class="right">{{ result.get('main()', 'wt') |as_time }}</td>
