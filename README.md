@@ -123,7 +123,27 @@ Configure Xhgui profiling rate
 After installing Xhgui you may want to do change how frequently you profile the
 host application. The `profiler.enable` configuration option allows you to
 provide a callback function that determines which requests are profiled. By
-default 1 in 100 requests are profiled.
+default 1 in 100 requests are profiled. If for example you wanted to only profile requests
+in a certain URL path you could do the following:
+
+
+```php
+// In config/config.php
+return array(
+    // Other config
+    'profiler.enable' => function() {
+        $url = $_SERVER['REQUEST_URI'];
+        if (strpos($url, '/blog') === 0) {
+            return false;
+        }
+        return rand(0, 100) === 42;
+    }
+);
+```
+
+The above code would profile anything not in `/blog` 1 in 100 requests. Paths containing `/blog` would never
+be profiled.
+
 
 Configure how 'simple' URLs are created
 ---------------------------------------
