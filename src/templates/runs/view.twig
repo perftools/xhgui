@@ -124,7 +124,11 @@
     {% for key, value in profile %}
     <tr>
         <td class="text">
-            <a href="{{ url('run.symbol', {'id': result.id|trim, 'symbol': key}) }}">{{ key }}</a>
+            <a {% if key|length > 65 %}class="tip"{% endif %}
+                href="{{ url('run.symbol', {'id': result.id|trim, 'symbol': key}) }}"
+                title="{{ key }}">
+                {{ key|truncate(65) }}
+            </a>
         </td>
         <td class="right">{{ value.ct }}</td>
         <td class="right">{{ value.ewt|as_time }}</td>
