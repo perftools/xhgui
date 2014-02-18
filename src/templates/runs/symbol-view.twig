@@ -30,7 +30,12 @@
         <tbody>
         <tr>
             <td class="text">
-                <a href="{{ url('run.symbol', {'id': id, 'symbol': current.function}) }}">{{ current.function }}</a>
+                {{ helpers.tip_link(
+                    current.function,
+                    65,
+                    'run.symbol',
+                    {'id': id, 'symbol': current.function}
+                ) }}
             </td>
             <td>{{ current.ct }}</td>
             <td>{{ current.ewt|as_time }}</td>
@@ -67,7 +72,12 @@
         {% for parent in parents %}
         <tr>
             <td class="text">
-                <a href="{{ url('run.symbol', {'id': id, 'symbol': parent.function}) }}">{{ parent.function }}</a>
+                {{ helpers.tip_link(
+                    parent.function,
+                    65,
+                    'run.symbol',
+                    {'id': id, 'symbol': parent.function}
+                ) }}
             </td>
             <td>{{ parent.ct }}</td>
             <td>{{ parent.ewt|as_time }}</td>
@@ -101,7 +111,12 @@
         {% for child in children %}
         <tr>
             <td class="text">
-                <a href="{{ url('run.symbol', {'id': id, 'symbol': child.function}) }}">{{ child.function }}</a>
+                {{ helpers.tip_link(
+                    child.function,
+                    65,
+                    'run.symbol',
+                    {'id': id, 'symbol': child.function}
+                ) }}
             </td>
             <td>{{ child.ct }}</td>
 

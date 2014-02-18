@@ -61,7 +61,12 @@
         {% for value in watches %}
         <tr>
             <td>
-                <a href="{{ url('run.symbol', {id: result.id|trim, symbol: value.function}) }}">{{ value.function }}</a>
+            {{ helpers.tip_link(
+                value.function,
+                65,
+                'run.symbol',
+                {'id': result.id|trim, 'symbol': value.function}
+            ) }}
             </td>
             <td class="right">{{ value.ct }}</td>
             <td class="right">{{ value.ewt|as_time }}</td>
@@ -124,11 +129,12 @@
     {% for key, value in profile %}
     <tr>
         <td class="text">
-            <a {% if key|length > 65 %}class="tip"{% endif %}
-                href="{{ url('run.symbol', {'id': result.id|trim, 'symbol': key}) }}"
-                title="{{ key }}">
-                {{ key|truncate(65) }}
-            </a>
+            {{ helpers.tip_link(
+                key,
+                65,
+                'run.symbol',
+                {'id': result.id|trim, 'symbol': key}
+            ) }}
         </td>
         <td class="right">{{ value.ct }}</td>
         <td class="right">{{ value.ewt|as_time }}</td>

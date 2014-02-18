@@ -26,6 +26,14 @@
 <a class="sort-link {{ classname }}" href="{{ url(url, params) }}">{{ text }}</a>
 {% endmacro %}
 
+{% macro tip_link(text, len, url, params) %}
+<a {% if text|length > len %}class="tip"{% endif %}
+    href="{{ url(url, params) }}"
+    title="{{ text }}">
+    {{ text|truncate(len) }}
+</a>
+{% endmacro %}
+
 {% macro pagination(url, paging, search) %}
 
 {# Hard code because I'm lazy #}
