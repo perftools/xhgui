@@ -163,8 +163,6 @@ thead .sort-link {
 thead .sort-link:hover {
     color: #59bdd2;
 }
-
-
 th.right,
 td.right {
     text-align: right;
@@ -199,6 +197,12 @@ th.headerSortUp {
 tr .no-results {
     text-align: center;
     font-size: 1.2em;
+}
+
+
+.tooltip-inner {
+    max-width: 400px;
+    word-wrap: break-word;
 }
 
 
