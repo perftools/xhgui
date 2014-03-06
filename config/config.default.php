@@ -23,6 +23,7 @@ return array(
     'page.limit' => 25,
 
     // Profile 1 in 100 requests.
+    // You can return true to profile every request.
     'profiler.enable' => function() {
         return rand(0, 100) === 42;
     },

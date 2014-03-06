@@ -142,7 +142,17 @@ return array(
 ```
 
 The above code would profile anything not in `/blog` 1 in 100 requests. Paths containing `/blog` would never
-be profiled.
+be profiled. To profile *every* request you could do the following:
+
+```php
+// In config/config.php
+return array(
+    // Other config
+    'profiler.enable' => function() {
+        return true;
+    }
+);
+```
 
 
 Configure how 'simple' URLs are created
