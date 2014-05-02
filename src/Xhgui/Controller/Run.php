@@ -217,6 +217,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $this->set(array(
             'symbol' => $symbol,
             'id' => $id,
+            'main' => $profile->get('main()'),
             'parents' => $parents,
             'current' => $current,
             'children' => $children,
