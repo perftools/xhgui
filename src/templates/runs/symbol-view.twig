@@ -36,6 +36,8 @@
                     'run.symbol',
                     {'id': id, 'symbol': current.function}
                 ) }}
+                <br>
+                Percent of total request.
             </td>
             <td>{{ current.ct }}</td>
             <td>{{ current.ewt|as_time }}</td>
@@ -43,25 +45,10 @@
             <td>{{ current.emu|as_bytes }}</td>
             <td>{{ current.epmu|as_bytes }}</td>
 
-            <td>{{ current.wt|as_time }}</td>
-            <td>{{ current.cpu|as_time }}</td>
-            <td>{{ current.mu|as_bytes }}</td>
-            <td>{{ current.pmu|as_bytes }}</td>
-        </tr>
-        <tr>
-            <td class="text">
-                Percent of total request.
-            </td>
-            <td>&mdash;</td>
-            <td>&mdash;</td>
-            <td>&mdash;</td>
-            <td>&mdash;</td>
-            <td>&mdash;</td>
-
-            <td>{{ (current.wt / main.wt)|as_percent }}</td>
-            <td>{{ (current.cpu / main.cpu)|as_percent }}</td>
-            <td>{{ (current.mu / main.mu)|as_percent }}</td>
-            <td>{{ (current.pmu / main.pmu)|as_percent }}</td>
+            <td>{{ helpers.time_and_percent('wt', current, main) }}</td>
+            <td>{{ helpers.time_and_percent('cpu', current, main) }}</td>
+            <td>{{ helpers.bytes_and_percent('mu', current, main) }}</td>
+            <td>{{ helpers.bytes_and_percent('pmu', current, main) }}</td>
         </tr>
         </tbody>
     </table>

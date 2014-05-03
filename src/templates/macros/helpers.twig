@@ -86,3 +86,13 @@
 </ul>
 </div>
 {% endmacro %}
+
+{% macro time_and_percent(prop, value, total) %}
+{{ value[prop]|as_time }}<br />
+({{ percent(value[prop], total[prop]) }})
+{% endmacro %}
+
+{% macro bytes_and_percent(prop, value, total) %}
+{{ value[prop]|as_bytes }}<br />
+({{ percent(value[prop], total[prop]) }})
+{% endmacro %}

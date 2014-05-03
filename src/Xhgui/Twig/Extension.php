@@ -19,6 +19,9 @@ class Xhgui_Twig_Extension extends Twig_Extension
         return array(
             'url' => new Twig_Function_Method($this, 'url'),
             'static' => new Twig_Function_Method($this, 'staticUrl'),
+            'percent' => new Twig_Function_Method($this, 'makePercent', array(
+                'is_safe' => array('html')
+            )),
         );
     }
 
@@ -74,12 +77,12 @@ class Xhgui_Twig_Extension extends Twig_Extension
 
     public function formatBytes($value)
     {
-        return number_format((float)$value) . ' <span class="units">bytes</span>';
+        return number_format((float)$value) . '&nbsp;<span class="units">bytes</span>';
     }
 
     public function formatTime($value)
     {
-        return number_format((float)$value) . ' <span class="units">µs</span>';
+        return number_format((float)$value) . '&nbsp;<span class="units">µs</span>';
     }
 
     public function formatDiff($value)
@@ -94,6 +97,12 @@ class Xhgui_Twig_Extension extends Twig_Extension
             $class,
             number_format((float)$value)
         );
+    }
+
+    public function makePercent($value, $total)
+    {
+        $value = $value / $total;
+        return $this->formatPercent($value);
     }
 
     public function formatPercent($value)
