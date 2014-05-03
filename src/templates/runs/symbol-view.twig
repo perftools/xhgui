@@ -37,7 +37,7 @@
                     {'id': id, 'symbol': current.function}
                 ) }}
                 <br>
-                Percent of total request.
+                Percent of total request
             </td>
             <td>{{ current.ct }}</td>
             <td>{{ current.ewt|as_time }}</td>
@@ -80,6 +80,8 @@
                     'run.symbol',
                     {'id': id, 'symbol': parent.function}
                 ) }}
+                <br>
+                Percent of total request
             </td>
             <td>{{ parent.ct }}</td>
             <td>{{ parent.ewt|as_time }}</td>
@@ -87,10 +89,10 @@
             <td>{{ parent.emu|as_bytes }}</td>
             <td>{{ parent.epmu|as_bytes }}</td>
 
-            <td>{{ parent.wt|as_time }}</td>
-            <td>{{ parent.cpu|as_time }}</td>
-            <td>{{ parent.mu|as_bytes }}</td>
-            <td>{{ parent.pmu|as_bytes }}</td>
+            <td>{{ helpers.time_and_percent('wt', parent, main) }}</td>
+            <td>{{ helpers.time_and_percent('cpu', parent, main) }}</td>
+            <td>{{ helpers.bytes_and_percent('mu', parent, main) }}</td>
+            <td>{{ helpers.bytes_and_percent('pmu', parent, main) }}</td>
         </tr>
         {% endfor %}
         </tbody>
