@@ -14,14 +14,14 @@ class Xhgui_Twig_ExtensionTest extends PHPUnit_Framework_TestCase
     public function testFormatBytes()
     {
         $result = $this->ext->formatBytes(2999);
-        $expected = '2,999 <span class="units">bytes</span>';
+        $expected = '2,999&nbsp;<span class="units">bytes</span>';
         $this->assertEquals($expected, $result);
     }
 
     public function testFormatTime()
     {
         $result = $this->ext->formatTime(2999);
-        $expected = '2,999 <span class="units">µs</span>';
+        $expected = '2,999&nbsp;<span class="units">µs</span>';
         $this->assertEquals($expected, $result);
     }
 
