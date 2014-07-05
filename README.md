@@ -202,6 +202,24 @@ With Nginx in fastcgi mode you could use:
         fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
      }
 
+Profiling a CLI script
+======================
+
+The simplest way to get a CLI script profiled, is to use
+`external/header.php`.  This file is designed to be combined with PHP's
+[auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-prepend-file)
+directive. This can be enabled system-wide through `php.ini`. Alternatively,
+you can enable include the `header.php` at the top of your script:
+
+    <?php
+    require '/path/to/xhgui/external/header.php';
+    // Rest of script.
+
+Or use the `-d` flag:
+
+    php -d auto_prepend_file=/path/to/xhgui/external/header.php do_work.php
+
+
 Saving & importing profiles
 ---------------------------
 
