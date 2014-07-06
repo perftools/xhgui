@@ -28,7 +28,7 @@
         <tr>
             <th>
                 <span class="badge compare-head">
-                    head - {{ comparison.head.date|date(date_format) }}
+                    new - {{ comparison.head.date|date(date_format) }}
                 </span>
                 <a target="_blank" href="{{ url('run.view', {id: comparison.head.id|trim}) }}">
                     {{ comparison.head.id }}
@@ -81,7 +81,7 @@
     {% for key, value in comparison.diff %}
     <tr>
         <td class="text">
-            <a href="{{ url('run.symbol', {'id': comparison.base.id|trim, 'symbol': key}) }}">{{ key }}</a>
+            <a href="{{ url('run.symbol', {'id': comparison.head.id|trim, 'symbol': key}) }}">{{ key }}</a>
         </td>
         <td class="right">{{ value.ct|as_diff }}</td>
         <td class="right">{{ value.ewt|as_diff }}</td>
@@ -96,4 +96,4 @@
     {% endfor %}
     </tbody>
 </table>
-
+<p>Red values are higher in 'new'. Green values are lower in 'new'.</p>

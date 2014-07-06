@@ -23,7 +23,7 @@
 
         {% if head_run %}
         <span class="badge compare-head">
-            head: {{ head_run.meta.simple_url }} - {{ head_run.date|date(date_format) }}
+            new: {{ _run.meta.simple_url }} - {{ head_run.date|date(date_format) }}
         </span>
         <a class="btn btn-mini" href="{{ url('run.compare', {'base': base_run.id|trim }) }}">change</a>
         <a class="btn btn-mini" href="{{ url('run.compare', {'base': head_run.id|trim, 'head': base_run.id|trim }) }}">reverse</a>
