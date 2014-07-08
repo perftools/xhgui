@@ -52,9 +52,9 @@
             <tr>
                 <th>Function</th>
                 <th class="right">Call Count</th>
-                <th class="right"><span class="tip" title="Exclusive wall time">ewt</span></th>
-                <th class="right"><span class="tip" title="Exclusive memory use">emu</span></th>
-                <th class="right"><span class="tip" title="Exclusive peak memory use">epmu</span></th>
+                <th class="right"><span class="tip" title="Self wall time">ewt</span></th>
+                <th class="right"><span class="tip" title="Self memory use">emu</span></th>
+                <th class="right"><span class="tip" title="Self peak memory use">epmu</span></th>
             </tr>
         </thead>
         <tbody>
@@ -85,7 +85,7 @@
 
     <div class="row-fluid">
         <div class="span6">
-          <h2>Exclusive Wall Time</h2>
+          <h2>Self Wall Time</h2>
           <div id="wall-time-chart" class="chart-container"></div>
           <dl>
           {% for value in wall_time %}
@@ -120,10 +120,10 @@
         <tr>
             <th>Function</th>
             <th>Call Count</th>
-            <th>Exclusive Wall Time</th>
-            <th>Exclusive CPU</th>
-            <th>Exclusive Memory Usage</th>
-            <th>Exclusive Peak Memory Usage</th>
+            <th>Self Wall Time</th>
+            <th>Self CPU</th>
+            <th>Self Memory Usage</th>
+            <th>Self Peak Memory Usage</th>
             <th>Inclusive Wall Time</th>
             <th>Inclusive CPU</th>
             <th>Inclusive Memory Usage</th>

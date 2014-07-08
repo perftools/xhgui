@@ -66,9 +66,9 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $detailCount = $this->_app->config('detail.count');
         $result = $this->_profiles->get($request->get('id'));
 
-        $result->calculateExclusive();
+        $result->calculateSelf();
 
-        // Exclusive wall time graph
+        // Self wall time graph
         $timeChart = $result->extractDimension('ewt', $detailCount);
 
         // Memory Block
@@ -210,7 +210,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $symbol = $request->get('symbol');
 
         $profile = $this->_profiles->get($id);
-        $profile->calculateExclusive();
+        $profile->calculateSelf();
         list($parents, $current, $children) = $profile->getRelatives($symbol);
 
         $this->_template = 'runs/symbol-view.twig';

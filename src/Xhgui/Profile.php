@@ -79,10 +79,10 @@ class Xhgui_Profile
         return $a;
     }
 
-    protected function _diffKeys($a, $b, $includeExclusive = true)
+    protected function _diffKeys($a, $b, $includeSelf = true)
     {
         $keys = $this->_keys;
-        if ($includeExclusive) {
+        if ($includeSelf) {
             $keys = array_merge($keys, $this->_exclusiveKeys);
         }
         foreach ($keys as $key) {
@@ -91,11 +91,11 @@ class Xhgui_Profile
         return $a;
     }
 
-    protected function _diffPercentKeys($a, $b, $includeExclusive = true)
+    protected function _diffPercentKeys($a, $b, $includeSelf = true)
     {
         $out = array();
         $keys = $this->_keys;
-        if ($includeExclusive) {
+        if ($includeSelf) {
             $keys = array_merge($keys, $this->_exclusiveKeys);
         }
         foreach ($keys as $key) {
@@ -312,7 +312,7 @@ class Xhgui_Profile
      *
      * @return Xhgui_Profile A new instance with exclusive data set.
      */
-    public function calculateExclusive()
+    public function calculateSelf()
     {
         // Init exclusive values
         foreach ($this->_collapsed as &$data) {
@@ -399,8 +399,8 @@ class Xhgui_Profile
      * @return array An array of comparison data.
      */
     public function compare(Xhgui_Profile $head) {
-        $this->calculateExclusive();
-        $head->calculateExclusive();
+        $this->calculateSelf();
+        $head->calculateSelf();
 
         $keys = array_merge($this->_keys, $this->_exclusiveKeys);
         $emptyData = array_fill_keys($keys, 0);
@@ -464,7 +464,7 @@ class Xhgui_Profile
         if (!in_array($metric, $valid)) {
             throw new Exception("Unknown metric '$metric'. Cannot generate callgraph.");
         }
-        $this->calculateExclusive();
+        $this->calculateSelf();
 
         // Non exclusive metrics are always main() because it is the root call scope.
         if (in_array($metric, $this->_exclusiveKeys)) {
