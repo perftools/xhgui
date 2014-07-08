@@ -73,6 +73,11 @@
             <td class="right">{{ value.emu|as_bytes }}</td>
             <td class="right">{{ value.epmu|as_bytes }}</td>
         </tr>
+        {% else %}
+        <tr><td colspan="4">
+            You have no watch functions setup.
+            <a href="{{ url('watch.list') }}">Add a watch function now</a>.
+        </td></tr>
         {% endfor %}
         </tbody>
         </table>
