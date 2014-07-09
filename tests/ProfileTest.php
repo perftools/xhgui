@@ -132,10 +132,10 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result[0]);
     }
 
-    public function testCalculateExclusive()
+    public function testCalculateSelf()
     {
         $profile = new Xhgui_Profile($this->_fixture[1]);
-        $result = $profile->calculateExclusive()->getProfile();
+        $result = $profile->calculateSelf()->getProfile();
 
         $main = $result['main()'];
         $this->assertEquals(800, $main['emu']);
