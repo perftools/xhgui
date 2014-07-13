@@ -32,8 +32,8 @@
             <li><strong>By IP</strong> <a href="{{ url('waterfall.list', {'remote_addr': result.meta.SERVER.REMOTE_ADDR, 'request_start': result.meta.SERVER.REQUEST_TIME - 5, 'request_end': result.meta.SERVER.REQUEST_TIME + 15}) }}">{{ result.meta.SERVER.REMOTE_ADDR }}</a></li>
 
         </ul>
-    </div><!--/.well -->
-</div><!--/span-->
+    </div>
+</div>
 
 <div class="span9">
 
@@ -106,16 +106,17 @@
           </dl>
         </div>
     </div>
-
   </div><!--/row-->
-
-  <div class="row-fluid">
-  </div><!--/row-->
-
 </div>
 
 <div class="row-fluid">
-  <table class="table table-hover table-sort">
+  <div class="pull-right form-search">
+      <input type="search" id="function-filter" placeholder="Filter by function name" />
+  </div>
+</div>
+
+<div class="row-fluid">
+  <table class="table table-hover table-sort" id="function-calls">
     <thead>
         <tr>
             <th>Function</th>
@@ -171,6 +172,20 @@ $(document).ready(function () {
         width: 350,
         height: 300,
         postfix: ' bytes'
+    });
+
+    var rows = $('#function-calls tbody tr');
+    $('#function-filter').on('keyup', function(e) {
+        var value = $(this).val();
+        rows.each(function (i, el) {
+            var row = $(el);
+            var name = row.find('.text a').text();
+            if (name.indexOf(value) === -1) {
+                row.hide();
+            } else {
+                row.show();
+            }
+        });
     });
 });
 </script>
