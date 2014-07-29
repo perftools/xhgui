@@ -249,4 +249,19 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         return $response->body(json_encode($callgraph));
     }
 
+    public function callgraphDataDot()
+    {
+        $request = $this->_app->request();
+        $response = $this->_app->response();
+        $profile = $this->_profiles->get($request->get('id'));
+        $metric = $request->get('metric') ?: 'wt';
+        $threshold = (float)$request->get('threshold') ?: 0.01;
+        $callgraph = $profile->getCallgraphNodes($metric, $threshold);
+
+        $this->_template = 'runs/callgraph-digraph.twig';
+        $this->set(array(
+            'callgraph' => $callgraph,
+        ));
+    }
+
 }
