@@ -451,6 +451,77 @@ class Xhgui_Profile
     }
 
     /**
+     * Return a structured array suitable for generating graphviz based callgraph visualizations.
+     *
+     * @param string $metric The metric you want in the callgraph.
+     * @param float $threshold The threshold below which you want to ignore.
+     * @return array
+     */
+    public function getCallgraphNodes($metric = 'wt', $threshold = 0.01)
+    {
+        $valid = array_merge($this->_keys, $this->_exclusiveKeys);
+        if (!in_array($metric, $valid)) {
+            throw new Exception("Unknown metric '$metric'. Cannot generate callgraph.");
+        }
+        $this->calculateSelf();
+
+        // Non exclusive metrics are always main() because it is the root call scope.
+        if (in_array($metric, $this->_exclusiveKeys)) {
+            $main = $this->_maxValue($metric);
+        } else {
+            $main = $this->_collapsed['main()'][$metric];
+        }
+
+        $this->_visited = $this->_nodes = array();
+        $this->_callgraphNodes(self::NO_PARENT, $main, $metric, $threshold);
+        $out = array(
+            'metric' => $metric,
+            'total' => $main,
+            'nodes' => $this->_nodes,
+        );
+        unset($this->_visited, $this->_nodes);
+        return $out;
+    }
+
+    protected function _callgraphNodes($parentName, $main, $metric, $threshold)
+    {
+        // Leaves don't have children, and don't have links/nodes to add.
+        if (!isset($this->_indexed[$parentName])) {
+            return;
+        }
+
+        $children = $this->_indexed[$parentName];
+        foreach ($children as $childName => $metrics) {
+            $metrics = $this->_collapsed[$childName];
+            if ($metrics[$metric] / $main <= $threshold) {
+                continue;
+            }
+            $revisit = false;
+
+            // Keep track of which nodes we've visited and their position
+            // in the node list.
+            if (!isset($this->_visited[$childName])) {
+                $this->_visited[$childName] = true;
+
+                $this->_nodes[] = array(
+                    'parent' => $parentName,
+                    'child' => $childName,
+                    'callCount' => $metrics['ct'],
+                    'value' => $metrics[$metric],
+                );
+            } else {
+                $revisit = true;
+            }
+
+            // If the current function has more children,
+            // walk that call subgraph.
+            if (isset($this->_indexed[$childName]) && !$revisit) {
+                $this->_callgraphNodes($childName, $main, $metric, $threshold);
+            }
+        }
+    }
+
+    /**
      * Return a structured array suitable for generating callgraph visualizations.
      *
      * Functions whose inclusive time is less than 2% of the total time will
