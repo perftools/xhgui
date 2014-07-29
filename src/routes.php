@@ -54,6 +54,10 @@ $app->get('/run/callgraph/data', function () use ($di, $app) {
     $di['runController']->callgraphData();
 })->name('run.callgraph.data');
 
+$app->get('/run/callgraph/dot', function () use ($di, $app) {
+    $di['runController']->callgraphDataDot();
+})->name('run.callgraph.dot');
+
 // Watch function routes.
 $app->get('/watch', function () use ($di, $app) {
     $app->controller = $di['watchController'];
