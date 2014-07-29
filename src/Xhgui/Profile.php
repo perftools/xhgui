@@ -496,21 +496,23 @@ class Xhgui_Profile
             if ($metrics[$metric] / $main <= $threshold) {
                 continue;
             }
-            $revisit = false;
+
+            $revisit = true;
 
             // Keep track of which nodes we've visited and their position
             // in the node list.
-            if (!isset($this->_visited[$childName])) {
+            if (!isset($this->_visited[$childName]) ) {
+                $revisit = false;
                 $this->_visited[$childName] = true;
 
-                $this->_nodes[] = array(
-                    'parent' => $parentName,
-                    'child' => $childName,
-                    'callCount' => $metrics['ct'],
-                    'value' => $metrics[$metric],
-                );
-            } else {
-                $revisit = true;
+                if ($parentName !== self::NO_PARENT) {
+                    $this->_nodes[] = array(
+                        'parent' => $parentName,
+                        'child' => $childName,
+                        'callCount' => $metrics['ct'],
+                        'value' => $metrics[$metric],
+                    );
+                }
             }
 
             // If the current function has more children,
