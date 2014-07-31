@@ -65,7 +65,11 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
 }
 
 
-xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+if(PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4) {
+    xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY | XHPROF_FLAGS_NO_BUILTINS);
+} else {
+    xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+}
 
 register_shutdown_function(function() {
     // ignore_user_abort(true) allows your PHP script to continue executing, even if the user has terminated their request.
