@@ -50,9 +50,7 @@ if (file_exists($dir . '/config/config.php')) {
 }
 unset($root);
 
-$saveHandler = Xhgui_Config::read('save.handler');
-
-if (!extension_loaded('mongo') && $saveHandler === 'mongodb') {
+if (!extension_loaded('mongo') && Xhgui_Config::read('save.handler') === 'mongodb') {
     error_log('xhgui - extension mongo not loaded');
     return;
 }
