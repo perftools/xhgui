@@ -37,11 +37,6 @@ if (!extension_loaded('xhprof')) {
     return;
 }
 
-if (!extension_loaded('mongo')) {
-    error_log('xhgui - extension mongo not loaded');
-    return;
-}
-
 // Use the callbacks defined in the configuration file
 // to determine whether or not XHgui should enable profiling.
 //
@@ -54,6 +49,13 @@ if (file_exists($dir . '/config/config.php')) {
     Xhgui_Config::load($dir . '/config/config.php');
 }
 unset($root);
+
+$saveHandler = Xhgui_Config::read('save.handler');
+
+if (!extension_loaded('mongo') && $saveHandler === 'mongodb') {
+    error_log('xhgui - extension mongo not loaded');
+    return;
+}
 
 if (!Xhgui_Config::shouldRun()) {
     return;
@@ -72,6 +74,7 @@ if(PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4) {
 }
 
 register_shutdown_function(function() {
+
     // ignore_user_abort(true) allows your PHP script to continue executing, even if the user has terminated their request.
     // Further Reading: http://blog.preinheimer.com/index.php?/archives/248-When-does-a-user-abort.html
     // flush() asks PHP to send any data remaining in the output buffers. This is normally done when the script completes, but
@@ -91,15 +94,26 @@ register_shutdown_function(function() {
         $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
     }
 
-    $time = array_key_exists('REQUEST_TIME', $_SERVER) ? $_SERVER['REQUEST_TIME'] : null;
+    $time = array_key_exists('REQUEST_TIME', $_SERVER) ? $_SERVER['REQUEST_TIME'] : time();
+    $requestTimeFloat = explode('.', $_SERVER['REQUEST_TIME_FLOAT']);
+
+    if (Xhgui_Config::read('save.handler') === 'file') {
+        $request_ts = array('sec' => $time, 'usec' => 0);
+        $request_ts_micro = array('sec' => $requestTimeFloat[0], 'usec' => $requestTimeFloat[1]);
+    }
+    else {
+        $request_ts = new MongoDate($time);
+        $request_ts_micro = new MongoDate($requestTimeFloat[0], $requestTimeFloat[1]);
+    }
+
     $data['meta'] = array(
         'url' => $uri,
         'SERVER' => $_SERVER,
         'get' => $_GET,
         'env' => $_ENV,
         'simple_url' => Xhgui_Util::simpleUrl($uri),
-        'request_ts' => new MongoDate($time),
-        'request_ts_micro' => new MongoDate($_SERVER['REQUEST_TIME_FLOAT']),
+        'request_ts' => $request_ts,
+        'request_ts_micro' => $request_ts_micro,
         'request_date' => date('Y-m-d', $time),
     );
 
