@@ -12,6 +12,6 @@ class Xhgui_Saver_File implements Xhgui_Saver_Interface
     public function save($data)
     {
         $json = json_encode($data);
-        return file_put_contents($this->_file, $json.PHP_EOL, FILE_APPEND);
+        return file_put_contents(XHGUI_ROOT_DIR . '/cache/' . $this->_file, $json.PHP_EOL, FILE_APPEND);
     }
 }
