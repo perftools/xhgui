@@ -6,7 +6,7 @@ class Saver_FileTest extends PHPUnit_Framework_TestCase
     {
         $data = file_get_contents('tests/fixtures/results.json');
         
-        $file = md5(rand(0,100));
+        $file = XHGUI_ROOT_DIR . '/cache/' . md5(rand(0,100));
         
         $saver = new Xhgui_Saver_File($file);
         $saver->save($data);
