@@ -9,7 +9,7 @@ return array(
     // Can be either mongodb or file.
     /* 
     'save.handler' => 'file',
-    'save.handler.filename' => dirname(__DIR__) . '/cache/' . 'xhgui.data.' . microtime(true) . '_' . md5($url),
+    'save.handler.filename' => dirname(__DIR__) . '/cache/' . 'xhgui.data.' . microtime(true) . '_' . substr(md5($url), 0, 6),
     */
     'save.handler' => 'mongodb',
 
