@@ -57,7 +57,9 @@ the actual method callgraph.</p>
 {% endblock %}
 
 {% block jsfoot %}
-<script src="{{ static('js/callgraph.js') }}"></script>
+{# <script src="{{ static('js/callgraph.js') }}"></script> #}
+<script src="{{ static('js/dagre-d3.js') }}"></script>
+<script src="{{ static('js/callgraph-viz.js') }}"></script>
 <script>
 $(document).ready(function () {
     var gear = $('#customize-graph');

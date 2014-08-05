@@ -258,10 +258,8 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $threshold = (float)$request->get('threshold') ?: 0.01;
         $callgraph = $profile->getCallgraphNodes($metric, $threshold);
 
-        $this->_template = 'runs/callgraph-digraph.twig';
-        $this->set(array(
-            'callgraph' => $callgraph,
-        ));
+        $response['Content-Type'] = 'application/json';
+        return $response->body(json_encode($callgraph));
     }
 
 }

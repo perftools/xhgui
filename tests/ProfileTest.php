@@ -293,34 +293,34 @@ class ProfileTest extends PHPUnit_Framework_TestCase
             ),
             'links' => array(
                 array(
-                    'source' => 0,
-                    'target' => 1,
-                    'value' => 1,
+                    'source' => 'main()',
+                    'target' => 'eat_burger()',
+                    'callCount' => 1,
                 ),
                 array(
-                    'source' => 1,
-                    'target' => 2,
-                    'value' => 1,
+                    'source' => 'eat_burger()',
+                    'target' => 'chew_food()',
+                    'callCount' => 10,
                 ),
                 array(
-                    'source' => 1,
-                    'target' => 3,
-                    'value' => 1,
+                    'source' => 'eat_burger()',
+                    'target' => 'strlen()',
+                    'callCount' => 2,
                 ),
                 array(
-                    'source' => 0,
-                    'target' => 4,
-                    'value' => 1,
+                    'source' => 'main()',
+                    'target' => 'drink_beer()',
+                    'callCount' => 1,
                 ),
                 array(
-                    'source' => 4,
-                    'target' => 5,
-                    'value' => 1,
+                    'source' => 'drink_beer()',
+                    'target' => 'lift_glass()',
+                    'callCount' => 5,
                 ),
                 array(
-                    'source' => 4,
-                    'target' => 3,
-                    'value' => 1,
+                    'source' => 'drink_beer()',
+                    'target' => 'strlen()',
+                    'callCount' => 2,
                 ),
             )
         );
@@ -364,29 +364,29 @@ class ProfileTest extends PHPUnit_Framework_TestCase
             ),
             'links' => array(
                 array(
-                    'source' => 0,
-                    'target' => 1,
-                    'value' => 1,
+                    'source' => 'main()',
+                    'target' => 'load_file()',
+                    'callCount' => 1,
                 ),
                 array(
-                    'source' => 1,
-                    'target' => 2,
-                    'value' => 1,
+                    'source' => 'load_file()',
+                    'target' => 'open()',
+                    'callCount' => 2,
                 ),
                 array(
-                    'source' => 2,
-                    'target' => 3,
-                    'value' => 1,
+                    'source' => 'open()',
+                    'target' => 'strlen()',
+                    'callCount' => 1,
                 ),
                 array(
-                    'source' => 0,
-                    'target' => 4,
-                    'value' => 1,
+                    'source' => 'main()',
+                    'target' => 'parse_string()',
+                    'callCount' => 1,
                 ),
                 array(
-                    'source' => 4,
-                    'target' => 2,
-                    'value' => 1,
+                    'source' => 'parse_string()',
+                    'target' => 'open()',
+                    'callCount' => 2,
                 ),
             )
         );

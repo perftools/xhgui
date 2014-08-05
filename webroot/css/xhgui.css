@@ -265,35 +265,27 @@ tr .no-results {
 /**
  * Call graph chart
  */
-.callgraph .node {
-    font: 10px sans-serif;
-    cursor: move;
+
+/* Prototype graph styles. */
+.callgraph svg {
+    overflow: hidden;
+    text-select: none;
 }
 
-.callgraph circle {
+.callgraph .node rect {
+    stroke: #333;
+    stroke-width: 1.5px;
     fill: #fff;
-    stroke: #b63c71;
-    stroke-width: 1.5px;
 }
-.callgraph .link {
+
+.callgraph .edgeLabel rect {
+    fill: #fff;
+}
+
+.callgraph .edgePath {
+    stroke: #333;
+    stroke-width: 1.5px;
     fill: none;
-    stroke: #ccc;
-    stroke-width: 1.5px;
-}
-.callgraph .link.active {
-    stroke: #000;
-}
-.callgraph #arrowhead {
-    fill: #bbb;
-}
-.callgraph #arrowhead-active {
-    fill: #000;
-}
-.callgraph text {
-    font-size: 11px;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-    text-anchor: middle;
-    vertical-align: middle;
 }
 #metric-popover {
     left: auto;

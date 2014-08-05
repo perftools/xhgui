@@ -1,5 +1,0 @@
-digraph {
-    {% for node in callgraph.nodes %}
-    "{{ node.parent }}" -> "{{ node.child }}" [label="{{ node.callCount }} call{% if node.callCount > 1 %}s{% endif %}"];
-    {% endfor %}
-}

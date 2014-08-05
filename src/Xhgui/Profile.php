@@ -591,9 +591,9 @@ class Xhgui_Profile
 
             if ($parentIndex !== null) {
                 $this->_links[] = array(
-                    'source' => $parentIndex,
-                    'target' => $index,
-                    'value' => 1,
+                    'source' => $parentName,
+                    'target' => $childName,
+                    'callCount' => $metrics['ct'],
                 );
             }
 
