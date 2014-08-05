@@ -267,9 +267,18 @@ tr .no-results {
  */
 
 /* Prototype graph styles. */
-.callgraph svg {
+.callgraph {
     overflow: hidden;
-    text-select: none;
+    cursor: move;
+}
+.callgraph text {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+.callgraph .node {
+    cursor: default;
 }
 
 .callgraph .node rect {
