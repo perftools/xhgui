@@ -1,4 +1,4 @@
-Xhgui.callgraph = function(container, data, option) {
+Xhgui.callgraph = function(container, data, options) {
     // Color scale
     var colors = d3.scale.linear()
         .domain([0, 100])
@@ -31,7 +31,7 @@ Xhgui.callgraph = function(container, data, option) {
     for (var i = 0, len = data.nodes.length; i < len; i++) {
         var node = data.nodes[i];
         g.addNode(node.name, {
-            label: node.name,
+            label: node.name + ' - ' + Xhgui.metricName(data.metric) + ' ' + Xhgui.formatNumber(node.value),
             style: nodeStyle(node),
             labelStyle: nodeLabelStyle(node)
         });
