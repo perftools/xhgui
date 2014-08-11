@@ -68,6 +68,19 @@ Xhgui.callgraph = function(container, data, options) {
             .attr('height', height * dpoint.ratio * 0.1);
         });
     });
-
     renderer.run(g, svg);
+
+    // Setup details view.
+    var details = $(options.detailView);
+    details.find('.button-close').on('click', function() {
+        details.hide();
+        details.find('.details-content').empty();
+        return false;
+    });
+
+    // Bind click events for function calls
+    svg.select('.node.enter').on('click', function(d, ev) {
+        console.log(d);
+        details.show();
+    });
 };

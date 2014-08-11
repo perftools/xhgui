@@ -271,6 +271,7 @@ tr .no-results {
     overflow: hidden;
     cursor: move;
 }
+.callgraph tspan,
 .callgraph text {
     user-select: none;
     -moz-user-select: none;
@@ -278,7 +279,7 @@ tr .no-results {
 }
 
 .callgraph .node {
-    cursor: default;
+    cursor: pointer;
 }
 
 .callgraph .node rect {
@@ -299,6 +300,16 @@ tr .no-results {
 #metric-popover {
     left: auto;
     width: 250px;
+}
+#callgraph-details {
+    width: 30%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    border: 1px solid #ccc;
+    background: #fff;
 }
 
 /**

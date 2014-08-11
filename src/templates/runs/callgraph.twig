@@ -51,13 +51,19 @@
 <div class="row-fluid">
     <div class="chart-container" id="callgraph-image"></div>
 
+    <div id="callgraph-details" style="display: none;">
+        <span class="button button-close pull-right">x</span>
+        <div class="details-content">
+        </div>
+    </div>
+
+
     <p>Due to the limitations in how xhprof collects data, callgraphs are not 100% reflective of
 the actual method callgraph.</p>
 </div>
 {% endblock %}
 
 {% block jsfoot %}
-{# <script src="{{ static('js/callgraph.js') }}"></script> #}
 <script src="{{ static('js/dagre-d3.js') }}"></script>
 <script src="{{ static('js/callgraph-viz.js') }}"></script>
 <script>
@@ -105,11 +111,10 @@ function loadCallgraph(metric, threshold) {
 
         updateThreshold(threshold);
 
-        Xhgui.callgraph(
-            '#callgraph-image',
-            data,
-            {baseUrl: baseUrl}
-        );
+        Xhgui.callgraph('#callgraph-image', data, {
+            baseUrl: baseUrl,
+            detailView: '#callgraph-details',
+        });
     });
 }
 </script>
