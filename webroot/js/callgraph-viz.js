@@ -82,7 +82,10 @@ Xhgui.callgraph = function(container, data, options) {
     renderer.run(g, svg);
 
     // Bind click events for function calls
-    svg.selectAll('.node').on('click', function(d, ev) {
+    var nodes = svg.selectAll('.node');
+    nodes.on('click', function(d, ev) {
+        nodes.classed('active', false);
+        d3.select(this).classed('active', true);
         details.show();
         var xhr = $.get(options.baseUrl + '&symbol=' + d)
         xhr.done(function(response) {

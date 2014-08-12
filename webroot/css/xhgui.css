@@ -287,6 +287,10 @@ tr .no-results {
     stroke-width: 1.5px;
     fill: #fff;
 }
+.callgraph .active rect {
+    stroke: #59bdd2;
+    stroke-width: 4px;
+}
 
 .callgraph .edgeLabel rect {
     fill: #fff;
