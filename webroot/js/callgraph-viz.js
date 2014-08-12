@@ -83,7 +83,10 @@ Xhgui.callgraph = function(container, data, options) {
 
     // Bind click events for function calls
     svg.selectAll('.node').on('click', function(d, ev) {
-        console.log(d);
         details.show();
+        var xhr = $.get(options.baseUrl + '&symbol=' + d)
+        xhr.done(function(response) {
+            details.find('.details-content').html(response);
+        });
     });
 };

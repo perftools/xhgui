@@ -45,6 +45,11 @@ $app->get('/run/symbol', function () use ($di, $app) {
     $app->controller->symbol();
 })->name('run.symbol');
 
+$app->get('/run/symbol/short', function () use ($di, $app) {
+    $app->controller = $di['runController'];
+    $app->controller->symbolShort();
+})->name('run.symbol-short');
+
 $app->get('/run/callgraph', function () use ($di, $app) {
     $app->controller = $di['runController'];
     $app->controller->callgraph();

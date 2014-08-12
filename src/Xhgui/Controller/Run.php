@@ -213,7 +213,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $profile->calculateSelf();
         list($parents, $current, $children) = $profile->getRelatives($symbol);
 
-        $this->_template = 'runs/symbol-view.twig';
+        $this->_template = 'runs/symbol.twig';
         $this->set(array(
             'symbol' => $symbol,
             'id' => $id,
@@ -222,6 +222,12 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'current' => $current,
             'children' => $children,
         ));
+    }
+
+    public function symbolShort()
+    {
+        $this->symbol();
+        $this->_template = 'runs/symbol-short.twig';
     }
 
     public function callgraph()

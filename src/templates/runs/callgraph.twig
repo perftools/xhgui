@@ -105,7 +105,7 @@ function updateThreshold(value) {
 
 function loadCallgraph(metric, threshold) {
     var url = "{{ url('run.callgraph.data', {'id': profile.id|trim}) }}";
-    var baseUrl = "{{ url('run.symbol', {'id': profile.id|trim }) }}";
+    var baseUrl = "{{ url('run.symbol-short', {'id': profile.id|trim }) }}";
     $.getJSON(url + '&metric=' + metric + '&threshold=' + threshold, function (data) {
         $('#callgraph-image').empty();
 
@@ -113,7 +113,7 @@ function loadCallgraph(metric, threshold) {
 
         Xhgui.callgraph('#callgraph-image', data, {
             baseUrl: baseUrl,
-            detailView: '#callgraph-details',
+            detailView: '#callgraph-details'
         });
     });
 }

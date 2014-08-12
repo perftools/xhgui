@@ -302,7 +302,7 @@ tr .no-results {
     width: 250px;
 }
 #callgraph-details {
-    width: 30%;
+    width: 50%;
     height: 100%;
     position: fixed;
     top: 0;
@@ -310,6 +310,10 @@ tr .no-results {
     z-index: 100;
     border: 1px solid #ccc;
     background: #fff;
+}
+.details-content {
+    height: 100%;
+    overflow-y: scroll;
 }
 .button-close {
     position: absolute;
