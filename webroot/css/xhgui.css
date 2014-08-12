@@ -311,6 +311,24 @@ tr .no-results {
     border: 1px solid #ccc;
     background: #fff;
 }
+.button-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #888;
+    color: #fff;
+    display: inline-block;
+    padding: 8px;
+    line-height: 7px;
+    font-size: 14px;
+    height: 8px;
+    width: 8px;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    vertical-align: middle;
+    cursor: pointer;
+}
 
 /**
  * Waterfall chart

@@ -47,6 +47,7 @@ Xhgui.callgraph = function(container, data, options) {
         );
     }
 
+
     var renderer = new dagreD3.Renderer();
 
     var oldDraw = renderer.drawNodes();
@@ -68,7 +69,6 @@ Xhgui.callgraph = function(container, data, options) {
             .attr('height', height * dpoint.ratio * 0.1);
         });
     });
-    renderer.run(g, svg);
 
     // Setup details view.
     var details = $(options.detailView);
@@ -78,8 +78,11 @@ Xhgui.callgraph = function(container, data, options) {
         return false;
     });
 
+    // Render the graph.
+    renderer.run(g, svg);
+
     // Bind click events for function calls
-    svg.select('.node.enter').on('click', function(d, ev) {
+    svg.selectAll('.node').on('click', function(d, ev) {
         console.log(d);
         details.show();
     });
