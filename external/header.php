@@ -75,7 +75,7 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 
-if(extension_loaded('uprofiler')) {
+if (extension_loaded('uprofiler')) {
     uprofiler_enable(UPROFILER_FLAGS_CPU | UPROFILER_FLAGS_MEMORY);
 } else {
     if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4) {
@@ -87,17 +87,16 @@ if(extension_loaded('uprofiler')) {
 
 register_shutdown_function(
     function () {
-
-        // ignore_user_abort(true) allows your PHP script to continue executing, even if the user has terminated their request.
-        // Further Reading: http://blog.preinheimer.com/index.php?/archives/248-When-does-a-user-abort.html
-        // flush() asks PHP to send any data remaining in the output buffers. This is normally done when the script completes, but
-        // since we're delaying that a bit by dealing with the xhprof stuff, we'll do it now to avoid making the user wait.
-        if(extension_loaded('uprofiler')) {
+        if (extension_loaded('uprofiler')) {
             $data['profile'] = uprofiler_disable();
         } else {
             $data['profile'] = xhprof_disable();
         }
 
+        // ignore_user_abort(true) allows your PHP script to continue executing, even if the user has terminated their request.
+        // Further Reading: http://blog.preinheimer.com/index.php?/archives/248-When-does-a-user-abort.html
+        // flush() asks PHP to send any data remaining in the output buffers. This is normally done when the script completes, but
+        // since we're delaying that a bit by dealing with the xhprof stuff, we'll do it now to avoid making the user wait.
         ignore_user_abort(true);
         flush();
 
