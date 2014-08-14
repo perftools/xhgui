@@ -31,8 +31,8 @@
  */
 
 // this file should not - under no circumstances - interfere with any other application
-if (!extension_loaded('xhprof')) {
-    error_log('xhgui - extension xhprof not loaded');
+if (!extension_loaded('xhprof') && !extension_loaded('uprofiler')) {
+    error_log('xhgui - either extension xhprof or uprofiler must be loaded');
     return;
 }
 
@@ -62,10 +62,14 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 
-if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4) {
-    xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY | XHPROF_FLAGS_NO_BUILTINS);
+if(extension_loaded('uprofiler')) {
+    uprofiler_enable(UPROFILER_FLAGS_CPU | UPROFILER_FLAGS_MEMORY);
 } else {
-    xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+    if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4) {
+        xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY | XHPROF_FLAGS_NO_BUILTINS);
+    } else {
+        xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+    }
 }
 
 register_shutdown_function(
@@ -75,7 +79,11 @@ register_shutdown_function(
         // Further Reading: http://blog.preinheimer.com/index.php?/archives/248-When-does-a-user-abort.html
         // flush() asks PHP to send any data remaining in the output buffers. This is normally done when the script completes, but
         // since we're delaying that a bit by dealing with the xhprof stuff, we'll do it now to avoid making the user wait.
-        $data['profile'] = xhprof_disable();
+        if(extension_loaded('uprofiler')) {
+            $data['profile'] = uprofiler_disable();
+        } else {
+            $data['profile'] = xhprof_disable();
+        }
 
         ignore_user_abort(true);
         flush();
