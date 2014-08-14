@@ -18,6 +18,7 @@
  * XHPROF_FLAGS_NO_BUILTINS
  *  Omit built in functions from return
  *  This can be useful to simplify the output, but there's some value in seeing that you've called strpos() 2000 times
+ *  (disabled on PHP 5.5+ as it causes a segfault)
  *
  * XHPROF_FLAGS_CPU
  *  Include CPU profiling information in output
@@ -28,6 +29,18 @@
  *
  * Use bitwise operators to combine, so XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY to profile CPU and Memory
  *
+ */
+
+/* uprofiler support
+ * The uprofiler extension is a fork of xhprof.  See: https://github.com/FriendsOfPHP/uprofiler
+ *
+ * The two extensions are very similar, and this script will use the uprofiler extension if it is loaded, 
+ * or the xhprof extension if not.  At least one of these extensions must be present.
+ *
+ * The UPROFILER_* constants mirror the XHPROF_* ones exactly, with one additional constant available:
+ *
+ * UPROFILER_FLAGS_FUNCTION_INFO (integer)
+ *  Adds more information about function calls (this information is not currently used by XHGui)
  */
 
 // this file should not - under no circumstances - interfere with any other application
