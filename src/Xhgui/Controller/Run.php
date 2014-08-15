@@ -92,7 +92,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'wall_time' => $timeChart,
             'memory' => $memoryChart,
             'watches' => $watchedFunctions,
-            'date_format' => $this->_app->config('date_format'),
+            'date_format' => $this->_app->config('date.format'),
         ));
     }
 
@@ -232,7 +232,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $this->_template = 'runs/callgraph.twig';
         $this->set(array(
             'profile' => $profile,
-            'date_format' => $this->_app->config('date_format'),
+            'date_format' => $this->_app->config('date.format'),
         ));
     }
 
