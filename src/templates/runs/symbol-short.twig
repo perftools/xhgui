@@ -50,10 +50,8 @@
                 <th>Function</th>
                 <th>Call Count</th>
 
-                <th>Inclusive Wall Time</th>
-                <th>Inclusive CPU</th>
-                <th>Inclusive Memory Usage</th>
-                <th>Inclusive Peak Memory Usage</th>
+                <th>Self Wall Time</th>
+                <th>Self Memory Usage</th>
             </tr>
         </thead>
         <tbody>
@@ -69,10 +67,8 @@
             </td>
             <td>{{ child.ct }}</td>
 
-            <td>{{ child.wt|as_time }}</td>
-            <td>{{ child.cpu|as_time }}</td>
+            <td>{{ helpers.time_and_percent('wt', child, main) }}</td>
             <td>{{ child.mu|as_bytes }}</td>
-            <td>{{ child.pmu|as_bytes }}</td>
         </tr>
         {% else %}
         <tr>

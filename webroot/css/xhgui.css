@@ -317,6 +317,7 @@ tr .no-results {
 }
 .details-content {
     height: 100%;
+    padding: 10px;
     overflow-y: scroll;
 }
 .button-close {
