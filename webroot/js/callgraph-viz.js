@@ -2,7 +2,7 @@ Xhgui.callgraph = function(container, data, options) {
     // Color scale
     var colors = d3.scale.linear()
         .domain([0, 100])
-        .range(['#ffe85e', '#b63c71']);
+        .range(['#fff', '#b63c71']);
 
     var textSize = d3.scale.linear()
         .domain([0, 100])
