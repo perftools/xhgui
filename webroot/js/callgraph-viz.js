@@ -90,6 +90,8 @@ Xhgui.callgraph = function(container, data, options) {
         var xhr = $.get(options.baseUrl + '&symbol=' + d)
         xhr.done(function(response) {
             details.find('.details-content').html(response);
+            Xhgui.tableSort(details.find('.table-sort'));
         });
     });
+
 };

@@ -1,7 +1,6 @@
-// Utilitarian DOM behavior.
-$(document).ready(function () {
-    $('.tip').tooltip();
-    var tables = $('.table-sort');
+window.Xhgui = window.Xhgui || {};
+
+Xhgui.tableSort = function(tables) {
     tables.stickyTableHeaders();
     tables.tablesorter({
         textExtraction: function(node) {
@@ -12,6 +11,14 @@ $(document).ready(function () {
             return '' + parseInt(text.replace(/,/g, ''), 10);
         }
     });
+};
+
+// Utilitarian DOM behavior.
+$(document).ready(function () {
+    $('.tip').tooltip();
+
+    var tables = $('.table-sort');
+    Xhgui.tableSort(tables);
 
     $('.datepicker').datepicker();
 

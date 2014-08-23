@@ -1,4 +1,4 @@
-window.Xhgui = {};
+window.Xhgui = window.Xhgui || {};
 
 Xhgui.metricName = function (metric) {
     var map = {
