@@ -46,30 +46,6 @@ Xhgui.callgraph = function(container, data, options) {
             {label: edge.callCount + word}
         );
     }
-
-
-    var renderer = new dagreD3.Renderer();
-
-    var oldDraw = renderer.drawNodes();
-    renderer.drawNodes(function(graph, root) {
-        var nodes = oldDraw(graph, root);
-        return nodes.each(function(u) {
-            return;
-
-            var dpoint = graph.node(u);
-            var box = d3.select(this).select('rect');
-
-            var width = box.attr('width');
-            var height = box.attr('height');
-
-            // Color and size the box based on how heavy it was.
-            box.style('fill', function (d) {
-                return colors(dpoint.ratio);
-            }).attr('width',  width * dpoint.ratio * 0.1)
-            .attr('height', height * dpoint.ratio * 0.1);
-        });
-    });
-
     // Setup details view.
     var details = $(options.detailView);
     details.find('.button-close').on('click', function() {
@@ -78,8 +54,16 @@ Xhgui.callgraph = function(container, data, options) {
         return false;
     });
 
+    // Lay out the graph more tightly than the defaults.
+    var layout = dagreD3.layout()
+          .nodeSep(30)
+          .rankSep(30)
+          .rankDir("TB");
+
     // Render the graph.
-    renderer.run(g, svg);
+    var renderer = new dagreD3.Renderer()
+        .layout(layout)
+        .run(g, svg);
 
     // Bind click events for function calls
     var nodes = svg.selectAll('.node');
