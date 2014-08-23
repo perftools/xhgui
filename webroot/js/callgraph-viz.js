@@ -46,6 +46,8 @@ Xhgui.callgraph = function(container, data, options) {
             {label: edge.callCount + word}
         );
     }
+
+
     // Setup details view.
     var details = $(options.detailView);
     details.find('.button-close').on('click', function() {
@@ -62,12 +64,22 @@ Xhgui.callgraph = function(container, data, options) {
 
     // Render the graph.
     var renderer = new dagreD3.Renderer()
-        .layout(layout)
-        .run(g, svg);
+        .layout(layout);
+
+    var oldEdge = renderer.drawEdgePaths();
+    renderer.drawEdgePaths(function(g, root) {
+        var node = oldEdge(g, root);
+        node.attr('data-value', function(d) {
+            return d;
+        });
+        return node;
+    });
+
+    renderer.run(g, svg);
 
     // Bind click events for function calls
     var nodes = svg.selectAll('.node');
-    nodes.on('click', function(d, ev) {
+    nodes.on('click', function(d, edge) {
         nodes.classed('active', false);
         d3.select(this).classed('active', true);
         details.show();
@@ -76,6 +88,41 @@ Xhgui.callgraph = function(container, data, options) {
             details.find('.details-content').html(response);
             Xhgui.tableSort(details.find('.table-sort'));
         });
+        highlightSubtree(d);
     });
 
+
+    // Collects and iterates the subtree of nodes/edges and highlights them.
+    var highlightSubtree = function(root) {
+        var i, len;
+        var subtree = [root];
+        var nodes = [root];
+        while (nodes.length > 0) {
+            var node = nodes.shift();
+            var childNodes = g.successors(node);
+            if (childNodes.length == 0) {
+                break;
+            }
+            // Append into the 'queue' so we can collect *all the nodes*
+            nodes = nodes.concat(childNodes);
+
+            // Collect the entire subtree so we can find and highlight edges.
+            subtree = subtree.concat(childNodes);
+        }
+
+        var edges = [];
+        // Find the outgoing edges for each node in the subtree.
+        for (i = 0, len = subtree.length; i < len; i++) {
+            node = subtree[i];
+            edges = edges.concat(g.outEdges(node));
+        }
+
+        // Clear width.
+        svg.selectAll('g.edgePath path').style('stroke-width', 1);
+
+        // Highlight each edge in the subtree.
+        for (i = 0, len = edges.length; i < len; i++) {
+            svg.select('g.edgePath[data-value=' + edges[i] + '] path').style('stroke-width', 5);
+        }
+    };
 };
