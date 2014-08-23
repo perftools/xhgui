@@ -312,8 +312,8 @@ tr .no-results {
     top: 0;
     left: 0;
     z-index: 100;
-    border: 1px solid #ccc;
     background: #fff;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5);
 }
 .details-content {
     height: 100%;
