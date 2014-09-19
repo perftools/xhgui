@@ -310,10 +310,15 @@ tr .no-results {
     height: 100%;
     position: fixed;
     top: 0;
-    left: 0;
+    left: -50%;
     z-index: 100;
     background: #fff;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5);
+    transition: left 0.25s ease-out;
+}
+#callgraph-details.active {
+    left: 0;
+    transition: left 0.25s ease-out;
 }
 .details-content {
     height: 100%;

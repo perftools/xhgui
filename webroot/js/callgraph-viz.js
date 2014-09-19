@@ -51,7 +51,7 @@ Xhgui.callgraph = function(container, data, options) {
     // Setup details view.
     var details = $(options.detailView);
     details.find('.button-close').on('click', function() {
-        details.hide();
+        details.removeClass('active');
         details.find('.details-content').empty();
         return false;
     });
@@ -82,10 +82,10 @@ Xhgui.callgraph = function(container, data, options) {
     nodes.on('click', function(d, edge) {
         nodes.classed('active', false);
         d3.select(this).classed('active', true);
-        details.show();
         var xhr = $.get(options.baseUrl + '&symbol=' + d)
         xhr.done(function(response) {
-            details.find('.details-content').html(response);
+            details.addClass('active')
+                .find('.details-content').html(response);
             Xhgui.tableSort(details.find('.table-sort'));
         });
         highlightSubtree(d);
