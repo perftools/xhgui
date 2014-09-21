@@ -17,6 +17,16 @@ Xhgui.callgraph = function(container, data, options) {
         var ratio = node.value / data.total * 100;
         return 'font-size: ' + textSize(ratio) + 'em;'
     }
+    // Get a data hash for a given node.
+    var nodeData = function(node) {
+        var ratio = node.value / data.total * 100;
+        return {
+            metric: data.metric,
+            value: node.value,
+            ratio: ratio,
+            callCount: node.callCount,
+        };
+    }
 
     var el = d3.select(container),
         width = parseInt(el.style('width'), 10),
@@ -31,9 +41,10 @@ Xhgui.callgraph = function(container, data, options) {
     for (var i = 0, len = data.nodes.length; i < len; i++) {
         var node = data.nodes[i];
         g.addNode(node.name, {
-            label: node.name + ' - ' + Xhgui.metricName(data.metric) + ' ' + Xhgui.formatNumber(node.value),
+            label: node.name + ' - ' + data.metric + ' ' + Xhgui.formatNumber(node.value),
             style: nodeStyle(node),
-            labelStyle: nodeLabelStyle(node)
+            labelStyle: nodeLabelStyle(node),
+            data: nodeData(node)
         });
     }
     for (i = 0, len = data.links.length; i < len; i++) {
@@ -91,6 +102,46 @@ Xhgui.callgraph = function(container, data, options) {
         highlightSubtree(d);
     });
 
+    // Set tooltips on boxes.
+    Xhgui.tooltip(el, {
+        bindTo: nodes,
+        positioner: function (d, i, tooltip) {
+            // Use the box's offset to position the tooltip.
+            var position = this.getBoundingClientRect();
+            var height = parseInt(tooltip.frame.style('height'), 10);
+
+            var pos = {
+                // 7 = 1/2 width of arrow
+                x: position.left + (position.width / 2) - 7,
+                // Because we are using getBoundingClientRect() which returns
+                // data based on the viewport, we have
+                // to reverse the offsetTop() and height/2 operations that
+                // the tooltip will apply.
+                y: position.y - el.node().offsetTop - (height / 2),
+            };
+            return pos;
+        },
+        formatter: function (d, i) {
+            var data = g.node(d).data;
+            var units = 'µs';
+            if (data.metric.indexOf('mu') !== -1) {
+              units = 'bytes';
+            }
+            var ratio = Xhgui.formatNumber(data.ratio);
+            var value = Xhgui.formatNumber(data.value);
+            var metric = Xhgui.metricName(data.metric);
+            var urlName = '&symbol=' + encodeURIComponent(d);
+
+            var label = '<h5>' + d + '</h5>' +
+                '<strong>' + metric + ':</strong> ' + ratio + '% ' +
+                ' (' + value + ' <span class="units">' + units + '</span>) ' +
+                '<br />' +
+                '<strong>Call count:</strong> ' + data.callCount +
+                '<br />' +
+                ' <a href="' + options.baseUrl + urlName + '">View symbol</a> <br />';
+            return label;
+        }
+    });
 
     // Collects and iterates the subtree of nodes/edges and highlights them.
     var highlightSubtree = function(root) {
