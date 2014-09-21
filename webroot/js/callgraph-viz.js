@@ -111,13 +111,15 @@ Xhgui.callgraph = function(container, data, options) {
             var height = parseInt(tooltip.frame.style('height'), 10);
 
             var pos = {
-                // 7 = 1/2 width of arrow
-                x: position.left + (position.width / 2) - 7,
+                // 20 is a fudge factor.
+                x: position.left + (position.width / 2) - 20,
+
                 // Because we are using getBoundingClientRect() which returns
                 // data based on the viewport, we have
                 // to reverse the offsetTop() and height/2 operations that
-                // the tooltip will apply.
-                y: position.y - el.node().offsetTop - (height / 2),
+                // the tooltip will apply. We also need to account for window scroll
+                // position.
+                y: position.y + window.scrollY - el.node().offsetTop - (height / 2),
             };
             return pos;
         },
