@@ -58,15 +58,6 @@ Xhgui.callgraph = function(container, data, options) {
         );
     }
 
-
-    // Setup details view.
-    var details = $(options.detailView);
-    details.find('.button-close').on('click', function() {
-        details.removeClass('active');
-        details.find('.details-content').empty();
-        return false;
-    });
-
     // Lay out the graph more tightly than the defaults.
     var layout = dagreD3.layout()
           .nodeSep(30)
@@ -82,6 +73,15 @@ Xhgui.callgraph = function(container, data, options) {
         var node = oldEdge(g, root);
         node.attr('data-value', function(d) {
             return d;
+        });
+        return node;
+    });
+
+    var oldNode = renderer.drawNodes();
+    renderer.drawNodes(function(g, root) {
+        var node = oldNode(g, root);
+        node.attr('data-value', function(d) {
+            return d.replace(/\\/g, '_');
         });
         return node;
     });
@@ -178,4 +178,37 @@ Xhgui.callgraph = function(container, data, options) {
             svg.select('g.edgePath[data-value=' + edges[i] + '] path').style('stroke-width', 5);
         }
     };
+
+
+    // Setup details view.
+    var details = $(options.detailView);
+    details.find('.button-close').on('click', function() {
+        details.removeClass('active');
+        details.find('.details-content').empty();
+        return false;
+    });
+
+    // Child symbol links move graph around.
+    details.on('click', '.child-symbol a', function(e) {
+        var symbol = $(this).attr('title').replace(/\\/g, '_');
+        var rect = $('[data-value="' + symbol + '"]');
+
+        // Not in the DOM, follow the link.
+        if (!rect.length) {
+            return;
+        }
+        var zoom = svg.select('.zoom');
+        var coords = rect[0].getBoundingClientRect();
+        var current = zoom.attr('transform');
+        var parser = /translate\([-0-9.]+,[-0-9.]+\)(?:scale\(([-0-9.]+)\))?/
+        var matches = parser.exec(current);
+        if (matches.length == 2) {
+            zoom.attr('transform',
+                      'translate(' + coords.x + ',' + coords.y + ')' +
+                      'scale(' + matches[1] + ')');
+        } else {
+            zoom.attr('transform', 'translate(' + coords.x + ',' + coords.y + ')');
+        }
+        return false;
+    });
 };
