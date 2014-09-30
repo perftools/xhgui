@@ -86,7 +86,22 @@ Xhgui.callgraph = function(container, data, options) {
         return node;
     });
 
+    // Capture zoom object so tooltips can be hidden
+    var zoom;
+    renderer.zoom(function(graph, svg) {
+        zoom = d3.behavior.zoom().on('zoom', function() {
+            svg.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
+        });
+        return zoom;
+    });
+
     renderer.run(g, svg);
+
+    // Hide tooltip on zoom
+    zoom.on('zoom.tooltip', function(e) {
+        $('.popover').hide();
+        return true;
+    });
 
     // Bind click events for function calls
     var nodes = svg.selectAll('.node');
