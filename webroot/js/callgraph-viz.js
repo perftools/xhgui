@@ -97,11 +97,12 @@ Xhgui.callgraph = function(container, data, options) {
 
     renderer.run(g, svg);
 
-    // Hide tooltip on zoom
-    zoom.on('zoom.tooltip', function(e) {
+    var hideTooltip = function(e) {
         $('.popover').hide();
         return true;
-    });
+    };
+    // Hide tooltip on zoom
+    zoom.on('zoom.tooltip', hideTooltip);
 
     // Bind click events for function calls
     var nodes = svg.selectAll('.node');
@@ -195,7 +196,7 @@ Xhgui.callgraph = function(container, data, options) {
     };
 
 
-    // Hopefully center an element in the canvas.
+    // Approximately center an element in the canvas.
     var centerElement = function(rect) {
         var zoomEl = svg.select('.zoom');
         var position = rect[0].getBoundingClientRect();
@@ -232,6 +233,7 @@ Xhgui.callgraph = function(container, data, options) {
         if (!rect.length) {
             return;
         }
+        hideTooltip();
         centerElement(rect);
 
         // Simulate a click as d3 and jQuery handle events differently.

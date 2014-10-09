@@ -306,11 +306,11 @@ tr .no-results {
     width: 250px;
 }
 #callgraph-details {
-    width: 50%;
+    width: 40%;
     height: 100%;
     position: fixed;
     top: 0;
-    left: -50%;
+    left: -40%;
     z-index: 1020;
     background: #fff;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5);
