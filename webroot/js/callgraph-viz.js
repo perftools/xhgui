@@ -195,6 +195,26 @@ Xhgui.callgraph = function(container, data, options) {
     };
 
 
+    // Hopefully center an element in the canvas.
+    var centerElement = function(rect) {
+        var zoomEl = svg.select('.zoom');
+        var position = rect[0].getBoundingClientRect();
+
+        // Get the box center so we can center the center.
+        var scale = zoom.scale();
+        var offset = zoom.translate();
+
+        var translate = [
+            offset[0] - position.x + (position.width / 2) + (window.innerWidth / 2),
+            offset[1] + position.y - (position.height / 2) - (window.innerHeight / 2)
+        ];
+
+        zoom.translate(translate);
+        zoomEl.transition()
+            .duration(750)
+            .attr('transform', 'translate(' + translate[0] + ',' + translate[1] + ')scale(' + scale + ')');
+    };
+
     // Setup details view.
     var details = $(options.detailView);
     details.find('.button-close').on('click', function() {
@@ -212,18 +232,13 @@ Xhgui.callgraph = function(container, data, options) {
         if (!rect.length) {
             return;
         }
-        var zoom = svg.select('.zoom');
-        var coords = rect[0].getBoundingClientRect();
-        var current = zoom.attr('transform');
-        var parser = /translate\([-0-9.]+,[-0-9.]+\)(?:scale\(([-0-9.]+)\))?/
-        var matches = parser.exec(current);
-        if (matches.length == 2) {
-            zoom.attr('transform',
-                      'translate(' + coords.x + ',' + coords.y + ')' +
-                      'scale(' + matches[1] + ')');
-        } else {
-            zoom.attr('transform', 'translate(' + coords.x + ',' + coords.y + ')');
-        }
+        centerElement(rect);
+
+        // Simulate a click as d3 and jQuery handle events differently.
+        var evt = document.createEvent("MouseEvents");
+        evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        rect[0].dispatchEvent(evt);
         return false;
     });
+
 };
