@@ -49,7 +49,9 @@
 
 
 <div class="row-fluid">
-    <div class="chart-container" id="callgraph-image"></div>
+    <div id="loading">Loading..</div>
+    <div class="chart-container" id="callgraph-image">
+    </div>
 
     <div id="callgraph-details">
         <span class="button-close pull-right">&#10799;</span>
@@ -68,6 +70,7 @@ the actual method callgraph.</p>
 <script src="{{ static('js/callgraph-viz.js') }}"></script>
 <script>
 $(document).ready(function () {
+    var loading = $('#loading');
     var gear = $('#customize-graph');
     var select = $('select[name=metric]');
     var popover = $('#metric-popover');
@@ -108,6 +111,7 @@ function loadCallgraph(metric, threshold) {
     var baseUrl = "{{ url('run.symbol-short', {'id': profile.id|trim }) }}";
     $.getJSON(url + '&metric=' + metric + '&threshold=' + threshold, function (data) {
         $('#callgraph-image').empty();
+        $('#loading').hide();
 
         updateThreshold(threshold);
 

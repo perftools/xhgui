@@ -305,6 +305,10 @@ tr .no-results {
     left: auto;
     width: 250px;
 }
+#loading {
+    text-align: center;
+    margin: 20px;
+}
 #callgraph-details {
     width: 40%;
     height: 100%;
