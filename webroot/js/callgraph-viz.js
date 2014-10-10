@@ -204,10 +204,9 @@ Xhgui.callgraph = function(container, data, options) {
         // Get the box center so we can center the center.
         var scale = zoom.scale();
         var offset = zoom.translate();
-
         var translate = [
-            offset[0] - position.x + (position.width / 2) + (window.innerWidth / 2),
-            offset[1] + position.y - (position.height / 2) - (window.innerHeight / 2)
+            offset[0] - position.left - (position.width / 2) + (window.innerWidth / 2),
+            offset[1] - position.top - (position.height / 2) + (window.innerHeight / 2)
         ];
 
         zoom.translate(translate);
