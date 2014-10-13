@@ -109,7 +109,12 @@ Xhgui.callgraph = function(container, data, options) {
     nodes.on('click', function(d, edge) {
         nodes.classed('active', false);
         d3.select(this).classed('active', true);
-        var xhr = $.get(options.baseUrl + '&symbol=' + d)
+        var params = {
+            symbol: d,
+            threshold: options.threshold,
+            metric: options.metric
+        };
+        var xhr = $.get(options.shortUrl + '&' + $.param(params))
         xhr.done(function(response) {
             details.addClass('active')
                 .find('.details-content').html(response);
@@ -228,9 +233,9 @@ Xhgui.callgraph = function(container, data, options) {
         var symbol = $(this).attr('title').replace(/\\/g, '_');
         var rect = $('[data-value="' + symbol + '"]');
 
-        // Not in the DOM, follow the link.
+        // Not in the DOM; cancel.
         if (!rect.length) {
-            return;
+            return false;
         }
         hideTooltip();
         centerElement(rect);

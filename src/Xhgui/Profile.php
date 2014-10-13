@@ -210,12 +210,15 @@ class Xhgui_Profile
      * of the symbol given. The current index will give the total
      * inclusive values for all properties.
      *
-     * @param array $profile Array of profile data.
      * @param string $symbol The name of the function/method to find
      *    relatives for.
+     * @param string $metric The metric to compare $threshold with.
+     * @param float $threshold The threshold to exclude child functions at. Any
+     *   function that represents less than this percentage of the current metric
+     *   will be filtered out.
      * @return array List of (parent, current, children)
      */
-    public function getRelatives($symbol)
+    public function getRelatives($symbol, $metric = null, $threshold = 0)
     {
         $parents = array();
 
@@ -230,30 +233,59 @@ class Xhgui_Profile
         $current = $this->_collapsed[$symbol];
         $current['function'] = $symbol;
 
-        // Use the parents data to collect parents.
-        $parentMethods = $current['parents'];
-        foreach ($parentMethods as $parent) {
+        $parents = $this->_getParents($symbol);
+        $children = $this->_getChildren($symbol, $metric, $threshold);
+        return array($parents, $current, $children);
+    }
+
+    /**
+     * Get the parent methods for a given symbol.
+     *
+     * @param string $symbol The name of the function/method to find
+     *    parents for.
+     * @return array List of parents
+     */
+    protected function _getParents($symbol) {
+        $parents = array();
+        $current = $this->_collapsed[$symbol];
+        foreach ($current['parents'] as $parent) {
             if (isset($this->_collapsed[$parent])) {
                 $parents[] = array('function' => $parent) + $this->_collapsed[$parent];
             }
         }
-
-        $children = $this->_getChildren($symbol);
-        return array($parents, $current, $children);
+        return $parents;
     }
 
     /**
      * Find symbols that are the children of the given name.
      *
      * @param string $symbol The name of the function to find children of.
+     * @param string $metric The metric to compare $threshold with.
+     * @param float $threshold The threshold to exclude functions at. Any
+     *   function that represents less than
      * @return array An array of child methods.
      */
-    protected function _getChildren($symbol) {
+    protected function _getChildren($symbol, $metric = null, $threshold = 0) {
         $children = array();
         if (!isset($this->_indexed[$symbol])) {
             return $children;
         }
+
+        $total = 0;
+        if (isset($metric)) {
+            $top = $this->_indexed[self::NO_PARENT];
+            // Not always 'main()'
+            $mainFunc = current($top);
+            $total = $mainFunc[$metric];
+        }
+
         foreach ($this->_indexed[$symbol] as $name => $data) {
+            if (
+                $metric && $total > 0 && $threshold > 0 &&
+                ($this->_collapsed[$name][$metric] / $total) < $threshold
+            ) {
+                continue;
+            }
             $children[] = $data + array('function' => $name);
         }
         return $children;
