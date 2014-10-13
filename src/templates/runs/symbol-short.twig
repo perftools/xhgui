@@ -44,6 +44,41 @@
         </tbody>
     </table>
 
+    <h3>Parent functions</h3>
+    <table class="table table-hover table-sort">
+        <thead>
+            <tr>
+                <th>Function</th>
+                <th>Call Count</th>
+
+                <th>Self Wall Time</th>
+                <th>Self Memory Usage</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for parent in parents %}
+        <tr>
+            <td class="text child-symbol">
+                {{ helpers.tip_link(
+                    parent.function,
+                    65,
+                    'run.symbol',
+                    {'id': id, 'symbol': parent.function}
+                ) }}
+            </td>
+            <td>{{ child.ct }}</td>
+
+            <td>{{ helpers.time_and_percent('wt', parent, main) }}</td>
+            <td>{{ parent.mu|as_bytes }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6">{{ symbol }} had no parents.</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
     <h3>Child functions</h3>
     <table class="table table-hover table-sort">
         <thead>
