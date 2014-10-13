@@ -1,292 +1,245 @@
-/**
- * Generate a callgraph visualization based on the provided data.
- *
- * @param String container
- * @param Array data The profile data.
- * @param Object options Additional options
- */
-Xhgui.callgraph = function (container, data, options) {
+Xhgui.callgraph = function(container, data, options) {
+    // Color scale
+    var colors = d3.scale.linear()
+        .domain([0, 100])
+        .range(['#fff', '#b63c71']);
+
+    var textSize = d3.scale.linear()
+        .domain([0, 100])
+        .range([0.5, 3]);
+
+    // Generate the style props for a node and its label
+    var nodeStyle = function(node) {
+        var ratio = node.value / data.total * 100;
+        return 'fill: ' + colors(ratio) + ';'
+    };
+    var nodeLabelStyle = function(node) {
+        var ratio = node.value / data.total * 100;
+        return 'font-size: ' + textSize(ratio) + 'em;'
+    }
+    // Get a data hash for a given node.
+    var nodeData = function(node) {
+        var ratio = node.value / data.total * 100;
+        return {
+            metric: data.metric,
+            value: node.value,
+            ratio: ratio,
+            callCount: node.callCount,
+        };
+    }
+
     var el = d3.select(container),
         width = parseInt(el.style('width'), 10),
         height = 1000;
-
-    var force = d3.layout.force()
-        .charge(function(d) {
-            return -50 * Math.log(d.ratio);
-        })
-        .linkDistance(function(d) {
-            return d.target.weight;
-        })
-        .size([width, height]);
 
     var svg = d3.select(container).append('svg')
         .attr('class', 'callgraph')
         .attr('width', width)
         .attr('height', height);
 
-    // Append the defs and markers
-    var defs = svg.append('svg:defs');
-
-    defs.append('svg:marker')
-        .attr({
-            id: 'arrowhead',
-            viewBox: '0 0 10 10',
-            refX: 10,
-            refY: 6,
-            markerUnits: 'strokeWidth',
-            markerHeight: 4,
-            markerWidth: 4,
-            orient: 'auto'
-        }).append('path')
-            .attr('d', 'M 0 0 L 10 5 L 0 10 z');
-
-    defs.append('svg:marker')
-        .attr({
-            id: 'arrowhead-active',
-            viewBox: '0 0 10 10',
-            refX: 10,
-            refY: 6,
-            markerUnits: 'strokeWidth',
-            markerHeight: 4,
-            markerWidth: 4,
-            orient: 'auto'
-        }).append('path')
-            .attr('d', 'M 0 0 L 10 5 L 0 10 z');
-
-    // Fix the main() node
-    data.nodes[0].fixed = true;
-    data.nodes[0].x = width / 2;
-    data.nodes[0].y = 60;
-
+    var g = new dagreD3.Digraph();
     for (var i = 0, len = data.nodes.length; i < len; i++) {
-        data.nodes[i].ratio = Math.ceil(data.nodes[i].value / data.total * 100);
+        var node = data.nodes[i];
+        g.addNode(node.name, {
+            label: node.name + ' - ' + data.metric + ' ' + Xhgui.formatNumber(node.value),
+            style: nodeStyle(node),
+            labelStyle: nodeLabelStyle(node),
+            data: nodeData(node)
+        });
+    }
+    for (i = 0, len = data.links.length; i < len; i++) {
+        var edge = data.links[i];
+        var word = edge.callCount === 1 ? ' call' : ' calls';
+        g.addEdge(
+            null,
+            edge.source,
+            edge.target,
+            {label: edge.callCount + word}
+        );
     }
 
-    var nodes = force.nodes(data.nodes)
-        .links(data.links)
-        .charge(-200)
-        .linkDistance(20)
-        .start();
+    // Lay out the graph more tightly than the defaults.
+    var layout = dagreD3.layout()
+          .nodeSep(30)
+          .rankSep(30)
+          .rankDir("TB");
 
-    var linkGroup = svg.selectAll('.link-g')
-        .data(data.links)
-        .enter()
-        .append('g')
-        .attr('class', 'link-g');
+    // Render the graph.
+    var renderer = new dagreD3.Renderer()
+        .layout(layout);
 
-    var link = linkGroup.append('line')
-        .style('stroke-width', function (d) {
-            return Math.max(0.75, Math.log(d.target.ratio));
-        })
-        .attr({
-            'class': 'link',
-            'marker-end': "url(#arrowhead)"
+    var oldEdge = renderer.drawEdgePaths();
+    renderer.drawEdgePaths(function(g, root) {
+        var node = oldEdge(g, root);
+        node.attr('data-value', function(d) {
+            return d;
         });
-
-    // Text displayed by connecting lines.
-    var linkText = linkGroup.append('text')
-        .style('display', function(d) {
-            return d.target.ratio > 5 ? 'block' : 'none';
-        })
-        .text(function(d) {
-            var text = d.target.callCount == 1 ? ' call' : ' calls';
-            return d.target.callCount + text;
-        });
-
-    // Color scale
-    var colors = d3.scale.linear()
-        .domain([0, 100])
-        .range(['#ffe85e', '#b63c71']);
-
-    var gnodes = svg.selectAll('g.node')
-        .data(data.nodes)
-        .enter().append('g')
-        .attr('class', 'node')
-        .call(force.drag);
-
-    // Make nodes that are moved sticky.
-    gnodes.on('mousedown', function (d) {
-        d.fixed = true;
+        return node;
     });
 
-    // Make an easier to traverse link list.
-    var linkMap = {};
-    link.each(function (linkData) {
-        var sourceIndex = linkData.source.index;
-        var childLinks = link.filter(function (d) {
-            return d.source.index == sourceIndex;
+    var oldNode = renderer.drawNodes();
+    renderer.drawNodes(function(g, root) {
+        var node = oldNode(g, root);
+        node.attr('data-value', function(d) {
+            return d.replace(/\\/g, '_');
         });
-        if (childLinks[0].length) {
-            linkMap[sourceIndex] = childLinks;
-        }
+        return node;
     });
 
-    function getChildLinks(parent) {
-        if (linkMap[parent.index] === undefined) {
-            return [];
-        }
-        // Use a simple queue to walk the graph
-        // without using recursion, as we could easily
-        // blow the browser stack frame limit
-        var queue = linkMap[parent.index].slice()
-        var linkSet = [];
-        var visited = {};
-        visited[parent.index] = true;
+    // Capture zoom object so tooltips can be hidden
+    var zoom;
+    renderer.zoom(function(graph, svg) {
+        zoom = d3.behavior.zoom().on('zoom', function() {
+            svg.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
+        });
+        return zoom;
+    });
 
-        if (queue === undefined) {
-            return linkSet;
-        }
-        while (queue.length) {
-            var currentSet = queue.shift();
-            if (!currentSet.length) {
-                return linkSet;
-            }
-            // 'recurse' and append into the queue.
-            d3.selectAll(currentSet).each(function (datum) {
-                var nextIndex = datum.target.index;
-                if (visited[nextIndex]) {
-                    return;
-                }
-                linkSet.push(this);
-                visited[nextIndex] = true;
-                var nextNodes = linkMap[nextIndex];
-                if (nextNodes && nextNodes.length) {
-                    queue = queue.concat(linkMap[nextIndex]);
-                }
-            });
-        }
-        return linkSet;
-    }
+    renderer.run(g, svg);
 
-    // Used to generate the radius of the circles
-    // also used to adjust link line positions.
-    var radiusCalculator = function(d) {
-        return Math.max(d.ratio * 0.5, 4);
+    var hideTooltip = function(e) {
+        $('.popover').hide();
+        return true;
     };
+    // Hide tooltip on zoom
+    zoom.on('zoom.tooltip', hideTooltip);
 
-    // Append dots and text.
-    var circle = gnodes.append('circle')
-        .attr('r', radiusCalculator)
-        .style('fill', function (d) {
-            return colors(d.ratio);
-        })
-        // Mouse effects to highlight subtrees
-        .on('mouseover', function (d, ev) {
-            var node = nodes.nodes()[d.index];
-            var childLinks = getChildLinks(node);
-            d3.selectAll(childLinks).attr({
-                'class': 'link active',
-                'marker-end': "url(#arrowhead-active)"
-            });
-        }).on('mouseout', function (d, ev) {
-            var node = nodes.nodes()[d.index];
-            var childLinks = getChildLinks(node);
-            d3.selectAll(childLinks).attr({
-                'class': 'link',
-                'marker-end': "url(#arrowhead)"
-            });
+    // Bind click events for function calls
+    var nodes = svg.selectAll('.node');
+    nodes.on('click', function(d, edge) {
+        nodes.classed('active', false);
+        d3.select(this).classed('active', true);
+        var xhr = $.get(options.baseUrl + '&symbol=' + d)
+        xhr.done(function(response) {
+            details.addClass('active')
+                .find('.details-content').html(response);
+            Xhgui.tableSort(details.find('.table-sort'));
         });
-
-    var text = gnodes.append('text')
-        .style({
-            'display': function (d) {
-                return d.ratio > 15 ? 'block' : 'none';
-            }
-        })
-        .text(function (d) {
-            return d.name;
-        });
-
-    // Get the angle of the line that
-    // will connect d.target + d.source.
-    // We need the angle to make adjustments to the
-    // line termination so the arrows show.
-    var slopeInfo = function(d) {
-        var run = d.target.x - d.source.x;
-        var rise = Math.abs(d.target.y - d.source.y);
-        var slope = rise / run;
-        return {
-            run: run,
-            angle: Math.atan(slope)
-        };
-    };
-
-    // Position lines / dots on each tick of the graph.
-    force.on("tick", function() {
-        link.attr("x1", function(d) {
-                return d.source.x;
-            })
-            .attr("y1", function(d) {
-                return d.source.y;
-            })
-            .attr("x2", function(d) {
-                // Use slope, radius and trigonometry to reposition the end
-                // of the line to where it would intersect with the circle.
-                var slope = slopeInfo(d);
-                var radius = radiusCalculator(d.target);
-                var adjacent = Math.cos(slope.angle) * radius;
-                if (slope.run > 0) {
-                    return d.target.x - adjacent;
-                }
-                return d.target.x + adjacent;
-
-                return d.target.x;
-            })
-            .attr("y2", function(d) {
-                // See x2 above.
-                var slope = slopeInfo(d);
-                var radius = radiusCalculator(d.target);
-                var opposite = Math.sin(slope.angle) * radius;
-                if (slope.run > 0) {
-                    return d.target.y - opposite;
-                }
-                return d.target.y + opposite;
-            });
-
-        // Position call count text along line.
-        // 5 gives a decent margin.
-        linkText.attr('x', function(d) {
-            return d.source.x - 5 + (d.target.x - d.source.x) / 2;
-        }).attr('y', function(d) {
-            return d.source.y - 5 + (d.target.y - d.source.y) / 2;
-        });
-
-        circle.attr("cx", function(d) { return d.x; })
-            .attr("cy", function(d) { return d.y; });
-
-        text.attr("x", function(d) { return d.x; })
-            .attr("y", function(d) { return d.y; });
+        highlightSubtree(d);
     });
 
-    // Set tooltips on circles.
+    // Set tooltips on boxes.
     Xhgui.tooltip(el, {
-        bindTo: gnodes,
-        positioner: function (d, i) {
-            // Use the circle's bbox to position the tooltip.
-            var position = this.getBBox();
+        bindTo: nodes,
+        positioner: function (d, i, tooltip) {
+            // Use the box's offset to position the tooltip.
+            var position = this.getBoundingClientRect();
+            var height = parseInt(tooltip.frame.style('height'), 10);
 
-            return {
-                // 7 = 1/2 width of arrow
-                x: position.x + (position.width / 2) - 7,
-                // 45 = fudge factor.
-                y: position.y - 45
+            var pos = {
+                // 20 is a fudge factor.
+                x: position.left + (position.width / 2) - 20,
+
+                // Because we are using getBoundingClientRect() which returns
+                // data based on the viewport, we have
+                // to reverse the offsetTop() and height/2 operations that
+                // the tooltip will apply. We also need to account for window scroll
+                // position.
+                y: position.y + window.scrollY - el.node().offsetTop - (height / 2),
             };
+            return pos;
         },
         formatter: function (d, i) {
+            var data = g.node(d).data;
             var units = 'µs';
             if (data.metric.indexOf('mu') !== -1) {
               units = 'bytes';
             }
-            var urlName = '&symbol=' + encodeURIComponent(d.name);
-            var label = '<h5>' + d.name + '</h5>' +
-                '<strong>' + Xhgui.metricName(data.metric) + ':</strong> ' + d.ratio + '% ' +
-                ' (' + Xhgui.formatNumber(d.value) + ' <span class="units">' + units + '</span>) ' +
+            var ratio = Xhgui.formatNumber(data.ratio);
+            var value = Xhgui.formatNumber(data.value);
+            var metric = Xhgui.metricName(data.metric);
+            var urlName = '&symbol=' + encodeURIComponent(d);
+
+            var label = '<h5>' + d + '</h5>' +
+                '<strong>' + metric + ':</strong> ' + ratio + '% ' +
+                ' (' + value + ' <span class="units">' + units + '</span>) ' +
                 '<br />' +
-                '<strong>Call count:</strong> ' + d.callCount +
+                '<strong>Call count:</strong> ' + data.callCount +
                 '<br />' +
                 ' <a href="' + options.baseUrl + urlName + '">View symbol</a> <br />';
             return label;
         }
+    });
+
+    // Collects and iterates the subtree of nodes/edges and highlights them.
+    var highlightSubtree = function(root) {
+        var i, len;
+        var subtree = [root];
+        var nodes = [root];
+        while (nodes.length > 0) {
+            var node = nodes.shift();
+            var childNodes = g.successors(node);
+            if (childNodes.length == 0) {
+                break;
+            }
+            // Append into the 'queue' so we can collect *all the nodes*
+            nodes = nodes.concat(childNodes);
+
+            // Collect the entire subtree so we can find and highlight edges.
+            subtree = subtree.concat(childNodes);
+        }
+
+        var edges = [];
+        // Find the outgoing edges for each node in the subtree.
+        for (i = 0, len = subtree.length; i < len; i++) {
+            node = subtree[i];
+            edges = edges.concat(g.outEdges(node));
+        }
+
+        // Clear width.
+        svg.selectAll('g.edgePath path').style('stroke-width', 1);
+
+        // Highlight each edge in the subtree.
+        for (i = 0, len = edges.length; i < len; i++) {
+            svg.select('g.edgePath[data-value=' + edges[i] + '] path').style('stroke-width', 5);
+        }
+    };
+
+
+    // Approximately center an element in the canvas.
+    var centerElement = function(rect) {
+        var zoomEl = svg.select('.zoom');
+        var position = rect[0].getBoundingClientRect();
+
+        // Get the box center so we can center the center.
+        var scale = zoom.scale();
+        var offset = zoom.translate();
+        var translate = [
+            offset[0] - position.left - (position.width / 2) + (window.innerWidth / 2),
+            offset[1] - position.top - (position.height / 2) + (window.innerHeight / 2)
+        ];
+
+        zoom.translate(translate);
+        zoomEl.transition()
+            .duration(750)
+            .attr('transform', 'translate(' + translate[0] + ',' + translate[1] + ')scale(' + scale + ')');
+    };
+
+    // Setup details view.
+    var details = $(options.detailView);
+    details.find('.button-close').on('click', function() {
+        details.removeClass('active');
+        details.find('.details-content').empty();
+        return false;
+    });
+
+    // Child symbol links move graph around.
+    details.on('click', '.child-symbol a', function(e) {
+        var symbol = $(this).attr('title').replace(/\\/g, '_');
+        var rect = $('[data-value="' + symbol + '"]');
+
+        // Not in the DOM, follow the link.
+        if (!rect.length) {
+            return;
+        }
+        hideTooltip();
+        centerElement(rect);
+
+        // Simulate a click as d3 and jQuery handle events differently.
+        var evt = document.createEvent("MouseEvents");
+        evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        rect[0].dispatchEvent(evt);
+        return false;
     });
 
 };
