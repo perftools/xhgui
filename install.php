@@ -51,7 +51,7 @@ function runProcess($cmd, $input = null) {
 /**
  * Composer setup.
  */
-if (!file_exists('./composer.phar')) {
+if (!file_exists(__DIR__ . '/composer.phar')) {
     out("Downloading composer.");
     $cmd = "php -r \"eval('?>'.file_get_contents('https://getcomposer.org/installer'));\"";
     $output = runProcess($cmd);
@@ -61,7 +61,7 @@ if (!file_exists('./composer.phar')) {
 }
 
 out("Installing dependencies.");
-$cmd = 'php ./composer.phar update --prefer-dist';
+$cmd = 'php ' . __DIR__ . '/composer.phar update --prefer-dist';
 $output = runProcess($cmd);
 out($output);
 
@@ -77,7 +77,7 @@ $currentPerms = octdec(substr(sprintf('%o', fileperms('./cache')), -4));
 
 if (($currentPerms & $worldWritable) != $worldWritable) {
 	out('Attempting to set permissions on cache/');
-	$result = chmod('./cache', $currentPerms | $worldWritable);
+	$result = chmod(__DIR__ . '/cache', $currentPerms | $worldWritable);
 	if ($result) {
 		out('Permissions set on cache/');
 	} else {
