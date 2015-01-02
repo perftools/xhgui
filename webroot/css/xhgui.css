@@ -47,6 +47,10 @@ h1, h2, h3, h4, h5, h6,
     word-break: break-all;
 }
 
+.function-name {
+    font-family: Consolas, Menlo, Courier, monospace;
+}
+
 /**
  * Top Navbar
  */
@@ -265,39 +269,87 @@ tr .no-results {
 /**
  * Call graph chart
  */
-.callgraph .node {
-    font: 10px sans-serif;
+
+/* Prototype graph styles. */
+.callgraph {
+    overflow: hidden;
     cursor: move;
 }
-
-.callgraph circle {
-    fill: #fff;
-    stroke: #b63c71;
-    stroke-width: 1.5px;
-}
-.callgraph .link {
-    fill: none;
-    stroke: #ccc;
-    stroke-width: 1.5px;
-}
-.callgraph .link.active {
-    stroke: #000;
-}
-.callgraph #arrowhead {
-    fill: #bbb;
-}
-.callgraph #arrowhead-active {
-    fill: #000;
-}
+.callgraph tspan,
 .callgraph text {
-    font-size: 11px;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-    text-anchor: middle;
-    vertical-align: middle;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+.callgraph .node {
+    cursor: pointer;
+}
+
+.callgraph .node rect {
+    stroke: #333;
+    stroke-width: 1.5px;
+    fill: #fff;
+}
+.callgraph .active rect {
+    stroke: #59bdd2;
+    stroke-width: 4px;
+}
+
+.callgraph .edgeLabel rect {
+    fill: #fff;
+}
+
+.callgraph .edgePath {
+    stroke: #333;
+    stroke-width: 1.5px;
+    fill: none;
 }
 #metric-popover {
     left: auto;
     width: 250px;
+}
+#loading {
+    text-align: center;
+    margin: 20px;
+}
+#callgraph-details {
+    width: 40%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: -40%;
+    z-index: 1020;
+    background: #fff;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5);
+    transition: left 0.25s ease-out;
+}
+#callgraph-details.active {
+    left: 0;
+    transition: left 0.25s ease-out;
+}
+.details-content {
+    height: 100%;
+    padding: 0 10px 10px 10px;
+    overflow-y: scroll;
+}
+.button-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #888;
+    color: #fff;
+    display: inline-block;
+    padding: 8px;
+    line-height: 7px;
+    font-size: 14px;
+    height: 8px;
+    width: 8px;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    vertical-align: middle;
+    cursor: pointer;
 }
 
 /**

@@ -49,3 +49,24 @@
 {% endif %}
 
 {% endblock %}
+
+
+{% block jsfoot %}
+<script>
+$(document).ready(function () {
+    var rows = $('#filter-table tbody tr');
+    $('#function-filter').on('keyup', function(e) {
+        var value = $(this).val();
+        rows.each(function (i, el) {
+            var row = $(el);
+            var name = row.find('.text a').text();
+            if (name.indexOf(value) === -1) {
+                row.hide();
+            } else {
+                row.show();
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

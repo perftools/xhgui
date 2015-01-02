@@ -1,4 +1,4 @@
-window.Xhgui = {};
+window.Xhgui = window.Xhgui || {};
 
 Xhgui.metricName = function (metric) {
     var map = {
@@ -169,14 +169,14 @@ Xhgui.tooltip = function (container, options) {
         // Get the tooltip content.
         content = options.formatter.call(this, d, i);
 
-        // Get the tooltip position.
-        position = options.positioner.call(this, d, i);
-
         tooltip.content.html(content);
         tooltip.frame.style({
             display: 'block',
             opacity: 1
         });
+
+        // Get the tooltip position.
+        position = options.positioner.call(this, d, i, tooltip);
 
         tooltipWidth = parseInt(tooltip.frame.style('width'), 10);
         tooltipHeight = parseInt(tooltip.frame.style('height'), 10);

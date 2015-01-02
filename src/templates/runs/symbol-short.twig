@@ -1,0 +1,117 @@
+{% import 'macros/helpers.twig' as helpers %}
+
+<div class="row-fluid">
+    <h3>Function Details</h3>
+    <h4 class="function-name">{{ symbol }}</h4>
+    <table class="table table-hover">
+        <tbody>
+            <tr>
+                <th>Call Count</th>
+                <td>{{ current.ct }}</td>
+            </tr>
+            <tr>
+                <th>Self Wall Time</th>
+                <td>{{ current.ewt|as_time }}</td>
+            </tr>
+            <tr>
+                <th>Self CPU</th>
+                <td>{{ current.ecpu|as_time }}</td>
+            </tr>
+            <tr>
+                <th>Self Memory Usage</th>
+                <td>{{ current.emu|as_bytes }}</td>
+            </tr>
+            <tr>
+                <th>Self Peak Memory Usage</th>
+                <td>{{ current.epmu|as_bytes }}</td>
+            </tr>
+            <tr>
+                <th>Inclusive Wall Time</th>
+                <td>{{ helpers.time_and_percent('wt', current, main) }}</td>
+            </tr>
+            <tr>
+                <th>Inclusive CPU</th>
+                <td>{{ helpers.time_and_percent('cpu', current, main) }}</td>
+            </tr>
+            <tr>
+                <th>Inclusive Memory Usage</th>
+                <td>{{ helpers.time_and_percent('mu', current, main) }}</td>
+            </tr>
+            <tr>
+                <th>Inclusive Peak Memory Usage</th>
+                <td>{{ helpers.time_and_percent('pmu', current, main) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Parent functions</h3>
+    <table class="table table-hover table-sort">
+        <thead>
+            <tr>
+                <th>Function</th>
+                <th>Call Count</th>
+
+                <th>Self Wall Time</th>
+                <th>Self Memory Usage</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for parent in parents %}
+        <tr>
+            <td class="text child-symbol">
+                {{ helpers.tip_link(
+                    parent.function,
+                    65,
+                    'run.symbol',
+                    {'id': id, 'symbol': parent.function}
+                ) }}
+            </td>
+            <td>{{ child.ct }}</td>
+
+            <td>{{ helpers.time_and_percent('wt', parent, main) }}</td>
+            <td>{{ parent.mu|as_bytes }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6">{{ symbol }} had no parents.</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Child functions</h3>
+    <table class="table table-hover table-sort">
+        <thead>
+            <tr>
+                <th>Function</th>
+                <th>Call Count</th>
+
+                <th>Self Wall Time</th>
+                <th>Self Memory Usage</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for child in children %}
+        <tr>
+            <td class="text child-symbol">
+                {{ helpers.tip_link(
+                    child.function,
+                    65,
+                    'run.symbol',
+                    {'id': id, 'symbol': child.function}
+                ) }}
+            </td>
+            <td>{{ child.ct }}</td>
+
+            <td>{{ helpers.time_and_percent('wt', child, main) }}</td>
+            <td>{{ child.mu|as_bytes }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6">{{ symbol }} called no functions.</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>

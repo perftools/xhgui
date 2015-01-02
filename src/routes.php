@@ -45,6 +45,11 @@ $app->get('/run/symbol', function () use ($di, $app) {
     $app->controller->symbol();
 })->name('run.symbol');
 
+$app->get('/run/symbol/short', function () use ($di, $app) {
+    $app->controller = $di['runController'];
+    $app->controller->symbolShort();
+})->name('run.symbol-short');
+
 $app->get('/run/callgraph', function () use ($di, $app) {
     $app->controller = $di['runController'];
     $app->controller->callgraph();
@@ -53,6 +58,10 @@ $app->get('/run/callgraph', function () use ($di, $app) {
 $app->get('/run/callgraph/data', function () use ($di, $app) {
     $di['runController']->callgraphData();
 })->name('run.callgraph.data');
+
+$app->get('/run/callgraph/dot', function () use ($di, $app) {
+    $di['runController']->callgraphDataDot();
+})->name('run.callgraph.dot');
 
 // Watch function routes.
 $app->get('/watch', function () use ($di, $app) {
