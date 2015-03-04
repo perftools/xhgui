@@ -116,6 +116,9 @@ register_shutdown_function(
             ? $_SERVER['REQUEST_TIME']
             : time();
         $requestTimeFloat = explode('.', $_SERVER['REQUEST_TIME_FLOAT']);
+        if (!isset($requestTimeFloat[1])) {
+            $requestTimeFloat[1] = 0;
+        }
 
         if (Xhgui_Config::read('save.handler') === 'file') {
             $requestTs = array('sec' => $time, 'usec' => 0);
