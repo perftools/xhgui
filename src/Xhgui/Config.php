@@ -10,13 +10,23 @@ class Xhgui_Config
      * Load a config file, it will replace
      * all the currently loaded configuration.
      *
+     * @staticVar array $loaded_files Files which have already been loaded
+     *
      * @param string $file
      * @return void
      */
     public static function load($file)
     {
+        static $loaded_files = array();
+
+        if (in_array($file, $loaded_files)) {
+            return;
+        }
+
         $config = include($file);
         self::$_config = array_merge(self::$_config, $config);
+
+        $loaded_files []= $file;
     }
 
     /**
