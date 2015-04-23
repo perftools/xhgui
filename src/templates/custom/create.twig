@@ -129,7 +129,7 @@
                       }
                     }else  {
                       $.each( data, function(i, n){
-                         $("#results tbody").append('<tr><td>' + n.meta.url + '</td><td>' + n.meta.SERVER.REQUEST_TIME + '</td><td>' + n.profile['main()'].wt + '</td><td>' + n.profile['main()'].cpu + '</td><td>' + n.profile['main()'].mu + '</td><td>' + n.profile['main()'].pmu + '</td></tr>');
+                         $("#results tbody").append('<tr><td>' + n.meta.url + '</td><td>' + n.meta.profile_ts + '</td><td>' + n.profile['main()'].wt + '</td><td>' + n.profile['main()'].cpu + '</td><td>' + n.profile['main()'].mu + '</td><td>' + n.profile['main()'].pmu + '</td></tr>');
                       });
                     }
                     

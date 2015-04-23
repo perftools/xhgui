@@ -122,9 +122,11 @@ class Xhgui_Profiler
             $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
         }
 
-        $time = array_key_exists('REQUEST_TIME', $_SERVER)
-            ? $_SERVER['REQUEST_TIME']
-            : time();
+        if (Xhgui_Config::read('date.stamp_on_finish') || !array_key_exists('REQUEST_TIME', $_SERVER)) {
+            $time = time();
+        } else {
+            $time = $_SERVER['REQUEST_TIME'];
+        }
         $requestTimeFloat = explode('.', $_SERVER['REQUEST_TIME_FLOAT']);
         if (!isset($requestTimeFloat[1])) {
             $requestTimeFloat[1] = 0;
@@ -147,6 +149,8 @@ class Xhgui_Profiler
             'request_ts' => $requestTs,
             'request_ts_micro' => $requestTsMicro,
             'request_date' => date('Y-m-d', $time),
+            // date used to identify when the profile was run
+            'profile_ts' => $time,
         );
 
         try {

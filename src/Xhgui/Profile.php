@@ -126,9 +126,12 @@ class Xhgui_Profile
         return $this->_data['_id'];
     }
 
+    /**
+     * @return DateTime
+     */
     public function getDate()
     {
-        return new DateTime('@' . $this->getMeta('SERVER.REQUEST_TIME'));
+        return new DateTime('@' . $this->getMeta('profile_ts'));
     }
 
     /**

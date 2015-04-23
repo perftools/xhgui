@@ -57,10 +57,10 @@ class Xhgui_Db_Mapper
             $conditions['meta.simple_url'] = (string)$search['simple_url'];
         }
         if (!empty($search['request_start'])) {
-            $conditions['meta.SERVER.REQUEST_TIME']['$gte'] = $this->_convertDate($search['request_start']);
+            $conditions['meta.profile_ts']['$gte'] = $this->_convertDate($search['request_start']);
         }
         if (!empty($search['request_end'])) {
-            $conditions['meta.SERVER.REQUEST_TIME']['$lte'] = $this->_convertDate($search['request_end']);
+            $conditions['meta.profile_ts']['$lte'] = $this->_convertDate($search['request_end']);
         }
 
         if (!empty($search['remote_addr'])) {
@@ -136,10 +136,10 @@ class Xhgui_Db_Mapper
             empty($options['sort']) ||
             (isset($options['sort']) && !in_array($options['sort'], $valid))
         ) {
-            return array('meta.SERVER.REQUEST_TIME' => $direction);
+            $options['sort'] = 'time';
         }
         if ($options['sort'] == 'time') {
-            return array('meta.SERVER.REQUEST_TIME' => $direction);
+            return array('meta.profile_ts' => $direction);
         } elseif ($options['sort'] == 'wt') {
             return array('profile.main().wt' => $direction);
         } elseif ($options['sort'] == 'mu') {

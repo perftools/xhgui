@@ -31,7 +31,7 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
         );
         $result = $this->profiles->paginate($options);
         $this->assertEquals(
-            array('meta.SERVER.REQUEST_TIME' => -1),
+            array('meta.profile_ts' => -1),
             $result['sort']
         );
     }

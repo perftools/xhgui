@@ -32,7 +32,7 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
                 '$gte' => '2013-01-20',
                 '$lte' => '2013-01-21'
             ),
-            'meta.SERVER.REQUEST_TIME' => array(
+            'meta.profile_ts' => array(
                 '$gte' => strtotime($opts['conditions']['request_start']),
                 '$lte' => strtotime($opts['conditions']['request_end']),
             ),
@@ -137,7 +137,7 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
         );
         $result = $this->mapper->convert($options);
         $this->assertEquals(
-            array('meta.SERVER.REQUEST_TIME' => -1),
+            array('meta.profile_ts' => -1),
             $result['sort']
         );
 
@@ -188,7 +188,7 @@ class Db_MapperTest extends PHPUnit_Framework_TestCase
         );
         $result = $this->mapper->convert($options);
         $this->assertEquals(
-            array('meta.SERVER.REQUEST_TIME' => -1),
+            array('meta.profile_ts' => -1),
             $result['sort']
         );
     }

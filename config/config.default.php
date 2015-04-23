@@ -23,7 +23,12 @@ return array(
     // 'username', 'password' and 'db' (where the user is added)
     'db.options' => array(),
     'templates.path' => dirname(__DIR__) . '/src/templates',
+
     'date.format' => 'M jS H:i:s',
+    // If true, profiles are timestamped at the end of the profiling run
+    // instead of at the time of the server request (useful if multiple runs are created per request)
+    'date.stamp_on_finish' => false,
+
     'detail.count' => 6,
     'page.limit' => 25,
 
