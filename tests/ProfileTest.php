@@ -183,7 +183,7 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($fixture['meta'], $profile->getMeta());
 
         $this->assertEquals($fixture['meta']['simple_url'], $profile->getMeta('simple_url'));
-        $this->assertEquals($fixture['meta']['SERVER']['REQUEST_TIME'], $profile->getMeta('SERVER.REQUEST_TIME'));
+        $this->assertEquals($fixture['meta']['profile_ts'], $profile->getMeta('profile_ts'));
 
         $this->assertNull($profile->getMeta('not there'));
         $this->assertNull($profile->getMeta('SERVER.NOT_THERE'));
