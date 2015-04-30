@@ -127,7 +127,13 @@ class Xhgui_Profiler
         } else {
             $time = $_SERVER['REQUEST_TIME'];
         }
-        $requestTimeFloat = explode('.', $_SERVER['REQUEST_TIME_FLOAT']);
+
+        if (Xhgui_Config::read('date.stamp_on_finish') || !array_key_exists('REQUEST_TIME_FLOAT', $_SERVER)) {
+            $requestTimeFloat = explode('.', microtime(true));
+        } else {
+            $requestTimeFloat = explode('.', $_SERVER['REQUEST_TIME_FLOAT']);
+        }
+
         if (!isset($requestTimeFloat[1])) {
             $requestTimeFloat[1] = 0;
         }
