@@ -1,53 +1,45 @@
 <?php
-/* Things you may want to tweak in here:
- *  - xhprof_enable() uses a few constants.
- *  - The values passed to rand() determine the the odds of any particular run being profiled.
- *  - The MongoDB collection and such.
- *
- * I use unsafe writes by default, let's not slow down requests any more than I need to. As a result you will
- * indubidubly want to ensure that writes are actually working.
- */
 
-/* xhprof_enable()
- * See: http://php.net/manual/en/xhprof.constants.php
+/**
+ * Manages the starting and stopping of the profiler.
  *
- *
- * XHPROF_FLAGS_NO_BUILTINS
- *  Omit built in functions from return
- *  This can be useful to simplify the output, but there's some value in seeing that you've called strpos() 2000 times
- *  (disabled on PHP 5.5+ as it causes a segfault)
- *
- * XHPROF_FLAGS_CPU
- *  Include CPU profiling information in output
- *
- * XHPROF_FLAGS_MEMORY (integer)
- *  Include Memory profiling information in output
- *
- *
- * Use bitwise operators to combine, so XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY to profile CPU and Memory
- *
- */
-
-/* uprofiler support
+ * uprofiler support
  * The uprofiler extension is a fork of xhprof.  See: https://github.com/FriendsOfPHP/uprofiler
  *
  * The two extensions are very similar, and this class will use the uprofiler extension if it is loaded,
  * or the xhprof extension if not.  At least one of these extensions must be present.
- *
- * The UPROFILER_* constants mirror the XHPROF_* ones exactly, with one additional constant available:
- *
- * UPROFILER_FLAGS_FUNCTION_INFO (integer)
- *  Adds more information about function calls (this information is not currently used by XHGui)
- */
-
-/**
- * Profiles things.
  */
 class Xhgui_Profiler
 {
+    /**
+     * Ensures XHGui is configured and then conditionally enables the profiler.
+     *
+     * Various constants () may be passed to the profiler when enabling:
+     *     -XHPROF_FLAGS_NO_BUILTINS
+     *      Omit built in functions from return
+     *      This is useful to simplify output, but there is value in seeing that you've called strpos() 2000 times
+     *      (disabled on PHP 5.5+ as it causes a segfault)
+     *
+     *     -XHPROF_FLAGS_CPU
+     *      Include CPU profiling information in output
+     *
+     *     -XHPROF_FLAGS_MEMORY (integer)
+     *      Include Memory profiling information in output
+     *
+     *     The UPROFILER_* constants mirror the XHPROF_* ones exactly, with one additional constant available:
+     *
+     *     -UPROFILER_FLAGS_FUNCTION_INFO (integer)
+     *      Adds more information about function calls (this information is not currently used by XHGui)
+     *
+     * Use bitwise operators to combine, so XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY to profile CPU and Memory
+     *
+     * @link http://php.net/manual/en/xhprof.constants.php Documentation of available profiler constants
+     *
+     * @param string $uri URI to be used in order to identify/categorize the profile result
+     */
     public function startProfiling()
     {
-        // this file should not - under no circumstances - interfere with any other application
+        // this method should not - under any circumstances - interfere with any other application
         if (!extension_loaded('xhprof') && !extension_loaded('uprofiler')) {
             error_log('xhgui - either extension xhprof or uprofiler must be loaded');
             return;
@@ -81,6 +73,9 @@ class Xhgui_Profiler
         }
     }
 
+    /**
+     * Load configuration into memory for XHGui, if not already loaded.
+     */
     public function configure()
     {
         // Only load the config class so we don't pollute the host application's autoloaders.
@@ -95,26 +90,37 @@ class Xhgui_Profiler
         }
     }
 
-    public function finishProfiling($event_name)
+    /**
+     * Disables the profiler and stores the profile results
+     *
+     * @param string $uri URI to be used in order to identify/categorize the profile result
+     */
+    public function finishProfiling($uri = null)
     {
         if (extension_loaded('uprofiler')) {
             $data['profile'] = uprofiler_disable();
-        } else {
+        } elseif (extension_loaded('xhprof')) {
             $data['profile'] = xhprof_disable();
+        } else {
+            error_log('xhgui - either extension xhprof or uprofiler must be loaded');
+            return;
         }
 
-        // ignore_user_abort(true) allows your PHP script to continue executing, even if the user has terminated their request.
+        // ignore_user_abort(true) allows your PHP script to continue executing,
+        // even if the user has terminated their request.
         // Further Reading: http://blog.preinheimer.com/index.php?/archives/248-When-does-a-user-abort.html
-        // flush() asks PHP to send any data remaining in the output buffers. This is normally done when the script completes, but
-        // since we're delaying that a bit by dealing with the xhprof stuff, we'll do it now to avoid making the user wait.
         ignore_user_abort(true);
+
+        // flush() asks PHP to send any data remaining in the output buffers.
+        // This is normally done when the script completes, but
+        // since we're delaying that by dealing with the xhprof stuff, we'll do it now to avoid making the user wait.
         flush();
 
         if (!defined('XHGUI_ROOT_DIR')) {
             require dirname(dirname(dirname(__FILE__))) . '/src/bootstrap.php';
         }
 
-        $uri = array_key_exists('REQUEST_URI', $_SERVER)
+        $uri = $uri ?: array_key_exists('REQUEST_URI', $_SERVER)
             ? $_SERVER['REQUEST_URI']
             : null;
         if (empty($uri) && isset($_SERVER['argv'])) {
@@ -147,11 +153,11 @@ class Xhgui_Profiler
         }
 
         $data['meta'] = array(
-            'url' => $event_name,
+            'url' => $uri,
             'SERVER' => $_SERVER,
             'get' => $_GET,
             'env' => $_ENV,
-            'simple_url' => Xhgui_Util::simpleUrl($event_name),
+            'simple_url' => Xhgui_Util::simpleUrl($uri),
             'request_ts' => $requestTs,
             'request_ts_micro' => $requestTsMicro,
             'request_date' => date('Y-m-d', $time),
