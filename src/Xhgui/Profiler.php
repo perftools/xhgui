@@ -120,9 +120,7 @@ class Xhgui_Profiler
             require dirname(dirname(dirname(__FILE__))) . '/src/bootstrap.php';
         }
 
-        $uri = $uri ?: array_key_exists('REQUEST_URI', $_SERVER)
-            ? $_SERVER['REQUEST_URI']
-            : null;
+        $uri = $uri ?: (array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : null);
         if (empty($uri) && isset($_SERVER['argv'])) {
             $cmd = basename($_SERVER['argv'][0]);
             $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
