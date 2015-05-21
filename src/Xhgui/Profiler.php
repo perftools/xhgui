@@ -36,26 +36,27 @@ class Xhgui_Profiler
      * @link http://php.net/manual/en/xhprof.constants.php Documentation of available profiler constants
      *
      * @param string $uri URI to be used in order to identify/categorize the profile result
+     * @return boolean TRUE if profiler was enabled, otherwise FALSE
      */
     public function startProfiling()
     {
         // this method should not - under any circumstances - interfere with any other application
         if (!extension_loaded('xhprof') && !extension_loaded('uprofiler')) {
             error_log('xhgui - either extension xhprof or uprofiler must be loaded');
-            return;
+            return false;
         }
 
         $this->configure();
 
         if (!extension_loaded('mongo') && Xhgui_Config::read('save.handler') === 'mongodb') {
             error_log('xhgui - extension mongo not loaded');
-            return;
+            return false;
         }
 
         /* Use the callbacks defined in the configuration file
            to determine whether or not XHgui should enable profiling. */
         if (!Xhgui_Config::shouldRun()) {
-            return;
+            return false;
         }
 
         if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
@@ -71,6 +72,7 @@ class Xhgui_Profiler
                 xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
             }
         }
+        return true;
     }
 
     /**
