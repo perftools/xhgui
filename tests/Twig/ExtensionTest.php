@@ -25,6 +25,38 @@ class Xhgui_Twig_ExtensionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @return array
+     */
+    public function makePercentProvider() {
+        return array(
+            array(
+                10,
+                100,
+                '10 <span class="units">%</span>'
+            ),
+            array(
+                0.5,
+                100,
+                '1 <span class="units">%</span>'
+            ),
+            array(
+                100,
+                0,
+                '0 <span class="units">%</span>'
+            )
+        );
+    }
+
+    /**
+     * @dataProvider makePercentProvider
+     */
+    public function testMakePercent($value, $total, $expected)
+    {
+        $result = $this->ext->makePercent($value, $total, $total);
+        $this->assertEquals($expected, $result);
+    }
+
     public static function urlProvider()
     {
         return array(
