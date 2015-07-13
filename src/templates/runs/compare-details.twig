@@ -85,7 +85,7 @@
     {% for key, value in comparison.diff %}
     <tr>
         <td class="text">
-            <a href="{{ url('run.symbol', {'id': comparison.head.id|trim, 'symbol': key}) }}">{{ key }}</a>
+            <a href="{{ url('run.compareSymbol', {'head_id': comparison.head.id|trim, 'base_id': comparison.base.id|trim, 'symbol': key}) }}">{{ key }}</a>
         </td>
         <td class="right">{{ value.ct|as_diff }}</td>
         <td class="right">{{ value.ewt|as_diff }}</td>

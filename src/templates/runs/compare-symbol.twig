@@ -1,0 +1,156 @@
+{% extends 'layout/base.twig' %}
+{% import 'macros/helpers.twig' as helpers %}
+
+{% block title %}
+    - Compare - {{ current.function }}
+{% endblock %}
+
+{% block content %}
+<h1>Compare runs for {{ base_run.meta.simple_url }}</h1>
+    <div class="row-fluid">
+        <a class="back-link" href="{{ url('run.compare', {'base': base_run.id|trim, 'head': head_run.id|trim }) }}">&laquo; Back to run</a>
+        <span class="badge compare-base">
+            base: {{ base_run.meta.simple_url }} - {{ base_run.date|date(date_format) }}
+        </span>
+        <span class="compare-elipsis">&hellip;</span>
+        <span class="badge compare-head">
+            new: {{ _run.meta.simple_url }} - {{ head_run.date|date(date_format) }}
+        </span>
+        <a class="btn btn-mini" href="{{ url('run.compare', {'base': base_run.id|trim }) }}">change</a>
+        <a class="btn btn-mini" href="{{ url('run.compare', {'base': head_run.id|trim, 'head': base_run.id|trim }) }}">reverse</a>
+    </div>
+    <div class="row-fluid">
+        <h3>Current function</h3>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Function</th>
+                <th>Call Count</th>
+                <th>Self Wall Time</th>
+                <th>Self CPU</th>
+                <th>Self Memory Usage</th>
+                <th>Self Peak Memory Usage</th>
+                <th>Inclusive Wall Time</th>
+                <th>Inclusive CPU</th>
+                <th>Inclusive Memory Usage</th>
+                <th>Inclusive Peak Memory Usage</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="text">
+                    {{ helpers.tip_link(
+                    current.function,
+                    65,
+                    'run.compareSymbol',
+                    {'head_id': head_run.id|trim, 'base_id': base_run.id|trim, 'symbol': current.function}
+                    ) }}
+                    <br>
+                    Percent of total request
+                </td>
+                <td>{{ current.ct|as_diff }}</td>
+                <td>{{ current.ewt|as_diff }}</td>
+                <td>{{ current.ecpu|as_diff }}</td>
+                <td>{{ current.emu|as_diff }}</td>
+                <td>{{ current.epmu|as_diff }}</td>
+
+                <td>{{ current.wt|as_diff }}</td>
+                <td>{{ current.cpu|as_diff }}</td>
+                <td>{{ current.mu|as_diff }}</td>
+                <td>{{ current.pmu|as_diff }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>Parent functions</h3>
+        <table class="table table-hover table-sort">
+            <thead>
+            <tr>
+                <th>Function</th>
+                <th>Call Count</th>
+                <th>Self Wall Time</th>
+                <th>Self CPU</th>
+                <th>Self Memory Usage</th>
+                <th>Self Peak Memory Usage</th>
+
+                <th>Inclusive Wall Time</th>
+                <th>Inclusive CPU</th>
+                <th>Inclusive Memory Usage</th>
+                <th>Inclusive Peak Memory Usage</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for parent in parents %}
+                <tr>
+                    <td class="text">
+                        {{ helpers.tip_link(
+                        parent.function,
+                        65,
+                        'run.compareSymbol',
+                        {'head_id': head_run.id|trim, 'base_id': base_run.id|trim, 'symbol': parent.function}
+                        ) }}
+                    </td>
+                    <td>{{ parent.ct|as_diff }}</td>
+                    <td>{{ parent.ewt|as_diff }}</td>
+                    <td>{{ parent.ecpu|as_diff }}</td>
+                    <td>{{ parent.emu|as_diff }}</td>
+                    <td>{{ parent.epmu|as_diff }}</td>
+                    <td>{{ parent.wt|as_diff }}</td>
+                    <td>{{ parent.cpu|as_diff }}</td>
+                    <td>{{ parent.mu|as_diff }}</td>
+                    <td>{{ parent.pmu|as_diff }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Child functions</h3>
+        <table class="table table-hover table-sort">
+            <thead>
+            <tr>
+                <th>Function</th>
+                <th>Call Count</th>
+                <th>Self Wall Time</th>
+                <th>Self CPU</th>
+                <th>Self Memory Usage</th>
+                <th>Self Peak Memory Usage</th>
+
+                <th>Inclusive Wall Time</th>
+                <th>Inclusive CPU</th>
+                <th>Inclusive Memory Usage</th>
+                <th>Inclusive Peak Memory Usage</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for child in children %}
+                <tr>
+                    <td class="text">
+                        {{ helpers.tip_link(
+                        child.function,
+                        65,
+                        'run.compareSymbol',
+                        {'head_id': head_run.id|trim, 'base_id': base_run.id|trim, 'symbol': child.function}
+                        ) }}
+                    </td>
+
+                    <td>{{ child.ct|as_diff }}</td>
+                    <td>{{ child.ewt|as_diff }}</td>
+                    <td>{{ child.ecpu|as_diff }}</td>
+                    <td>{{ child.emu|as_diff }}</td>
+                    <td>{{ child.epmu|as_diff }}</td>
+                    <td>{{ child.wt|as_diff }}</td>
+                    <td>{{ child.cpu|as_diff }}</td>
+                    <td>{{ child.mu|as_diff }}</td>
+                    <td>{{ child.pmu|as_diff }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">{{ symbol }} called no functions.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    <p>Red values are higher in 'new'. Green values are lower in 'new'.</p>
+{% endblock %}

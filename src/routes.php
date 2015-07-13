@@ -45,6 +45,11 @@ $app->get('/run/symbol', function () use ($di, $app) {
     $app->controller->symbol();
 })->name('run.symbol');
 
+$app->get('/run/compareSymbol', function () use ($di, $app) {
+    $app->controller = $di['runController'];
+    $app->controller->compareSymbol();
+})->name('run.compareSymbol');
+
 $app->get('/run/symbol/short', function () use ($di, $app) {
     $app->controller = $di['runController'];
     $app->controller->symbolShort();
