@@ -60,7 +60,7 @@ Xhgui_Config::load($dir . '/config/config.default.php');
 if (file_exists($dir . '/config/config.php')) {
     Xhgui_Config::load($dir . '/config/config.php');
 }
-unset($root);
+unset($dir);
 
 if (!extension_loaded('mongo') && Xhgui_Config::read('save.handler') === 'mongodb') {
     error_log('xhgui - extension mongo not loaded');
