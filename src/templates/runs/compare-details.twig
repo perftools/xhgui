@@ -9,6 +9,8 @@
             <th class="right">Inclusive CPU</th>
             <th class="right">Inclusive Memory</th>
             <th class="right">Inclusive Peak Memory</th>
+        </tr>
+    </thead>
     <tbody>
         <tr>
             <th>
@@ -82,22 +84,22 @@
         </tr>
     </thead>
     <tbody>
-    {% for key, value in comparison.diff %}
-    <tr>
-        <td class="text">
-            <a href="{{ url('run.symbol', {'id': comparison.head.id|trim, 'symbol': key}) }}">{{ key }}</a>
-        </td>
-        <td class="right">{{ value.ct|as_diff }}</td>
-        <td class="right">{{ value.ewt|as_diff }}</td>
-        <td class="right">{{ value.ecpu|as_diff }}</td>
-        <td class="right">{{ value.emu|as_diff }}</td>
-        <td class="right">{{ value.epmu|as_diff }}</td>
-        <td class="right">{{ value.wt|as_diff }}</td>
-        <td class="right">{{ value.cpu|as_diff }}</td>
-        <td class="right">{{ value.mu|as_diff }}</td>
-        <td class="right">{{ value.pmu|as_diff }}</td>
-    </tr>
-    {% endfor %}
+        {% for key, value in comparison.diff %}
+        <tr>
+            <td class="text">
+                <a href="{{ url('run.symbol', {'id': comparison.head.id|trim, 'symbol': key}) }}">{{ key }}</a>
+            </td>
+            <td class="right">{{ value.ct|as_diff }}</td>
+            <td class="right">{{ value.ewt|as_diff }}</td>
+            <td class="right">{{ value.ecpu|as_diff }}</td>
+            <td class="right">{{ value.emu|as_diff }}</td>
+            <td class="right">{{ value.epmu|as_diff }}</td>
+            <td class="right">{{ value.wt|as_diff }}</td>
+            <td class="right">{{ value.cpu|as_diff }}</td>
+            <td class="right">{{ value.mu|as_diff }}</td>
+            <td class="right">{{ value.pmu|as_diff }}</td>
+        </tr>
+        {% endfor %}
     </tbody>
 </table>
 <p>Red values are higher in 'new'. Green values are lower in 'new'.</p>
