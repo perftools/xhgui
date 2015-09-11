@@ -59,6 +59,9 @@
                 {% if show_compare_link %}
                 <th>&nbsp;</th>
                 {% endif %}
+                <th>
+                  Method
+                </th>
                 <th>URL</th>
                 <th>
                     {{ helpers.sort_link('Time', base_url, 'time', paging, search) }}
@@ -95,6 +98,11 @@
                 </a>
             </td>
             {% endif %}
+            <td>
+              <a href="{{ url('run.view', {'id': result.id|trim }) }}">
+                {{result.meta('SERVER.REQUEST_METHOD')}}
+              </a>
+            </td>
             <td><a href="{{ url('url.view', {'url': result.meta.url}) }}">{{ result.meta.url }}</a></td>
             <td><a href="{{ url('run.view', {'id': result.id|trim }) }}">{{ result.date|date(date_format) }}</a></td>
             <td class="right">{{ result.get('main()', 'wt') |as_time }}</td>
@@ -132,4 +140,4 @@ $(document).ready(function() {
     });
 });
 </script>
-{% endblock %} 
+{% endblock %}

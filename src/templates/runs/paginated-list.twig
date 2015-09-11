@@ -7,6 +7,9 @@
                 {% if show_compare_link %}
                 <th>&nbsp;</th>
                 {% endif %}
+                <th>
+                  Method
+                </th>
                 <th>URL</th>
                 <th>
                     {{ helpers.sort_link('Time', base_url, 'time', paging, search) }}
@@ -44,6 +47,11 @@
             </td>
             {% endif %}
             <td>
+              <a href="{{ url('run.view', {'id': result.id|trim }) }}">
+                {{result.meta('SERVER.REQUEST_METHOD')}}
+              </a>
+            </td>
+            <td>
                 {% set addr = result.meta.url %}
                 {{ helpers.tip_link(
                     addr,
@@ -52,7 +60,11 @@
                     {'url': result.meta.simple_url}
                 ) }}
             </td>
-            <td><a href="{{ url('run.view', {'id': result.id|trim }) }}">{{ result.date|date(date_format) }}</a></td>
+            <td>
+              <a href="{{ url('run.view', {'id': result.id|trim }) }}">
+                {{ result.date|date(date_format) }}
+              </a>
+            </td>
             <td class="right">{{ result.get('main()', 'wt') |as_time }}</td>
             <td class="right">{{ result.get('main()', 'cpu') |as_time }}</td>
             <td class="right">{{ result.get('main()', 'mu') |as_bytes }}</td>
