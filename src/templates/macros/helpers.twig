@@ -64,10 +64,10 @@
 
 <div class="pagination">
 <ul>
-{% if page == 1 %}
+{% if paging.page == 1 %}
     <li class="disabled"><span>&laquo;</span><li>
 {% else %}
-    <li><a href="{{ url(url, search|merge({'page': page - 1})) }}">&laquo;</a><li>
+    <li><a href="{{ url(url, search|merge({'page': paging.page - 1})) }}">&laquo;</a><li>
 {% endif %}
 
 {% for i in start..end %}
@@ -78,10 +78,10 @@
     {% endif %}
 {% endfor %}
 
-{% if page == total_pages %}
+{% if paging.page == total_pages %}
     <li class="disabled"><span>&raquo;</span></li>
 {% else %}
-    <li><a href="{{ url(url, search|merge({'page': page + 1})) }}">&raquo;</a></li>
+    <li><a href="{{ url(url, search|merge({'page': paging.page + 1})) }}">&raquo;</a></li>
 {% endif %}
 </ul>
 </div>
