@@ -90,6 +90,76 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, $current['pmu']);
     }
 
+    public function testGetRelativesWithThreshold()
+    {
+        $data = array(
+            'main()' => array(
+                'ct' => 1,
+                'wt' => 100,
+            ),
+            'main()==>other_func' => array(
+                'ct' => 1,
+                'cpu' => 1,
+                'wt' => 50,
+                'mu' => 1,
+                'pmu' => 1,
+            ),
+            'main()==>your_func' => array(
+                'ct' => 1,
+                'cpu' => 1,
+                'wt' => 50,
+                'mu' => 1,
+                'pmu' => 1,
+            ),
+            'other_func==>func' => array(
+                'ct' => 1,
+                'cpu' => 1,
+                'wt' => 10,
+                'mu' => 1,
+                'pmu' => 1,
+            ),
+            'other_func==>isset' => array(
+                'ct' => 10,
+                'cpu' => 10,
+                'wt' => 1,
+                'mu' => 5,
+                'pmu' => 1,
+            ),
+            'your_func==>func' => array(
+                'ct' => 1,
+                'cpu' => 1,
+                'wt' => 1,
+                'mu' => 1,
+                'pmu' => 1,
+            ),
+            'func==>strlen' => array(
+                'ct' => 1,
+                'cpu' => 1,
+                'wt' => 1,
+                'mu' => 1,
+                'pmu' => 1,
+            ),
+            'func==>isset' => array(
+                'ct' => 1,
+                'cpu' => 1,
+                'wt' => 1,
+                'mu' => 1,
+                'pmu' => 1,
+            ),
+        );
+        $profile = new Xhgui_Profile(array('profile' => $data));
+
+        $result = $profile->getRelatives('other_func', 'wt', 0.1);
+        $this->assertCount(3, $result);
+
+        list($parent, $current, $children) = $result;
+        $this->assertCount(1, $parent);
+        $this->assertEquals('main()', $parent[0]['function']);
+
+        $this->assertCount(1, $children, 'One method below threshold');
+        $this->assertEquals('func', $children[0]['function']);
+    }
+
     public function testGet()
     {
         $fixture = $this->_fixture[0];
@@ -293,34 +363,34 @@ class ProfileTest extends PHPUnit_Framework_TestCase
             ),
             'links' => array(
                 array(
-                    'source' => 0,
-                    'target' => 1,
-                    'value' => 1,
+                    'source' => 'main()',
+                    'target' => 'eat_burger()',
+                    'callCount' => 1,
                 ),
                 array(
-                    'source' => 1,
-                    'target' => 2,
-                    'value' => 1,
+                    'source' => 'eat_burger()',
+                    'target' => 'chew_food()',
+                    'callCount' => 10,
                 ),
                 array(
-                    'source' => 1,
-                    'target' => 3,
-                    'value' => 1,
+                    'source' => 'eat_burger()',
+                    'target' => 'strlen()',
+                    'callCount' => 2,
                 ),
                 array(
-                    'source' => 0,
-                    'target' => 4,
-                    'value' => 1,
+                    'source' => 'main()',
+                    'target' => 'drink_beer()',
+                    'callCount' => 1,
                 ),
                 array(
-                    'source' => 4,
-                    'target' => 5,
-                    'value' => 1,
+                    'source' => 'drink_beer()',
+                    'target' => 'lift_glass()',
+                    'callCount' => 5,
                 ),
                 array(
-                    'source' => 4,
-                    'target' => 3,
-                    'value' => 1,
+                    'source' => 'drink_beer()',
+                    'target' => 'strlen()',
+                    'callCount' => 2,
                 ),
             )
         );
@@ -364,29 +434,29 @@ class ProfileTest extends PHPUnit_Framework_TestCase
             ),
             'links' => array(
                 array(
-                    'source' => 0,
-                    'target' => 1,
-                    'value' => 1,
+                    'source' => 'main()',
+                    'target' => 'load_file()',
+                    'callCount' => 1,
                 ),
                 array(
-                    'source' => 1,
-                    'target' => 2,
-                    'value' => 1,
+                    'source' => 'load_file()',
+                    'target' => 'open()',
+                    'callCount' => 2,
                 ),
                 array(
-                    'source' => 2,
-                    'target' => 3,
-                    'value' => 1,
+                    'source' => 'open()',
+                    'target' => 'strlen()',
+                    'callCount' => 1,
                 ),
                 array(
-                    'source' => 0,
-                    'target' => 4,
-                    'value' => 1,
+                    'source' => 'main()',
+                    'target' => 'parse_string()',
+                    'callCount' => 1,
                 ),
                 array(
-                    'source' => 4,
-                    'target' => 2,
-                    'value' => 1,
+                    'source' => 'parse_string()',
+                    'target' => 'open()',
+                    'callCount' => 2,
                 ),
             )
         );

@@ -18,7 +18,7 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
         $keys = array("remote_addr", 'request_start', 'request_end');
         foreach ($keys as $key) {
             if ($request->get($key)) {
-                $search[$key] = $request->get($key);
+                $search[$key] = trim($request->get($key));
             }
         }
         $result = $this->_profiles->getAll(array(

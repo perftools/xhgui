@@ -85,6 +85,15 @@ For Apache you can do the following to enable URL rewriting:
 
 1. Make sure that an .htaccess override is allowed and that AllowOverride is
    set to All for the correct DocumentRoot.
+
+    Example configuration for Apache 2.4:
+    ```
+    <Directory /var/www/xhgui/>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+    ```
 2. Make sure you are loading up mod_rewrite correctly. You should see something like:
 
     ```

@@ -60,7 +60,7 @@ Xhgui_Config::load($dir . '/config/config.default.php');
 if (file_exists($dir . '/config/config.php')) {
     Xhgui_Config::load($dir . '/config/config.php');
 }
-unset($root);
+unset($dir);
 
 if (!extension_loaded('mongo') && Xhgui_Config::read('save.handler') === 'mongodb') {
     error_log('xhgui - extension mongo not loaded');
@@ -116,6 +116,9 @@ register_shutdown_function(
             ? $_SERVER['REQUEST_TIME']
             : time();
         $requestTimeFloat = explode('.', $_SERVER['REQUEST_TIME_FLOAT']);
+        if (!isset($requestTimeFloat[1])) {
+            $requestTimeFloat[1] = 0;
+        }
 
         if (Xhgui_Config::read('save.handler') === 'file') {
             $requestTs = array('sec' => $time, 'usec' => 0);

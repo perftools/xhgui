@@ -49,7 +49,16 @@
 
 
 <div class="row-fluid">
-    <div class="chart-container" id="callgraph-image"></div>
+    <div id="loading">Loading..</div>
+    <div class="chart-container" id="callgraph-image">
+    </div>
+
+    <div id="callgraph-details">
+        <span class="button-close pull-right">&#10799;</span>
+        <div class="details-content">
+        </div>
+    </div>
+
 
     <p>Due to the limitations in how xhprof collects data, callgraphs are not 100% reflective of
 the actual method callgraph.</p>
@@ -57,9 +66,11 @@ the actual method callgraph.</p>
 {% endblock %}
 
 {% block jsfoot %}
+<script src="{{ static('js/dagre-d3.js') }}"></script>
 <script src="{{ static('js/callgraph.js') }}"></script>
 <script>
 $(document).ready(function () {
+    var loading = $('#loading');
     var gear = $('#customize-graph');
     var select = $('select[name=metric]');
     var popover = $('#metric-popover');
@@ -98,16 +109,25 @@ function updateThreshold(value) {
 function loadCallgraph(metric, threshold) {
     var url = "{{ url('run.callgraph.data', {'id': profile.id|trim}) }}";
     var baseUrl = "{{ url('run.symbol', {'id': profile.id|trim }) }}";
-    $.getJSON(url + '&metric=' + metric + '&threshold=' + threshold, function (data) {
+    var shortUrl = "{{ url('run.symbol-short', {'id': profile.id|trim }) }}";
+
+    var params = {
+        metric: metric,
+        threshold: threshold
+    };
+    $.getJSON(url + '&' + $.param(params), function (data) {
         $('#callgraph-image').empty();
+        $('#loading').hide();
 
         updateThreshold(threshold);
 
-        Xhgui.callgraph(
-            '#callgraph-image',
-            data,
-            {baseUrl: baseUrl}
-        );
+        Xhgui.callgraph('#callgraph-image', data, {
+            baseUrl: baseUrl,
+            shortUrl: shortUrl,
+            detailView: '#callgraph-details',
+            threshold: threshold,
+            metric: metric
+        });
     });
 }
 </script>
