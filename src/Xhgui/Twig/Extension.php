@@ -91,7 +91,15 @@ class Xhgui_Twig_Extension extends Twig_Extension
         if (!empty($queryargs)) {
             $query = '?' . http_build_query($queryargs);
         }
-        return $this->_app->urlFor($name)  . $query;
+
+        // TODO: how to fetch DIC from here?
+        global $di;
+
+        $params = array(
+            'site' => $di['sites']->getCurrent()
+        );
+
+        return $this->_app->urlFor($name, $params)  . $query;
     }
 
     public function staticUrl($url)

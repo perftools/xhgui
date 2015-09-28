@@ -35,6 +35,8 @@ class Xhgui_Sites
                     $list[] = str_replace($this->_template, '', $name);
                 }
             }
+            sort($list);
+
             $this->_list = $list;
         }
 
@@ -60,6 +62,8 @@ class Xhgui_Sites
     {
         $this->_current = $current;
 
+        Xhgui_Config::write('db.collection', $this->getCurrentCollection());
+
         return $this;
     }
 
@@ -69,12 +73,7 @@ class Xhgui_Sites
     public function getCurrent()
     {
         if (null === $this->_current) {
-            $available = $this->getAvailable();
-            if (isset($_COOKIE['currsite']) && in_array($_COOKIE['currsite'], $available, false)) {
-                $this->_current = $_COOKIE['currsite'];
-            } else {
-                $this->_current = current($available);
-            }
+            $this->_current = current($this->getAvailable());
         }
 
         return $this->_current;
