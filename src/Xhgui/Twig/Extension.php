@@ -72,7 +72,7 @@ class Xhgui_Twig_Extension extends Twig_Extension
 
     public function staticUrl($url)
     {
-        return $this->_app->request()->getRootUri() . '/' . $url;
+        return $this->_app->request()->getResourceUri() . $url;
     }
 
     public function formatBytes($value)
