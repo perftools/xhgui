@@ -17,6 +17,9 @@ class Xhgui_Twig_Extension extends Twig_Extension
     public function getFunctions()
     {
         return array(
+            'sites' => new Twig_Function_Method($this, 'sites'),
+            'site' => new Twig_Function_Method($this, 'site'),
+            'site_url' => new Twig_Function_Method($this, 'siteUrl'),
             'url' => new Twig_Function_Method($this, 'url'),
             'static' => new Twig_Function_Method($this, 'staticUrl'),
             'percent' => new Twig_Function_Method($this, 'makePercent', array(
@@ -54,6 +57,27 @@ class Xhgui_Twig_Extension extends Twig_Extension
         return substr($input, 0, $length) . "\xe2\x80\xa6";
     }
 
+     public function sites()
+     {
+         // TODO: how to fetch DIC from here?
+         global $di;
+
+         return $di['sites']->getAvailable();
+     }
+
+    public function site()
+    {
+        // TODO: how to fetch DIC from here?
+        global $di;
+
+        return $di['sites']->getCurrent();
+    }
+
+    public function siteUrl($name, $params)
+    {
+        return $this->_app->urlFor($name, $params);
+    }
+
     /**
      * Get a URL for xhgui.
      *
@@ -72,7 +96,7 @@ class Xhgui_Twig_Extension extends Twig_Extension
 
     public function staticUrl($url)
     {
-        return $this->_app->request()->getResourceUri() . $url;
+        return $this->_app->request()->getRootUri() . $url;
     }
 
     public function formatBytes($value)

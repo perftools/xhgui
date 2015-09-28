@@ -22,6 +22,12 @@ $app->error(function (Exception $e) use ($di, $app) {
 // Profile Runs routes
 $app->get('/', function () use ($di, $app) {
     $app->controller = $di['runController'];
+    $app->controller->homepage();
+})->name('homepage');
+
+// Profile Runs routes
+$app->get('/:site', function () use ($di, $app) {
+    $app->controller = $di['runController'];
     $app->controller->index();
 })->name('home');
 

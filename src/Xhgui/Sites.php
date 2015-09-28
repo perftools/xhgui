@@ -41,6 +41,11 @@ class Xhgui_Sites
         return $this->_list;
     }
 
+    public function getFirstAvailable()
+    {
+        return current($this->getAvailable());
+    }
+
     public function hasCurrent()
     {
         return ($this->getCurrent());
