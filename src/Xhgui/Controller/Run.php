@@ -15,12 +15,12 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         global $di;
 
         if (null !== ($site = $di['sites']->getFirstAvailable())) {
-            /*
             $url = $this->_app->urlFor('home', compact('site'));
-            return $this->_app->redirect($url);
+            // TODO: this does not work (?)
+            // $this->_app->redirect($url);
+
             header('Location: '. $url);
             exit;
-            */
         }
 
         return $this->index();
