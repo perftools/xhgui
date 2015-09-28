@@ -14,7 +14,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         // TODO: how to fetch DIC from app?
         global $di;
 
-        if (null !== ($site = $di['sites']->getFirstAvailable())) {
+        if (false !== ($site = $di['sites']->getFirstAvailable())) {
             $url = $this->_app->urlFor('home', compact('site'));
             // TODO: this does not work (?)
             // $this->_app->redirect($url);

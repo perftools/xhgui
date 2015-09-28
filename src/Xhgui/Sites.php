@@ -57,9 +57,14 @@ class Xhgui_Sites
      * @param $current
      *
      * @return $this
+     * @throws \Slim\Exception\Pass
      */
     public function setCurrent($current)
     {
+        if (false === in_array($current, $this->getAvailable())) {
+            throw new \Slim\Exception\Pass('No such site');
+        }
+
         $this->_current = $current;
 
         Xhgui_Config::write('db.collection', $this->getCurrentCollection());
