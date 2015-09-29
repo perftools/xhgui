@@ -18,6 +18,29 @@ class Xhgui_Sites
      */
     protected $_template = 'profiles_';
 
+    /** @var bool */
+    protected $_validate = true;
+
+    /**
+     * @return boolean
+     */
+    public function isValidate()
+    {
+        return $this->_validate;
+    }
+
+    /**
+     * @param boolean $validate
+     *
+     * @return Xhgui_Sites
+     */
+    public function setValidate($validate)
+    {
+        $this->_validate = $validate;
+
+        return $this;
+    }
+
     /**
      * @return array
      */
@@ -61,7 +84,7 @@ class Xhgui_Sites
      */
     public function setCurrent($current)
     {
-        if (false === in_array($current, $this->getAvailable())) {
+        if (true === $this->isValidate() && false === in_array($current, $this->getAvailable())) {
             throw new \Slim\Exception\Pass('No such site');
         }
 

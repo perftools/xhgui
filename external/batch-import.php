@@ -5,22 +5,28 @@ if (!defined('XHGUI_ROOT_DIR')) {
 }
 
 $sites      = new Xhgui_Sites();
-$sites->setCurrent($_SERVER['PHP_AUTH_USER']);
+$sites->setValidate(false);
+// $sites->setCurrent($_SERVER['PHP_AUTH_USER']);
+$sites->setCurrent('podravka.hr');
 
 $client     = new MongoClient(Xhgui_Config::read('db.host'));
 $db         = $client->selectDB(Xhgui_Config::read('db.db'));
 $collection = $db->selectCollection($sites->getCurrentCollection());
 
-if (false === array_key_exists('archive', $_FILES['archive'])) {
+if (false === array_key_exists('archive', $_FILES)) {
+    header('HTTP/1.1 400 No archive uploaded');
     exit;
 }
 
 $archive = $_FILES['archive'];
 if (false === array_key_exists('type', $archive)) {
+    header('HTTP/1.1 400 Invalid archive type');
     exit;
-} else if ('application/zip' !== $archive['type']) {
+} elseif ('application/zip' !== $archive['type']) {
+    header('HTTP/1.1 400 Invalid archive type');
     exit;
-} else if ('application/zip' !== mime_content_type($archive['tmp_name'])) {
+} elseif ('application/zip' !== mime_content_type($archive['tmp_name'])) {
+    header('HTTP/1.1 400 Invalid archive type');
     exit;
 }
 

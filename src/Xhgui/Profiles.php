@@ -10,7 +10,8 @@ class Xhgui_Profiles
 
     public function __construct(MongoDb $db)
     {
-        $this->_collection = $db->results;
+        $collectionName = Xhgui_Config::read('db.collection');
+        $this->_collection = $db->{$collectionName};
         $this->_mapper = new Xhgui_Db_Mapper();
     }
 
