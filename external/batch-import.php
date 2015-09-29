@@ -6,8 +6,7 @@ if (!defined('XHGUI_ROOT_DIR')) {
 
 $sites      = new Xhgui_Sites();
 $sites->setValidate(false);
-// $sites->setCurrent($_SERVER['PHP_AUTH_USER']);
-$sites->setCurrent('podravka.hr');
+$sites->setCurrent($_SERVER['PHP_AUTH_USER']);
 
 $client     = new MongoClient(Xhgui_Config::read('db.host'));
 $db         = $client->selectDB(Xhgui_Config::read('db.db'));
