@@ -95,9 +95,12 @@ class Xhgui_Twig_Extension extends Twig_Extension
         // TODO: how to fetch DIC from here?
         global $di;
 
-        $params = array(
-            'site' => $di['sites']->getCurrent()
-        );
+        $params = array();
+        if (isset($di['sites'])) {
+            $params = array(
+                'site' => $di['sites']->getCurrent()
+            );
+        }
 
         return $this->_app->urlFor($name, $params)  . $query;
     }
