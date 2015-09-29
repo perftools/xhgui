@@ -5,6 +5,10 @@ class Controller_WatchTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
+        if (!extension_loaded('mongo')) {
+            $this->markTestSkipped('Extension "mongo" required to run');
+        }
+
         parent::setUp();
         Environment::mock(array(
            'SCRIPT_NAME' => 'index.php',
