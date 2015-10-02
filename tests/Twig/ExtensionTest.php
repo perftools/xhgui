@@ -95,4 +95,62 @@ class Xhgui_Twig_ExtensionTest extends PHPUnit_Framework_TestCase
         $this->assertStringEndsWith($expected, $result);
     }
 
+    public function testCanGetAvailableSites()
+    {
+        $app = $this->getMockBuilder('Slim\Slim')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $sites = $this->getMockBuilder('Xhgui_Sites')
+            ->disableOriginalConstructor()
+            ->setMethods(array('getAvailable'))
+            ->getMock();
+        $availableSites = array('example.com', 'example.org');
+        $sites
+            ->expects($this->once())
+            ->method('getAvailable')
+            ->will($this->returnValue($availableSites));
+        $ext = new Xhgui_Twig_Extension($app, $sites);
+
+        $this->assertEquals($availableSites, $ext->sites());
+    }
+
+    public function testCanGetCurrentSites()
+    {
+        $app = $this->getMockBuilder('Slim\Slim')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $sites = $this->getMockBuilder('Xhgui_Sites')
+            ->disableOriginalConstructor()
+            ->setMethods(array('getCurrent'))
+            ->getMock();
+        $sites
+            ->expects($this->once())
+            ->method('getCurrent')
+            ->will($this->returnValue('example.com'));
+        $ext = new Xhgui_Twig_Extension($app, $sites);
+
+        $this->assertEquals('example.com', $ext->site());
+    }
+
+    public function testCanBuildSitesEnabledUrls()
+    {
+        $app = $this->getMockBuilder('Slim\Slim')
+            ->disableOriginalConstructor()
+            ->setMethods(array('urlFor'))
+            ->getMock();
+        $app
+            ->expects($this->once())
+            ->method('urlFor')
+            ->with($this->equalTo('routeName'), $this->equalTo(array('site' => 'example.com')))
+            ->will($this->returnValue('/example.com/view/run'));
+        $sites = $this->getMockBuilder('Xhgui_Sites')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $ext = new Xhgui_Twig_Extension($app, $sites);
+
+        $this->assertEquals(
+            '/example.com/view/run',
+            $ext->siteUrl('routeName', array('site' => 'example.com'))
+        );
+    }
 }
