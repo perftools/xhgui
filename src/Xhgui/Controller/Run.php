@@ -2,19 +2,17 @@
 
 class Xhgui_Controller_Run extends Xhgui_Controller
 {
-    public function __construct($app, $profiles, $watches)
+    public function __construct($app, $profiles, $watches, $sites)
     {
         $this->_app = $app;
         $this->_profiles = $profiles;
         $this->_watches = $watches;
+        $this->_sites = $sites;
     }
 
     public function homepage()
     {
-        // TODO: how to fetch DIC from app?
-        global $di;
-
-        if (false !== ($site = $di['sites']->getFirstAvailable())) {
+        if (false !== ($site = $this->_sites->getFirstAvailable())) {
             $url = $this->_app->urlFor('home', compact('site'));
             // TODO: this does not work (?)
             // $this->_app->redirect($url);
