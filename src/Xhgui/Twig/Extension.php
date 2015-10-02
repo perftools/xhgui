@@ -4,9 +4,12 @@ class Xhgui_Twig_Extension extends Twig_Extension
 {
     protected $_app;
 
-    public function __construct($app)
+    protected $_sites;
+
+    public function __construct($app, $sites)
     {
         $this->_app = $app;
+        $this->_sites = $sites;
     }
 
     public function getName()
@@ -59,18 +62,12 @@ class Xhgui_Twig_Extension extends Twig_Extension
 
      public function sites()
      {
-         // TODO: how to fetch DIC from here?
-         global $di;
-
-         return $di['sites']->getAvailable();
+         return $this->_sites->getAvailable();
      }
 
     public function site()
     {
-        // TODO: how to fetch DIC from here?
-        global $di;
-
-        return $di['sites']->getCurrent();
+        return $this->_sites->getCurrent();
     }
 
     public function siteUrl($name, $params)
@@ -92,15 +89,9 @@ class Xhgui_Twig_Extension extends Twig_Extension
             $query = '?' . http_build_query($queryargs);
         }
 
-        // TODO: how to fetch DIC from here?
-        global $di;
-
-        $params = array();
-        if (isset($di['sites'])) {
-            $params = array(
-                'site' => $di['sites']->getCurrent()
-            );
-        }
+        $params = array(
+            'site' => $this->_sites->getCurrent()
+        );
 
         return $this->_app->urlFor($name, $params)  . $query;
     }

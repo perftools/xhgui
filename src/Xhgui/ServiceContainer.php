@@ -55,8 +55,9 @@ class Xhgui_ServiceContainer extends Pimple
             $app->add(new Xhgui_Middleware_Render());
 
             $view = $c['view'];
+            $sites = $c['sites'];
             $view->parserExtensions = array(
-                new Xhgui_Twig_Extension($app)
+                new Xhgui_Twig_Extension($app, $sites)
             );
             $app->view($view);
 
