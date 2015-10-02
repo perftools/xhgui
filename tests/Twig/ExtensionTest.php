@@ -8,7 +8,11 @@ class Xhgui_Twig_ExtensionTest extends PHPUnit_Framework_TestCase
         parent::setUp();
         $app = new Slim();
         $app->get('/test', function () {})->name('test');
-        $this->ext = new Xhgui_Twig_Extension($app);
+        $sites = $this->getMockBuilder('Xhgui_Sites')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->ext = new Xhgui_Twig_Extension($app, $sites);
     }
 
     public function testFormatBytes()
