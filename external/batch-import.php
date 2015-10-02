@@ -1,15 +1,15 @@
 <?php
 ini_set('display_errors', 1);
 if (!defined('XHGUI_ROOT_DIR')) {
-    require dirname(__DIR__) . '/src/bootstrap.php';
+    require dirname(__DIR__).'/src/bootstrap.php';
 }
 
-$sites      = new Xhgui_Sites();
+$sites = new Xhgui_Sites();
 $sites->setValidate(false);
 $sites->setCurrent($_SERVER['PHP_AUTH_USER']);
 
-$client     = new MongoClient(Xhgui_Config::read('db.host'));
-$db         = $client->selectDB(Xhgui_Config::read('db.db'));
+$client = new MongoClient(Xhgui_Config::read('db.host'));
+$db = $client->selectDB(Xhgui_Config::read('db.db'));
 $collection = $db->selectCollection($sites->getCurrentCollection());
 
 if (false === array_key_exists('archive', $_FILES)) {
@@ -30,7 +30,7 @@ if (false === array_key_exists('type', $archive)) {
 }
 
 $archive = zip_open($archive['tmp_name']);
-while(false !== ($entry = zip_read($archive))) {
+while (false !== ($entry = zip_read($archive))) {
     // entry by entry
     if (zip_entry_open($archive, $entry, 'rb')) {
         $content = '';
@@ -48,13 +48,16 @@ while(false !== ($entry = zip_read($archive))) {
                 if (false !== strpos($time, '.')) {
                     $time = explode('.', $time);
                 } else {
-                    $time = array($time, 0);
+                    $time = [$time, 0];
                 }
-                $payload['meta'] = array_merge($payload['meta'], array(
-                    'request_ts'       => new MongoDate($time[0]),
-                    'request_ts_micro' => new MongoDate($time[0], $time[1]),
-                    'request_date'     => date('Y-m-d', $time[0]),
-                ));
+                $payload['meta'] = array_merge(
+                    $payload['meta'],
+                    [
+                        'request_ts' => new MongoDate($time[0]),
+                        'request_ts_micro' => new MongoDate($time[0], $time[1]),
+                        'request_date' => date('Y-m-d', $time[0]),
+                    ]
+                );
                 $collection->save($payload);
             }
         }
