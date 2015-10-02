@@ -5,6 +5,9 @@
  */
 class Xhgui_Sites
 {
+    /** @var MongoDb */
+    protected $_db;
+
     /**
      * @var
      */
@@ -20,6 +23,14 @@ class Xhgui_Sites
 
     /** @var bool */
     protected $_validate = true;
+
+    /**
+     * @param MongoDb $db
+     */
+    public function __construct(MongoDb $db)
+    {
+        $this->_db = $db;
+    }
 
     /**
      * @return boolean
@@ -47,9 +58,7 @@ class Xhgui_Sites
     public function getAvailable()
     {
         if (null === $this->_list) {
-            $client = new MongoClient(Xhgui_Config::read('db.host'));
-            $db = $client->selectDB(Xhgui_Config::read('db.db'));
-            $colls = $db->listCollections();
+            $colls = $this->_db->listCollections();
             $list = [];
             /** @var MongoCollection $coll */
             foreach ($colls as $coll) {
