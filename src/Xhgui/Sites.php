@@ -8,17 +8,13 @@ class Xhgui_Sites
     /** @var MongoDb */
     protected $_db;
 
-    /**
-     * @var
-     */
+    /** @var */
     protected $_list;
-    /**
-     * @var
-     */
+
+    /** @var */
     protected $_current;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $_template = 'profiles_';
 
     /** @var bool */
@@ -59,7 +55,7 @@ class Xhgui_Sites
     {
         if (null === $this->_list) {
             $colls = $this->_db->listCollections();
-            $list = [];
+            $list = array();
             /** @var MongoCollection $coll */
             foreach ($colls as $coll) {
                 $name = $coll->getName();
@@ -75,26 +71,32 @@ class Xhgui_Sites
         return $this->_list;
     }
 
+    /**
+     * @return mixed
+     */
     public function getFirstAvailable()
     {
         return current($this->getAvailable());
     }
 
+    /**
+     * @return bool
+     */
     public function hasCurrent()
     {
-        return ($this->getCurrent());
+        return (bool) $this->getCurrent();
     }
 
     /**
      * @param $current
      *
      * @return $this
-     * @throws \Slim\Exception\Pass
+     * @throws \InvalidArgumentException
      */
     public function setCurrent($current)
     {
         if (true === $this->isValidate() && false === in_array($current, $this->getAvailable())) {
-            throw new \Slim\Exception\Pass('No such site');
+            throw new InvalidArgumentException('No such site');
         }
 
         $this->_current = $current;
@@ -107,10 +109,6 @@ class Xhgui_Sites
      */
     public function getCurrent()
     {
-        if (null === $this->_current) {
-            $this->_current = current($this->getAvailable());
-        }
-
         return $this->_current;
     }
 
