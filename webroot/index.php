@@ -9,7 +9,11 @@ $app = $di['app'];
 $app->hook('slim.before.dispatch', function() use ($di, $app) {
     $params = $app->router()->getCurrentRoute()->getParams();
     if (true === array_key_exists('site', $params)) {
-        $di['sites']->setCurrent($params['site']);
+        try {
+            $di['sites']->setCurrent($params['site']);
+        } catch (InvalidArgumentException $exception) {
+            throw new \Slim\Exception\Pass;
+        }
     }
 });
 

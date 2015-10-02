@@ -4,9 +4,10 @@
  */
 $app->error(function (Exception $e) use ($di, $app) {
     $view = $di['view'];
+    $sites = $di['sites'];
     $view->parserOptions['cache'] = false;
     $view->parserExtensions = array(
-        new Xhgui_Twig_Extension($app)
+        new Xhgui_Twig_Extension($app, $sites)
     );
 
     // Remove the controller so we don't render it.
