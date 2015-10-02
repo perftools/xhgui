@@ -85,7 +85,7 @@ class Xhgui_ServiceContainer extends Pimple
         };
 
         $this['profiles'] = function ($c) {
-            return new Xhgui_Profiles($c['db']);
+            return new Xhgui_Profiles($c['db'], $c['sites']->getCurrentCollection());
         };
 
         $this['sites'] = $this->share(function () {

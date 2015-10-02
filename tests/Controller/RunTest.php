@@ -25,6 +25,9 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
         $di['app'] = $di->share(function ($c) use ($mock) {
             return $mock;
         });
+        $di['sites']
+            ->setValidate(false)
+            ->setCurrent('example.com');
         $this->runs = $di['runController'];
         $this->app = $di['app'];
         $this->profiles = $di['profiles'];

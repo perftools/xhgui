@@ -90,8 +90,6 @@ class Xhgui_Sites
 
         $this->_current = $current;
 
-        Xhgui_Config::write('db.collection', $this->getCurrentCollection());
-
         return $this;
     }
 
