@@ -60,6 +60,17 @@ if (!file_exists(__DIR__ . '/composer.phar')) {
     out("Composer already installed.");
 }
 
+if (!file_exists(__DIR__ . '/composer.phar')) {
+    out('ERROR - No composer found');
+    out('download failed, possible reasons:');
+    out(' - you\'re behind a proxy.');
+    out(' - composer servers is not available at the moment.');
+    out(' - something wrong with network configuration.');
+    out('please try download it manually from https://getcomposer.org/installer and follow manual.');
+    out('');
+    exit(9);
+}
+
 out("Installing dependencies.");
 $cmd = 'php ' . __DIR__ . '/composer.phar update --prefer-dist --no-dev';
 $output = runProcess($cmd);
