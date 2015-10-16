@@ -4,84 +4,89 @@ xhgui
 A graphical interface for XHProf data built on MongoDB.
 
 This tool requires that [XHProf](http://pecl.php.net/package/xhprof) or 
-its fork [Uprofiler](https://github.com/FriendsOfPHP/uprofiler) is installed, 
-which is a PHP Extension that records and provides profiling data.
+its fork [Uprofiler](https://github.com/FriendsOfPHP/uprofiler) is installed.
+XHProf is a PHP Extension that records and provides profiling data.
 XHGui (this tool) takes that information, saves it in MongoDB, and provides
-a convienent GUI for working with it.
-
+a convenient GUI for working with it.
 
 System Requirements
 ===================
 
+XHGui has the following requirements:
+
  * [XHProf](http://pecl.php.net/package/xhprof) or 
-   [Uprofiler](https://github.com/FriendsOfPHP/uprofiler) to actually profile the data
- * [MongoDB PHP](http://pecl.php.net/package/mongo) MongoDB PHP extension
- * [MongoDB](http://www.mongodb.org/) MongoDB Itself
- * [mcrypt] (http://php.net/manual/en/book.mcrypt.php) PHP must be configured
-   with mcrypt (which is a dependency of Slim)
- * [dom] (http://php.net/manual/en/book.dom.php) If you are running the tests
-   you'll need the DOM extension (which is a dependency of PHPUnit)
+   [Uprofiler](https://github.com/FriendsOfPHP/uprofiler) to actually profile the data.
+ * [MongoDB PHP](http://pecl.php.net/package/mongo) MongoDB PHP driver.
+   XHGui requires verison 1.3.0 or later.
+ * [MongoDB](http://www.mongodb.org/) MongoDB Itself.
+ * [mcrypt](http://php.net/manual/en/book.mcrypt.php) PHP must be configured
+   with mcrypt (which is a dependency of Slim).
+ * [dom](http://php.net/manual/en/book.dom.php) If you are running the tests
+   you'll need the DOM extension (which is a dependency of PHPUnit).
 
 
 Installation
 ============
 
-Installing Xhgui requires 2 main steps. First is installing the `xhgui`
-front-end, and the second is profiling a web application/site.
+1. Clone or download `xhgui` from Github.
 
+2. Point your webserver to the `webroot` directory.
 
-Installing Xhgui
-----------------
+3. Set the permissions on the `cache` directory to allow the
+   webserver to create files. If you're lazy, `0777` will work.
+   
+   The following command changes the permissions for the `cache` directory:
 
-* Clone or download `xhgui` from github.
-* You'll need to install `mongodb`, and `php-mongodb`, at least version 1.3.0
-  of the php extension is required.
-* Point your webserver to the `webroot` directory.
-* Set the permissions on the `cache` cache directory to allow the webserver to
-  create files.  If you're lazy `0777` will work. Run:
+   ```
+   chmod -R 0777 cache
+   ```
 
-  ```
-  chmod -R 0777 cache
-  ```
+4. Start a MongoDB instance. XHGui uses the MongoDB instance to store
+   profiling data.
 
-* If your mongodb setup requires a username + password, or isn't running on the
-  default port + host.  You'll need to update `config/config.php` so that it
-  can connect to mongod.
-* You may wish to add indexes (recommended but optional) to improve the
-  performance, you'll need to do this by using mongo console
+5. If your MongoDB setup uses authentication, or isn't running on the
+   default port and localhost, update XHGui's `config/config.php` so that XHGui
+   can connect to your `mongod` instance.
 
-  On your command prompt (irrespective of Windows or \*nix), open mongo shell
-  using command 'mongo' and follow below  commands to add the index:
+6. (**Optional**, but recommended) Add indexes to MongoDB to improve performance.
 
-  ```
-  $ mongo
-  > use xhprof
-  > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
-  > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
-  > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
-  > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
-  > db.results.ensureIndex( { 'meta.url' : 1 } )
-  ```
+   XHGui stores profiling information in a `results` collection in the
+   `xhprof` database in MongoDB. Adding indexes improves performance,
+   letting you navigate pages more quickly.
 
-  After adding indexes, you may notice you can navigate across pages faster.
-* Run the install script. This will download composer and use it to install the
-  dependencies for xhgui.
+   To add an index, open a `mongo` shell from your command prompt.
+   Then, use MongoDB's `db.collection.ensureIndex()` method to add
+   the indexes, as in the following:
 
-    ```
-    cd path/to/xhgui
-    php install.php
-    ```
+   ```
+   $ mongo
+   > use xhprof
+   > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
+   > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
+   > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
+   > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
+   > db.results.ensureIndex( { 'meta.url' : 1 } )
+   ```
 
-* Setup your webserver. See below for how to setup the rewrite rules for nginx + apache.
+7. Run XHGui's install script. The install script downloads composer and
+   uses it to install the XHGui's dependencies.
+
+   ```
+   cd path/to/xhgui
+   php install.php
+   ```
+
+8. Set up your webserver. The Configuration section below describes how
+   to setup the rewrite rules for both nginx and apache.
 
 Configuration
 =============
 
-Configure webserver re-write rules
+Configure Webserver Re-Write Rules
 ----------------------------------
 
-Xhgui prefers to have URL rewriting enabled, but will work without it.
-For Apache you can do the following to enable URL rewriting:
+XHGui prefers to have URL rewriting enabled, but will work without it.
+For Apache, you can do the following to enable URL rewriting:
 
 1. Make sure that an .htaccess override is allowed and that AllowOverride is
    set to All for the correct DocumentRoot.
@@ -94,15 +99,16 @@ For Apache you can do the following to enable URL rewriting:
         Require all granted
     </Directory>
     ```
-2. Make sure you are loading up mod_rewrite correctly. You should see something like:
+2. Make sure you are loading up mod_rewrite correctly. 
+   You should see something like:
 
     ```
     LoadModule rewrite_module libexec/apache2/mod_rewrite.so
     ```
 
-3. Xhgui comes with a `.htaccess` to enable the remaining rewrite rules.
+3. XHGui comes with a `.htaccess` file to enable the remaining rewrite rules.
 
-For nginx & fast-cgi you can the following snippet as a start:
+For nginx and fast-cgi, you can the following snippet as a start:
 
 ```
 server {
@@ -128,15 +134,19 @@ server {
 ```
 
 
-Configure Xhgui profiling rate
+Configure XHGui Profiling Rate
 -------------------------------
 
-After installing Xhgui you may want to do change how frequently you profile the
-host application. The `profiler.enable` configuration option allows you to
-provide a callback function that determines which requests are profiled. By
-default 1 in 100 requests are profiled. If for example you wanted to only profile requests
-in a certain URL path you could do the following:
+After installing XHGui, you may want to do change how frequently you
+profile the host application. The `profiler.enable` configuration option
+allows you to provide a callback function that specifies the requests that
+are profiled. By default, XHGui profiles 1 in 100 requests. 
 
+The following example configures XHGui to only profile requests
+from a specific URL path:
+
+The following example configures XHGui to profile 1 in 100 requests,
+excluding requests with the `/blog` URL path:
 
 ```php
 // In config/config.php
@@ -152,8 +162,8 @@ return array(
 );
 ```
 
-The above code would profile anything not in `/blog` 1 in 100 requests. Paths containing `/blog` would never
-be profiled. To profile *every* request you could do the following:
+In contrast, the following example configured XHGui to profile *every*
+request:
 
 ```php
 // In config/config.php
@@ -166,14 +176,15 @@ return array(
 ```
 
 
-Configure how 'simple' URLs are created
----------------------------------------
+Configure 'Simple' URLs Creation
+--------------------------------
 
-Xhgui generates 'simple' URLs for each profile collected. These simple URLs are used to generate
-the aggregate data used on the URL view. Since different applications have different requirements
-for how URLs map to logical blocks of code, a configuration option allows you to provide custom
-logic to generate the simple URL. By default all numeric values in the query string are removed. To
-provide custom logic you define the `profiler.simple_url` configuration option:
+XHGui generates 'simple' URLs for each profile collected. These URLs are
+used to generate the aggregate data used on the URL view. Since
+different applications have different requirements for how URLs map to
+logical blocks of code, the `profile.simple_url` configuration option
+allows you to provide specify the logic used to generate the simple URL.
+By default, all numeric values in the query string are removed.
 
 ```php
 // In config/config.php
@@ -188,104 +199,129 @@ return array(
 The URL argument is the `REQUEST_URI` or `argv` value.
 
 
-Profiling an application / site
-===============================
+Profile an Application or Site
+==============================
 
-The simplest way to get an application profiled, is to use
-`external/header.php`.  This file is designed to be combined with PHP's
-[auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-prepend-file)
-directive. This can be enabled system-wide through `php.ini`. Alternatively,
-you can enable `auto_prepend_file` per virtual host. With apache this would
-look like:
+The simplest way to profile an application is to use
+`external/header.php`. `external/header.php` is designed to be combined
+with PHP's
+[auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-pr
+epend-file) directive. You can enable `auto_prepend_file` system-wide
+through `php.ini`. Alternatively, you can enable `auto_prepend_file` per
+virtual host. 
 
-    <VirtualHost *:80>
-        php_admin_value auto_prepend_file "/Users/markstory/Sites/xhgui/external/header.php"
-        DocumentRoot "/Users/markstory/Sites/awesome-thing/app/webroot/"
-        ServerName site.localhost
-    </VirtualHost>
+With apache this would look like:
 
+```
+<VirtualHost *:80>
+  php_admin_value auto_prepend_file "/Users/markstory/Sites/xhgui/external/header.php"
+  DocumentRoot "/Users/markstory/Sites/awesome-thing/app/webroot/"
+  ServerName site.localhost
+</VirtualHost>
+```
 With Nginx in fastcgi mode you could use:
 
-    server {
-        listen 80;
-        server_name site.localhost;
-        root /Users/markstory/Sites/awesome-thing/app/webroot/;
-        fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
-     }
+```
+server {
+  listen 80;
+  server_name site.localhost;
+  root /Users/markstory/Sites/awesome-thing/app/webroot/;
+  fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
+}
+```
 
-Profiling a CLI script
-======================
+Profile a CLI Script
+====================
 
-The simplest way to get a CLI script profiled, is to use
-`external/header.php`.  This file is designed to be combined with PHP's
+The simplest way to profile a CLI is to use
+`external/header.php`. `external/header.php` is designed to be combined with PHP's
 [auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-prepend-file)
-directive. This can be enabled system-wide through `php.ini`. Alternatively,
+directive. You can enable `auto_prepend_file` system-wide
+through `php.ini`. Alternatively,
 you can enable include the `header.php` at the top of your script:
 
-    <?php
-    require '/path/to/xhgui/external/header.php';
-    // Rest of script.
+```php
+<?php
+require '/path/to/xhgui/external/header.php';
+// Rest of script.
+```
 
-Or use the `-d` flag:
+You can alternatively use the `-d` flag when running php:
 
-    php -d auto_prepend_file=/path/to/xhgui/external/header.php do_work.php
+```
+php -d auto_prepend_file=/path/to/xhgui/external/header.php do_work.php
+```
 
-
-Saving & importing profiles
+Saving & Importing Profiles
 ---------------------------
 
-If your site cannot directly connect to your mongodb instance, you can choose
-to save your data on a temporary file for a later import to xhgui's mongo
-database.  Change the `save.handler` setting to `file` and define your file's
-path with `save.handler.filename`.  To import a file inside mongodb use the
-`external/import.php`. Be aware of file locking. Depending on your workload, 
-you may need to change the `save.handler.filename` file path to avoid file locking
+If your site cannot directly connect to your MongoDB instance, you can choose
+to save your data to a temporary file for a later import to XHGui's MongoDB
+database.  
 
+To configure XHGui to save your data to a temporary file, 
+change the `save.handler` setting to `file` and define your file's
+path with `save.handler.filename`.  
+
+To import a saved file to MongoDB use XHGui's provided
+`external/import.php` script. 
+
+Be aware of file locking: depending on your workload, you may need to
+change the `save.handler.filename` file path to avoid file locking
+during the import.
+
+The following demonstrate the use of `external/import.php`:
 
 ```
 php external/import.php -f /path/to/file
 ```
 
-Be careful, importing the same file twice will load twice the run datas inside
-mongo, resulting with duplicate profiles
+**Warning**: Importing the same file twice will load twice the run datas inside
+MongoDB, resulting in duplicate profiles
 
 
-Limiting Mongo Disk Usage
--------------------------
+Limiting MongoDB Disk Usage
+---------------------------
 
 Disk usage can grow quickly, especially when profiling applications with large
-code bases, or that utilize larger frameworks. One technique to keep the growth
-in check is to have Mongo automatically delete profiling documents once they
-reach a certain age. Decide on a maximum profile document age in seconds, you
+code bases or that use larger frameworks. 
+
+To keep the growth
+in check, configure MongoDB to automatically delete profiling documents once they
+have reached a certain age by creating a [TTL index](http://docs.mongodb.org/manual/core/index-ttl/).
+
+Decide on a maximum profile document age in seconds: you
 may wish to choose a lower value in development (where you profile everything),
 than production (where you profile only a selection of documents). The
 following command instructs Mongo to delete documents over 5 days (432000
 seconds) old.
 
-      $ mongo
-      > use xhprof
-      > db.results.ensureIndex( { "meta.request_ts" : 1 }, { expireAfterSeconds : 432000 } )
+```
+$ mongo
+> use xhprof
+> db.results.ensureIndex( { "meta.request_ts" : 1 }, { expireAfterSeconds : 432000 } )
+```
 
 Waterfall Display
 -----------------
 
-The goal of the waterfall display is to recognize that concurrent requests can
-affect each other. Concurrent DB requests (or other resources), CPU intensive
-activies, or even locks on session files can become relevant. With an Ajax
-heavy applicaitons understanding the page build is far more complex than
-a single load, hopefully the waterfall can help. Remember: If you're only
-profiling a sample of requests the waterfall fills you with impolite lies. 
+The goal of XHGui's waterfall display is to recognize that concurrent requests can
+affect each other. Concurrent database requests, CPU-intensive
+activities and even locks on session files can become relevant. With an 
+Ajax-heavy application, understanding the page build is far more complex than
+a single load: hopefully the waterfall can help. Remember, if you're only
+profiling a sample of requests, the waterfall fills you with impolite lies. 
 
 Some Notes:
 
- * There should probably be more indexes on MongoDB for this to be performant
- * It introduces storage of a new request_ts_micro value, as second level
-   granularity doesn't work well with waterfalls
- * Still very much in alpha
- * Feedback and pull requests welcome :)
+ * There should probably be more indexes on MongoDB for this to be performant.
+ * The waterfall display introduces storage of a new `request_ts_micro` value, as second level
+   granularity doesn't work well with waterfalls.
+ * The waterfall display is still very much in alpha.
+ * Feedback and pull requests are welcome :)
 
-Releases/Changelog
-==================
+Releases / Changelog
+====================
 
 See the [releases](https://github.com/preinheimer/xhgui/releases) for changelogs,
 and release information.
@@ -295,8 +331,21 @@ License
 
 Copyright (c) 2013 Mark Story & Paul Reinheimer
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
