@@ -4,13 +4,14 @@ if (!defined('XHGUI_ROOT_DIR')) {
     require dirname(__DIR__).'/src/bootstrap.php';
 }
 
-$sites = new Xhgui_Sites();
-$sites->setValidate(false);
-$sites->setCurrent($_SERVER['PHP_AUTH_USER']);
 
-$client = new MongoClient(Xhgui_Config::read('db.host'));
-$db = $client->selectDB(Xhgui_Config::read('db.db'));
-$collection = $db->selectCollection($sites->getCurrentCollection());
+$di = new Xhgui_ServiceContainer();
+
+$sites = $di['sites'];
+$sites
+    ->setValidate(false)
+    ->setCurrent($_SERVER['PHP_AUTH_USER']);
+$collection = $di['profiles']->getCollection();
 
 if (false === array_key_exists('archive', $_FILES)) {
     header('HTTP/1.1 400 No archive uploaded');
