@@ -9,6 +9,10 @@ XHProf is a PHP Extension that records and provides profiling data.
 XHGui (this tool) takes that information, saves it in MongoDB, and provides
 a convenient GUI for working with it.
 
+[![Build Status](https://travis-ci.org/perftools/xhgui.svg?branch=master)](https://travis-ci.org/perftools/xhgui)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/perftools/xhgui/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/perftools/xhgui/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/perftools/xhgui/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/perftools/xhgui/?branch=master)
+
 System Requirements
 ===================
 
