@@ -1,3 +1,7 @@
+/.idea/
+/.vagrant
+/config.yaml
+/Vagrantfile
 /composer.phar
 /tags
 /vendor

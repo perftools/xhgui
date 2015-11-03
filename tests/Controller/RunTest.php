@@ -5,6 +5,10 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
+        if (!extension_loaded('mongo')) {
+            $this->markTestSkipped('Extension "mongo" required to run');
+        }
+
         parent::setUp();
         Environment::mock(array(
             'SCRIPT_NAME' => 'index.php',
@@ -21,6 +25,9 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
         $di['app'] = $di->share(function ($c) use ($mock) {
             return $mock;
         });
+        $di['sites']
+            ->setValidate(false)
+            ->setCurrent('example.com');
         $this->runs = $di['runController'];
         $this->app = $di['app'];
         $this->profiles = $di['profiles'];

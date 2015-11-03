@@ -18,7 +18,7 @@
                 </a>
                 <a class="brand" href="{{ url('home') }}">XHG</a>
                 <div class="nav-collapse collapse">
-                    <ul class="nav">
+                    <ul class="nav navbar-nav">
                         <li><a href="{{ url('home') }}">Recent</a></li>
                         <li><a href="{{ url('home', {'sort': 'wt'}) }}">Longest wall time</a></li>
                         <li><a href="{{ url('home', {'sort': 'cpu'}) }}">Most CPU</a></li>
@@ -27,6 +27,20 @@
                         <li><a href="{{ url('watch.list') }}">Watch Functions</a></li>
                         <li><a href="{{ url('waterfall.list') }}">Waterfall</a></li>
                     </ul>
+                    {% set sites = sites() %}
+                    {% if sites %}
+                        <ul class="nav navbar-nav navbar-right pull-right">
+                            <li class="dropdown">
+                                <a aria-expanded="false" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">{{ site() }} <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    {% for site in sites %}
+                                        <li><a href="{{ site_url('home', {'site': site}) }}">{{ site }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        </ul>
+                    {% endif %}
+
                 </div><!--/.nav-collapse -->
             </div>
         </div>

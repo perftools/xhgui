@@ -4,9 +4,12 @@ class Xhgui_Twig_Extension extends Twig_Extension
 {
     protected $_app;
 
-    public function __construct($app)
+    protected $_sites;
+
+    public function __construct($app, $sites)
     {
         $this->_app = $app;
+        $this->_sites = $sites;
     }
 
     public function getName()
@@ -17,6 +20,9 @@ class Xhgui_Twig_Extension extends Twig_Extension
     public function getFunctions()
     {
         return array(
+            'sites' => new Twig_Function_Method($this, 'sites'),
+            'site' => new Twig_Function_Method($this, 'site'),
+            'site_url' => new Twig_Function_Method($this, 'siteUrl'),
             'url' => new Twig_Function_Method($this, 'url'),
             'static' => new Twig_Function_Method($this, 'staticUrl'),
             'percent' => new Twig_Function_Method($this, 'makePercent', array(
@@ -54,6 +60,21 @@ class Xhgui_Twig_Extension extends Twig_Extension
         return substr($input, 0, $length) . "\xe2\x80\xa6";
     }
 
+     public function sites()
+     {
+         return $this->_sites->getAvailable();
+     }
+
+    public function site()
+    {
+        return $this->_sites->getCurrent();
+    }
+
+    public function siteUrl($name, $params)
+    {
+        return $this->_app->urlFor($name, $params);
+    }
+
     /**
      * Get a URL for xhgui.
      *
@@ -67,12 +88,17 @@ class Xhgui_Twig_Extension extends Twig_Extension
         if (!empty($queryargs)) {
             $query = '?' . http_build_query($queryargs);
         }
-        return $this->_app->urlFor($name)  . $query;
+
+        $params = array(
+            'site' => $this->_sites->getCurrent()
+        );
+
+        return $this->_app->urlFor($name, $params)  . $query;
     }
 
     public function staticUrl($url)
     {
-        return $this->_app->request()->getRootUri() . '/' . $url;
+        return $this->_app->request()->getRootUri() .'/'. $url;
     }
 
     public function formatBytes($value)

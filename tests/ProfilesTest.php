@@ -3,6 +3,10 @@ class ProfilesTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
+        if (!extension_loaded('mongo')) {
+            $this->markTestSkipped('Extension "mongo" required to run');
+        }
+
         $di = Xhgui_ServiceContainer::instance();
         $this->profiles = $di['profiles'];
         loadFixture($this->profiles, 'tests/fixtures/results.json');

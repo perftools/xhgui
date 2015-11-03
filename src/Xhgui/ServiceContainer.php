@@ -55,8 +55,9 @@ class Xhgui_ServiceContainer extends Pimple
             $app->add(new Xhgui_Middleware_Render());
 
             $view = $c['view'];
+            $sites = $c['sites'];
             $view->parserExtensions = array(
-                new Xhgui_Twig_Extension($app)
+                new Xhgui_Twig_Extension($app, $sites)
             );
             $app->view($view);
 
@@ -85,8 +86,12 @@ class Xhgui_ServiceContainer extends Pimple
         };
 
         $this['profiles'] = function ($c) {
-            return new Xhgui_Profiles($c['db']);
+            return new Xhgui_Profiles($c['db'], $c['sites']->getCurrentCollection());
         };
+
+        $this['sites'] = $this->share(function ($c) {
+            return new Xhgui_Sites($c['db']);
+        });
 
         $this['saver'] = function($c) {
             $config = $c['config'];
@@ -118,7 +123,7 @@ class Xhgui_ServiceContainer extends Pimple
         };
 
         $this['runController'] = function ($c) {
-            return new Xhgui_Controller_Run($c['app'], $c['profiles'], $c['watchFunctions']);
+            return new Xhgui_Controller_Run($c['app'], $c['profiles'], $c['watchFunctions'], $c['sites']);
         };
 
         $this['customController'] = function ($c) {

@@ -4,14 +4,28 @@
  */
 class Xhgui_Profiles
 {
+    protected $_db;
+
     protected $_collection;
+
+    protected $_collectionName;
 
     protected $_mapper;
 
-    public function __construct(MongoDb $db)
+    public function __construct(MongoDb $db, $collectionName)
     {
-        $this->_collection = $db->results;
+        $this->_db = $db;
+        $this->_collectionName = $collectionName;
         $this->_mapper = new Xhgui_Db_Mapper();
+    }
+
+    public function getCollection()
+    {
+        if (null === $this->_collection) {
+            $this->_collection = $this->_db->{$this->_collectionName};
+        }
+
+        return $this->_collection;
     }
 
     /**
@@ -21,7 +35,7 @@ class Xhgui_Profiles
      */
     public function latest()
     {
-        $cursor = $this->_collection->find()
+        $cursor = $this->getCollection()->find()
             ->sort(array('meta.request_date' => -1))
             ->limit(1);
         $result = $cursor->getNext();
@@ -30,7 +44,7 @@ class Xhgui_Profiles
 
     public function query($conditions, $fields = null)
     {
-        return $this->_collection->find($conditions, $fields);
+        return $this->getCollection()->find($conditions, $fields);
     }
 
     /**
@@ -41,7 +55,7 @@ class Xhgui_Profiles
      */
     public function get($id)
     {
-        return $this->_wrap($this->_collection->findOne(array(
+        return $this->_wrap($this->getCollection()->findOne(array(
             '_id' => new MongoId($id)
         )));
     }
@@ -69,8 +83,9 @@ class Xhgui_Profiles
     public function paginate($options)
     {
         $opts = $this->_mapper->convert($options);
+        $collection = $this->getCollection();
 
-        $totalRows = $this->_collection->find(
+        $totalRows = $collection->find(
             $opts['conditions'],
             array('_id' => 1))->count();
 
@@ -90,12 +105,12 @@ class Xhgui_Profiles
         }
 
         if ($projection === false) {
-            $cursor = $this->_collection->find($opts['conditions'])
+            $cursor = $collection->find($opts['conditions'])
                 ->sort($opts['sort'])
                 ->skip(($page - 1) * $opts['perPage'])
                 ->limit($opts['perPage']);
         } else {
-            $cursor = $this->_collection->find($opts['conditions'], $projection)
+            $cursor = $collection->find($opts['conditions'], $projection)
                 ->sort($opts['sort'])
                 ->skip(($page - 1) * $opts['perPage'])
                 ->limit($opts['perPage']);
@@ -134,7 +149,7 @@ class Xhgui_Profiles
             $col = '$meta.request_ts';
         }
 
-        $results = $this->_collection->aggregate(array(
+        $results = $this->getCollection()->aggregate(array(
             array('$match' => $match),
             array(
                 '$project' => array(
@@ -212,7 +227,7 @@ class Xhgui_Profiles
         if (isset($search['date_end'])) {
             $match['meta.request_date']['$lte'] = (string)$search['date_end'];
         }
-        $results = $this->_collection->aggregate(array(
+        $results = $this->getCollection()->aggregate(array(
             array('$match' => $match),
             array(
                 '$project' => array(
@@ -261,7 +276,7 @@ class Xhgui_Profiles
      */
     public function insert($profile)
     {
-        return $this->_collection->insert($profile, array('w' => 0));
+        return $this->getCollection()->insert($profile, array('w' => 0));
     }
 
     /**
@@ -273,7 +288,7 @@ class Xhgui_Profiles
      */
     public function truncate()
     {
-        return $this->_collection->drop();
+        return $this->getCollection()->drop();
     }
 
     /**
