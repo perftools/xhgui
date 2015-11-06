@@ -3,8 +3,9 @@ xhgui
 
 A graphical interface for XHProf data built on MongoDB.
 
-This tool requires that [XHProf](http://pecl.php.net/package/xhprof) or 
-its fork [Uprofiler](https://github.com/FriendsOfPHP/uprofiler) is installed.
+This tool requires that [XHProf](http://pecl.php.net/package/xhprof) or its one
+of its forks [Uprofiler](https://github.com/FriendsOfPHP/uprofiler),
+[Tideways](https://github.com/tideways/php-profiler-extension) are installed.
 XHProf is a PHP Extension that records and provides profiling data.
 XHGui (this tool) takes that information, saves it in MongoDB, and provides
 a convenient GUI for working with it.
@@ -18,8 +19,9 @@ System Requirements
 
 XHGui has the following requirements:
 
- * [XHProf](http://pecl.php.net/package/xhprof) or 
-   [Uprofiler](https://github.com/FriendsOfPHP/uprofiler) to actually profile the data.
+ * [XHProf](http://pecl.php.net/package/xhprof),
+   [Uprofiler](https://github.com/FriendsOfPHP/uprofiler) or
+   [Tideways](https://github.com/tideways/php-profiler-extension) to actually profile the data.
  * [MongoDB PHP](http://pecl.php.net/package/mongo) MongoDB PHP driver.
    XHGui requires verison 1.3.0 or later.
  * [MongoDB](http://www.mongodb.org/) MongoDB Itself.
@@ -38,7 +40,7 @@ Installation
 
 3. Set the permissions on the `cache` directory to allow the
    webserver to create files. If you're lazy, `0777` will work.
-   
+
    The following command changes the permissions for the `cache` directory:
 
    ```
@@ -103,7 +105,7 @@ For Apache, you can do the following to enable URL rewriting:
         Require all granted
     </Directory>
     ```
-2. Make sure you are loading up mod_rewrite correctly. 
+2. Make sure you are loading up mod_rewrite correctly.
    You should see something like:
 
     ```
@@ -144,7 +146,7 @@ Configure XHGui Profiling Rate
 After installing XHGui, you may want to do change how frequently you
 profile the host application. The `profiler.enable` configuration option
 allows you to provide a callback function that specifies the requests that
-are profiled. By default, XHGui profiles 1 in 100 requests. 
+are profiled. By default, XHGui profiles 1 in 100 requests.
 
 The following example configures XHGui to only profile requests
 from a specific URL path:
@@ -212,7 +214,7 @@ with PHP's
 [auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-pr
 epend-file) directive. You can enable `auto_prepend_file` system-wide
 through `php.ini`. Alternatively, you can enable `auto_prepend_file` per
-virtual host. 
+virtual host.
 
 With apache this would look like:
 
@@ -261,14 +263,14 @@ Saving & Importing Profiles
 
 If your site cannot directly connect to your MongoDB instance, you can choose
 to save your data to a temporary file for a later import to XHGui's MongoDB
-database.  
+database.
 
-To configure XHGui to save your data to a temporary file, 
+To configure XHGui to save your data to a temporary file,
 change the `save.handler` setting to `file` and define your file's
-path with `save.handler.filename`.  
+path with `save.handler.filename`.
 
 To import a saved file to MongoDB use XHGui's provided
-`external/import.php` script. 
+`external/import.php` script.
 
 Be aware of file locking: depending on your workload, you may need to
 change the `save.handler.filename` file path to avoid file locking
@@ -288,7 +290,7 @@ Limiting MongoDB Disk Usage
 ---------------------------
 
 Disk usage can grow quickly, especially when profiling applications with large
-code bases or that use larger frameworks. 
+code bases or that use larger frameworks.
 
 To keep the growth
 in check, configure MongoDB to automatically delete profiling documents once they
@@ -311,10 +313,10 @@ Waterfall Display
 
 The goal of XHGui's waterfall display is to recognize that concurrent requests can
 affect each other. Concurrent database requests, CPU-intensive
-activities and even locks on session files can become relevant. With an 
+activities and even locks on session files can become relevant. With an
 Ajax-heavy application, understanding the page build is far more complex than
 a single load: hopefully the waterfall can help. Remember, if you're only
-profiling a sample of requests, the waterfall fills you with impolite lies. 
+profiling a sample of requests, the waterfall fills you with impolite lies.
 
 Some Notes:
 
