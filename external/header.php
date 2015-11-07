@@ -155,8 +155,19 @@ register_shutdown_function(
         );
 
         try {
-            $container = Xhgui_ServiceContainer::instance();
-            $container['saver']->save($data);
+            $config = Xhgui_Config::all();
+            if (empty($config['db.options'])) {
+                $config['db.options'] = array();
+            }
+            $mongo = new MongoClient($config['db.host'], $config['db.options']);
+            $mongo->$config['db.db']->results->findOne();
+
+            $mongoConfig = $mongo->{$config['db.db']};
+
+            $saver = new Xhgui_Saver_Mongo(
+              new Xhgui_Profiles($mongoConfig)
+            );
+            $saver->save($data);
         } catch (Exception $e) {
             error_log('xhgui - ' . $e->getMessage());
         }
