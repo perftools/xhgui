@@ -1,42 +1,5 @@
+checks:
+  php: true
+
 filter:
-    excluded_paths:
-        - 'cache/*'
-        - 'tests/*'
-        - 'webroot/*'
-    paths:
-        - 'src/*'
-        - 'external/*'
-
-tools:
-
-    external_code_coverage:
-        timeout: 700
-        runs: 3
-
-    php_cpd:
-        enabled: true
-
-    php_code_sniffer:
-        enabled: true
-
-    php_cs_fixer:
-        enabled: true
-
-    php_hhvm:
-        enabled: true
-        config:
-            use_undeclared_constant:  false
-
-    php_mess_detector:
-        enabled: true
-        config:
-            controversial_rules:
-                superglobals: true
-
-    php_pdepend:
-        enabled: true
-
-    php_analyzer:
-        enabled: true
-
-    sensiolabs_security_checker: true
+  paths: ['src/*', 'external/*']
