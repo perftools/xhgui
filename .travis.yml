@@ -17,7 +17,6 @@ services:
 before_script:
   - pecl install xhprof-beta
   - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - echo "extension = xhprof.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - phpenv rehash
   - composer install --prefer-dist --dev
   - chmod -R 0777 cache/
@@ -42,4 +41,3 @@ script:
       wget https://scrutinizer-ci.com/ocular.phar
       php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover
     fi
-
