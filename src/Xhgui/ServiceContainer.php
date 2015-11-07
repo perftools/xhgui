@@ -91,15 +91,11 @@ class Xhgui_ServiceContainer extends Pimple
         $this['saver'] = function($c) {
             $config = $c['config'];
             switch ($config['save.handler']) {
-                case 'mongodb':
-                    return $c['saverMongo'];
-                    break;
                 case 'file':
                     return new Xhgui_Saver_File($config['save.handler.filename']);
-                    break;
+                case 'mongodb':
                 default:
                     return $c['saverMongo'];
-                    break;
             }
         };
 
