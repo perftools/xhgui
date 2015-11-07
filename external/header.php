@@ -56,7 +56,7 @@
 
 // this file should not - under no circumstances - interfere with any other application
 if (!extension_loaded('xhprof') && !extension_loaded('uprofiler') && !extension_loaded('tideways')) {
-    error_log('xhgui - either extension xhprof or uprofiler must be loaded');
+    error_log('xhgui - either extension xhprof, uprofiler or tideways must be loaded');
     return;
 }
 
