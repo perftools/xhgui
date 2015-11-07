@@ -140,7 +140,7 @@ Xhgui.callgraph = function(container, data, options) {
                 // to reverse the offsetTop() and height/2 operations that
                 // the tooltip will apply. We also need to account for window scroll
                 // position.
-                y: position.y + window.scrollY - el.node().offsetTop - (height / 2),
+                y: position.top + window.scrollY - el.node().offsetTop - (height / 2),
             };
             return pos;
         },
