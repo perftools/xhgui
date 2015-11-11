@@ -464,4 +464,16 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testGetDateFallback()
+    {
+        $data = array(
+            'meta' => array(
+                'SERVER' => array()
+            )
+        );
+        $profile = new Xhgui_Profile($data);
+        $result = $profile->getDate();
+        $this->assertInstanceOf('DateTime', $result);
+    }
+
 }

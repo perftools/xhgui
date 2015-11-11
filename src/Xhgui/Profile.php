@@ -128,7 +128,11 @@ class Xhgui_Profile
 
     public function getDate()
     {
-        return new DateTime('@' . $this->getMeta('SERVER.REQUEST_TIME'));
+        $date = $this->getMeta('SERVER.REQUEST_TIME');
+        if ($date) {
+            return new DateTime('@' . $date);
+        }
+        return new DateTime('now');
     }
 
     /**
