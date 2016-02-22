@@ -163,7 +163,7 @@ return array(
         if (strpos($url, '/blog') === 0) {
             return false;
         }
-        return rand(0, 100) === 42;
+        return rand(1, 100) === 42;
     }
 );
 ```
