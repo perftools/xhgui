@@ -70,23 +70,22 @@ class Xhgui_Twig_Extension extends Twig_Extension
         return $this->_app->urlFor($name)  . $query;
     }
 
-	/**
-	 * Get the URL for static content relative to webroot
-	 *
-	 * @param string $path The file/path you want a link to
-	 * @return string url.
-	 */
+    /**
+     * Get the URL for static content relative to webroot
+     *
+     * @param string $path The file/path you want a link to
+     * @return string url.
+     */
     public function staticUrl($url)
     {
-		$rootUri = $this->_app->request()->getRootUri();
+        $rootUri = $this->_app->request()->getRootUri();
 
-		// get URL part prepending index.php
-		$indexPos = strpos($rootUri, 'index.php');
-		if ( $indexPos > 0 ) {
-			return substr($rootUri,0,$indexPos) . $url;
-		} else {
-			return $rootUri . '/' . $url;
-		}
+        // Get URL part prepending index.php
+        $indexPos = strpos($rootUri, 'index.php');
+        if ($indexPos > 0) {
+            return substr($rootUri, 0, $indexPos) . $url;
+        }
+        return $rootUri . '/' . $url;
     }
 
     public function formatBytes($value)

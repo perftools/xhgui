@@ -1,5 +1,6 @@
 <?php
 use Slim\Slim;
+use Slim\Environment;
 
 class Xhgui_Twig_ExtensionTest extends PHPUnit_Framework_TestCase
 {
@@ -91,4 +92,25 @@ class Xhgui_Twig_ExtensionTest extends PHPUnit_Framework_TestCase
         $this->assertStringEndsWith($expected, $result);
     }
 
+    public function testStaticUrlNoIndexPhp()
+    {
+        Environment::mock(array(
+            'SCRIPT_NAME' => '/index.php',
+            'PHP_SELF' => '/index.php',
+            'REQUEST_URI' => '/',
+        ));
+        $result = $this->ext->staticUrl('css/bootstrap.css');
+        $this->assertEquals('/css/bootstrap.css', $result);
+    }
+
+    public function testStaticUrlWithIndexPhp()
+    {
+        Environment::mock(array(
+            'SCRIPT_NAME' => '/xhgui/webroot/index.php',
+            'PHP_SELF' => '/xhgui/webroot/index.php/',
+            'REQUEST_URI' => '/xhgui/webroot/index.php/',
+        ));
+        $result = $this->ext->staticUrl('css/bootstrap.css');
+        $this->assertEquals('/xhgui/webroot/css/bootstrap.css', $result);
+    }
 }
