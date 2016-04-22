@@ -23,6 +23,7 @@
     "suggest": {
         "ext-xhprof": "You need to install either xhprof or uprofiler to use XHGui.",
         "ext-uprofiler": "You need to install either xhprof or uprofiler to use XHGui.",
-        "ext-mongo": "Mongo is needed to store profiler results."
+        "ext-mongo": "Mongo is needed to store profiler results for PHP < 7.",
+        "ext-mongodb": "Mongo is needed to store profiler results for PHP > 7."
     }
 }
