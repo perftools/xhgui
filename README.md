@@ -19,10 +19,11 @@ System Requirements
 
 XHGui has the following requirements:
 
+ * PHP version 5.5 or later.
  * [XHProf](http://pecl.php.net/package/xhprof),
    [Uprofiler](https://github.com/FriendsOfPHP/uprofiler) or
    [Tideways](https://github.com/tideways/php-profiler-extension) to actually profile the data.
- * [MongoDB PHP](http://pecl.php.net/package/mongo) MongoDB PHP driver.
+ * [MongoDB Extension](http://pecl.php.net/package/mongo) MongoDB PHP driver.
    XHGui requires verison 1.3.0 or later.
  * [MongoDB](http://www.mongodb.org/) MongoDB Itself. XHGui requires version 2.2.0 or later.
  * [mcrypt](http://php.net/manual/en/book.mcrypt.php) PHP must be configured
