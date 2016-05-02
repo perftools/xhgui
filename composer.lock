@@ -4,9 +4,127 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ce1482e32bf9a4a370e36bb9d805605b",
-    "content-hash": "615cd33ffb5b3be1ea616f9de39d4a67",
+    "hash": "73dd09718440579cbe044b8c06b86805",
+    "content-hash": "42a298af10bd4786e35ffe57a8ec527d",
     "packages": [
+        {
+            "name": "alcaeus/mongo-php-adapter",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alcaeus/mongo-php-adapter.git",
+                "reference": "f3b879fadc0f5271f054b87b525b3945c9abd608"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alcaeus/mongo-php-adapter/zipball/f3b879fadc0f5271f054b87b525b3945c9abd608",
+                "reference": "f3b879fadc0f5271f054b87b525b3945c9abd608",
+                "shasum": ""
+            },
+            "require": {
+                "ext-hash": "*",
+                "mongodb/mongodb": "^1.0.1",
+                "php": "^5.5 || ^7.0"
+            },
+            "provide": {
+                "ext-mongo": "1.6.13"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8 || ^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Mongo": "lib/Mongo"
+                },
+                "psr-4": {
+                    "Alcaeus\\MongoDbAdapter\\": "lib/Alcaeus/MongoDbAdapter"
+                },
+                "files": [
+                    "lib/Mongo/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "alcaeus",
+                    "email": "alcaeus@alcaeus.org"
+                },
+                {
+                    "name": "Olivier Lechevalier",
+                    "email": "olivier.lechevalier@gmail.com"
+                }
+            ],
+            "description": "Adapter to provide ext-mongo interface on top of mongo-php-libary",
+            "keywords": [
+                "database",
+                "mongodb"
+            ],
+            "time": "2016-04-13 12:37:00"
+        },
+        {
+            "name": "mongodb/mongodb",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mongodb/mongo-php-library.git",
+                "reference": "faf8a1d86b5c10684ef91fa6c81475b0c7f95240"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/faf8a1d86b5c10684ef91fa6c81475b0c7f95240",
+                "reference": "faf8a1d86b5c10684ef91fa6c81475b0c7f95240",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mongodb": "^1.1.0",
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MongoDB\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jeremy Mikola",
+                    "email": "jmikola@gmail.com"
+                },
+                {
+                    "name": "Hannes Magnusson",
+                    "email": "bjori@mongodb.com"
+                },
+                {
+                    "name": "Derick Rethans",
+                    "email": "github@derickrethans.nl"
+                }
+            ],
+            "description": "MongoDB driver library",
+            "homepage": "https://jira.mongodb.org/browse/PHPLIB",
+            "keywords": [
+                "database",
+                "driver",
+                "mongodb",
+                "persistence"
+            ],
+            "time": "2016-03-30 19:10:28"
+        },
         {
             "name": "pimple/pimple",
             "version": "v1.0.2",
@@ -18,7 +136,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/silexphp/Pimple/zipball/ae11e57e8c2bb414b2ff93396dbbfc0eb92feb94",
-                "reference": "v1.0.2",
+                "reference": "ae11e57e8c2bb414b2ff93396dbbfc0eb92feb94",
                 "shasum": ""
             },
             "require": {
@@ -64,7 +182,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/slimphp/Slim/zipball/2e540cc392644b9b5cdcc57e5576db5a92ca2149",
-                "reference": "2.3.1",
+                "reference": "2e540cc392644b9b5cdcc57e5576db5a92ca2149",
                 "shasum": ""
             },
             "require": {
@@ -109,7 +227,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/slimphp/Slim-Views/zipball/d5eca1c0932aadf7255d83f3ed02ffc07c3c8297",
-                "reference": "0.1.0",
+                "reference": "d5eca1c0932aadf7255d83f3ed02ffc07c3c8297",
                 "shasum": ""
             },
             "require": {
@@ -128,14 +246,14 @@
             ],
             "authors": [
                 {
-                    "name": "Andrew Smith",
-                    "email": "a.smith@silentworks.co.uk",
-                    "homepage": "http://thoughts.silentworks.co.uk/"
-                },
-                {
                     "name": "Josh Lockhart",
                     "email": "info@joshlockhart.com",
                     "homepage": "http://www.joshlockhart.com/"
+                },
+                {
+                    "name": "Andrew Smith",
+                    "email": "a.smith@silentworks.co.uk",
+                    "homepage": "http://thoughts.silentworks.co.uk/"
                 }
             ],
             "description": "Twig View Parser package for the Slim Framework",
@@ -534,7 +652,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/5794e3c5c5ba0fb037b11d8151add2a07fa82875",
-                "reference": "1.2.3",
+                "reference": "5794e3c5c5ba0fb037b11d8151add2a07fa82875",
                 "shasum": ""
             },
             "require": {

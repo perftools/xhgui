@@ -1,10 +1,9 @@
 language: php
 
 php:
-  - 5.3
-  - 5.4
   - 5.5
   - 5.6
+  - 7.0
 
 matrix:
   include:
@@ -16,7 +15,12 @@ services:
 
 before_script:
   - pecl install xhprof-beta
-  - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - pecl install mongodb
+  - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - git clone https://github.com/tideways/php-profiler-extension.git
+  - cd php-profiler-extension && phpize && ./configure && make && make install && cd ..
+  - echo "extension=tideways.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "tideways.auto_prepend_library=0" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - phpenv rehash
   - composer install --prefer-dist --dev
   - chmod -R 0777 cache/
