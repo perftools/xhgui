@@ -1,0 +1,81 @@
+{% extends 'layout/base.twig' %}
+
+{% block title %}
+- Flamegraph - {{ profile.meta.url }} - {{ profile.meta('SERVER.REQUEST_TIME')|date(date_format) }}
+{% endblock %}
+
+{% block content %}
+<h1>Flamegraph for {{ profile.meta.url }} on {{ profile.meta('SERVER.REQUEST_TIME')|date(date_format) }}</h1>
+
+<div class="row-fluid">
+<form class="search-form form-inline" id="form">
+	<div class="control-group span4">
+		<a class="btn" href="javascript: resetZoom();">Reset zoom</a>
+	</div>
+	<div class="control-group span4">
+		<input type="text" class="form-control" id="term">
+		<a class="btn btn-primary" href="javascript: search();">Search</a>
+		<a class="btn" href="javascript: clear();">Clear</a>
+	</div>
+</form>
+</div>
+
+<div class="row-fluid">
+    <div id="chart"></div>
+    <hr>
+    <div id="details"></div>
+</div>
+
+{% endblock %}
+
+{% block jsfoot %}
+<link href="{{ static('css/d3.flameGraph.css') }}" rel="stylesheet" media="screen">
+<script src="{{ static('js/d3.js') }}"></script>
+<script src="{{ static('js/d3-tip-index.js') }}"></script>
+<script src="{{ static('js/d3.flameGraph.js') }}"></script>
+<script type="text/javascript">
+var flameGraph = d3.flameGraph()
+  .height(540)
+  .width(960)
+  .cellHeight(18)
+  .transitionDuration(750)
+  .transitionEase('cubic-in-out')
+  .sort(true)
+  .title("");
+
+var tip = d3.tip()
+  .direction("s")
+  .offset([8, 0])
+  .attr('class', 'd3-flame-graph-tip')
+  .html(function(d) { return "name: " + d.name + ", value: " + d.value; });
+
+flameGraph.tooltip(tip);
+
+d3.json("{{ url('run.flamegraph.data', {id: profile.id|trim }) }}", function(error, data) {
+  if (error) return console.warn(error);
+  d3.select("#chart")
+	  .datum(data)
+	  .call(flameGraph);
+});
+
+$(document).ready(function(){
+  $("form").submit(function(event){
+    event.preventDefault();
+    search();
+  });
+});
+
+function search() {
+  flameGraph.search($("#term").val());
+}
+
+function clear() {
+  $('#term').val('');
+  flameGraph.clear();
+}
+
+function resetZoom() {
+  flameGraph.resetZoom();
+}
+</script>
+{% endblock %}

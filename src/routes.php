@@ -59,6 +59,15 @@ $app->get('/run/callgraph/data', function () use ($di, $app) {
     $di['runController']->callgraphData();
 })->name('run.callgraph.data');
 
+$app->get('/run/flamegraph', function () use ($di, $app) {
+    $app->controller = $di['runController'];
+    $app->controller->flamegraph();
+})->name('run.flamegraph');
+
+$app->get('/run/flamegraph/data', function () use ($di, $app) {
+    $di['runController']->flamegraphData();
+})->name('run.flamegraph.data');
+
 $app->get('/run/callgraph/dot', function () use ($di, $app) {
     $di['runController']->callgraphDataDot();
 })->name('run.callgraph.dot');
@@ -99,4 +108,3 @@ $app->get('/waterfall', function () use ($di, $app) {
 $app->get('/waterfall/data', function () use ($di) {
     $di['waterfallController']->query();
 })->name('waterfall.data');
-
