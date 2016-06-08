@@ -15,7 +15,7 @@
 
     var tip = d3.tip()
       .direction("s")
-      .offset([8, 0])
+      .offset([24, 0])
       .attr('class', 'd3-flame-graph-tip')
       .html(function(d) { return label(d); });
 

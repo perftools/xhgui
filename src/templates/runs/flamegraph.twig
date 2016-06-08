@@ -13,13 +13,13 @@
 
 <div class="row-fluid">
 <form class="search-form form-inline" id="form">
-	<div class="control-group span4">
+	<div class="control-group span8">
 		<a class="btn" id="flamegraph-reset">Reset zoom</a>
 	</div>
 	<div class="control-group span4">
 		<input type="text" class="form-control" id="term">
-		<a class="btn btn-primary" id="flamegraph-search">Search</a>
-		<a class="btn" id="flamegraph-clear">Clear</a>
+		<button class="btn btn-primary" id="flamegraph-search">Search</button>
+		<button class="btn" id="flamegraph-clear">Clear</button>
 	</div>
 </form>
 </div>
@@ -35,14 +35,15 @@
 <script src="{{ static('js/d3-tip-index.js') }}"></script>
 <script src="{{ static('js/d3.flameGraph.js') }}"></script>
 <script type="text/javascript">
+var width = parseInt($('#chart').css('width'), 10);
+
 var flameGraph = d3.flameGraph()
     .height(540)
-    .width(960)
+    .width(width)
     .cellHeight(18)
     .transitionDuration(750)
     .transitionEase('cubic-in-out')
-    .sort(true)
-    .title("");
+    .sort(true);
 
 var tip = d3.tip()
     .direction("s")
