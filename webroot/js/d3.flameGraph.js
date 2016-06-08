@@ -264,12 +264,12 @@
         g.exit().remove();
 
         g.on('mouseover', function(d) {
-          if(!d.dummy) {
+          if (!d.dummy) {
             if (tooltip) tip.show(d);
             setDetails(label(d));
           }
         }).on('mouseout', function(d) {
-          if(!d.dummy) {
+          if (!d.dummy) {
             if (tooltip) tip.hide(d);
             setDetails("");
           }
