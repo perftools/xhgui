@@ -476,4 +476,21 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('DateTime', $result);
     }
 
+    public function testGetFlamegraph()
+    {
+        $fixture = $this->_fixture[0];
+        $profile = new Xhgui_Profile($fixture);
+        $result = $profile->getFlamegraph();
+        $expected = array(
+            'name' => 'main()',
+            'value' => 50139,
+            'children' => array(
+                array(
+                    'name' => 'strpos()',
+                    'value' => 600
+                )
+            )
+        );
+        $this->assertEquals($expected, $result);
+    }
 }

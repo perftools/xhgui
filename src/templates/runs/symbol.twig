@@ -123,12 +123,12 @@
                     {'id': id, 'symbol': child.function}
                 ) }}
             </td>
-            <td>{{ child.ct }}</td>
+            <td class="right">{{ child.ct }}</td>
 
-            <td>{{ child.wt|as_time }}</td>
-            <td>{{ child.cpu|as_time }}</td>
-            <td>{{ child.mu|as_bytes }}</td>
-            <td>{{ child.pmu|as_bytes }}</td>
+            <td class="right">{{ child.wt|as_time }}</td>
+            <td class="right">{{ child.cpu|as_time }}</td>
+            <td class="right">{{ child.mu|as_bytes }}</td>
+            <td class="right">{{ child.pmu|as_bytes }}</td>
         </tr>
         {% else %}
         <tr>

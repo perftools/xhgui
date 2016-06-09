@@ -1,0 +1,78 @@
+.d3-flame-graph rect {
+  stroke: #fff;
+  fill-opacity: .8;
+}
+
+.d3-flame-graph .frame {
+  cursor: pointer;
+}
+.d3-flame-graph .frame:hover .label {
+  color: #fff;
+}
+
+.d3-flame-graph .label {
+  pointer-events: none;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 12px;
+  font-family: Verdana;
+  margin-left: 4px;
+  margin-right: 4px;
+  line-height: 1.5;
+  padding: 0 0 0;
+  font-weight: 400;
+  color: black;
+  text-align: left;
+}
+
+.d3-flame-graph .fade {
+  opacity: 0.6 !important;
+}
+
+.d3-flame-graph .title {
+  font-size: 20px;
+}
+
+.d3-flame-graph .label {
+  background: transparent;
+}
+
+.d3-flame-graph-tip {
+  line-height: 1;
+  padding: 12px;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  color: #000;
+  pointer-events: none;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-flame-graph-tip:before,
+.d3-flame-graph-tip:after {
+    pointer-events: none;
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-width: 11px;
+    border-color: transparent;
+    border-style: solid;
+    left: 50%;
+    z-index: 2;
+}
+.d3-flame-graph-tip:after {
+    border-bottom-color: #fff;
+    margin-left: -11px;
+    top: -22px;
+    z-index: 2;
+}
+.d3-flame-graph-tip:before {
+    border-width: 12px;
+    border-bottom-color: #999;
+    margin-left: -12px;
+    top: -24px;
+}

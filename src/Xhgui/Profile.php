@@ -249,7 +249,8 @@ class Xhgui_Profile
      *    parents for.
      * @return array List of parents
      */
-    protected function _getParents($symbol) {
+    protected function _getParents($symbol)
+    {
         $parents = array();
         $current = $this->_collapsed[$symbol];
         foreach ($current['parents'] as $parent) {
@@ -269,7 +270,8 @@ class Xhgui_Profile
      *   function that represents less than
      * @return array An array of child methods.
      */
-    protected function _getChildren($symbol, $metric = null, $threshold = 0) {
+    protected function _getChildren($symbol, $metric = null, $threshold = 0)
+    {
         $children = array();
         if (!isset($this->_indexed[$symbol])) {
             return $children;
@@ -305,7 +307,7 @@ class Xhgui_Profile
      *
      * @param string $dimension The dimension to extract
      * @param int $limit Number of elements to pull
-     * @return array Array of data with name = function name and 
+     * @return array Array of data with name = function name and
      *   value = the dimension.
      */
     public function extractDimension($dimension, $limit)
@@ -434,7 +436,8 @@ class Xhgui_Profile
      * @param Xhgui_Profile $head The other run to compare with
      * @return array An array of comparison data.
      */
-    public function compare(Xhgui_Profile $head) {
+    public function compare(Xhgui_Profile $head)
+    {
         $this->calculateSelf();
         $head->calculateSelf();
 
@@ -476,7 +479,7 @@ class Xhgui_Profile
     {
         return array_reduce(
             $this->_collapsed,
-            function($result, $item) use ($metric) {
+            function ($result, $item) use ($metric) {
                 if ($item[$metric] > $result) {
                     return $item[$metric];
                 }
@@ -568,9 +571,81 @@ class Xhgui_Profile
         }
     }
 
+    /**
+     * Return a structured array suitable for generating flamegraph visualizations.
+     *
+     * Functions whose inclusive time is less than 1% of the total time will
+     * be excluded from the callgraph data.
+     *
+     * @return array
+     */
+    public function getFlamegraph($metric = 'wt', $threshold = 0.01)
+    {
+        $valid = array_merge($this->_keys, $this->_exclusiveKeys);
+        if (!in_array($metric, $valid)) {
+            throw new Exception("Unknown metric '$metric'. Cannot generate flamegraph.");
+        }
+        $this->calculateSelf();
+
+        // Non exclusive metrics are always main() because it is the root call scope.
+        if (in_array($metric, $this->_exclusiveKeys)) {
+            $main = $this->_maxValue($metric);
+        } else {
+            $main = $this->_collapsed['main()'][$metric];
+        }
+
+        $this->_visited = $this->_nodes = $this->_links = array();
+        $flamegraph = $this->_flamegraphData(self::NO_PARENT, $main, $metric, $threshold);
+        return array_shift($flamegraph);
+    }
+
+    protected function _flamegraphData($parentName, $main, $metric, $threshold, $parentIndex = null)
+    {
+        $result = array();
+        // Leaves don't have children, and don't have links/nodes to add.
+        if (!isset($this->_indexed[$parentName])) {
+            return $result;
+        }
+
+        $children = $this->_indexed[$parentName];
+        foreach ($children as $childName => $metrics) {
+            $metrics = $this->_collapsed[$childName];
+            if ($metrics[$metric] / $main <= $threshold) {
+                continue;
+            }
+            $current = array(
+                'name' => $childName,
+                'value' => $metrics[$metric],
+            );
+            $revisit = false;
+
+            // Keep track of which nodes we've visited and their position
+            // in the node list.
+            if (!isset($this->_visited[$childName])) {
+                $index = count($this->_nodes);
+                $this->_visited[$childName] = $index;
+                $this->_nodes[] = $current;
+            } else {
+                $revisit = true;
+                $index = $this->_visited[$childName];
+            }
+
+            // If the current function has more children,
+            // walk that call subgraph.
+            if (isset($this->_indexed[$childName]) && !$revisit) {
+                $grandChildren = $this->_flamegraphData($childName, $main, $metric, $threshold, $index);
+                if (!empty($grandChildren)) {
+                    $current['children'] = $grandChildren;
+                }
+            }
+
+            $result[] = $current;
+        }
+        return $result;
+    }
+
     public function toArray()
     {
         return $this->_data;
     }
-
 }
