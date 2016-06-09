@@ -574,7 +574,7 @@ class Xhgui_Profile
     /**
      * Return a structured array suitable for generating flamegraph visualizations.
      *
-     * Functions whose inclusive time is less than 2% of the total time will
+     * Functions whose inclusive time is less than 1% of the total time will
      * be excluded from the callgraph data.
      *
      * @return array
@@ -641,7 +641,6 @@ class Xhgui_Profile
 
             $result[] = $current;
         }
-
         return $result;
     }
 
