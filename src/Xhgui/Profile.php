@@ -77,12 +77,7 @@ class Xhgui_Profile
             if (!isset($a[$key])) {
                 $a[$key] = 0;
             }
-
-            if (isset($b[$key])) {
-                $a[$key] += $b[$key];
-    		} else {
-                $a[$key] += 0;
-            }
+            $a[$key] += isset($b[$key]) ? $b[$key] : 0;
         }
         return $a;
     }

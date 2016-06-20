@@ -9,6 +9,21 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->_fixture = json_decode($contents, true);
     }
 
+    public function testProcessIncompleteData()
+    {
+        $data = array(
+            'main()' => array(),
+            'main()==>do_thing()' => array(
+                // empty because of bad extension
+            ),
+            'other_thing()==>do_thing()' => array(
+                'cpu' => 1,
+            ),
+        );
+        $profile = new Xhgui_Profile(array('profile' => $data));
+        $this->assertNotEmpty($profile->get('do_thing()'));
+    }
+
     public function testGetRelatives()
     {
         $data = array(
