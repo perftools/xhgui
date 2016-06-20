@@ -482,13 +482,19 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $profile = new Xhgui_Profile($fixture);
         $result = $profile->getFlamegraph();
         $expected = array(
-            'name' => 'main()',
-            'value' => 50139,
-            'children' => array(
-                array(
-                    'name' => 'strpos()',
-                    'value' => 600
-                )
+            'data' => array(
+                'name' => 'main()',
+                'value' => 50139,
+                'children' => array(
+                    array(
+                        'name' => 'strpos()',
+                        'value' => 600
+                    )
+                ),
+            ),
+            'sort' => array(
+                'main()' => 0,
+                'strpos()' => 1
             )
         );
         $this->assertEquals($expected, $result);
