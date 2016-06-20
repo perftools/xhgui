@@ -74,7 +74,15 @@ class Xhgui_Profile
     protected function _sumKeys($a, $b)
     {
         foreach ($this->_keys as $key) {
-            $a[$key] += $b[$key];
+            if (!isset($a[$key])) {
+                $a[$key] = 0;
+            }
+
+            if (isset($b[$key])) {
+                $a[$key] += $b[$key];
+    		} else {
+                $a[$key] += 0;
+            }
         }
         return $a;
     }
