@@ -44,12 +44,14 @@
 <script src="{{ static('js/d3-tip-index.js') }}"></script>
 <script src="{{ static('js/d3.flameGraph.js') }}"></script>
 <script type="text/javascript">
+
 var width = parseInt($('#chart').css('width'), 10);
+var cellHeight = 18;
 
 var flameGraph = d3.flameGraph()
     .height(540)
     .width(width)
-    .cellHeight(18)
+    .cellHeight(cellHeight)
     .transitionDuration(750)
     .transitionEase('cubic-in-out')
     .sort(true);
@@ -69,6 +71,9 @@ d3.json("{{ url('run.flamegraph.data', {id: profile.id|trim }) }}", function(err
     if (error) {
         return console.warn(error);
     }
+
+    flameGraph.height(getDepth(data) * cellHeight);
+
     d3.select("#chart")
         .datum(data)
         .call(flameGraph);
@@ -93,5 +98,19 @@ $('#flamegraph-clear').on('click', function() {
 $('#flamegraph-reset').on('click', function () {
     flameGraph.resetZoom();
 });
+
+function getDepth (obj) {
+    var depth = 0;
+    if (obj.children) {
+        obj.children.forEach(function (d) {
+            var tmpDepth = getDepth(d)
+            if (tmpDepth > depth) {
+                depth = tmpDepth
+            }
+        })
+    }
+    return 1 + depth
+}
+
 </script>
 {% endblock %}
