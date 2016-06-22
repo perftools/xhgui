@@ -72,10 +72,14 @@ d3.json("{{ url('run.flamegraph.data', {id: profile.id|trim }) }}", function(err
         return console.warn(error);
     }
 
-    flameGraph.height(getDepth(data) * cellHeight);
+    flameGraph.height(getDepth(data.data) * cellHeight);
+
+    flameGraph.sort(function (a, b) {
+        return data.sort[a.name] - data.sort[b.name];
+    });
 
     d3.select("#chart")
-        .datum(data)
+        .datum(data.data)
         .call(flameGraph);
 });
 

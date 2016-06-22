@@ -599,7 +599,7 @@ class Xhgui_Profile
 
         $this->_visited = $this->_nodes = $this->_links = array();
         $flamegraph = $this->_flamegraphData(self::NO_PARENT, $main, $metric, $threshold);
-        return array_shift($flamegraph);
+        return array('data' => array_shift($flamegraph), 'sort' => $this->_visited);
     }
 
     protected function _flamegraphData($parentName, $main, $metric, $threshold, $parentIndex = null)
