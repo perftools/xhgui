@@ -62,7 +62,7 @@ var tip = d3.tip()
     .attr('class', 'd3-flame-graph-tip')
     .html(function(d) {
         var units = 'µs';
-        return d.name + " &mdash; " + Xhgui.formatNumber(d.value) + units + ' (' + (100 * d.dx, 3) + '%)';
+        return d.name + " &mdash; " + Xhgui.formatNumber(d.value) + units + ' (' + Math.round(100 * d.dx, 3) + '%)';
     });
 
 flameGraph.tooltip(tip);
