@@ -72,7 +72,7 @@ if (!file_exists(__DIR__ . '/composer.phar')) {
 }
 
 out("Installing dependencies.");
-$cmd = 'php ' . __DIR__ . '/composer.phar update --prefer-dist --no-dev';
+$cmd = 'php ' . __DIR__ . '/composer.phar update --prefer-dist';
 $output = runProcess($cmd);
 out($output);
 
