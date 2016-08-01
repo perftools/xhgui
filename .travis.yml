@@ -15,7 +15,7 @@ services:
 
 before_script:
   - pecl install xhprof-beta
-  - pecl install mongodb
+  - pecl install mongodb || true
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - git clone https://github.com/tideways/php-profiler-extension.git
   - cd php-profiler-extension && phpize && ./configure && make && make install && cd ..
