@@ -12,7 +12,7 @@
         "php": ">=5.3.0",
         "slim/slim": "2.3.1",
         "slim/views": "0.1.0",
-        "twig/twig": "^1.13.1",
+        "twig/twig": "~1.17",
         "pimple/pimple": "1.0.2"
     },
     "require-dev": {
