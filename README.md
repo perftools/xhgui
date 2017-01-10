@@ -26,8 +26,6 @@ XHGui has the following requirements:
  * [MongoDB Extension](http://pecl.php.net/package/mongo) MongoDB PHP driver.
    XHGui requires verison 1.3.0 or later.
  * [MongoDB](http://www.mongodb.org/) MongoDB Itself. XHGui requires version 2.2.0 or later.
- * [mcrypt](http://php.net/manual/en/book.mcrypt.php) PHP must be configured
-   with mcrypt (which is a dependency of Slim).
  * [dom](http://php.net/manual/en/book.dom.php) If you are running the tests
    you'll need the DOM extension (which is a dependency of PHPUnit).
 
