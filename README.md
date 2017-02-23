@@ -125,7 +125,7 @@ server {
     index  index.php;
 
     location / {
-        try_files $uri $uri/ /index.php?$uri&$args;
+        try_files $uri $uri/ /index.php?$args;
     }
 
     location ~ \.php$ {
