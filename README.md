@@ -325,6 +325,24 @@ Some Notes:
  * The waterfall display is still very much in alpha.
  * Feedback and pull requests are welcome :)
 
+Using Tideways Extension
+========================
+
+The XHProf PHP extension is not compatible with PHP7.0+. Instead you'll need to
+use the [tideways extension](https://github.com/tideways/php-profiler-extension).
+
+Once installed, you can use the following configuration data:
+
+```ini
+[tideways]
+extension="/path/to/tideways/tideways.so"
+tideways.connection=unix:///usr/local/var/run/tidewaysd.sock
+tideways.load_library=0
+tideways.auto_prepend_library=0
+tideways.auto_start=0
+tideways.sample_rate=100
+```
+
 Releases / Changelog
 ====================
 
