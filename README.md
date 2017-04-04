@@ -11,8 +11,7 @@ This is a small standalone module which you can use to collect and store
  - No dependencies aside from the relevant extensions
  - Customizable and configurable so you can build your own logic on top of it
 
-System Requirements
-===================
+## System Requirements
 
 For using the data collection classes you will need the following:
 
