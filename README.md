@@ -1,7 +1,7 @@
-[![Build Status](https://scrutinizer-ci.com/g/lauripiisang/xhgui-data-collector/badges/build.png?b=master)](https://scrutinizer-ci.com/g/lauripiisang/xhgui-data-collector/build-status/master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/lauripiisang/xhgui-data-collector/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/lauripiisang/xhgui-data-collector/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/perftools/xhgui-collector/badges/build.png?b=master)](https://scrutinizer-ci.com/g/perftools/xhgui-collector/build-status/master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/perftools/xhgui-collector/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/perftools/xhgui-collector/?branch=master)
 
-# XHGUI Data Collector
+# XHGUI Collector
 
 This is a small standalone module which you can use to collect and store
 [XHProf][1] performance data for later usage in [XHGUI][2].
@@ -21,9 +21,9 @@ The only thing to break compatibility would be a schema change on XHGUI side.
 
 This table represents current known information about compatibility between this project and [XHGUI][2] data schema.
 
-| XHGUI Data Collector version | XHGUI Version | Compatibility                            |
-|------------------------------|---------------|------------------------------------------|
-| 1.0.0                        | 0.2.0 - 0.7.1 | presumed compatible - schema is the same |
+| XHGUI Collector version | XHGUI Version | Compatibility                            |
+|-------------------------|---------------|------------------------------------------|
+| 1.0.0                   | 0.2.0 - 0.7.1 | presumed compatible - schema is the same |
 
 ## Usage
 

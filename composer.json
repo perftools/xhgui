@@ -1,6 +1,12 @@
 {
-    "name": "lauripiisang/xhgui-data-collector",
+    "name": "perftools/xhgui-collector",
     "description": "Library for collecting and storing XHProf results for later use by XHGUI.",
+    "authors": [
+        {
+            "name":  "Lauri Piisang",
+            "email": "lauri.piisang@eesti.ee"
+        }
+    ],
     "license": "MIT",
     "autoload": {
         "psr-0": {
