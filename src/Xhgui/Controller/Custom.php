@@ -36,13 +36,13 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
         $response = $this->_app->response();
         $response['Content-Type'] = 'application/json';
 
-        $query = json_decode($request->post('query'));
+        $query = json_decode($request->post('query'), true);
         $error = array();
         if (is_null($query)) {
             $error['query'] = json_last_error();
         }
 
-        $retrieve = json_decode($request->post('retrieve'));
+        $retrieve = json_decode($request->post('retrieve'), true);
         if (is_null($retrieve)) {
             $error['retrieve'] = json_last_error();
         }
