@@ -71,6 +71,7 @@ Installation
    > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
    > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
    > db.results.ensureIndex( { 'meta.url' : 1 } )
+   > db.results.ensureIndex( { 'meta.simple_url' : 1 } )
    ```
 
 7. Run XHGui's install script. The install script downloads composer and
