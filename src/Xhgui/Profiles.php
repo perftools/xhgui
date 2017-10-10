@@ -265,7 +265,7 @@ class Xhgui_Profiles
         $target = array(
           '__encoded' => true,
         );
-        foreach($profile as $k => $v) {
+        foreach ($profile as $k => $v) {
             if (is_array($v)) {
                 $v = $this->encodeProfile($v);
             }

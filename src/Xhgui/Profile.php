@@ -28,17 +28,25 @@ class Xhgui_Profile
         }
     }
 
-    protected function _decode($profile) {
+    /**
+     * Decodes the profile array by removing unicode replacements.
+     *
+     * @param array $profile
+     *
+     * @return array
+     */
+    protected function decode($profile)
+    {
         if (!is_array($profile) || !isset($profile['__encoded'])) {
             return $profile;
         }
         $target = array();
-        foreach($profile as $k => $v) {
+        foreach ($profile as $k => $v) {
             if ($k === '__encoded') {
                 continue;
             }
             if (is_array($v)) {
-                $v = $this->_decode($v);
+                $v = $this->decode($v);
             }
             $replacementKey = strtr($k, array(
               '．' => '.',
@@ -59,7 +67,7 @@ class Xhgui_Profile
      */
     protected function _process()
     {
-        $this->_data['profile'] = $this->_decode($this->_data['profile']);
+        $this->_data['profile'] = $this->decode($this->_data['profile']);
         $result = array();
         foreach ($this->_data['profile'] as $name => $values) {
             list($parent, $func) = $this->splitName($name);
