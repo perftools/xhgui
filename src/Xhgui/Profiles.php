@@ -258,7 +258,8 @@ class Xhgui_Profiles
      *
      * @return array
      */
-    protected function encodeProfile($profile) {
+    protected function encodeProfile($profile)
+    {
         if (!is_array($profile)) {
             return $profile;
         }
