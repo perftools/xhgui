@@ -39,7 +39,7 @@ Xhgui.colors = function () {
  * @param Date date The date to format.
  * @return String Formatted date string.
  */
-Xhgui.formatDate = d3.time.format('%y-%m-%d %H:%M:%S');
+Xhgui.formatDate = d3.timeFormat('%y-%m-%d %H:%M:%S');
 
 /**
  * Dynamic date/time format based on date being shown
@@ -214,7 +214,7 @@ Xhgui.piechart = function (container, data, options) {
         .outerRadius(radius - 10)
         .innerRadius(0);
 
-    var pie = d3.layout.pie()
+    var pie = d3.pie()
         .sort(null)
         .value(function (d) {
             return d.value;
@@ -424,7 +424,7 @@ Xhgui.linegraph = function (container, data, options) {
         .range([height, 0])
         .domain(yDomain);
 
-    var dateFormatter = d3.time.format(Xhgui.dateTimeFormat);
+    var dateFormatter = d3.timeFormat(Xhgui.dateTimeFormat);
 
     var xAxis = d3.svg.axis()
         .scale(x)
