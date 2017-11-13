@@ -1,7 +1,8 @@
 linters:
   phpcs:
     standard: PSR2
-  csslint: {  }
+  csslint:
+    ignore: 'ids,known-properties'
 files:
   ignore:
     - 'bower_components/*'
