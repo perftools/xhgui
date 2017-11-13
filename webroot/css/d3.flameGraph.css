@@ -1,13 +1,12 @@
 .d3-flame-graph rect {
-  stroke: #fff;
+  stroke: #EEEEEE;
   fill-opacity: .8;
 }
 
-.d3-flame-graph .frame {
+.d3-flame-graph rect:hover {
+  stroke: #474747;
+  stroke-width: 0.5;
   cursor: pointer;
-}
-.d3-flame-graph .frame:hover .label {
-  color: #fff;
 }
 
 .d3-flame-graph .label {
@@ -32,6 +31,7 @@
 
 .d3-flame-graph .title {
   font-size: 20px;
+  font-family: Verdana;
 }
 
 .d3-flame-graph .label {
@@ -40,6 +40,8 @@
 
 .d3-flame-graph-tip {
   line-height: 1;
+  font-family: Verdana;
+  font-size: 12px;
   padding: 12px;
   background: #fff;
   border-radius: 6px;

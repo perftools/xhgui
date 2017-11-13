@@ -376,6 +376,30 @@ tr .no-results {
 }
 
 /**
+ * FlameGraph
+ *
+ * Note: Uses "body" selector to make sure specificity is higher
+ * than the original styles in d3.flameGraph.css.
+ */
+
+/* Use white stroke instead of grey, to make them invisible on our background */
+body .d3-flame-graph rect,
+body .d3-flame-graph rect:hover {
+    stroke: #fff;
+    stroke-width: 1px;
+}
+/* Instead of stroke, change text color on hover */
+body .d3-flame-graph .frame:hover .label {
+    color: #fff;
+}
+
+/* Inherit our font style instead of hardcoded Verdana 12px */
+body .d3-flame-graph-tip {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/**
  * Run details
  */
 .back-link {
