@@ -204,6 +204,23 @@ return array(
 
 The URL argument is the `REQUEST_URI` or `argv` value.
 
+Configure ignored functions
+---------------------------
+
+You can use the `profiler.options` configuration value to set additional options
+for the profiler extension. This is useful when you want to exclude specific
+functions from your profiler data:
+
+```php
+// In config/config.php
+return array(
+    //Other config
+    'profiler.options' => [
+        'ignored_functions' => ['call_user_func', 'call_user_func_array']
+    ]
+);
+```
+
 
 Profile an Application or Site
 ==============================
