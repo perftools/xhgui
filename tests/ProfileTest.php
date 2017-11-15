@@ -491,7 +491,7 @@ class ProfileTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('DateTime', $result);
     }
 
-    public function testGetFlamegraph()
+    public function testGetFlamegraphBasic()
     {
         $fixture = $this->_fixture[0];
         $profile = new Xhgui_Profile($fixture);
@@ -510,6 +510,102 @@ class ProfileTest extends PHPUnit_Framework_TestCase
             'sort' => array(
                 'main()' => 0,
                 'strpos()' => 1
+            )
+        );
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testGetFlamegraphNonUniqueLeaf()
+    {
+        $fixture = array(
+            'profile' => array(
+                'main()' => array(
+                    'wt' => 10000,
+                    'ct' => 1, 'cpu' => 1, 'mu' => 1, 'pmu' => 1,
+                ),
+                'main()==>one()' => array(
+                    'wt' => 2000,
+                    'ct' => 1, 'cpu' => 1, 'mu' => 1, 'pmu' => 1,
+                ),
+                'main()==>two()' => array(
+                    'wt' => 4000,
+                    'ct' => 1, 'cpu' => 1, 'mu' => 1, 'pmu' => 1,
+                ),
+                'main()==>three()' => array(
+                    'wt' => 4000,
+                    'ct' => 1, 'cpu' => 1, 'mu' => 1, 'pmu' => 1,
+                ),
+                'one()==>util()' => array(
+                    'wt' => 1500,
+                    'ct' => 1, 'cpu' => 1, 'mu' => 1, 'pmu' => 1,
+                ),
+                'two()==>util()' => array(
+                    'wt' => 3500,
+                    'ct' => 1, 'cpu' => 1, 'mu' => 1, 'pmu' => 1,
+                ),
+                'three()==>special()' => array(
+                    'wt' => 3500,
+                    'ct' => 1, 'cpu' => 1, 'mu' => 1, 'pmu' => 1,
+                ),
+                'util()==>util_helper()' => array(
+                    'wt' => 3900,
+                    'ct' => 2, 'cpu' => 1, 'mu' => 1, 'pmu' => 1,
+                ),
+            ),
+        );
+        $profile = new Xhgui_Profile($fixture);
+        $result = $profile->getFlamegraph();
+        $expected = array(
+            'data' => array(
+                'name' => 'main()',
+                'value' => 10000,
+                'children' => array(
+                    array(
+                        'name' => 'one()',
+                        'value' => 2000,
+                        'children' => array(
+                            array(
+                                'name' => 'util()',
+                                'value' => 5000,
+                                'children' => array(
+                                    array(
+                                        'name' => 'util_helper()',
+                                        'value' => 3900,
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                    array(
+                        'name' => 'two()',
+                        'value' => 4000,
+                        'children' => array(
+                            array(
+                                'name' => 'util()',
+                                'value' => 5000
+                            ),
+                        ),
+                    ),
+                    array(
+                        'name' => 'three()',
+                        'value' => 4000,
+                        'children' => array(
+                            array(
+                                'name' => 'special()',
+                                'value' => 3500,
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            'sort' => array(
+                'main()' => 0,
+                'one()' => 1,
+                'util()' => 2,
+                'util_helper()' => 3,
+                'two()' => 4,
+                'three()' => 5,
+                'special()' => 6,
             )
         );
         $this->assertEquals($expected, $result);
