@@ -15,6 +15,7 @@
 
     var tip = d3.tip()
       .direction("s")
+      // PATCH(xhgui): Override offset from 8 to 24.
       .offset([24, 0])
       .attr('class', 'd3-flame-graph-tip')
       .html(function(d) { return label(d); });
