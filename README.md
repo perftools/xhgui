@@ -226,7 +226,15 @@ Profile an Application or Site
 ==============================
 
 The simplest way to profile an application is to use
-`external/header.php`. `external/header.php` is designed to be combined
+`external/header.php`. 
+
+You should require `perftools/xhgui` as dependency in your projects composer.json. Add the following lines to your index.php and replace `PATH_TO_OWN_CONFIG` with the path to the directory where your xhgui `config.php` is located. Replace `PATH_TO_YOUR_VENDOR` with the path to your vendor directory.
+```
+define('XHGUI_CONFIG_DIR', PATH_TO_OWN_CONFIG);
+require_once PATH_TO_YOUR_VENDOR . '/perftools/xhgui/external/header.php';
+```
+
+`external/header.php` is designed to be combined
 with PHP's
 [auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-pr
 epend-file) directive. You can enable `auto_prepend_file` system-wide
