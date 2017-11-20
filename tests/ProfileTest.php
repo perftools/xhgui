@@ -566,7 +566,7 @@ class ProfileTest extends PHPUnit_Framework_TestCase
                         'children' => array(
                             array(
                                 'name' => 'util()',
-                                'value' => 5000,
+                                'value' => 1500,
                                 'children' => array(
                                     array(
                                         'name' => 'util_helper()',
@@ -582,7 +582,7 @@ class ProfileTest extends PHPUnit_Framework_TestCase
                         'children' => array(
                             array(
                                 'name' => 'util()',
-                                'value' => 5000
+                                'value' => 3500
                             ),
                         ),
                     ),

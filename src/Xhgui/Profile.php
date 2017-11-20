@@ -577,9 +577,11 @@ class Xhgui_Profile
     /**
      * Return a structured array suitable for generating flamegraph visualizations.
      *
-     * Functions whose inclusive time is less than 1% of the total time will
+     * Functions whose inclusive time is less than $threshold of the total time will
      * be excluded from the callgraph data.
      *
+     * @param string $metric The metric name to aggregate on.
+     * @param float $threshold The total % below which data should be elided.
      * @return array
      */
     public function getFlamegraph($metric = 'wt', $threshold = 0.01)
@@ -612,7 +614,6 @@ class Xhgui_Profile
 
         $children = $this->_indexed[$parentName];
         foreach ($children as $childName => $metrics) {
-            $metrics = $this->_collapsed[$childName];
             if ($metrics[$metric] / $main <= $threshold) {
                 continue;
             }
