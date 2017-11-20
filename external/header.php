@@ -67,11 +67,13 @@ if (!extension_loaded('xhprof') && !extension_loaded('uprofiler') && !extension_
 // autoloaders.
 $dir = dirname(__DIR__);
 require_once $dir . '/src/Xhgui/Config.php';
-Xhgui_Config::load($dir . '/config/config.default.php');
-if (file_exists($dir . '/config/config.php')) {
-    Xhgui_Config::load($dir . '/config/config.php');
+$configDir = defined('XHGUI_CONFIG_DIR') ? XHGUI_CONFIG_DIR : $dir . '/config/';
+if (file_exists($configDir . 'config.php')) {
+    Xhgui_Config::load($configDir . 'config.php');
+} else {
+    Xhgui_Config::load($configDir . 'config.default.php');
 }
-unset($dir);
+unset($dir, $configDir);
 
 if ((!extension_loaded('mongo') && !extension_loaded('mongodb')) && Xhgui_Config::read('save.handler') === 'mongodb') {
     error_log('xhgui - extension mongo not loaded');
@@ -86,15 +88,16 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 
+$options = Xhgui_Config::read('profiler.options');
 if (extension_loaded('uprofiler')) {
-    uprofiler_enable(UPROFILER_FLAGS_CPU | UPROFILER_FLAGS_MEMORY);
+    uprofiler_enable(UPROFILER_FLAGS_CPU | UPROFILER_FLAGS_MEMORY, $options);
 } else if (extension_loaded('tideways')) {
-    tideways_enable(TIDEWAYS_FLAGS_CPU | TIDEWAYS_FLAGS_MEMORY | TIDEWAYS_FLAGS_NO_SPANS);
+    tideways_enable(TIDEWAYS_FLAGS_CPU | TIDEWAYS_FLAGS_MEMORY | TIDEWAYS_FLAGS_NO_SPANS, $options);
 } else {
     if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4) {
-        xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY | XHPROF_FLAGS_NO_BUILTINS);
+        xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY | XHPROF_FLAGS_NO_BUILTINS, $options);
     } else {
-        xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+        xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY, $options);
     }
 }
 
@@ -130,7 +133,10 @@ register_shutdown_function(
         $time = array_key_exists('REQUEST_TIME', $_SERVER)
             ? $_SERVER['REQUEST_TIME']
             : time();
-        $requestTimeFloat = explode('.', $_SERVER['REQUEST_TIME_FLOAT']);
+
+        // In some cases there is comma instead of dot
+        $delimiter = (strpos($_SERVER['REQUEST_TIME_FLOAT'], ',') !== false) ? ',' : '.';
+        $requestTimeFloat = explode($delimiter, $_SERVER['REQUEST_TIME_FLOAT']);
         if (!isset($requestTimeFloat[1])) {
             $requestTimeFloat[1] = 0;
         }

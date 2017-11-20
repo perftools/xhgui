@@ -2,6 +2,11 @@
 /**
  * Default configuration for Xhgui
  */
+
+$mongoUri = getenv('XHGUI_MONGO_URI') ?: '127.0.0.1:27017';
+$mongoUri = str_replace('mongodb://', '', $mongoUri);
+$mongoDb  = getenv('XHGUI_MONGO_DB') ?: 'xhprof';
+
 return array(
     'debug' => false,
     'mode' => 'development',
@@ -16,8 +21,8 @@ return array(
     // Needed for file save handler. Beware of file locking. You can adujst this file path 
     // to reduce locking problems (eg uniqid, time ...)
     //'save.handler.filename' => __DIR__.'/../data/xhgui_'.date('Ymd').'.dat',
-    'db.host' => 'mongodb://127.0.0.1:27017',
-    'db.db' => 'xhprof',
+    'db.host' => sprintf('mongodb://%s', $mongoUri),
+    'db.db' => $mongoDb,
 
     // Allows you to pass additional options like replicaSet to MongoClient.
     // 'username', 'password' and 'db' (where the user is added)
@@ -27,14 +32,17 @@ return array(
     'detail.count' => 6,
     'page.limit' => 25,
 
-    // Profile 1 in 100 requests.
+    // Profile x in 100 requests. (E.g. set XHGUI_PROFLING_RATIO=50 to profile 50% of requests)
     // You can return true to profile every request.
     'profiler.enable' => function() {
-        return rand(1, 100) === 42;
+        $ratio = getenv('XHGUI_PROFILING_RATIO') ?: 100;
+        return (getenv('XHGUI_PROFILING') !== false) && (mt_rand(1, 100) <= $ratio);
     },
 
     'profiler.simple_url' => function($url) {
         return preg_replace('/\=\d+/', '', $url);
-    }
+    },
+
+    'profiler.options' => array(),
 
 );

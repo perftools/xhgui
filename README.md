@@ -30,6 +30,25 @@ This table represents current known information about compatibility between this
 You can use this to build your own saving library or just configure as described in [XHGUI][2] manual
 and include `external/header.php` as an auto_prepend_file (also described in [XHGUI][2] manual)
 
+### Use with environment variables
+* run `composer require perftools/xhgui-collector` 
+* include these lines into your bootstrap file (e.g. index.php) 
+
+```
+define('XHGUI_CONFIG_DIR', PATH_TO_OWN_CONFIG);
+require_once PATH_TO_YOUR_VENDOR . '/perftools/xhgui-collector/external/header.php';
+```
+ 
+* set environment variables to configure the mongodb host, database name and more
+
+| env | description | example | default |
+| ---- | ----------- | ------- | ------- |
+| `XHGUI_MONGO_URI` | the host and port to the mongo db | `XHGUI_MONGO_URI=mongo:27017` | 127.0.0.1:27017 |
+| `XHGUI_MONGO_DB` | the database name for the profiling data | `XHGUI_MONGO_DB=xhprof` | xhprof |
+| `XHGUI_PROFILING_RATIO` | the ratio of profiled requests | `XHGUI_PROFILING_RATIO=50` which profiles 50% of all requests | `XHGUI_PROFILING_RATIO=100` |
+| `XHGUI_PROFILING` | if this env var is set with any value the profiling is enabled | `XHGUI_PROFILING=enabled` | it is not set per default, so no profiling will be triggered |
+
+
 ## System Requirements
 
 For using the data collection classes you will need the following:
