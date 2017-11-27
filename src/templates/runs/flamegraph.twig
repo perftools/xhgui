@@ -85,7 +85,7 @@ d3.json("{{ url('run.flamegraph.data', {id: profile.id|trim }) }}", function(err
 $(document).ready(function(){
     $("form").submit(function(event){
         event.preventDefault();
-        search();
+        flameGraph.search($('#term').val());
     });
 });
 
