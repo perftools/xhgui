@@ -347,18 +347,13 @@ Using Tideways Extension
 ========================
 
 The XHProf PHP extension is not compatible with PHP7.0+. Instead you'll need to
-use the [tideways extension](https://github.com/tideways/php-profiler-extension).
+use the [tideways_xhprof extension](https://github.com/tideways/php-profiler-extension).
 
 Once installed, you can use the following configuration data:
 
 ```ini
-[tideways]
-extension="/path/to/tideways/tideways.so"
-tideways.connection=unix:///usr/local/var/run/tidewaysd.sock
-tideways.load_library=0
-tideways.auto_prepend_library=0
-tideways.auto_start=0
-tideways.sample_rate=100
+[tideways_xhprof]
+extension="/path/to/tideways/tideways_xhprof.so"
 ```
 
 Releases / Changelog

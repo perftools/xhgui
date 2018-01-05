@@ -18,8 +18,7 @@ before_script:
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - git clone https://github.com/tideways/php-profiler-extension.git
   - cd php-profiler-extension && phpize && ./configure && make && make install && cd ..
-  - echo "extension=tideways.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - echo "tideways.auto_prepend_library=0" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "extension=tideways_xhprof.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - phpenv rehash
   - composer install --prefer-dist --dev
   - chmod -R 0777 cache/
