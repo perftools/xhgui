@@ -14,32 +14,7 @@ services:
   - mongodb
 
 before_script:
-  - pecl install mongodb || true
-  - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - git clone https://github.com/tideways/php-profiler-extension.git
-  - cd php-profiler-extension && phpize && ./configure && make && make install && cd ..
-  - echo "extension=tideways_xhprof.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - phpenv rehash
-  - composer install --prefer-dist --dev
-  - chmod -R 0777 cache/
+  - bash .travis/install.sh
 
 script:
-  - >
-    if [[ "$COVERAGE" == "0" ]]; then
-      echo;
-      echo "Running unit tests";
-      phpunit
-    fi
-  - >
-    if [[ "$COVERAGE" == "1" ]]; then
-      echo;
-      echo "Running unit tests with code-coverage";
-      phpunit --coverage-clover=unittest-coverage.clover
-    fi
-  - >
-    if [[ "$COVERAGE" == "1" ]]; then
-      echo;
-      echo "Uploading code coverage results";
-      wget https://scrutinizer-ci.com/ocular.phar
-      php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover
-    fi
+  - bash .travis/run.sh
