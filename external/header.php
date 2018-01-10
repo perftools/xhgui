@@ -67,11 +67,13 @@ if (!extension_loaded('xhprof') && !extension_loaded('uprofiler') && !extension_
 // autoloaders.
 $dir = dirname(__DIR__);
 require_once $dir . '/src/Xhgui/Config.php';
-Xhgui_Config::load($dir . '/config/config.default.php');
-if (file_exists($dir . '/config/config.php')) {
-    Xhgui_Config::load($dir . '/config/config.php');
+$configDir = defined('XHGUI_CONFIG_DIR') ? XHGUI_CONFIG_DIR : $dir . '/config/';
+if (file_exists($configDir . 'config.php')) {
+    Xhgui_Config::load($configDir . 'config.php');
+} else {
+    Xhgui_Config::load($configDir . 'config.default.php');
 }
-unset($dir);
+unset($dir, $configDir);
 
 if ((!extension_loaded('mongo') && !extension_loaded('mongodb')) && Xhgui_Config::read('save.handler') === 'mongodb') {
     error_log('xhgui - extension mongo not loaded');
