@@ -169,7 +169,7 @@ class Xhgui_Profiles
                 )
             ),
             array('$sort' => array('_id' => 1)),
-        ),
+            ),
             array('cursor' => array('batchSize' => 0))
         );
 
