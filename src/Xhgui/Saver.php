@@ -11,13 +11,18 @@ class Xhgui_Saver
      * Get a saver instance based on configuration data.
      *
      * @param array $config The configuration data.
-     * @return Xhgui_Saver_File|Xhgui_Saver_Mongo
+     * @return Xhgui_Saver_File|Xhgui_Saver_Mongo|Xhgui_Saver_Upload
      */
     public static function factory($config)
     {
         switch ($config['save.handler']) {
+
             case 'file':
                 return new Xhgui_Saver_File($config['save.handler.filename']);
+
+            case 'upload':
+                return new Xhgui_Saver_Upload($config['save.handler.upload.uri']);
+
             case 'mongodb':
             default:
                 $mongo = new MongoClient($config['db.host'], $config['db.options']);
