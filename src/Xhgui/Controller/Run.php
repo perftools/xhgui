@@ -2,6 +2,21 @@
 
 class Xhgui_Controller_Run extends Xhgui_Controller
 {
+    /**
+     * @var \Slim\Slim
+     */
+    protected $_app;
+
+    /**
+     * @var Xhgui_Profiles
+     */
+    private $_profiles;
+
+    /**
+     * @var Xhgui_WatchFunctions
+     */
+    private $_watches;
+
     public function __construct($app, $profiles, $watches)
     {
         $this->_app = $app;
@@ -308,5 +323,18 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
         $response['Content-Type'] = 'application/json';
         return $response->body(json_encode($callgraph));
+    }
+
+    public function import()
+    {
+        $request = $this->_app->request();
+
+        $data = json_decode($request->getBody(), true);
+
+        $container = Xhgui_ServiceContainer::instance();
+        /* @var Xhgui_Saver_Mongo $saver */
+        $saver = $container['saverMongo'];
+
+        $saver->save($data);
     }
 }
