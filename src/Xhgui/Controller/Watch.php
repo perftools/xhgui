@@ -1,20 +1,23 @@
 <?php
 
+use Slim\Slim;
+
 class Xhgui_Controller_Watch extends Xhgui_Controller
 {
+    /**
+     * @var Xhgui_WatchFunctions
+     */
+    protected $watches;
 
-    protected $_app;
-    protected $_watches;
-
-    public function __construct($app, $watches)
+    public function __construct(Slim $app, Xhgui_WatchFunctions $watches)
     {
-        $this->_app = $app;
-        $this->_watches = $watches;
+        $this->app = $app;
+        $this->watches = $watches;
     }
 
     public function get()
     {
-        $watched = $this->_watches->getAll();
+        $watched = $this->watches->getAll();
 
         $this->_template = 'watch/list.twig';
         $this->set(array('watched' => $watched));
@@ -22,8 +25,8 @@ class Xhgui_Controller_Watch extends Xhgui_Controller
 
     public function post()
     {
-        $app = $this->_app;
-        $watches = $this->_watches;
+        $app = $this->app;
+        $watches = $this->watches;
 
         $saved = false;
         $request = $app->request();
