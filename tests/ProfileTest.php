@@ -5,7 +5,7 @@ class ProfileTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $contents = file_get_contents('tests/fixtures/results.json');
+        $contents = file_get_contents(XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
         $this->_fixture = json_decode($contents, true);
     }
 

@@ -138,7 +138,7 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
 
     public function testCallgraph()
     {
-        loadFixture($this->profiles, 'tests/fixtures/results.json');
+        loadFixture($this->profiles, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
         Environment::mock(array(
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
@@ -154,7 +154,7 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
 
     public function testCallgraphData()
     {
-        loadFixture($this->profiles, 'tests/fixtures/results.json');
+        loadFixture($this->profiles, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
         Environment::mock(array(
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
