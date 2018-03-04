@@ -5,19 +5,19 @@ use Slim\Slim;
 class Xhgui_Controller_Watch extends Xhgui_Controller
 {
     /**
-     * @var Xhgui_WatchFunctions
+     * @var Xhgui_Searcher_Interface
      */
-    protected $watches;
+    protected $searcher;
 
-    public function __construct(Slim $app, Xhgui_WatchFunctions $watches)
+    public function __construct(Slim $app, Xhgui_Searcher_Interface $searcher)
     {
-        $this->app = $app;
-        $this->watches = $watches;
+        parent::__construct($app);
+        $this->searcher = $searcher;
     }
 
     public function get()
     {
-        $watched = $this->watches->getAll();
+        $watched = $this->searcher->getAllWatches();
 
         $this->_template = 'watch/list.twig';
         $this->set(array('watched' => $watched));
@@ -25,18 +25,15 @@ class Xhgui_Controller_Watch extends Xhgui_Controller
 
     public function post()
     {
-        $app = $this->app;
-        $watches = $this->watches;
-
         $saved = false;
-        $request = $app->request();
+        $request = $this->app->request();
         foreach ((array)$request->post('watch') as $data) {
             $saved = true;
-            $watches->save($data);
+            $this->searcher->saveWatch($data);
         }
         if ($saved) {
-            $app->flash('success', 'Watch functions updated.');
+            $this->app->flash('success', 'Watch functions updated.');
         }
-        $app->redirect($app->urlFor('watch.list'));
+        $this->app->redirect($this->app->urlFor('watch.list'));
     }
 }

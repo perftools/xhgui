@@ -20,9 +20,15 @@ class Xhgui_Profile
     protected $_exclusiveKeys = array('ewt', 'ecpu', 'emu', 'epmu');
     protected $_functionCount;
 
-    public function __construct($profile, $convert = true)
+    public function __construct(array $profile, $convert = true)
     {
         $this->_data = $profile;
+
+        // cast MongoIds to string
+        if (isset($this->_data['_id']) && !is_string($this->_data['_id'])) {
+            $this->_data['_id'] = (string) $this->_data['_id'];
+        }
+
         if (!empty($profile['profile']) && $convert) {
             $this->_process();
         }
@@ -398,7 +404,7 @@ class Xhgui_Profile
         uasort($data, $sorter);
         return $data;
     }
-    
+
     /**
      * @param array $profileData
      * @param array $filters
@@ -414,7 +420,7 @@ class Xhgui_Profile
                 }
             }
         }
-        
+
         return $profileData;
     }
 

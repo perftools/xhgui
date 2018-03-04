@@ -17,7 +17,6 @@ class Xhgui_ServiceContainer extends Pimple
 
     public function __construct()
     {
-        $this['config'] = Xhgui_Config::all();
         $this->_slimApp();
         $this->_services();
         $this->_controllers();
@@ -70,6 +69,8 @@ class Xhgui_ServiceContainer extends Pimple
      */
     protected function _services()
     {
+        $this['config'] = Xhgui_Config::all();
+
         $this['db'] = $this->share(function ($c) {
             $config = $c['config'];
             if (empty($config['db.options'])) {
@@ -81,23 +82,44 @@ class Xhgui_ServiceContainer extends Pimple
             return $mongo->{$config['db.db']};
         });
 
-        $this['watchFunctions'] = function ($c) {
-            return new Xhgui_WatchFunctions($c['db']);
+        $this['pdo'] = $this->share(function ($c) {
+            return new PDO(
+                $c['config']['pdo']['dsn'],
+                $c['config']['pdo']['pass'],
+                $c['config']['pdo']['user']
+            );
+        });
+
+        $this['searcher.mongo'] = function ($c) {
+            return new Xhgui_Searcher_Mongo($c['db']);
         };
 
-        $this['profiles'] = function ($c) {
-            return new Xhgui_Profiles($c['db']);
+        $this['searcher.pdo'] = function ($c) {
+            return new Xhgui_Searcher_Pdo($c['pdo'], $c['config']['pdo']['table']);
         };
 
-        $this['saver'] = function($c) {
-            return Xhgui_Saver::factory($c['config']);
+        $this['searcher'] = function ($c) {
+            $config = $c['config'];
+
+            switch ($config['save.handler']) {
+                case 'pdo':
+                    return $c['searcher.pdo'];
+
+                case 'mongodb':
+                default:
+                    return $c['searcher.mongo'];
+            }
         };
 
-        $this['saverMongo'] = function($c) {
+        $this['saver.mongo'] = function ($c) {
             $config = $c['config'];
             $config['save.handler'] = 'mongodb';
 
             return Xhgui_Saver::factory($config);
+        };
+
+        $this['saver'] = function ($c) {
+            return Xhgui_Saver::factory($c['config']);
         };
     }
 
@@ -107,23 +129,23 @@ class Xhgui_ServiceContainer extends Pimple
     protected function _controllers()
     {
         $this['watchController'] = function ($c) {
-            return new Xhgui_Controller_Watch($c['app'], $c['watchFunctions']);
+            return new Xhgui_Controller_Watch($c['app'], $c['searcher']);
         };
 
         $this['runController'] = function ($c) {
-            return new Xhgui_Controller_Run($c['app'], $c['profiles'], $c['watchFunctions']);
+            return new Xhgui_Controller_Run($c['app'], $c['searcher']);
         };
 
         $this['customController'] = function ($c) {
-            return new Xhgui_Controller_Custom($c['app'], $c['profiles']);
+            return new Xhgui_Controller_Custom($c['app'], $c['searcher']);
         };
 
         $this['waterfallController'] = function ($c) {
-            return new Xhgui_Controller_Waterfall($c['app'], $c['profiles']);
+            return new Xhgui_Controller_Waterfall($c['app'], $c['searcher']);
         };
 
         $this['importController'] = function ($c) {
-            return new Xhgui_Controller_Import($c['app'], $c['saverMongo']);
+            return new Xhgui_Controller_Import($c['app'], $c['saver']);
         };
     }
 
