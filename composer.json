@@ -13,7 +13,7 @@
         "slim/views": "^0.1.0",
         "twig/twig": "~1.17",
         "pimple/pimple": "^1.0.2",
-        "perftools/xhgui-collector": "^1.0.0"
+        "perftools/xhgui-collector": "dev-resolve-cp-conflicts"
     },
     "require-dev": {
         "alcaeus/mongo-php-adapter": "^1.0",
@@ -26,5 +26,11 @@
         "ext-mongo": "Mongo is needed to store profiler results for PHP < 7.",
         "ext-mongodb": "Mongo is needed to store profiler results for PHP > 7.",
         "alcaeus/mongo-php-adapter": "Mongo PHP Adapter is required for PHP >7 (when using ext-mongodb)"
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/1ma/xhgui-collector"
+        }
+    ]
 }
