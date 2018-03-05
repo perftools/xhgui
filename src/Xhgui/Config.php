@@ -4,7 +4,7 @@
  */
 class Xhgui_Config
 {
-    static $_config = array();
+    private static $_config = array();
 
     /**
      * Load a config file, it will replace

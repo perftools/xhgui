@@ -2,7 +2,7 @@
 
 class Xhgui_Saver_File implements Xhgui_Saver_Interface
 {
-    protected $_file;
+    private $_file;
 
     public function __construct($file)
     {
