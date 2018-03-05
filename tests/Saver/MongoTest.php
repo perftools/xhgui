@@ -4,16 +4,16 @@ class Saver_MongoTest extends PHPunit_Framework_TestCase
 {
     public function testSave()
     {
-        $data = file_get_contents(XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        $data = json_decode(file_get_contents(XHGUI_ROOT_DIR . '/tests/fixtures/results.json'), true);
 
-        $profiles = $this->getMockBuilder('Xhgui_Profiles')
+        $collection = $this->getMockBuilder(MongoCollection::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $profiles->expects($this->once())
+        $collection->expects($this->once())
             ->method('insert')
-            ->with($this->equalTo($data));
+            ->with($this->equalTo($data + ['_id' => Xhgui_Saver_Mongo::getLastProfilingId()]));
 
-        $saver = new Xhgui_Saver_Mongo($profiles);
+        $saver = new Xhgui_Saver_Mongo($collection);
         $saver->save($data);
     }
 }
