@@ -2,15 +2,36 @@
 
 class Xhgui_Saver_Mongo implements Xhgui_Saver_Interface
 {
-    protected $_profiles;
-    
-    public function __construct(Xhgui_Profiles $profiles) 
+    /**
+     * @var MongoCollection
+     */
+    private $_collection;
+
+    /**
+     * @var MongoId lastProfilingId
+     */
+    private static $lastProfilingId;
+
+    public function __construct(MongoCollection $collection)
     {
-        $this->_profiles = $profiles;
+        $this->_collection = $collection;
     }
-    
-    public function save($data)
+
+    public function save(array $data)
     {
-        return $this->_profiles->insert($data);
+        $data['_id'] = self::getLastProfilingId();
+
+        return $this->_collection->insert($data, array('w' => 0));
+    }
+
+    /**
+     * Return profiling ID
+     * @return MongoId lastProfilingId
+     */
+    public static function getLastProfilingId() {
+        if (!self::$lastProfilingId) {
+            self::$lastProfilingId = new MongoId();
+        }
+        return self::$lastProfilingId;
     }
 }
