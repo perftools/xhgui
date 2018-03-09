@@ -21,7 +21,7 @@ class Xhgui_Saver
             case 'mongodb':
             default:
                 $mongo = new MongoClient($config['db.host'], $config['db.options']);
-                $collection = $mongo->{$config['db.do']}->results;
+                $collection = $mongo->{$config['db.db']}->results;
                 $collection->findOne();
                 return new Xhgui_Saver_Mongo($collection);
         }
