@@ -11,12 +11,11 @@ class Xhgui_Saver
      * Get a saver instance based on configuration data.
      *
      * @param array $config The configuration data.
-     * @return Xhgui_Saver_File|Xhgui_Saver_Mongo|Xhgui_Saver_Upload
+     * @return Xhgui_Saver_Interface
      */
     public static function factory($config)
     {
         switch ($config['save.handler']) {
-
             case 'file':
                 return new Xhgui_Saver_File($config['save.handler.filename']);
 
@@ -30,6 +29,13 @@ class Xhgui_Saver
                     $timeout
                 );
 
+            case 'pdo':
+                return new Xhgui_Saver_Pdo(new PDO(
+                    $config['save.handler.pdo.dsn'],
+                    $config['save.handler.pdo.user'],
+                    $config['save.handler.pdo.pass'],
+                    $config['save.handler.pdo.opts']
+                ));
             case 'mongodb':
             default:
                 $mongo = new MongoClient($config['db.host'], $config['db.options']);
