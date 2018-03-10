@@ -4,7 +4,7 @@ class Xhgui_Saver_Pdo implements Xhgui_Saver_Interface
 {
     const TABLE_DDL = <<<SQL
 
-CREATE TABLE IF NOT EXISTS xhgui_profiles (
+CREATE TABLE IF NOT EXISTS "%s" (
   id               TEXT PRIMARY KEY,
   profile          TEXT           NOT NULL,
   url              TEXT           NULL,
@@ -21,7 +21,7 @@ SQL;
 
     const INSERT_DML = <<<SQL
 
-INSERT INTO xhgui_profiles (
+INSERT INTO "%s" (
   id,
   profile,
   url,
@@ -52,11 +52,15 @@ SQL;
      */
     private $stmt;
 
-    public function __construct(PDO $pdo)
+    /**
+     * @param PDO    $pdo
+     * @param string $table
+     */
+    public function __construct(PDO $pdo, $table)
     {
-        $pdo->exec(self::TABLE_DDL);
+        $pdo->exec(sprintf(self::TABLE_DDL, $table));
 
-        $this->stmt = $pdo->prepare(self::INSERT_DML);
+        $this->stmt = $pdo->prepare(sprintf(self::INSERT_DML, $table));
     }
 
     public function save(array $data)

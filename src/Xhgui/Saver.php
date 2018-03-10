@@ -30,12 +30,14 @@ class Xhgui_Saver
                 );
 
             case 'pdo':
-                return new Xhgui_Saver_Pdo(new PDO(
-                    $config['save.handler.pdo.dsn'],
-                    $config['save.handler.pdo.user'],
-                    $config['save.handler.pdo.pass'],
-                    $config['save.handler.pdo.opts']
-                ));
+                return new Xhgui_Saver_Pdo(
+                    new PDO(
+                        $config['save.handler.pdo']['dsn'],
+                        $config['save.handler.pdo']['user'],
+                        $config['save.handler.pdo']['pass']
+                    ),
+                    $config['save.handler.pdo']['table']
+                );
             case 'mongodb':
             default:
                 $mongo = new MongoClient($config['db.host'], $config['db.options']);
