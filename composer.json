@@ -17,7 +17,7 @@
     },
     "require-dev": {
         "alcaeus/mongo-php-adapter": "^1.0",
-        "phpunit/phpunit": "3.7.x-dev",
+        "phpunit/phpunit": "4.*|5.*",
         "ext-dom": "*"
     },
     "suggest": {
