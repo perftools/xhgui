@@ -11,16 +11,20 @@ return array(
     'debug' => false,
     'mode' => 'development',
 
-    // Can be either mongodb or file.
-    /*
-    'save.handler' => 'file',
-    'save.handler.filename' => dirname(__DIR__) . '/cache/' . 'xhgui.data.' . microtime(true) . '_' . substr(md5($url), 0, 6),
-    */
-    'save.handler' => 'mongodb',
+    // Can be mongodb, file or upload.
 
-    // Needed for file save handler. Beware of file locking. You can adujst this file path
-    // to reduce locking problems (eg uniqid, time ...)
-    //'save.handler.filename' => __DIR__.'/../data/xhgui_'.date('Ymd').'.dat',
+    // For file
+    //
+    //'save.handler' => 'file',
+    //'save.handler.filename' => dirname(__DIR__) . '/cache/' . 'xhgui.data.' . microtime(true) . '_' . substr(md5($url), 0, 6),
+
+    // For url
+    //
+    //'save.handler' => 'upload',
+    //'save.handler.upload.uri' => 'http://example.com/run/import',
+
+    // For MongoDB
+    'save.handler' => 'mongodb',
     'db.host' => sprintf('mongodb://%s', $mongoUri),
     'db.db' => $mongoDb,
 
