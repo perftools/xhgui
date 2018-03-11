@@ -221,59 +221,12 @@ return array(
 );
 ```
 
+Profiling a Web Request or CLI script
+=====================================
 
-Profile an Application or Site
-==============================
-
-The simplest way to profile an application is to use
-`external/header.php`. `external/header.php` is designed to be combined
-with PHP's
-[auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-pr
-epend-file) directive. You can enable `auto_prepend_file` system-wide
-through `php.ini`. Alternatively, you can enable `auto_prepend_file` per
-virtual host.
-
-With apache this would look like:
-
-```apache
-<VirtualHost *:80>
-  php_admin_value auto_prepend_file "/Users/markstory/Sites/xhgui/external/header.php"
-  DocumentRoot "/Users/markstory/Sites/awesome-thing/app/webroot/"
-  ServerName site.localhost
-</VirtualHost>
-```
-With Nginx in fastcgi mode you could use:
-
-```nginx
-server {
-  listen 80;
-  server_name site.localhost;
-  root /Users/markstory/Sites/awesome-thing/app/webroot/;
-  fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
-}
-```
-
-Profile a CLI Script
-====================
-
-The simplest way to profile a CLI is to use
-`external/header.php`. `external/header.php` is designed to be combined with PHP's
-[auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-prepend-file)
-directive. You can enable `auto_prepend_file` system-wide
-through `php.ini`. Alternatively,
-you can enable include the `header.php` at the top of your script:
-
-```php
-<?php
-require '/path/to/xhgui/external/header.php';
-// Rest of script.
-```
-
-You can alternatively use the `-d` flag when running php:
-
-```bash
-php -d auto_prepend_file=/path/to/xhgui/external/header.php do_work.php
-```
+Using [xhgui-collector](https://github.com/perftools/xhgui-collector) you can
+collect data from your web applications and CLI scripts. This data is then
+pushed into xhgui's database where it can be viewed with this application.
 
 Saving & Importing Profiles
 ---------------------------
