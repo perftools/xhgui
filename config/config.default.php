@@ -18,10 +18,16 @@ return array(
     //'save.handler' => 'file',
     //'save.handler.filename' => dirname(__DIR__) . '/cache/' . 'xhgui.data.' . microtime(true) . '_' . substr(md5($url), 0, 6),
 
-    // For url
+    // For upload
+    //
+    // Saving profile data by upload is only recommended with HTTPS
+    // endpoints that have IP whitelists applied.
+    //
+    // The timeout option is in seconds and defaults to 3 if unspecified.
     //
     //'save.handler' => 'upload',
-    //'save.handler.upload.uri' => 'http://example.com/run/import',
+    //'save.handler.upload.uri' => 'https://example.com/run/import',
+    //'save.handler.upload.timeout' => 3,
 
     // For MongoDB
     'save.handler' => 'mongodb',
@@ -48,5 +54,4 @@ return array(
     },
 
     'profiler.options' => array(),
-
 );

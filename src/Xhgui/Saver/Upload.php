@@ -3,11 +3,12 @@
 class Xhgui_Saver_Upload implements Xhgui_Saver_Interface
 {
 
-    protected $uri;
+    protected $uri, $timeout;
 
-    public function __construct($uri)
+    public function __construct($uri, $timeout)
     {
         $this->uri = $uri;
+        $this->timeout = $timeout;
     }
 
     public function save($data)
@@ -26,6 +27,7 @@ class Xhgui_Saver_Upload implements Xhgui_Saver_Interface
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
 
         curl_exec($ch);
 

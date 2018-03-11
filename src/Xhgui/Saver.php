@@ -21,7 +21,14 @@ class Xhgui_Saver
                 return new Xhgui_Saver_File($config['save.handler.filename']);
 
             case 'upload':
-                return new Xhgui_Saver_Upload($config['save.handler.upload.uri']);
+                $timeout = 3;
+                if (isset($config['save.handler.upload.timeout'])) {
+                    $timeout = $config['save.handler.upload.timeout'];
+                }
+                return new Xhgui_Saver_Upload(
+                    $config['save.handler.upload.uri'],
+                    $timeout
+                );
 
             case 'mongodb':
             default:
