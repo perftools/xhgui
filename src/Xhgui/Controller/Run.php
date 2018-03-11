@@ -321,17 +321,4 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $response['Content-Type'] = 'application/json';
         return $response->body(json_encode($callgraph));
     }
-
-    public function import()
-    {
-        $request = $this->app->request();
-
-        $data = json_decode($request->getBody(), true);
-
-        $container = Xhgui_ServiceContainer::instance();
-        /* @var Xhgui_Saver_Mongo $saver */
-        $saver = $container['saverMongo'];
-
-        $saver->save($data);
-    }
 }

@@ -89,18 +89,14 @@ class Xhgui_ServiceContainer extends Pimple
         };
 
         $this['saver'] = function($c) {
-            $config = $c['config'];
-            switch ($config['save.handler']) {
-                case 'file':
-                    return new Xhgui_Saver_File($config['save.handler.filename']);
-                case 'mongodb':
-                default:
-                    return $c['saverMongo'];
-            }
+            return Xhgui_Saver::factory($c['config']);
         };
 
         $this['saverMongo'] = function($c) {
-            return new Xhgui_Saver_Mongo($c['profiles']);
+            $config = $c['config'];
+            $config['save.handler'] = 'mongodb';
+
+            return Xhgui_Saver::factory($config);
         };
     }
 
@@ -123,6 +119,10 @@ class Xhgui_ServiceContainer extends Pimple
 
         $this['waterfallController'] = function ($c) {
             return new Xhgui_Controller_Waterfall($c['app'], $c['profiles']);
+        };
+
+        $this['importController'] = function ($c) {
+            return new Xhgui_Controller_Import($c['app'], $c['saverMongo']);
         };
     }
 

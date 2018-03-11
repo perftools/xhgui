@@ -30,11 +30,6 @@ $app->get('/run/view', function () use ($di, $app) {
     $app->controller->view();
 })->name('run.view');
 
-$app->post('/run/import', function () use ($di, $app) {
-    $app->controller = $di['runController'];
-    $app->controller->import();
-})->name('run.import');
-
 $app->get('/url/view', function () use ($di, $app) {
     $app->controller = $di['runController'];
     $app->controller->url();
@@ -76,6 +71,13 @@ $app->get('/run/flamegraph/data', function () use ($di, $app) {
 $app->get('/run/callgraph/dot', function () use ($di, $app) {
     $di['runController']->callgraphDataDot();
 })->name('run.callgraph.dot');
+
+// Import route
+$app->post('/run/import', function () use ($di, $app) {
+    $app->controller = $di['importController'];
+    $app->controller->import();
+})->name('run.import');
+
 
 // Watch function routes.
 $app->get('/watch', function () use ($di, $app) {
