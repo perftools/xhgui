@@ -23,14 +23,60 @@ This table represents current known information about compatibility between this
 
 | XHGUI Collector version | XHGUI Version | Compatibility                            |
 |-------------------------|---------------|------------------------------------------|
-| 1.0.0                   | 0.2.0 - 0.7.1 | presumed compatible - schema is the same |
+| 1.x                     | 0.2.0 - 0.7.1 | presumed compatible - schema is the same |
 
 ## Usage
 
-You can use this to build your own saving library or just configure as described in [XHGUI][2] manual
-and include `external/header.php` as an auto_prepend_file (also described in [XHGUI][2] manual)
+### Profile an Application or Site
+
+The simplest way to profile an application is to use `external/header.php`.
+`external/header.php` is designed to be combined with PHP's
+[auto_prepend_file][4] directive. You can enable `auto_prepend_file` system-wide
+through `php.ini`. Alternatively, you can enable `auto_prepend_file` per virtual
+host.
+
+With apache this would look like:
+
+```apache
+<VirtualHost *:80>
+  php_admin_value auto_prepend_file "/Users/markstory/Sites/xhgui/external/header.php"
+  DocumentRoot "/Users/markstory/Sites/awesome-thing/app/webroot/"
+  ServerName site.localhost
+</VirtualHost>
+```
+With Nginx in fastcgi mode you could use:
+
+```nginx
+server {
+  listen 80;
+  server_name site.localhost;
+  root /Users/markstory/Sites/awesome-thing/app/webroot/;
+  fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
+}
+```
+
+### Profile a CLI Script
+
+The simplest way to profile a CLI is to use `external/header.php`.
+`external/header.php` is designed to be combined with PHP's
+[auto_prepend_file][4] directive. You can enable `auto_prepend_file` system-wide
+through `php.ini`. Alternatively, you can enable include the `header.php` at the
+top of your script:
+
+```php
+<?php
+require '/path/to/xhgui/external/header.php';
+// Rest of script.
+```
+
+You can alternatively use the `-d` flag when running php:
+
+```bash
+php -d auto_prepend_file=/path/to/xhgui/external/header.php do_work.php
+```
 
 ### Use with environment variables
+
 * run `composer require perftools/xhgui-collector` 
 * include these lines into your bootstrap file (e.g. index.php) 
 
@@ -62,9 +108,12 @@ For using the data collection classes you will need the following:
     * `alcaeus/mongo-php-adapter` composer dependency.   
  * a MongoDB server. XHGUI requires version 2.2.0 or later.
 
- When in doubt, refer to [XHGUI][2] repository's composer.json or this repository's composer.json `suggests` section.
- 
+When in doubt, refer to [XHGUI][2] repository's composer.json or this
+repository's composer.json `suggests` section.
+
+
  [1]:https://pecl.php.net/package/xhprof
  [2]:https://github.com/perftools/xhgui
  [3]:http://www.mongodb.org/
  [perftools/xhgui@133051f]:https://github.com/perftools/xhgui/commit/133051f0c27240adadf00eadc236be595caadcdd
+ [4]:http://www.php.net/manual/en/ini.core.php#ini.auto-prepend-file
