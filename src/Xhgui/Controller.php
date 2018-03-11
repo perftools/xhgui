@@ -1,9 +1,16 @@
 <?php
 
+use Slim\Slim;
+
 class Xhgui_Controller
 {
     protected $_templateVars = array();
     protected $_template = null;
+
+    /**
+     * @var Slim
+     */
+    protected $app;
 
     public function set($vars)
     {
@@ -17,7 +24,7 @@ class Xhgui_Controller
 
     public function render()
     {
-        $this->_app->render($this->_template, $this->_templateVars);
+        $this->app->render($this->_template, $this->_templateVars);
     }
 
 }

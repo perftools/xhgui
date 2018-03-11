@@ -1,14 +1,18 @@
 <?php
 
+use Slim\Slim;
+
 class Xhgui_Controller_Custom extends Xhgui_Controller
 {
-    protected $_app;
-    protected $_profiles;
+    /**
+     * @var Xhgui_Profiles
+     */
+    protected $profiles;
 
-    public function __construct($app, $profiles)
+    public function __construct(Slim $app, Xhgui_Profiles $profiles)
     {
-        $this->_app = $app;
-        $this->_profiles = $profiles;
+        $this->app = $app;
+        $this->profiles = $profiles;
     }
 
     public function get()
@@ -18,11 +22,11 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
 
     public function help()
     {
-        $request = $this->_app->request();
+        $request = $this->app->request();
         if ($request->get('id')) {
-            $res = $this->_profiles->get($request->get('id'));
+            $res = $this->profiles->get($request->get('id'));
         } else {
-            $res = $this->_profiles->latest();
+            $res = $this->profiles->latest();
         }
         $this->_template = 'custom/help.twig';
         $this->set(array(
@@ -32,8 +36,8 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
 
     public function query()
     {
-        $request = $this->_app->request();
-        $response = $this->_app->response();
+        $request = $this->app->request();
+        $response = $this->app->response();
         $response['Content-Type'] = 'application/json';
 
         $query = json_decode($request->post('query'), true);
@@ -52,9 +56,9 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
             return $response->body($json);
         }
 
-        $perPage = $this->_app->config('page.limit');
+        $perPage = $this->app->config('page.limit');
 
-        $res = $this->_profiles->query($query, $retrieve)
+        $res = $this->profiles->query($query, $retrieve)
             ->limit($perPage);
         $r = iterator_to_array($res);
         return $response->body(json_encode($r));

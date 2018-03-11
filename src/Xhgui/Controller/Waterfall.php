@@ -1,19 +1,23 @@
 <?php
 
+use Slim\Slim;
+
 class Xhgui_Controller_Waterfall extends Xhgui_Controller
 {
-    protected $_app;
-    protected $_profiles;
+    /**
+     * @var Xhgui_Profiles
+     */
+    protected $profiles;
 
-    public function __construct($app, $profiles)
+    public function __construct(Slim $app, Xhgui_Profiles $profiles)
     {
-        $this->_app = $app;
-        $this->_profiles = $profiles;
+        $this->app = $app;
+        $this->profiles = $profiles;
     }
 
     public function index()
     {
-        $request = $this->_app->request();
+        $request = $this->app->request();
         $search = array();
         $keys = array("remote_addr", 'request_start', 'request_end');
         foreach ($keys as $key) {
@@ -21,7 +25,7 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
                 $search[$key] = trim($request->get($key));
             }
         }
-        $result = $this->_profiles->getAll(array(
+        $result = $this->profiles->getAll(array(
             'sort' => 'time',
             'direction' => 'asc',
             'conditions' => $search,
@@ -46,14 +50,14 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
 
     public function query()
     {
-        $request = $this->_app->request();
-        $response = $this->_app->response();
+        $request = $this->app->request();
+        $response = $this->app->response();
         $search = array();
         $keys = array("remote_addr", 'request_start', 'request_end');
         foreach ($keys as $key) {
             $search[$key] = $request->get($key);
         }
-        $result = $this->_profiles->getAll(array(
+        $result = $this->profiles->getAll(array(
             'sort' => 'time',
             'direction' => 'asc',
             'conditions' => $search,
