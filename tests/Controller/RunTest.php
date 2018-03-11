@@ -12,11 +12,10 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
         ));
 
         $di = Xhgui_ServiceContainer::instance();
-        $mock = $this->getMock(
-                'Slim\Slim',
-                array('redirect', 'render', 'urlFor'),
-                array($di['config'])
-            );
+        $mock = $this->getMockBuilder('Slim\Slim')
+            ->setMethods(array('redirect', 'render', 'urlFor'))
+            ->setConstructorArgs(array($di['config']))
+            ->getMock();
 
         $di['app'] = $di->share(function ($c) use ($mock) {
             return $mock;
