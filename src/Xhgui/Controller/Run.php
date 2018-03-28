@@ -155,8 +155,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             $search
         );
 
-        if (
-            isset($search['limit_custom'])
+        if (isset($search['limit_custom'])
             && strlen($search['limit_custom']) > 0
             && $search['limit_custom'][0] == 'P'
         ) {
