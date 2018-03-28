@@ -400,6 +400,40 @@ class Xhgui_Profile
     }
 
     /**
+     * @param array $profileData
+     * @param array $filters
+     *
+     * @return array
+     */
+    public function filter($profileData, $filters = [])
+    {
+        $filter = function ($item, $key) use ($filters) {
+            $nameToFilter = $this->getNameToFilter($key);
+            return !in_array($nameToFilter, $filters);
+        };
+        return array_filter($profileData, $filter, ARRAY_FILTER_USE_BOTH);
+    }
+
+    /**
+     * @param $name
+     *
+     * @return bool|string
+     */
+    protected function getNameToFilter($name)
+    {
+        $length = strpos($name, '\\', 1);
+        if (!$length) {
+            $length = strpos($name, '_', 1);
+        }
+        if (!$length) {
+            $length = strlen($name);
+        }
+        $nameToFilter = substr($name, 0, $length);
+
+        return $nameToFilter;
+    }
+
+    /**
      * Split a key name into the parent==>child format.
      *
      * @param string $name The name to split.

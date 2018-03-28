@@ -26,6 +26,11 @@ return array(
     'date.format' => 'M jS H:i:s',
     'detail.count' => 6,
     'page.limit' => 25,
+    'run.view.filter.names' => [
+        'Magento',
+        'Zend',
+        'Composer',
+    ],
 
     // Profile 1 in 100 requests.
     // You can return true to profile every request.
