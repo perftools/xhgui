@@ -30,6 +30,11 @@ $app->get('/run/view', function () use ($di, $app) {
     $app->controller->view();
 })->name('run.view');
 
+$app->get('/run/delete', function () use ($di, $app) {
+    $app->controller = $di['runController'];
+    $app->controller->delete();
+})->name('run.delete');
+
 $app->get('/url/view', function () use ($di, $app) {
     $app->controller = $di['runController'];
     $app->controller->url();

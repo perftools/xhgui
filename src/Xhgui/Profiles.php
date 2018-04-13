@@ -267,6 +267,17 @@ class Xhgui_Profiles
     }
 
     /**
+     * Delete a profile run.
+     *
+     * @param $id The profile id to delete.
+     * @return array|bool
+     */
+    public function delete($id)
+    {
+        return $this->_collection->remove(array('_id' => new MongoId($id)), array());
+    }
+
+    /**
      * Used to truncate a collection.
      *
      * Primarly used in test cases to reset the test db.

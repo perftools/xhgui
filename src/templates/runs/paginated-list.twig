@@ -34,6 +34,9 @@
                         {{ helpers.sort_link('pmu', base_url, 'pmu', paging, search) }}
                     </span>
                 </th>
+                <th>
+                    Ops
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -69,6 +72,11 @@
             <td class="right">{{ result.get('main()', 'cpu') |as_time }}</td>
             <td class="right">{{ result.get('main()', 'mu') |as_bytes }}</td>
             <td class="right">{{ result.get('main()', 'pmu') |as_bytes }}</td>
+            <td>
+                <a href="{{ url('run.delete', {'id': result.id|trim }) }}">
+                    <i class="icon-trash"></i>
+                </a>
+            </td>
         </tr>
         {% else %}
         <tr>
