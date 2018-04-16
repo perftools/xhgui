@@ -167,4 +167,28 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
         $this->assertStringStartsWith('{"', $response->body());
     }
 
+    public function testDelete() {
+      loadFixture($this->profiles, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+
+      Environment::mock(array(
+        'SCRIPT_NAME' => 'index.php',
+        'PATH_INFO' => '/run/delete',
+        'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
+      ));
+
+      $this->app->expects($this->once())
+        ->method('urlFor')
+        ->with('home');
+
+      $this->app->expects($this->once())
+        ->method('redirect');
+
+      $result = $this->profiles->getAll();
+      $this->assertCount(5, $result['results']);
+
+      $this->runs->delete();
+
+      $result = $this->profiles->getAll();
+      $this->assertCount(4, $result['results']);
+    }
 }
