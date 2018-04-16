@@ -31,8 +31,7 @@ $app->get('/run/view', function () use ($di, $app) {
 })->name('run.view');
 
 $app->get('/run/delete', function () use ($di, $app) {
-    $app->controller = $di['runController'];
-    $app->controller->delete();
+    $di['runController']->delete();
 })->name('run.delete');
 
 $app->get('/url/view', function () use ($di, $app) {
