@@ -124,6 +124,20 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $this->app->redirect($redirect);
     }
 
+    public function delete_all() {
+      $request = $this->app->request();
+
+      // Delete all profile runs.
+      $delete = $this->profiles->truncate();
+
+      $this->app->flash('success', 'Deleted all profiles');
+
+      $referrer = $request->getReferrer();
+      // In case route is accessed directly the referrer is not set.
+      $redirect = isset($referrer) ? $referrer : $this->app->urlFor('home');
+      $this->app->redirect($redirect);
+    }
+
     public function url()
     {
         $request = $this->app->request();
