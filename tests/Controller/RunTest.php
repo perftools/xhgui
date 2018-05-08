@@ -212,7 +212,7 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
         $result = $this->profiles->getAll();
         $this->assertCount(5, $result['results']);
 
-        $this->runs->delete_all();
+        $this->runs->deleteAll();
 
         $result = $this->profiles->getAll();
         $this->assertCount(0, $result['results']);
