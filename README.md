@@ -17,13 +17,13 @@ This project was originally forked from [perftools/xhgui@133051f], which was aft
 
 This should ensure compatibility for most tags up to 0.7.1 (included).
 
-The only thing to break compatibility would be a schema change on XHGUI side.
+The only change that would break compatibility would be a schema change on the XHGUI side.
 
 This table represents current known information about compatibility between this project and [XHGUI][2] data schema.
 
-| XHGUI Collector version | XHGUI Version | Compatibility                            |
-|-------------------------|---------------|------------------------------------------|
-| 1.x                     | 0.2.0 - 0.7.1 | presumed compatible - schema is the same |
+| XHGUI Collector version | XHGUI Version | Compatibility                           |
+|-------------------------|---------------|-----------------------------------------|
+| 1.0.0 - 1.x             | 0.2.0 - 0.9.0 | presumed compatible - no schema changes |
 
 ## Usage
 
