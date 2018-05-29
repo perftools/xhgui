@@ -10,6 +10,10 @@
 
 {% if runs|length or has_search %}
 <div class="searchbar clearfix">
+    <a href="{{ url('run.deleteAll') }}" class="pull-right btn btn-small delete-all" title="Delete all">
+        <i class="icon-trash"></i> Delete all
+    </a>
+
     <a href="#" class="pull-right btn btn-small search-expand" title="Show search form">
         <i class="icon-search"></i> Search
     </a>
