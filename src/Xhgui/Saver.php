@@ -32,11 +32,11 @@ class Xhgui_Saver
             case 'pdo':
                 return new Xhgui_Saver_Pdo(
                     new PDO(
-                        $config['save.handler.pdo']['dsn'],
-                        $config['save.handler.pdo']['user'],
-                        $config['save.handler.pdo']['pass']
+                        $config['pdo']['dsn'],
+                        $config['pdo']['user'],
+                        $config['pdo']['pass']
                     ),
-                    $config['save.handler.pdo']['table']
+                    $config['pdo']['table']
                 );
             case 'mongodb':
             default:
