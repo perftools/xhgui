@@ -14,7 +14,12 @@ CREATE TABLE IF NOT EXISTS "%s" (
   simple_url       TEXT           NULL,
   request_ts       INTEGER        NOT NULL,
   request_ts_micro NUMERIC(15, 4) NOT NULL,
-  request_date     DATE           NOT NULL
+  request_date     DATE           NOT NULL,
+  main_wt          INTEGER        NOT NULL,
+  main_ct          INTEGER        NOT NULL,
+  main_cpu         INTEGER        NOT NULL,
+  main_mu          INTEGER        NOT NULL,
+  main_pmu         INTEGER        NOT NULL
 );
 
 SQL;
@@ -31,7 +36,12 @@ INSERT INTO "%s" (
   simple_url,
   request_ts,
   request_ts_micro,
-  request_date
+  request_date,
+  main_wt,
+  main_ct,
+  main_cpu,
+  main_mu,
+  main_pmu
 ) VALUES (
   :id,
   :profile,
@@ -42,7 +52,12 @@ INSERT INTO "%s" (
   :simple_url,
   :request_ts,
   :request_ts_micro,
-  :request_date
+  :request_date,
+  :main_wt,
+  :main_ct,
+  :main_cpu,
+  :main_mu,
+  :main_pmu
 );
 
 SQL;
@@ -65,6 +80,8 @@ SQL;
 
     public function save(array $data)
     {
+        $main = $data['profile']['main()'];
+
         $this->stmt->execute(array(
             'id'               => Xhgui_Util::generateId(),
             'profile'          => json_encode($data['profile']),
@@ -76,6 +93,11 @@ SQL;
             'request_ts'       => $data['meta']['request_ts']['sec'],
             'request_ts_micro' => "{$data['meta']['request_ts_micro']['sec']}.{$data['meta']['request_ts_micro']['usec']}",
             'request_date'     => $data['meta']['request_date'],
+            'main_wt'          => $main['wt'],
+            'main_ct'          => $main['ct'],
+            'main_cpu'         => $main['cpu'],
+            'main_mu'          => $main['mu'],
+            'main_pmu'         => $main['pmu'],
         ));
 
         $this->stmt->closeCursor();
