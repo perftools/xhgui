@@ -38,6 +38,7 @@ class Xhgui_Saver
                     ),
                     $config['pdo']['table']
                 );
+
             case 'mongodb':
             default:
                 $mongo = new MongoClient($config['db.host'], $config['db.options']);
