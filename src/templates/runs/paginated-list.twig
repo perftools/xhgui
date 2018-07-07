@@ -55,7 +55,7 @@
               </a>
             </td>
             <td>
-                {% set addr = result.meta.url %}
+                {% set addr = result.meta('SERVER.SERVER_NAME') ~ result.meta.url %}
                 {{ helpers.tip_link(
                     addr,
                     50,
