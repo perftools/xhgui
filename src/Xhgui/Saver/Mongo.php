@@ -19,7 +19,9 @@ class Xhgui_Saver_Mongo implements Xhgui_Saver_Interface
 
     public function save(array $data)
     {
-        $data['_id'] = self::getLastProfilingId();
+        if (!isset($data['_id'])) {
+            $data['_id'] = self::getLastProfilingId();
+        }
 
         if (isset($data['meta']['request_ts'])) {
             $data['meta']['request_ts'] = new MongoDate($data['meta']['request_ts']['sec']);
