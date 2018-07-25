@@ -11,7 +11,7 @@ class Xhgui_Saver_Upload implements Xhgui_Saver_Interface
         $this->timeout = $timeout;
     }
 
-    public function save($data)
+    public function save(array $data)
     {
         $json = json_encode($data);
 
