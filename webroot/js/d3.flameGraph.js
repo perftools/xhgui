@@ -1,17 +1,122 @@
+
+/**!
+ *
+ *  Copyright 2017 Martin Spier <spiermar@gmail.com>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 (function() {
   'use strict';
+
+  /*jshint eqnull:true */
+  // https://tc39.github.io/ecma262/#sec-array.prototype.find
+  if (!Array.prototype.find) {
+    Object.defineProperty(Array.prototype, 'find', {
+      value: function(predicate) {
+      // 1. Let O be ? ToObject(this value).
+        if (this == null) {
+          throw new TypeError('"this" is null or not defined');
+        }
+
+        var o = Object(this);
+
+        // 2. Let len be ? ToLength(? Get(O, "length")).
+        var len = o.length >>> 0;
+
+        // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+        if (typeof predicate !== 'function') {
+          throw new TypeError('predicate must be a function');
+        }
+
+        // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+        var thisArg = arguments[1];
+
+        // 5. Let k be 0.
+        var k = 0;
+
+        // 6. Repeat, while k < len
+        while (k < len) {
+          // a. Let Pk be ! ToString(k).
+          // b. Let kValue be ? Get(O, Pk).
+          // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+          // d. If testResult is true, return kValue.
+          var kValue = o[k];
+          if (predicate.call(thisArg, kValue, k, o)) {
+            return kValue;
+          }
+          // e. Increase k by 1.
+          k++;
+        }
+
+        // 7. Return undefined.
+        return undefined;
+      }
+    });
+  }
+
+  if (!Array.prototype.filter)
+  Array.prototype.filter = function(func, thisArg) {
+    if ( ! ((typeof func === 'function') && this) )
+        throw new TypeError();
+
+    var len = this.length >>> 0,
+        res = new Array(len), // preallocate array
+        c = 0, i = -1;
+    if (thisArg === undefined)
+      while (++i !== len)
+        // checks to see if the key was set
+        if (i in this)
+          if (func(t[i], i, t))
+            res[c++] = t[i];
+    else
+      while (++i !== len)
+        // checks to see if the key was set
+        if (i in this)
+          if (func.call(thisArg, t[i], i, t))
+            res[c++] = t[i];
+
+    res.length = c; // shrink down array to proper size
+    return res;
+  };
+  /*jshint eqnull:false */
+
+  // Node/CommonJS - require D3
+  if (typeof(module) !== 'undefined' && typeof(exports) !== 'undefined' && typeof(d3) == 'undefined') {
+      d3 = require('d3');
+  }
+
+  // Node/CommonJS - require d3-tip
+  if (typeof(module) !== 'undefined' && typeof(exports) !== 'undefined' && typeof(d3.tip) == 'undefined') {
+      d3.tip = require('d3-tip');
+  }
 
   function flameGraph() {
 
     var w = 960, // graph width
-      h = 540, // graph height
+      h = null, // graph height
       c = 18, // cell height
       selection = null, // selection
       tooltip = true, // enable tooltip
       title = "", // graph title
       transitionDuration = 750,
-      transitionEase = "cubic-in-out", // tooltip offset
-      sort = true;
+      transitionEase = d3.easeCubic, // tooltip offset
+      sort = false,
+      reversed = false, // reverse the graph direction
+      clickHandler = null,
+      minFrameSize = 0,
+      details = null;
 
     var tip = d3.tip()
       .direction("s")
@@ -20,27 +125,32 @@
       .attr('class', 'd3-flame-graph-tip')
       .html(function(d) { return label(d); });
 
-    var labelFormat = function(d) {
-      return d.name + " (" + d3.round(100 * d.dx, 3) + "%, " + d.value + " samples)";
+    var svg;
+
+    function name(d) {
+      return d.data.n || d.data.name;
+    }
+
+    function children(d) {
+      return d.c || d.children;
+    }
+
+    function value(d) {
+      return d.v || d.value;
+    }
+
+    var label = function(d) {
+      return name(d) + " (" + d3.format(".3f")(100 * (d.x1 - d.x0), 3) + "%, " + value(d) + " samples)";
     };
 
     function setDetails(t) {
-      var details = document.getElementById("details");
       if (details)
         details.innerHTML = t;
     }
 
-    function label(d) {
-      if (!d.dummy) {
-        return labelFormat(d);
-      } else {
-        return "";
-      }
-    }
-
-    function name(d) {
-      return d.name;
-    }
+    var colorMapper = function(d) {
+      return d.highlight ? "#E600E6" : colorHash(name(d));
+    };
 
     function generateHash(name) {
       // Return a vector (0.0->1.0) that is a hash of the input string.
@@ -65,8 +175,11 @@
       // and with a warm palette.
       var vector = 0;
       if (name) {
-        name = name.replace(/.*`/, "");		// drop module name if present
-        name = name.replace(/\(.*/, "");	// drop extra info
+        var nameArr = name.split('`');
+        if (nameArr.length > 1) {
+          name = nameArr[nameArr.length -1]; // drop module name if present
+        }
+        name = name.split('(')[0]; // drop extra info
         vector = generateHash(name);
       }
       var r = 200 + Math.round(55 * vector);
@@ -75,45 +188,18 @@
       return "rgb(" + r + "," + g + "," + b + ")";
     }
 
-    function augment(data) {
-      // Augment partitioning layout with "dummy" nodes so that internal nodes'
-      // values dictate their width. Annoying, but seems to be least painful
-      // option.  https://github.com/mbostock/d3/pull/574
-      if (data.children && (data.children.length > 0)) {
-        data.children.forEach(augment);
-        var childValues = 0;
-        data.children.forEach(function(child) {
-          childValues += child.value;
-        });
-        if (childValues < data.value) {
-          data.children.push(
-            {
-              "name": "",
-              "value": data.value - childValues,
-              "dummy": true
-            }
-          );
-        }
-      }
-    }
-
     function hide(d) {
-      if(!d.original) {
-        d.original = d.value;
-      }
-      d.value = 0;
-      if(d.children) {
-        d.children.forEach(hide);
+      d.data.hide = true;
+      if(children(d)) {
+        children(d).forEach(hide);
       }
     }
 
     function show(d) {
-      d.fade = false;
-      if(d.original) {
-        d.value = d.original;
-      }
-      if(d.children) {
-        d.children.forEach(show);
+      d.data.fade = false;
+      d.data.hide = false;
+      if(children(d)) {
+        children(d).forEach(show);
       }
     }
 
@@ -139,7 +225,7 @@
 
     function fadeAncestors(d) {
       if(d.parent) {
-        d.parent.fade = true;
+        d.parent.data.fade = true;
         fadeAncestors(d.parent);
       }
     }
@@ -157,30 +243,41 @@
       show(d);
       fadeAncestors(d);
       update();
+      if (typeof clickHandler === 'function') {
+        clickHandler(d);
+      }
     }
 
     function searchTree(d, term) {
       var re = new RegExp(term),
-          label = d.name;
+          searchResults = [];
 
-      if(d.children) {
-        d.children.forEach(function(child) {
-          searchTree(child, term);
-        });
+      function searchInner(d) {
+        var label = name(d);
+
+        if (children(d)) {
+          children(d).forEach(function (child) {
+            searchInner(child);
+          });
+        }
+
+        if (label.match(re)) {
+          d.highlight = true;
+          searchResults.push(d);
+        } else {
+          d.highlight = false;
+        }
       }
 
-      if (label.match(re)) {
-        d.highlight = true;
-      } else {
-        d.highlight = false;
-      }
+      searchInner(d);
+      return searchResults;
     }
 
     function clear(d) {
       d.highlight = false;
-      if(d.children) {
-        d.children.forEach(function(child) {
-          clear(child, term);
+      if(children(d)) {
+        children(d).forEach(function(child) {
+          clear(child);
         });
       }
     }
@@ -189,46 +286,67 @@
       if (typeof sort === 'function') {
         return sort(a, b);
       } else if (sort) {
-        return d3.ascending(a.name, b.name);
-      } else {
-        return 0;
+        return d3.ascending(name(a), name(b));
       }
     }
 
-    var partition = d3.layout.partition()
-      .sort(doSort)
-      .value(function(d) {return d.v || d.value;})
-      .children(function(d) {return d.c || d.children;});
+    var partition = d3.partition();
+
+    function filterNodes(root) {
+      var nodeList = root.descendants();
+      if (minFrameSize > 0) {
+        var kx = w / (root.x1 - root.x0);
+        nodeList = nodeList.filter(function(el) {
+          return ((el.x1 - el.x0) * kx) > minFrameSize;
+        });
+      }
+      return nodeList;
+    }
 
     function update() {
+      selection.each(function(root) {
+        var x = d3.scaleLinear().range([0, w]),
+            y = d3.scaleLinear().range([0, c]);
 
-      selection.each(function(data) {
+        if (sort) root.sort(doSort);
+        root.sum(function(d) {
+          if (d.fade || d.hide) {
+            return 0;
+          }
+          // The node's self value is its total value minus all children.
+          var v = value(d);
+          if (children(d)) {
+            var c = children(d);
+            for (var i = 0; i < c.length; i++) {
+              v -= c[i].value;
+            }
+          }
+          return v;
+        });
+        partition(root);
 
-        var x = d3.scale.linear().range([0, w]),
-            y = d3.scale.linear().range([0, c]);
+        var kx = w / (root.x1 - root.x0);
+        function width(d) { return (d.x1 - d.x0) * kx; }
 
-        var nodes = partition(data);
-
-        var kx = w / data.dx;
-
-        var g = d3.select(this).select("svg").selectAll("g").data(nodes);
+        var descendants = filterNodes(root);
+        var g = d3.select(this).select("svg").selectAll("g").data(descendants, function(d) { return d.id; });
 
         g.transition()
           .duration(transitionDuration)
           .ease(transitionEase)
-          .attr("transform", function(d) { return "translate(" + x(d.x) + "," + (h - y(d.depth) - c) + ")"; });
+          .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + (reversed ? y(d.depth) : (h - y(d.depth) - c)) + ")"; });
 
-        g.select("rect").transition()
-          .duration(transitionDuration)
-          .ease(transitionEase)
-          .attr("width", function(d) { return d.dx * kx; });
+        g.select("rect")
+          .attr("width", width);
 
         var node = g.enter()
           .append("svg:g")
-          .attr("transform", function(d) { return "translate(" + x(d.x) + "," + (h - y(d.depth) - c) + ")"; });
+          .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + (reversed ? y(d.depth) : (h - y(d.depth) - c)) + ")"; });
 
         node.append("svg:rect")
-          .attr("width", function(d) { return d.dx * kx; });
+          .transition()
+          .delay(transitionDuration / 2)
+          .attr("width", width);
 
         if (!tooltip)
           node.append("svg:title");
@@ -236,80 +354,120 @@
         node.append("foreignObject")
           .append("xhtml:div");
 
-        g.attr("width", function(d) { return d.dx * kx; })
+        // Now we have to re-select to see the new elements (why?).
+        g = d3.select(this).select("svg").selectAll("g").data(descendants, function(d) { return d.id; });
+
+        g.attr("width", width)
           .attr("height", function(d) { return c; })
-          .attr("name", function(d) { return d.name; })
-          .attr("class", function(d) { return d.fade ? "frame fade" : "frame"; });
+          .attr("name", function(d) { return name(d); })
+          .attr("class", function(d) { return d.data.fade ? "frame fade" : "frame"; });
 
         g.select("rect")
           .attr("height", function(d) { return c; })
-          .attr("fill", function(d) {return d.highlight ? "#E600E6" : colorHash(d.name); })
-          .style("visibility", function(d) {return d.dummy ? "hidden" : "visible";});
+          .attr("fill", function(d) { return colorMapper(d); });
 
         if (!tooltip)
           g.select("title")
             .text(label);
 
         g.select("foreignObject")
-          .attr("width", function(d) { return d.dx * kx; })
+          .attr("width", width)
           .attr("height", function(d) { return c; })
           .select("div")
-          .attr("class", "label")
-          .style("display", function(d) { return (d.dx * kx < 35) || d.dummy ? "none" : "block";})
+          .attr("class", "d3-flame-graph-label")
+          .style("display", function(d) { return (width(d) < 35) ? "none" : "block";})
+          .transition()
+          .delay(transitionDuration)
           .text(name);
 
         g.on('click', zoom);
 
-
-
-        g.exit().remove();
+        g.exit()
+          .remove();
 
         g.on('mouseover', function(d) {
-          if (!d.dummy) {
-            if (tooltip) tip.show(d);
-            setDetails(label(d));
-          }
+          if (tooltip) tip.show(d);
+          setDetails(label(d));
         }).on('mouseout', function(d) {
-          if (!d.dummy) {
-            if (tooltip) tip.hide(d);
-            setDetails("");
-          }
+          if (tooltip) tip.hide(d);
+          setDetails("");
         });
       });
     }
 
-    function chart(s) {
+    function merge(data, samples) {
+      samples.forEach(function (sample) {
+        var node = data.find(function (element) {
+          return (element.name === sample.name);
+        });
 
-      selection = s;
+        if (node) {
+          if (node.original) {
+            node.original += sample.value;
+          } else {
+            node.value += sample.value;
+          }
+          if (sample.children) {
+            if (!node.children) {
+              node.children = [];
+            }
+            merge(node.children, sample.children);
+          }
+        } else {
+          data.push(sample);
+        }
+      });
+    }
+
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+
+    function injectIds(node) {
+      node.id = s4() + "-" + s4() + "-" + "-" + s4() + "-" + s4();
+      var children = node.c || node.children || [];
+      for (var i = 0; i < children.length; i++) {
+        injectIds(children[i]);
+      }
+    }
+
+    function chart(s) {
+      var root = d3.hierarchy(
+        s.datum(), function(d) { return children(d); }
+      );
+      injectIds(root);
+      selection = s.datum(root);
 
       if (!arguments.length) return chart;
 
+      if (!h) {
+        h = (root.height + 2) * c;
+      }
+
       selection.each(function(data) {
 
-        var svg = d3.select(this)
-          .append("svg:svg")
-          .attr("width", w)
-          .attr("height", h)
-          .attr("class", "partition d3-flame-graph")
-          .call(tip);
+        if (!svg) {
+          svg = d3.select(this)
+            .append("svg:svg")
+            .attr("width", w)
+            .attr("height", h)
+            .attr("class", "partition d3-flame-graph")
+            .call(tip);
 
-        svg.append("svg:text")
-          .attr("class", "title")
-          .attr("text-anchor", "middle")
-          .attr("y", "25")
-          .attr("x", w/2)
-          .attr("fill", "#808080")
-          .text(title);
-
-        augment(data);
-
-        // "creative" fix for node ordering when partition is called for the first time
-        partition(data);
-
-        // first draw
-        update();
-
+          svg.append("svg:text")
+            .attr("class", "title")
+            .attr("text-anchor", "middle")
+            .attr("y", "25")
+            .attr("x", w/2)
+            .attr("fill", "#808080")
+            .text(title);
+        }
       });
+
+      // first draw
+      update();
     }
 
     chart.height = function (_) {
@@ -335,7 +493,7 @@
       if (typeof _ === "function") {
         tip = _;
       }
-      tooltip = true;
+      tooltip = !!_;
       return chart;
     };
 
@@ -363,17 +521,25 @@
       return chart;
     };
 
+    chart.reversed = function (_) {
+      if (!arguments.length) { return reversed; }
+      reversed = _;
+      return chart;
+    };
+
     chart.label = function(_) {
-      if (!arguments.length) { return labelFormat; }
-      labelFormat = _;
+      if (!arguments.length) { return label; }
+      label = _;
       return chart;
     };
 
     chart.search = function(term) {
+      var searchResults = [];
       selection.each(function(data) {
-        searchTree(data, term);
+        searchResults = searchTree(data, term);
         update();
       });
+      return searchResults;
     };
 
     chart.clear = function() {
@@ -383,19 +549,60 @@
       });
     };
 
+    chart.zoomTo = function(d) {
+      zoom(d);
+    };
+
     chart.resetZoom = function() {
       selection.each(function (data) {
         zoom(data); // zoom to root
       });
     };
 
+    chart.onClick = function(_) {
+      if (!arguments.length) {
+        return clickHandler;
+      }
+      clickHandler = _;
+      return chart;
+    };
+
+    chart.merge = function(samples) {
+      var newRoot; // Need to re-create hierarchy after data changes.
+      selection.each(function (root) {
+        merge([root.data], [samples]);
+        newRoot = d3.hierarchy(root.data, function(d) { return children(d); });
+        injectIds(newRoot);
+      });
+      selection = selection.datum(newRoot);
+      update();
+    };
+
+    chart.color = function(_) {
+      if (!arguments.length) { return colorMapper; }
+      colorMapper = _;
+      return chart;
+    };
+
+    chart.minFrameSize = function (_) {
+      if (!arguments.length) { return minFrameSize; }
+      minFrameSize = _;
+      return chart;
+    };
+
+    chart.details = function (_) {
+      if (!arguments.length) { return details; }
+      details = _;
+      return chart;
+    };
+
     return chart;
   }
 
-  if (typeof module !== 'undefined' && module.exports){
-		module.exports = flameGraph;
-	}
-	else {
-		d3.flameGraph = flameGraph;
-	}
+  // Node/CommonJS exports
+  if (typeof(module) !== 'undefined' && typeof(exports) !== 'undefined') {
+    module.exports = flameGraph;
+  } else {
+    d3.flameGraph = flameGraph;
+  }
 })();

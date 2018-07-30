@@ -389,7 +389,7 @@ body .d3-flame-graph rect:hover {
     stroke-width: 1px;
 }
 /* Instead of stroke, change text color on hover */
-body .d3-flame-graph .frame:hover .label {
+body .d3-flame-graph .frame:hover .d3-flame-graph-label {
     color: #fff;
 }
 
