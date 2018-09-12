@@ -124,6 +124,9 @@ register_shutdown_function(
         // flush() asks PHP to send any data remaining in the output buffers. This is normally done when the script completes, but
         // since we're delaying that a bit by dealing with the xhprof stuff, we'll do it now to avoid making the user wait.
         ignore_user_abort(true);
+        if (function_exists('session_write_close')) {
+            session_write_close();
+        }
         flush();
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
