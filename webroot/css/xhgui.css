@@ -375,63 +375,6 @@ tr .no-results {
     color: black;
 }
 
-/**
- * FlameGraph
- *
- * Note: Uses "body" selector to make sure specificity is higher
- * than the original styles in d3.flameGraph.css.
- */
-
-/* Use white stroke instead of grey, to make them invisible on our background */
-body .d3-flame-graph rect,
-body .d3-flame-graph rect:hover {
-    stroke: #fff;
-    stroke-width: 1px;
-}
-/* Instead of stroke, change text color on hover */
-body .d3-flame-graph .frame:hover .label {
-    color: #fff;
-}
-
-.d3-flame-graph-tip {
-  line-height: 1;
-  padding: 12px;
-  background: #fff;
-  border-radius: 6px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  color: #000;
-  pointer-events: none;
-}
-
-/* Creates a small triangle extender for the tooltip */
-.d3-flame-graph-tip:before,
-.d3-flame-graph-tip:after {
-  pointer-events: none;
-  content: '';
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border-width: 11px;
-  border-color: transparent;
-  border-style: solid;
-  left: 50%;
-  z-index: 2;
-}
-.d3-flame-graph-tip:after {
-  border-bottom-color: #fff;
-  margin-left: -11px;
-  top: -22px;
-  z-index: 2;
-}
-.d3-flame-graph-tip:before {
-  border-width: 12px;
-  border-bottom-color: #999;
-  margin-left: -12px;
-  top: -24px;
-}
-
 
 /**
  * Run details
