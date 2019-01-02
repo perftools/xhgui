@@ -1,0 +1,18 @@
+{% extends 'layout/base.twig' %}
+{% import 'macros/helpers.twig' as helpers %}
+
+{% block title %}
+    - Delete all runs
+{% endblock %}
+
+{% block content %}
+<h1>Delete all runs</h1>
+
+<form class="form-stacked" action="{{ url('run.deleteAll.submit') }}" method="post">
+    <div class="hero-unit">
+        <p>Are you sure you want to delete all runs?</p>
+        <input class="btn btn-large btn-danger" type="submit" value="Delete all" />
+    </div>
+</form>
+
+{% endblock %}

@@ -193,7 +193,7 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
         $this->assertCount(4, $result['results']);
     }
 
-    public function testDeleteAll()
+    public function testDeleteAllSubmit()
     {
         loadFixture($this->profiles, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
 
@@ -212,7 +212,7 @@ class Controller_RunTest extends PHPUnit_Framework_TestCase
         $result = $this->profiles->getAll();
         $this->assertCount(5, $result['results']);
 
-        $this->runs->deleteAll();
+        $this->runs->deleteAllSubmit();
 
         $result = $this->profiles->getAll();
         $this->assertCount(0, $result['results']);
