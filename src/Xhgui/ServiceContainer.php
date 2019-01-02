@@ -32,6 +32,7 @@ class Xhgui_ServiceContainer extends Pimple
             // Configure Twig view for slim
             $view = new Twig();
 
+            $view->twigTemplateDirs = array(dirname(__DIR__) . '/templates');
             $view->parserOptions = array(
                 'charset' => 'utf-8',
                 'cache' => $cacheDir,
