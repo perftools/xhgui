@@ -19,7 +19,7 @@ System Requirements
 
 XHGui has the following requirements:
 
- * PHP version 5.5 or later.
+ * PHP version 5.6 or later.
  * [MongoDB Extension](http://pecl.php.net/package/mongodb) MongoDB PHP driver.
    XHGui requires verison 1.3.0 or later.
  * [MongoDB](http://www.mongodb.org/) MongoDB Itself. XHGui requires version 2.2.0 or later.

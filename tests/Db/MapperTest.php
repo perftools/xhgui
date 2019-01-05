@@ -1,6 +1,6 @@
 <?php
 
-class Db_MapperTest extends PHPUnit_Framework_TestCase
+class Db_MapperTest extends PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

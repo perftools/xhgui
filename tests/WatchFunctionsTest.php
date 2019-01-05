@@ -1,5 +1,5 @@
 <?php
-class WatchFunctionsTest extends PHPUnit_Framework_TestCase
+class WatchFunctionsTest extends PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
