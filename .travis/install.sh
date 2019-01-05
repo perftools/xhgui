@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 if [[ "$TRAVIS_PHP_VERSION" == "7.2" ]]; then
 	# installed, but not enabled?
@@ -22,5 +22,5 @@ fi
 phpize && ./configure && make && make install && cd ..
 phpenv rehash
 
-composer install --prefer-dist --dev
+composer install --prefer-dist
 chmod -R 0777 cache/

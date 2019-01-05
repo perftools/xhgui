@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 if [[ "$COVERAGE" == "1" ]]; then
   echo;
   echo "Running unit tests with code-coverage";
