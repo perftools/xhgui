@@ -124,7 +124,12 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $this->app->redirect($redirect);
     }
 
-    public function deleteAll()
+    public function deleteAllForm()
+    {
+        $this->_template = 'runs/delete-all-form.twig';
+    }
+
+    public function deleteAllSubmit()
     {
         $request = $this->app->request();
 
