@@ -2,7 +2,7 @@
 if [[ "$COVERAGE" == "1" ]]; then
   echo;
   echo "Running unit tests with code-coverage";
-  phpunit --coverage-clover=unittest-coverage.clover
+  composer cover
   echo;
   echo "Uploading code coverage results";
   wget https://scrutinizer-ci.com/ocular.phar
@@ -10,5 +10,5 @@ if [[ "$COVERAGE" == "1" ]]; then
 else
   echo;
   echo "Running unit tests";
-  phpunit
+  composer test
 fi

@@ -20,6 +20,10 @@
         "phpunit/phpunit": "4.*|5.*",
         "ext-dom": "*"
     },
+    "scripts": {
+        "test": "phpunit",
+        "cover": "phpunit --coverage-clover=unittest-coverage.clover"
+    },
     "suggest": {
         "ext-xhprof": "You need to install either xhprof or uprofiler to use XHGui.",
         "ext-uprofiler": "You need to install either xhprof or uprofiler to use XHGui.",
