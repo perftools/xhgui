@@ -1,6 +1,6 @@
 <?php
 
-class ProfileTest extends PHPUnit_Framework_TestCase
+class ProfileTest extends PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

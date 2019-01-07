@@ -2,7 +2,7 @@
 use Slim\Slim;
 use Slim\Environment;
 
-class Xhgui_Twig_ExtensionTest extends PHPUnit_Framework_TestCase
+class Xhgui_Twig_ExtensionTest extends PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

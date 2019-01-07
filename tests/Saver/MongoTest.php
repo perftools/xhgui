@@ -1,6 +1,6 @@
 <?php
 
-class Saver_MongoTest extends PHPunit_Framework_TestCase
+class Saver_MongoTest extends PHPUnit\Framework\TestCase
 {
     public function testSave()
     {

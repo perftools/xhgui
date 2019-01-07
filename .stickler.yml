@@ -1,6 +1,7 @@
 linters:
   phpcs:
     standard: PSR2
+    exclude: 'Squiz.Classes.ValidClassName,PSR1.Classes.ClassDeclaration'
   csslint:
     ignore: 'ids,known-properties'
 files:

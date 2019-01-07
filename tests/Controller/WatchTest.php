@@ -1,7 +1,7 @@
 <?php
 use Slim\Environment;
 
-class Controller_WatchTest extends PHPUnit_Framework_TestCase
+class Controller_WatchTest extends PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

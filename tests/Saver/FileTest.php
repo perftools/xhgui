@@ -1,6 +1,6 @@
 <?php
 
-class Saver_FileTest extends PHPUnit_Framework_TestCase
+class Saver_FileTest extends PHPUnit\Framework\TestCase
 {
     public function testSave()
     {
