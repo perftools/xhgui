@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit colors="true" bootstrap="./tests/bootstrap.php">
-    <!-- blacklist the tests and vendor directory from code coverage-->
-    <filter>
-        <blacklist>
-            <directory suffix=".php">./web/vendor</directory>
-        </blacklist>
-    </filter>
-
     <testsuites>
-        <testsuite name="All" suffix="Test.php">
-            <directory>./tests</directory>
+        <testsuite>
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
 </phpunit>
