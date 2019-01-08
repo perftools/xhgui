@@ -73,7 +73,7 @@
             <td class="right">{{ result.get('main()', 'mu') |as_bytes }}</td>
             <td class="right">{{ result.get('main()', 'pmu') |as_bytes }}</td>
             <td>
-                <a href="{{ url('run.delete', {'id': result.id|trim }) }}">
+                <a href="{{ url('run.delete.form', {'id': result.id|trim }) }}">
                     <i class="icon-trash"></i>
                 </a>
             </td>

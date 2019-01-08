@@ -31,8 +31,13 @@ $app->get('/run/view', function () use ($di, $app) {
 })->name('run.view');
 
 $app->get('/run/delete', function () use ($di, $app) {
-    $di['runController']->delete();
-})->name('run.delete');
+    $app->controller = $di['runController'];
+    $app->controller->deleteForm();
+})->name('run.delete.form');
+
+$app->post('/run/delete', function () use ($di, $app) {
+    $di['runController']->deleteSubmit();
+})->name('run.delete.submit');
 
 $app->get('/run/delete_all', function () use ($di, $app) {
     $app->controller = $di['runController'];

@@ -1,0 +1,35 @@
+{% extends 'layout/base.twig' %}
+
+{% block title %}
+    - Delete a run
+{% endblock %}
+
+{% block content %}
+<h1>Delete a run</h1>
+
+<form class="form-stacked" action="{{ url('run.delete.submit') }}" method="post">
+    <p>Are you sure you want to delete <a href="{{ url('run.view', {'id': result.id|trim }) }}">run {{ result.id }}</a>?</p>
+    <table class="table table-hover">
+        <tr>
+            <th class="span2">Method</th>
+            <td>{{result.meta('SERVER.REQUEST_METHOD')}}</td>
+        </tr>
+        <tr>
+            <th class="span2">URL</th>
+            <td>
+                {% set addr = result.meta('SERVER.SERVER_NAME') ~ result.meta.url %}
+                {{ addr }}
+            </td>
+        </tr>
+        <tr>
+            <th class="span2">Time</th>
+            <td>{{ result.date|date(date_format) }}</td>
+        </tr>
+    </table>
+    <div class="form-actions">
+        <input type="hidden" name="id" value="{{ run_id }}" />
+        <input class="btn btn-large btn-danger" type="submit" value="Delete run" />
+    </div>
+</form>
+
+{% endblock %}

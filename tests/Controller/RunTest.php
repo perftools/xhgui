@@ -167,14 +167,17 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
         $this->assertStringStartsWith('{"', $response->body());
     }
 
-    public function testDelete()
+    public function testDeleteSubmit()
     {
         loadFixture($this->profiles, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
 
         Environment::mock(array(
+            'REQUEST_METHOD' => 'POST',
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/delete',
-            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
+            'slim.request.form_hash' => [
+                'id' => 'aaaaaaaaaaaaaaaaaaaaaaaa',
+            ],
         ));
 
         $this->app->expects($this->once())
@@ -187,7 +190,7 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
         $result = $this->profiles->getAll();
         $this->assertCount(5, $result['results']);
 
-        $this->runs->delete();
+        $this->runs->deleteSubmit();
 
         $result = $this->profiles->getAll();
         $this->assertCount(4, $result['results']);

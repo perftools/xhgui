@@ -271,7 +271,7 @@ class Xhgui_Profiles
     /**
      * Delete a profile run.
      *
-     * @param $id The profile id to delete.
+     * @param string $id The profile id to delete.
      * @return array|bool
      */
     public function delete($id)
