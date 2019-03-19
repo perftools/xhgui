@@ -1,0 +1,10 @@
+# https://docs.docker.com/engine/reference/builder/#dockerignore-file
+# exclude all, whitelist only wanted context
+/*
+!/composer.*
+!/config/
+!/docker/
+!/external/
+!/src/
+!/vendor/
+!/webroot/

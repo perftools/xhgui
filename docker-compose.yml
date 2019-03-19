@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  app:
+    build: .
+
+  web:
+    image: nginx:1
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8142:80"
+
+  mongo:
+    image: percona/percona-server-mongodb:3.6
+    # (case sensitive) engine: mmapv1, rocksdb, wiredTiger, inMemory
+    command: --storageEngine=wiredTiger
+
+# vim:ts=2:sw=2:et
