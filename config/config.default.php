@@ -29,7 +29,7 @@ return array(
     //               for example 'username', 'password', or 'replicaSet'.
     //               See <https://secure.php.net/mongoclient_construct#options>.
     //
-    'db.host' => 'mongodb://127.0.0.1:27017',
+    'db.host' => getenv('XHGUI_MONGO_HOST') ?: 'mongodb://127.0.0.1:27017',
     'db.db' => 'xhprof',
     'db.options' => array(),
 

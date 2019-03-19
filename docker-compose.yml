@@ -3,6 +3,8 @@ version: "3.7"
 services:
   app:
     build: .
+    environment:
+      - XHGUI_MONGO_HOST=mongodb://mongo:27017
 
   web:
     image: nginx:1
