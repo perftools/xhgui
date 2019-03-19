@@ -3,6 +3,8 @@ version: "3.7"
 services:
   app:
     build: .
+    volumes:
+      - ./config:/var/www/xhgui/config
     environment:
       - XHGUI_MONGO_HOST=mongodb://mongo:27017
 
