@@ -6,7 +6,7 @@
 FROM php:7.3-fpm-alpine AS base
 
 RUN set -x \
-    && apk add --update --no-cache --virtual .build-deps ${PHPIZE_DEPS} \
+    && apk add --no-cache --virtual .build-deps ${PHPIZE_DEPS} \
 	&& pecl install mongodb && docker-php-ext-enable mongodb \
     && apk del .build-deps
 
