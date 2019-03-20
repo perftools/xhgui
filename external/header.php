@@ -128,12 +128,13 @@ register_shutdown_function(
             session_write_close();
         }
         flush();
-        if (function_exists('fastcgi_finish_request')) {
-            fastcgi_finish_request();
-        }
 
         if (!defined('XHGUI_ROOT_DIR')) {
-            require dirname(dirname(__FILE__)) . '/src/bootstrap.php';
+            require dirname(__DIR__) . '/src/bootstrap.php';
+        }
+
+        if (Xhgui_Config::read('fastcgi_finish_request') && function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
         }
 
         $uri = array_key_exists('REQUEST_URI', $_SERVER)
