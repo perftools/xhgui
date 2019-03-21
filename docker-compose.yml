@@ -8,6 +8,7 @@ services:
       - ./config:/var/www/xhgui/config
     environment:
       - XHGUI_MONGO_HOST=mongodb://mongo:27017
+      - XHGUI_MONGO_DATABASE=xhprof
 
   web:
     image: nginx:1
@@ -22,7 +23,7 @@ services:
     # (case sensitive) engine: mmapv1, rocksdb, wiredTiger, inMemory
     command: --storageEngine=wiredTiger
     environment:
-      - MONGO_INITDB_DATABASE=xhgui
+      - MONGO_INITDB_DATABASE=xhprof
     volumes:
       - ./mongo.init.d:/docker-entrypoint-initdb.d
       - mongodb:/data/db

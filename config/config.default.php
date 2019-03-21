@@ -30,7 +30,7 @@ return array(
     //               See <https://secure.php.net/mongoclient_construct#options>.
     //
     'db.host' => getenv('XHGUI_MONGO_HOST') ?: 'mongodb://127.0.0.1:27017',
-    'db.db' => 'xhprof',
+    'db.db' => getenv('XHGUI_MONGO_DATABASE') ?: 'xhprof',
     'db.options' => array(),
 
     // Whether to instrument a user request.
