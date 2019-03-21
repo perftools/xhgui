@@ -42,6 +42,9 @@ return array(
     'detail.count' => 6,
     'page.limit' => 25,
 
+    // call fastcgi_finish_request() in shutdown handler
+    'fastcgi_finish_request' => true,
+
     // Profile x in 100 requests. (E.g. set XHGUI_PROFLING_RATIO=50 to profile 50% of requests)
     // You can return true to profile every request.
     'profiler.enable' => function() {
