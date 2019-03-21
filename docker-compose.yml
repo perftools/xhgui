@@ -21,7 +21,10 @@ services:
     image: percona/percona-server-mongodb:3.6
     # (case sensitive) engine: mmapv1, rocksdb, wiredTiger, inMemory
     command: --storageEngine=wiredTiger
+    environment:
+      - MONGO_INITDB_DATABASE=xhgui
     volumes:
+      - ./mongo.init.d:/docker-entrypoint-initdb.d
       - mongodb:/data/db
     ports:
       - "27017:27017"
