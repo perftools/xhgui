@@ -21,10 +21,13 @@ services:
     image: percona/percona-server-mongodb:3.6
     # (case sensitive) engine: mmapv1, rocksdb, wiredTiger, inMemory
     command: --storageEngine=wiredTiger
+    volumes:
+      - mongodb:/data/db
     ports:
       - "27017:27017"
 
 volumes:
   webroot-share:
+  mongodb:
 
 # vim:ts=2:sw=2:et
