@@ -145,8 +145,8 @@ register_shutdown_function(
             $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
         }
         
-        if (function_exists('custom_validate_url')) {
-            $uri = custom_validate_url($uri);
+        if (function_exists('custom_clean_url')) {
+            $uri = custom_clean_url($uri);
         }
 
         $time = array_key_exists('REQUEST_TIME', $_SERVER)
