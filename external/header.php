@@ -144,6 +144,10 @@ register_shutdown_function(
             $cmd = basename($_SERVER['argv'][0]);
             $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
         }
+        
+        if (function_exists('custom_validate_url')) {
+            $uri = custom_validate_url($uri);
+        }
 
         $time = array_key_exists('REQUEST_TIME', $_SERVER)
             ? $_SERVER['REQUEST_TIME']
