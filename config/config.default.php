@@ -55,6 +55,10 @@ return array(
     'profiler.simple_url' => function($url) {
         return preg_replace('/\=\d+/', '', $url);
     },
+    
+    //'profiler.replace_url' => function($url) {
+    //    return str_replace('token', '', $url);
+    //},
 
     'profiler.options' => array(),
 );
