@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  app:
+    build: .
+    volumes:
+      - webroot-share:/var/www/xhgui/webroot
+      - ./config:/var/www/xhgui/config
+    environment:
+      - XHGUI_MONGO_HOST=mongodb://mongo:27017
+      - XHGUI_MONGO_DATABASE=xhprof
+
+  web:
+    image: nginx:1
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - webroot-share:/var/www/xhgui/webroot
+    ports:
+      - "8142:80"
+
+  mongo:
+    image: percona/percona-server-mongodb:3.6
+    # (case sensitive) engine: mmapv1, rocksdb, wiredTiger, inMemory
+    command: --storageEngine=wiredTiger
+    environment:
+      - MONGO_INITDB_DATABASE=xhprof
+    volumes:
+      - ./mongo.init.d:/docker-entrypoint-initdb.d
+      - mongodb:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  webroot-share:
+  mongodb:
+
+# vim:ts=2:sw=2:et

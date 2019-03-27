@@ -30,10 +30,10 @@ XHGui has the following requirements:
    you'll need the DOM extension (which is a dependency of PHPUnit).
 
 
-Installation
-============
+Installation from source
+========================
 
-1. Clone or download `xhgui` from Github.
+1. Clone or download `xhgui` from GitHub.
 
 2. Point your webserver to the `webroot` directory.
 
@@ -84,6 +84,23 @@ Installation
 
 8. Set up your webserver. The Configuration section below describes how
    to setup the rewrite rules for both nginx and apache.
+
+Installation with Docker
+========================
+
+This setup uses [docker-compose] to orchestrate docker containers.
+
+1. Clone or download `xhgui` from GitHub.
+
+2. Startup the containers: `docker-compose up -d`
+
+3. Open your browser at http://xhgui.127.0.0.1.xip.io:8142 or just http://localhost:8142
+
+4. To customize xhgui, copy `config/config.default.php` to `config/config.php` and edit that file.
+
+5. To customize docker-compose, copy `docker-compose.yml` to `docker-compose.override.yml` and edit that file.
+
+[docker-compose]: https://docs.docker.com/compose/
 
 Configuration
 =============

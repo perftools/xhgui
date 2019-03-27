@@ -29,8 +29,8 @@ return array(
     //               for example 'username', 'password', or 'replicaSet'.
     //               See <https://secure.php.net/mongoclient_construct#options>.
     //
-    'db.host' => 'mongodb://127.0.0.1:27017',
-    'db.db' => 'xhprof',
+    'db.host' => getenv('XHGUI_MONGO_HOST') ?: 'mongodb://127.0.0.1:27017',
+    'db.db' => getenv('XHGUI_MONGO_DATABASE') ?: 'xhprof',
     'db.options' => array(),
 
     // Whether to instrument a user request.
