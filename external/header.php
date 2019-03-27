@@ -144,6 +144,11 @@ register_shutdown_function(
             $cmd = basename($_SERVER['argv'][0]);
             $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
         }
+        
+        $replace_url = Xhgui_Config::read('profiler.replace_url');
+        if (is_callable($replace_url)) {
+            $uri = $replace_url($uri);
+        }
 
         $time = array_key_exists('REQUEST_TIME', $_SERVER)
             ? $_SERVER['REQUEST_TIME']
