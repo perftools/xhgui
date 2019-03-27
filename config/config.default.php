@@ -64,6 +64,10 @@ return array(
     // Default: Remove numeric values after `=`. For example,
     // it turns "/foo?page=2" into "/foo?page".
     'profiler.simple_url' => null,
+    
+    // Enable to clean up the url saved to the DB
+    // in this way is possible to remove sensitive data or other kind of data
+    'profiler.replace_url' => null,
 
     // Additional options to be passed to the `_enable()` function
     // of the profiler extension (xhprof, tideways, etc.).
