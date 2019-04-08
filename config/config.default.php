@@ -33,7 +33,7 @@ return array(
     'db.db' => getenv('XHGUI_MONGO_DATABASE') ?: 'xhprof',
     'db.options' => array(),
     'run.view.filter.names' => array(
-        'Polylang*',
+        'Zend*',
         'Composer*',
     ),
 
