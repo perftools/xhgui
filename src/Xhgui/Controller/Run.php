@@ -125,7 +125,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $request = $this->app->request();
         $filterString = $request->get(self::FILTER_ARGUMENT_NAME);
         if (strlen($filterString)) {
-            $filters = array_map('trim',explode(',', $filterString));
+            $filters = array_map('trim', explode(',', $filterString));
         } else {
             $filters = $this->app->config('run.view.filter.names');
         }

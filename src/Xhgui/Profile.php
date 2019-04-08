@@ -413,9 +413,9 @@ class Xhgui_Profile
         };
         
         $profileData = array_filter($profileData, $filter, ARRAY_FILTER_USE_BOTH);
-        foreach( $filters as $key => $item ) {
-            foreach( $profileData as $key_item => $method ) {
-                if ( fnmatch($item, $key_item) ) {
+        foreach($filters as $key => $item) {
+            foreach($profileData as $key_item => $method) {
+                if (fnmatch($item, $key_item)) {
                     unset($profileData[ $key_item ]);
                 }
             }
