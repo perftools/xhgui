@@ -407,39 +407,15 @@ class Xhgui_Profile
      */
     public function filter($profileData, $filters = [])
     {
-        $filter = function ($item, $key) use ($filters) {
-            $nameToFilter = $this->getNameToFilter($key);
-            return !in_array($nameToFilter, $filters);
-        };
-        
-        $profileData = array_filter($profileData, $filter, ARRAY_FILTER_USE_BOTH);
         foreach ($filters as $key => $item) {
-            foreach ($profileData as $key_item => $method) {
-                if (fnmatch($item, $key_item)) {
-                    unset($profileData[ $key_item ]);
+            foreach ($profileData as $keyItem => $method) {
+                if (fnmatch($item, $keyItem)) {
+                    unset($profileData[ $keyItem ]);
                 }
             }
         }
+        
         return $profileData;
-    }
-
-    /**
-     * @param $name
-     *
-     * @return bool|string
-     */
-    protected function getNameToFilter($name)
-    {
-        $length = strpos($name, '\\', 1);
-        if (!$length) {
-            $length = strpos($name, '_', 1);
-        }
-        if (!$length) {
-            $length = strlen($name);
-        }
-        $nameToFilter = substr($name, 0, $length);
-
-        return $nameToFilter;
     }
 
     /**
