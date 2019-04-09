@@ -67,7 +67,7 @@
               <a href="{{ url('run.view', {'id': result.id|trim }) }}">
                 {{ result.date|date(date_format) }}
               </a> 
-              <a href="{{ url('run.view', {'id': result.id|trim, 'filter': false }) }}">
+              <a href="{{ url('run.view', {'id': result.id|trim, 'filter': true }) }}">
                 [filter]
               </a>
             </td>
