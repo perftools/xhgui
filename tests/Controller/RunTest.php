@@ -20,6 +20,7 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
         $di['app'] = $di->share(function ($c) use ($mock) {
             return $mock;
         });
+        $this->import = $di['importController'];
         $this->runs = $di['runController'];
         $this->app = $di['app'];
         $this->profiles = $di['profiles'];
@@ -219,5 +220,37 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
 
         $result = $this->profiles->getAll();
         $this->assertCount(0, $result['results']);
+    }
+
+    public function testFilterCustomMethods()
+    {
+        loadFixture($this->profiles, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        
+        Environment::mock(array(
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/run/view',
+            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*',
+        ));
+        
+        $this->runs->view();
+        $result = $this->runs->templateVars();
+        
+        $this->assertCount(1, $result['profile']);
+    }
+
+    public function testFilterMethods()
+    {
+        loadFixture($this->profiles, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        
+        Environment::mock(array(
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/run/view',
+            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=true',
+        ));
+        
+        $this->runs->view();
+        $result = $this->runs->templateVars();
+        
+        $this->assertCount(1, $result['profile']);
     }
 }
