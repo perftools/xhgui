@@ -229,13 +229,29 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
         Environment::mock(array(
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
-            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*',
+            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*,strpos()',
         ));
         
         $this->runs->view();
         $result = $this->runs->templateVars();
         
         $this->assertCount(1, $result['profile']);
+    }
+    
+    public function testFilterCustomMethod()
+    {
+        loadFixture($this->profiles, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        
+        Environment::mock(array(
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/run/view',
+            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*',
+        ));
+        
+        $this->runs->view();
+        $result = $this->runs->templateVars();
+        
+        $this->assertCount(2, $result['profile']);
     }
 
     public function testFilterMethods()
@@ -251,6 +267,6 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
         $this->runs->view();
         $result = $this->runs->templateVars();
         
-        $this->assertCount(1, $result['profile']);
+        $this->assertCount(2, $result['profile']);
     }
 }
