@@ -398,6 +398,25 @@ class Xhgui_Profile
         uasort($data, $sorter);
         return $data;
     }
+    
+    /**
+     * @param array $profileData
+     * @param array $filters
+     *
+     * @return array
+     */
+    public function filter($profileData, $filters = [])
+    {
+        foreach ($filters as $key => $item) {
+            foreach ($profileData as $keyItem => $method) {
+                if (fnmatch($item, $keyItem)) {
+                    unset($profileData[ $keyItem ]);
+                }
+            }
+        }
+        
+        return $profileData;
+    }
 
     /**
      * Split a key name into the parent==>child format.
