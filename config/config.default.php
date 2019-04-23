@@ -35,10 +35,10 @@ return array(
     'db.db' => $mongoDb,
 
     'pdo' => array(
-        'dsn' => 'sqlite:/home/marcel/xhgui.sqlite3',
+        'dsn' => 'sqlite:/tmp/xhgui.sqlite3',
         'user' => null,
         'pass' => null,
-        'table' => 'runz'
+        'table' => 'results'
     ),
 
     // Allows you to pass additional options like replicaSet to MongoClient.
