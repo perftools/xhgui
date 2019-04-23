@@ -16,7 +16,7 @@
     "require": {
         "php": ">=5.3.0",
         "alcaeus/mongo-php-adapter": "^1.0",
-        "paragonie/random_compat": "^2.0"
+        "paragonie/random_compat": ">=2.0"
     },
     "suggest": {
         "ext-xhprof": "You need to install either xhprof or uprofiler to use XHGui.",
