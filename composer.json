@@ -14,7 +14,8 @@
         }
     },
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=5.3.0",
+        "paragonie/random_compat": ">=2.0"
     },
     "suggest": {
         "ext-xhprof": "You need to install either xhprof or uprofiler to use XHGui.",
@@ -22,6 +23,7 @@
         "ext-mongo": "Mongo is needed to store profiler results for PHP < 7.",
         "ext-mongodb": "Mongo is needed to store profiler results for PHP > 7.",
         "ext-curl": "You need to install the curl extension to upload saved files",
+        "ext-pdo": "You need to install the pdo extension to store profiler results to a relational database",
         "alcaeus/mongo-php-adapter": "Mongo PHP Adapter is required for PHP >7 (when using ext-mongodb)"
     }
 }

@@ -34,6 +34,13 @@ return array(
     'db.host' => sprintf('mongodb://%s', $mongoUri),
     'db.db' => $mongoDb,
 
+    'pdo' => array(
+        'dsn' => 'sqlite:/tmp/xhgui.sqlite3',
+        'user' => null,
+        'pass' => null,
+        'table' => 'results'
+    ),
+
     // Allows you to pass additional options like replicaSet to MongoClient.
     // 'username', 'password' and 'db' (where the user is added)
     'db.options' => array(),

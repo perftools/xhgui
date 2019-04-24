@@ -161,13 +161,8 @@ register_shutdown_function(
             $requestTimeFloat[1] = 0;
         }
 
-        if (Xhgui_Config::read('save.handler') === 'mongodb') {
-            $requestTs = new MongoDate($time);
-            $requestTsMicro = new MongoDate($requestTimeFloat[0], $requestTimeFloat[1]);
-        } else {
-            $requestTs = array('sec' => $time, 'usec' => 0);
-            $requestTsMicro = array('sec' => $requestTimeFloat[0], 'usec' => $requestTimeFloat[1]);
-        }
+        $requestTs = array('sec' => $time, 'usec' => 0);
+        $requestTsMicro = array('sec' => $requestTimeFloat[0], 'usec' => $requestTimeFloat[1]);
 
         $data['meta'] = array(
             'url' => $uri,
