@@ -19,6 +19,13 @@ return array(
     //
     'save.handler' => 'mongodb',
 
+    'pdo' => array(
+        'dsn' => null,
+        'user' => null,
+        'pass' => null,
+        'table' => 'results'
+    ),
+
     // Database options for MongoDB.
     //
     // - db.host: Connection string in the form `mongodb://[ip or host]:[port]`.
@@ -68,7 +75,7 @@ return array(
     // Default: Remove numeric values after `=`. For example,
     // it turns "/foo?page=2" into "/foo?page".
     'profiler.simple_url' => null,
-    
+
     // Enable to clean up the url saved to the DB
     // in this way is possible to remove sensitive data or other kind of data
     'profiler.replace_url' => null,

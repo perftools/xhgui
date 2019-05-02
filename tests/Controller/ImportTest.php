@@ -23,7 +23,7 @@ class Controller_ImportTest extends PHPUnit\Framework\TestCase
         $this->import = $di['importController'];
         $this->app = $di['app'];
 
-        $this->profiles = $di['profiles'];
+        $this->profiles = $di['searcher.mongo'];
         $this->profiles->truncate();
     }
 
@@ -36,7 +36,9 @@ class Controller_ImportTest extends PHPUnit\Framework\TestCase
                 'get' => [],
                 'env' => [],
                 'SERVER' => ['REQUEST_TIME' => 1358787612],
-                'request_date' => '2013-01-21'
+                'request_date' => '2013-01-21',
+                'request_ts' => ['sec' => 1358787612, 'usec' => 0],
+                'request_ts_micro' => ['sec' => 1358787612, 'usec' => 123456]
             ],
             'profile' => [
                 "main()" => [

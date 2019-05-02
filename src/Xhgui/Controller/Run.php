@@ -8,22 +8,16 @@ class Xhgui_Controller_Run extends Xhgui_Controller
      * HTTP GET attribute name for comma separated filters
      */
     const FILTER_ARGUMENT_NAME = 'filter';
-    
-    /**
-     * @var Xhgui_Profiles
-     */
-    private $profiles;
 
     /**
-     * @var Xhgui_WatchFunctions
+     * @var Xhgui_Searcher_Interface
      */
-    private $watches;
+    private $searcher;
 
-    public function __construct(Slim $app, Xhgui_Profiles $profiles, Xhgui_WatchFunctions $watches)
+    public function __construct(Slim $app, Xhgui_Searcher_Interface $searcher)
     {
-        $this->app = $app;
-        $this->profiles = $profiles;
-        $this->watches = $watches;
+        parent::__construct($app);
+        $this->searcher = $searcher;
     }
 
     public function index()
@@ -39,7 +33,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         }
         $sort = $request->get('sort');
 
-        $result = $this->profiles->getAll(array(
+        $result = $this->searcher->getAll(array(
             'sort' => $sort,
             'page' => $request->get('page'),
             'direction' => $request->get('direction'),
@@ -81,7 +75,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     {
         $request = $this->app->request();
         $detailCount = $this->app->config('detail.count');
-        $result = $this->profiles->get($request->get('id'));
+        $result = $this->searcher->get($request->get('id'));
 
         $result->calculateSelf();
 
@@ -93,7 +87,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
         // Watched Functions Block
         $watchedFunctions = array();
-        foreach ($this->watches->getAll() as $watch) {
+        foreach ($this->searcher->getAllWatches() as $watch) {
             $matches = $result->getWatched($watch['name']);
             if ($matches) {
                 $watchedFunctions = array_merge($watchedFunctions, $matches);
@@ -116,7 +110,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'date_format' => $this->app->config('date.format'),
         ));
     }
-    
+
     /**
      * @return array
      */
@@ -129,7 +123,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         } else {
             $filters = $this->app->config('run.view.filter.names');
         }
-        
+
         return $filters;
     }
 
@@ -142,7 +136,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         }
 
         // Get details
-        $result = $this->profiles->get($id);
+        $result = $this->searcher->get($id);
 
         $this->_template = 'runs/delete-form.twig';
         $this->set(array(
@@ -164,7 +158,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         }
 
         // Delete the profile run.
-        $delete = $this->profiles->delete($id);
+        $this->searcher->delete($id);
 
         $this->app->flash('success', 'Deleted profile ' . $id);
 
@@ -178,10 +172,8 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
     public function deleteAllSubmit()
     {
-        $request = $this->app->request();
-
         // Delete all profile runs.
-        $delete = $this->profiles->truncate();
+        $this->searcher->truncate();
 
         $this->app->flash('success', 'Deleted all profiles');
 
@@ -204,17 +196,20 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             $search[$key] = $request->get($key);
         }
 
-        $runs = $this->profiles->getForUrl(
+        $runs = $this->searcher->getForUrl(
             $request->get('url'),
             $pagination,
             $search
         );
 
-        if (isset($search['limit_custom']) && strlen($search['limit_custom']) > 0 && $search['limit_custom'][0] == 'P') {
+        if (isset($search['limit_custom']) &&
+            strlen($search['limit_custom']) > 0 &&
+            $search['limit_custom'][0] === 'P'
+        ) {
             $search['limit'] = $search['limit_custom'];
         }
 
-        $chartData = $this->profiles->getPercentileForUrl(
+        $chartData = $this->searcher->getPercentileForUrl(
             90,
             $request->get('url'),
             $search
@@ -247,7 +242,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $paging = array();
 
         if ($request->get('base')) {
-            $baseRun = $this->profiles->get($request->get('base'));
+            $baseRun = $this->searcher->get($request->get('base'));
         }
 
         if ($baseRun && !$request->get('head')) {
@@ -257,7 +252,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
                 'page' => $request->get('page'),
                 'perPage' => $this->app->config('page.limit'),
             );
-            $candidates = $this->profiles->getForUrl(
+            $candidates = $this->searcher->getForUrl(
                 $baseRun->getMeta('simple_url'),
                 $pagination
             );
@@ -271,7 +266,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         }
 
         if ($request->get('head')) {
-            $headRun = $this->profiles->get($request->get('head'));
+            $headRun = $this->searcher->get($request->get('head'));
         }
 
         if ($baseRun && $headRun) {
@@ -301,7 +296,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $id = $request->get('id');
         $symbol = $request->get('symbol');
 
-        $profile = $this->profiles->get($id);
+        $profile = $this->searcher->get($id);
         $profile->calculateSelf();
         list($parents, $current, $children) = $profile->getRelatives($symbol);
 
@@ -324,7 +319,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $symbol = $request->get('symbol');
         $metric = $request->get('metric');
 
-        $profile = $this->profiles->get($id);
+        $profile = $this->searcher->get($id);
         $profile->calculateSelf();
         list($parents, $current, $children) = $profile->getRelatives($symbol, $metric, $threshold);
 
@@ -342,7 +337,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     public function callgraph()
     {
         $request = $this->app->request();
-        $profile = $this->profiles->get($request->get('id'));
+        $profile = $this->searcher->get($request->get('id'));
 
         $this->_template = 'runs/callgraph.twig';
         $this->set(array(
@@ -355,7 +350,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     {
         $request = $this->app->request();
         $response = $this->app->response();
-        $profile = $this->profiles->get($request->get('id'));
+        $profile = $this->searcher->get($request->get('id'));
         $metric = $request->get('metric') ?: 'wt';
         $threshold = (float)$request->get('threshold') ?: 0.01;
         $callgraph = $profile->getCallgraph($metric, $threshold);
@@ -368,7 +363,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     {
         $request = $this->app->request();
         $response = $this->app->response();
-        $profile = $this->profiles->get($request->get('id'));
+        $profile = $this->searcher->get($request->get('id'));
         $metric = $request->get('metric') ?: 'wt';
         $threshold = (float)$request->get('threshold') ?: 0.01;
         $callgraph = $profile->getCallgraphNodes($metric, $threshold);

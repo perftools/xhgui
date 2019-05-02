@@ -1,49 +1,30 @@
 <?php
-class ProfilesTest extends PHPUnit\Framework\TestCase
+
+class MongoTest extends PHPUnit\Framework\TestCase
 {
+    /**
+     * @var Xhgui_Searcher_Mongo
+     */
+    private $mongo;
+
     public function setUp()
     {
         $di = Xhgui_ServiceContainer::instance();
-        $this->profiles = $di['profiles'];
-        loadFixture($this->profiles, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        $this->mongo = $di['searcher.mongo'];
+
+        $di['db']->watches->drop();
+
+        loadFixture($di['saver.mongo'], XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
     }
 
-    public function testPagination()
+    public function testCustomQuery()
     {
-        $options = array(
-            'page' => 1,
-            'sort' => 'wt',
-        );
-        $result = $this->profiles->paginate($options);
-        $this->assertEquals(25, $result['perPage'], 'default works');
-        $this->assertEquals(1, $result['page']);
-        $this->assertEquals(
-            array('profile.main().wt' => -1),
-            $result['sort']
-        );
-    }
+        $conditions = ['meta.simple_url' => '/tasks'];
 
-    public function testPaginateInvalidSort()
-    {
-        $options = array(
-            'page' => 1,
-            'sort' => 'barf',
-        );
-        $result = $this->profiles->paginate($options);
-        $this->assertEquals(
-            array('meta.SERVER.REQUEST_TIME' => -1),
-            $result['sort']
-        );
-    }
+        $results = $this->mongo->query($conditions, 10);
 
-    public function testPaginateOutOfRangePage()
-    {
-        $options = array(
-            'page' => 9000,
-            'sort' => 'barf',
-        );
-        $result = $this->profiles->paginate($options);
-        $this->assertEquals(1, $result['page']);
+        $this->assertTrue(is_array($results));
+        $this->assertCount(3, $results);
     }
 
     public function testGetForUrl()
@@ -51,7 +32,7 @@ class ProfilesTest extends PHPUnit\Framework\TestCase
         $options = array(
             'perPage' => 1
         );
-        $result = $this->profiles->getForUrl('/', $options);
+        $result = $this->mongo->getForUrl('/', $options);
         $this->assertEquals(1, $result['page']);
         $this->assertEquals(2, $result['totalPages']);
         $this->assertEquals(1, $result['perPage']);
@@ -59,7 +40,7 @@ class ProfilesTest extends PHPUnit\Framework\TestCase
         $this->assertCount(1, $result['results']);
         $this->assertInstanceOf('Xhgui_Profile', $result['results'][0]);
 
-        $result = $this->profiles->getForUrl('/not-there', $options);
+        $result = $this->mongo->getForUrl('/not-there', $options);
         $this->assertCount(0, $result['results']);
     }
 
@@ -72,7 +53,7 @@ class ProfilesTest extends PHPUnit\Framework\TestCase
             'date_start' => '2013-01-17',
             'date_end' => '2013-01-18',
         );
-        $result = $this->profiles->getForUrl('/', $options, $search);
+        $result = $this->mongo->getForUrl('/', $options, $search);
         $this->assertEquals(1, $result['page']);
         $this->assertEquals(1, $result['totalPages']);
         $this->assertEquals(2, $result['perPage']);
@@ -82,13 +63,13 @@ class ProfilesTest extends PHPUnit\Framework\TestCase
             'date_start' => '2013-01-01',
             'date_end' => '2013-01-02',
         );
-        $result = $this->profiles->getForUrl('/', $options, $search);
+        $result = $this->mongo->getForUrl('/', $options, $search);
         $this->assertCount(0, $result['results']);
     }
 
     public function testGetAvgsForUrl()
     {
-        $result = $this->profiles->getAvgsForUrl('/');
+        $result = $this->mongo->getAvgsForUrl('/');
         $this->assertCount(2, $result);
 
         $this->assertArrayHasKey('avg_wt', $result[0]);
@@ -103,7 +84,7 @@ class ProfilesTest extends PHPUnit\Framework\TestCase
     public function testGetAvgsForUrlWithSearch()
     {
         $search = array('date_start' => '2013-01-18', 'date_end' => '2013-01-18');
-        $result = $this->profiles->getAvgsForUrl('/', $search);
+        $result = $this->mongo->getAvgsForUrl('/', $search);
         $this->assertCount(1, $result);
 
         $this->assertArrayHasKey('avg_wt', $result[0]);
@@ -117,7 +98,7 @@ class ProfilesTest extends PHPUnit\Framework\TestCase
     public function testGetPercentileForUrlWithSearch()
     {
         $search = array('date_start' => '2013-01-18', 'date_end' => '2013-01-18');
-        $result = $this->profiles->getPercentileForUrl(20, '/', $search);
+        $result = $this->mongo->getPercentileForUrl(20, '/', $search);
         $this->assertCount(1, $result);
 
         $this->assertArrayHasKey('wt', $result[0]);
@@ -129,13 +110,13 @@ class ProfilesTest extends PHPUnit\Framework\TestCase
     public function testGetPercentileForUrlWithLimit()
     {
         $search = array('limit' => 'P1D');
-        $result = $this->profiles->getPercentileForUrl(20, '/', $search);
+        $result = $this->mongo->getPercentileForUrl(20, '/', $search);
         $this->assertCount(0, $result);
     }
 
     public function testGetAllConditions()
     {
-        $result = $this->profiles->getAll(array(
+        $result = $this->mongo->getAll(array(
             'conditions' => array(
                 'date_start' => '2013-01-20',
                 'date_end' => '2013-01-21',
@@ -150,9 +131,51 @@ class ProfilesTest extends PHPUnit\Framework\TestCase
 
     public function testLatest()
     {
-        $result = $this->profiles->latest();
+        $result = $this->mongo->latest();
         $this->assertInstanceOf('Xhgui_Profile', $result);
         $this->assertEquals('2013-01-21', $result->getDate()->format('Y-m-d'));
     }
 
+    public function testSaveInsert()
+    {
+        $data = array(
+            'name' => 'strlen',
+        );
+        $this->assertTrue($this->mongo->saveWatch($data));
+        $this->assertCount(1, $this->mongo->getAllWatches());
+
+        $data = array(
+            'name' => 'empty',
+        );
+        $this->assertTrue($this->mongo->saveWatch($data));
+        $this->assertCount(2, $this->mongo->getAllWatches());
+    }
+
+    public function testSaveUpdate()
+    {
+        $data = array(
+            'name' => 'strlen',
+        );
+        $this->mongo->saveWatch($data);
+        $result = $this->mongo->getAllWatches();
+
+        $result[0]['name'] = 'strpos';
+        $this->assertTrue($this->mongo->saveWatch($result[0]));
+        $results = $this->mongo->getAllWatches();
+        $this->assertCount(1, $results);
+        $this->assertEquals('strpos', $results[0]['name']);
+    }
+
+    public function testSaveRemove()
+    {
+        $data = array(
+            'name' => 'strlen',
+        );
+        $this->mongo->saveWatch($data);
+        $result = $this->mongo->getAllWatches();
+
+        $result[0]['removed'] = 1;
+        $this->assertTrue($this->mongo->saveWatch($result[0]));
+        $this->assertCount(0, $this->mongo->getAllWatches());
+    }
 }

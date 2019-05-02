@@ -5,13 +5,13 @@ use Slim\Slim;
 class Xhgui_Controller_Import extends Xhgui_Controller
 {
     /**
-     * @var Xhgui_Saver_Mongo
+     * @var Xhgui_Saver_Interface
      */
     private $saver;
 
-    public function __construct(Slim $app, Xhgui_Saver_Mongo $saver)
+    public function __construct(Slim $app, Xhgui_Saver_Interface $saver)
     {
-        $this->app = $app;
+        parent::__construct($app);
         $this->saver = $saver;
     }
 

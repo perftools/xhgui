@@ -1,23 +1,25 @@
 <?php
+
 /**
- * Contains logic for getting/creating/removing profile records.
+ * A Searcher for a MongoDB backend.
  */
-class Xhgui_Profiles
+class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
 {
     protected $_collection;
+
+    protected $_watches;
 
     protected $_mapper;
 
     public function __construct(MongoDb $db)
     {
         $this->_collection = $db->results;
+        $this->_watches = $db->watches;
         $this->_mapper = new Xhgui_Db_Mapper();
     }
 
     /**
-     * Get the latest profile data.
-     *
-     * @return Xhgui_Profile
+     * {@inheritdoc}
      */
     public function latest()
     {
@@ -28,16 +30,19 @@ class Xhgui_Profiles
         return $this->_wrap($result);
     }
 
-    public function query($conditions, $fields = null)
+    /**
+     * {@inheritdoc}
+     */
+    public function query($conditions, $limit, $fields = [])
     {
-        return $this->_collection->find($conditions, $fields);
+        $result = $this->_collection->find($conditions, $fields)
+            ->limit($limit);
+
+        return iterator_to_array($result);
     }
 
     /**
-     * Get a single profile run by id.
-     *
-     * @param string $id The id of the profile to get.
-     * @return Xhgui_Profile
+     * {@inheritdoc}
      */
     public function get($id)
     {
@@ -47,14 +52,9 @@ class Xhgui_Profiles
     }
 
     /**
-     * Get the list of profiles for a simplified url.
-     *
-     * @param string $url The url to load profiles for.
-     * @param array $options Pagination options to use.
-     * @param array $conditions The search options.
-     * @return MongoCursor
+     * {@inheritdoc}
      */
-    public function getForUrl($url, $options, $conditions = array())
+    public function getForUrl($url, $options, $conditions = [])
     {
         $conditions = array_merge(
             (array)$conditions,
@@ -66,63 +66,10 @@ class Xhgui_Profiles
         return $this->paginate($options);
     }
 
-    public function paginate($options)
-    {
-        $opts = $this->_mapper->convert($options);
-
-        $totalRows = $this->_collection->find(
-            $opts['conditions'],
-            array('_id' => 1))->count();
-
-        $totalPages = max(ceil($totalRows / $opts['perPage']), 1);
-        $page = 1;
-        if (isset($options['page'])) {
-            $page = min(max($options['page'], 1), $totalPages);
-        }
-
-        $projection = false;
-        if (isset($options['projection'])) {
-            if ($options['projection'] === true) {
-                $projection = array('meta' => 1, 'profile.main()' => 1);
-            } else {
-                $projection = $options['projection'];
-            }
-        }
-
-        if ($projection === false) {
-            $cursor = $this->_collection->find($opts['conditions'])
-                ->sort($opts['sort'])
-                ->skip((int)($page - 1) * $opts['perPage'])
-                ->limit($opts['perPage']);
-        } else {
-            $cursor = $this->_collection->find($opts['conditions'], $projection)
-                ->sort($opts['sort'])
-                ->skip((int)($page - 1) * $opts['perPage'])
-                ->limit($opts['perPage']);
-        }
-
-        return array(
-            'results' => $this->_wrap($cursor),
-            'sort' => $opts['sort'],
-            'direction' => $opts['direction'],
-            'page' => $page,
-            'perPage' => $opts['perPage'],
-            'totalPages' => $totalPages
-        );
-    }
-
     /**
-     * Get the Percentile metrics for a URL
-     *
-     * This will group data by date and returns only the
-     * percentile + date, making the data ideal for time series graphs
-     *
-     * @param integer $percentile The percentile you want. e.g. 90.
-     * @param string $url
-     * @param array $search Search options containing date_start and or date_end
-     * @return array Array of metrics grouped by date
+     * {@inheritdoc}
      */
-    public function getPercentileForUrl($percentile, $url, $search = array())
+    public function getPercentileForUrl($percentile, $url, $search = [])
     {
         $result = $this->_mapper->convert(array(
             'conditions' => $search + array('simple_url' => $url)
@@ -174,7 +121,7 @@ class Xhgui_Profiles
         );
 
         if (empty($results['result'])) {
-            return array();
+            return [];
         }
         $keys = array(
             'wall_times' => 'wt',
@@ -196,16 +143,9 @@ class Xhgui_Profiles
     }
 
     /**
-     * Get the Average metrics for a URL
-     *
-     * This will group data by date and returns only the
-     * avg + date, making the data ideal for time series graphs
-     *
-     * @param string $url
-     * @param array $search Search options containing date_start and or date_end
-     * @return array Array of metrics grouped by date
+     * {@inheritdoc}
      */
-    public function getAvgsForUrl($url, $search = array())
+    public function getAvgsForUrl($url, $search = [])
     {
         $match = array('meta.simple_url' => $url);
         if (isset($search['date_start'])) {
@@ -236,7 +176,7 @@ class Xhgui_Profiles
             array('cursor' => array('batchSize' => 0))
         );
         if (empty($results['result'])) {
-            return array();
+            return [];
         }
         foreach ($results['result'] as $i => $result) {
             $results['result'][$i]['date'] = $result['_id'];
@@ -246,45 +186,23 @@ class Xhgui_Profiles
     }
 
     /**
-     * Get a paginated set of results.
-     *
-     * @param array $options The find options to use.
-     * @return array An array of result data.
+     * {@inheritdoc}
      */
-    public function getAll($options = array())
+    public function getAll($options = [])
     {
         return $this->paginate($options);
     }
 
     /**
-     * Insert a profile run.
-     *
-     * Does unchecked inserts.
-     *
-     * @param array $profile The profile data to save.
-     */
-    public function insert($profile)
-    {
-        return $this->_collection->insert($profile, array('w' => 0));
-    }
-
-    /**
-     * Delete a profile run.
-     *
-     * @param string $id The profile id to delete.
-     * @return array|bool
+     * {@inheritdoc}
      */
     public function delete($id)
     {
-        return $this->_collection->remove(array('_id' => new MongoId($id)), array());
+        $this->_collection->remove(array('_id' => new MongoId($id)), []);
     }
 
     /**
-     * Used to truncate a collection.
-     *
-     * Primarly used in test cases to reset the test db.
-     *
-     * @return boolean
+     * {@inheritdoc}
      */
     public function truncate()
     {
@@ -292,12 +210,111 @@ class Xhgui_Profiles
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function saveWatch(array $data)
+    {
+        if (empty($data['name'])) {
+            return false;
+        }
+
+        if (!empty($data['removed']) && isset($data['_id'])) {
+            $this->_watches->remove(
+                array('_id' => new MongoId($data['_id'])),
+                array('w' => 1)
+            );
+            return true;
+        }
+
+        if (empty($data['_id'])) {
+            $this->_watches->insert(
+                $data,
+                array('w' => 1)
+            );
+            return true;
+        }
+
+        $data['_id'] = new MongoId($data['_id']);
+        $this->_watches->update(
+            array('_id' => $data['_id']),
+            $data,
+            array('w' => 1)
+        );
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllWatches()
+    {
+        $cursor = $this->_watches->find();
+        return array_values(iterator_to_array($cursor));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function truncateWatches()
+    {
+        $this->_watches->drop();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    private function paginate($options)
+    {
+        $opts = $this->_mapper->convert($options);
+
+        $totalRows = $this->_collection->find(
+            $opts['conditions'],
+            array('_id' => 1))->count();
+
+        $totalPages = max(ceil($totalRows / $opts['perPage']), 1);
+        $page = 1;
+        if (isset($options['page'])) {
+            $page = min(max($options['page'], 1), $totalPages);
+        }
+
+        $projection = false;
+        if (isset($options['projection'])) {
+            if ($options['projection'] === true) {
+                $projection = array('meta' => 1, 'profile.main()' => 1);
+            } else {
+                $projection = $options['projection'];
+            }
+        }
+
+        if ($projection === false) {
+            $cursor = $this->_collection->find($opts['conditions'])
+                ->sort($opts['sort'])
+                ->skip((int)($page - 1) * $opts['perPage'])
+                ->limit($opts['perPage']);
+        } else {
+            $cursor = $this->_collection->find($opts['conditions'], $projection)
+                ->sort($opts['sort'])
+                ->skip((int)($page - 1) * $opts['perPage'])
+                ->limit($opts['perPage']);
+        }
+
+        return array(
+            'results' => $this->_wrap($cursor),
+            'sort' => $opts['sort'],
+            'direction' => $opts['direction'],
+            'page' => $page,
+            'perPage' => $opts['perPage'],
+            'totalPages' => $totalPages
+        );
+    }
+
+    /**
      * Converts arrays + MongoCursors into Xhgui_Profile instances.
      *
      * @param array|MongoCursor $data The data to transform.
-     * @return Xhgui_Profile|array The transformed/wrapped results.
+     * @return Xhgui_Profile|Xhgui_Profile[] The transformed/wrapped results.
      */
-    protected function _wrap($data)
+    private function _wrap($data)
     {
         if ($data === null) {
             throw new Exception('No profile data found.');
@@ -306,7 +323,7 @@ class Xhgui_Profiles
         if (is_array($data)) {
             return new Xhgui_Profile($data);
         }
-        $results = array();
+        $results = [];
         foreach ($data as $row) {
             $results[] = new Xhgui_Profile($row);
         }
