@@ -1,11 +1,11 @@
 <?php
 class Xhgui_WatchFunctions
 {
-    protected $_collection;
+    protected $storage;
 
-    public function __construct(MongoDb $db)
+    public function __construct(\Xhgui_StorageInterface $storage)
     {
-        $this->_collection = $db->watches;
+        $this->storage = $storage;
     }
 
     /**
@@ -24,28 +24,15 @@ class Xhgui_WatchFunctions
         }
 
         if (!empty($data['removed']) && isset($data['_id'])) {
-            $this->_collection->remove(
-                array('_id' => new MongoId($data['_id'])),
-                array('w' => 1)
-            );
+            $this->storage->remove($data['_id']);
             return true;
         }
 
         if (empty($data['_id'])) {
-            $this->_collection->insert(
-                $data,
-                array('w' => 1)
-            );
+            $this->storage->insert($data);
             return true;
         }
-
-
-        $data['_id'] = new MongoId($data['_id']);
-        $this->_collection->update(
-            array('_id' => $data['_id']),
-            $data,
-            array('w' => 1)
-        );
+        $this->storage->update($data['_id'], $data);
         return true;
     }
 
@@ -56,8 +43,13 @@ class Xhgui_WatchFunctions
      */
     public function getAll()
     {
-        $cursor = $this->_collection->find();
-        return array_values(iterator_to_array($cursor));
+        $cursor = $this->storage->find();
+        if ($this->storage instanceof \Xhgui_Storage_Mongo) {
+            $ret = $cursor->toArray();
+        } else {
+            $ret = array_column($cursor->toArray(), 'profile', '_id');
+        }
+        return $ret;
     }
 
     /**
@@ -67,7 +59,7 @@ class Xhgui_WatchFunctions
      */
     public function truncate()
     {
-        $this->_collection->drop();
+        $this->storage->drop();
     }
 
 }

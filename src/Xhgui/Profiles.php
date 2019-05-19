@@ -4,33 +4,31 @@
  */
 class Xhgui_Profiles
 {
-    protected $_collection;
+    protected $storage;
 
-    protected $_mapper;
-
-    public function __construct(MongoDb $db)
+    public function __construct(\Xhgui_StorageInterface $storage)
     {
-        $this->_collection = $db->results;
-        $this->_mapper = new Xhgui_Db_Mapper();
+        $this->storage = $storage;
     }
 
     /**
      * Get the latest profile data.
      *
      * @return Xhgui_Profile
+     * @throws Exception
      */
     public function latest()
     {
-        $cursor = $this->_collection->find()
-            ->sort(array('meta.request_date' => -1))
-            ->limit(1);
+        $cursor = $this->storage->find()
+                                ->sort(array('meta.request_date' => -1))
+                                ->limit(1);
         $result = $cursor->getNext();
         return $this->_wrap($result);
     }
 
     public function query($conditions, $fields = null)
     {
-        return $this->_collection->find($conditions, $fields);
+        return $this->storage->find($conditions, $fields);
     }
 
     /**
@@ -38,12 +36,11 @@ class Xhgui_Profiles
      *
      * @param string $id The id of the profile to get.
      * @return Xhgui_Profile
+     * @throws Exception
      */
     public function get($id)
     {
-        return $this->_wrap($this->_collection->findOne(array(
-            '_id' => new MongoId($id)
-        )));
+        return $this->_wrap($this->storage->findOne($id));
     }
 
     /**
@@ -66,20 +63,8 @@ class Xhgui_Profiles
         return $this->paginate($options);
     }
 
-    public function paginate($options)
+    public function paginate(Xhgui_Storage_Filter $filter)
     {
-        $opts = $this->_mapper->convert($options);
-
-        $totalRows = $this->_collection->find(
-            $opts['conditions'],
-            array('_id' => 1))->count();
-
-        $totalPages = max(ceil($totalRows / $opts['perPage']), 1);
-        $page = 1;
-        if (isset($options['page'])) {
-            $page = min(max($options['page'], 1), $totalPages);
-        }
-
         $projection = false;
         if (isset($options['projection'])) {
             if ($options['projection'] === true) {
@@ -90,24 +75,21 @@ class Xhgui_Profiles
         }
 
         if ($projection === false) {
-            $cursor = $this->_collection->find($opts['conditions'])
-                ->sort($opts['sort'])
-                ->skip((int)($page - 1) * $opts['perPage'])
-                ->limit($opts['perPage']);
+            $result = $this->storage->find($filter, null);
         } else {
-            $cursor = $this->_collection->find($opts['conditions'], $projection)
-                ->sort($opts['sort'])
-                ->skip((int)($page - 1) * $opts['perPage'])
-                ->limit($opts['perPage']);
+            $result = $this->storage->find($filter, $projection);
         }
 
+        $totalRows = $this->storage->count($filter);
+        $totalPages = max(ceil($totalRows / $filter->getPerPage()), 1);
+
         return array(
-            'results' => $this->_wrap($cursor),
-            'sort' => $opts['sort'],
-            'direction' => $opts['direction'],
-            'page' => $page,
-            'perPage' => $opts['perPage'],
-            'totalPages' => $totalPages
+            'results'       => $this->_wrap($result),
+            'sort'          => $filter->getSort(),
+            'direction'     => $filter->getDirection(),
+            'page'          => $filter->getPage(),
+            'perPage'       => $filter->getPerPage(),
+            'totalPages'    => $totalPages
         );
     }
 
@@ -119,68 +101,25 @@ class Xhgui_Profiles
      *
      * @param integer $percentile The percentile you want. e.g. 90.
      * @param string $url
-     * @param array $search Search options containing date_start and or date_end
+     * @param array $search Search options containing startDate and or endDate
      * @return array Array of metrics grouped by date
      */
-    public function getPercentileForUrl($percentile, $url, $search = array())
+    public function getPercentileForUrl($percentile, $url, $filter)
     {
-        $result = $this->_mapper->convert(array(
-            'conditions' => $search + array('simple_url' => $url)
-        ));
-        $match = $result['conditions'];
-
         $col = '$meta.request_date';
-        if (!empty($search['limit']) && $search['limit'][0] == "P") {
-            $col = '$meta.request_ts';
-        }
+//        if (!empty($search['limit']) && $search['limit'][0] == "P") {
+//            $col = '$meta.request_ts';
+//        }
 
-        $results = $this->_collection->aggregate(array(
-            array('$match' => $match),
-            array(
-                '$project' => array(
-                    'date' => $col,
-                    'profile.main()' => 1
-                )
-            ),
-            array(
-                '$group' => array(
-                    '_id' => '$date',
-                    'row_count' => array('$sum' => 1),
-                    'wall_times' => array('$push' => '$profile.main().wt'),
-                    'cpu_times' => array('$push' => '$profile.main().cpu'),
-                    'mu_times' => array('$push' => '$profile.main().mu'),
-                    'pmu_times' => array('$push' => '$profile.main().pmu'),
-                )
-            ),
-            array(
-                '$project' => array(
-                    'date' => '$date',
-                    'row_count' => '$row_count',
-                    'raw_index' => array(
-                        '$multiply' => array(
-                            '$row_count',
-                            $percentile / 100
-                        )
-                    ),
-                    'wall_times' => '$wall_times',
-                    'cpu_times' => '$cpu_times',
-                    'mu_times' => '$mu_times',
-                    'pmu_times' => '$pmu_times',
-                )
-            ),
-            array('$sort' => array('_id' => 1)),
-            ),
-            array('cursor' => array('batchSize' => 0))
-        );
-
+        $results = $this->storage->aggregate($filter, $col, $percentile);
         if (empty($results['result'])) {
             return array();
         }
         $keys = array(
-            'wall_times' => 'wt',
-            'cpu_times' => 'cpu',
-            'mu_times' => 'mu',
-            'pmu_times' => 'pmu'
+            'wall_times'    => 'wt',
+            'cpu_times'     => 'cpu',
+            'mu_times'      => 'mu',
+            'pmu_times'     => 'pmu'
         );
         foreach ($results['result'] as &$result) {
             $result['date'] = ($result['_id'] instanceof MongoDate) ? date('Y-m-d H:i:s', $result['_id']->sec) : $result['_id'];
@@ -192,57 +131,7 @@ class Xhgui_Profiles
                 unset($result[$key]);
             }
         }
-        return $results['result'];
-    }
-
-    /**
-     * Get the Average metrics for a URL
-     *
-     * This will group data by date and returns only the
-     * avg + date, making the data ideal for time series graphs
-     *
-     * @param string $url
-     * @param array $search Search options containing date_start and or date_end
-     * @return array Array of metrics grouped by date
-     */
-    public function getAvgsForUrl($url, $search = array())
-    {
-        $match = array('meta.simple_url' => $url);
-        if (isset($search['date_start'])) {
-            $match['meta.request_date']['$gte'] = (string)$search['date_start'];
-        }
-        if (isset($search['date_end'])) {
-            $match['meta.request_date']['$lte'] = (string)$search['date_end'];
-        }
-        $results = $this->_collection->aggregate(array(
-            array('$match' => $match),
-            array(
-                '$project' => array(
-                    'date' => '$meta.request_date',
-                    'profile.main()' => 1,
-                )
-            ),
-            array(
-                '$group' => array(
-                    '_id' => '$date',
-                    'avg_wt' => array('$avg' => '$profile.main().wt'),
-                    'avg_cpu' => array('$avg' => '$profile.main().cpu'),
-                    'avg_mu' => array('$avg' => '$profile.main().mu'),
-                    'avg_pmu' => array('$avg' => '$profile.main().pmu'),
-                )
-            ),
-            array('$sort' => array('_id' => 1))
-        ),
-            array('cursor' => array('batchSize' => 0))
-        );
-        if (empty($results['result'])) {
-            return array();
-        }
-        foreach ($results['result'] as $i => $result) {
-            $results['result'][$i]['date'] = $result['_id'];
-            unset($results['result'][$i]['_id']);
-        }
-        return $results['result'];
+        return array_values($results['result']);
     }
 
     /**
@@ -251,9 +140,9 @@ class Xhgui_Profiles
      * @param array $options The find options to use.
      * @return array An array of result data.
      */
-    public function getAll($options = array())
+    public function getAll($filter)
     {
-        return $this->paginate($options);
+        return $this->paginate($filter);
     }
 
     /**
@@ -262,10 +151,11 @@ class Xhgui_Profiles
      * Does unchecked inserts.
      *
      * @param array $profile The profile data to save.
+     * @return
      */
     public function insert($profile)
     {
-        return $this->_collection->insert($profile, array('w' => 0));
+        return $this->storage->insert($profile, array('w' => 0));
     }
 
     /**
@@ -276,7 +166,7 @@ class Xhgui_Profiles
      */
     public function delete($id)
     {
-        return $this->_collection->remove(array('_id' => new MongoId($id)), array());
+        return $this->storage->remove($id);
     }
 
     /**
@@ -288,7 +178,7 @@ class Xhgui_Profiles
      */
     public function truncate()
     {
-        return $this->_collection->drop();
+        return $this->storage->drop();
     }
 
     /**
@@ -296,6 +186,7 @@ class Xhgui_Profiles
      *
      * @param array|MongoCursor $data The data to transform.
      * @return Xhgui_Profile|array The transformed/wrapped results.
+     * @throws Exception
      */
     protected function _wrap($data)
     {
@@ -303,12 +194,13 @@ class Xhgui_Profiles
             throw new Exception('No profile data found.');
         }
 
-        if (is_array($data)) {
-            return new Xhgui_Profile($data);
+        if (!($data instanceof \Xhgui_Storage_ResultSet)) {
+            return new Xhgui_Profile($data, true);
         }
+
         $results = array();
         foreach ($data as $row) {
-            $results[] = new Xhgui_Profile($row);
+            $results[] = new Xhgui_Profile($row, true);
         }
         return $results;
     }

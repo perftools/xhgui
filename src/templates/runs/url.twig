@@ -22,10 +22,11 @@
         <input type="hidden" name="url" value="{{ search.url }}" />
         <a href="#" class="search-collapse close" title="Hide search form">&times;</a>
         <div class="control-group span4">
-            <label class="control-label" for="start_date">Date range</label>
+            <label class="control-label" for="startDate">Date range</label>
             <div class="controls">
-                <input type="text" data-date-format="yyyy-mm-dd" id="date_start" name="date_start" class="datepicker span2" value="{{ search.date_start }}">
-                <input type="text" id="date_end" data-date-format="yyyy-mm-dd" name="date_end" class="datepicker span2" value="{{ search.date_end }}">
+                <input type="text" id="startDate" name="startDate" class="span2" value="{{ search.startDate }}">
+                <input type="text" id="endDate" name="endDate" class="span2" value="{{ search.endDate }}">
+                <small class="muted">Either unix timestamps or date time string formatted as YYYY-MM-DD H:i:s</small>
             </div>
         </div>
         <div class="control-group span4">
@@ -65,7 +66,7 @@
 $(document).ready(function () {
     var limit = $('#limit'),
         limitCustom = $('#limit_custom'),
-        dateInputs = $('#date_start, #date_end');
+        dateInputs = $('#startDate, #endDate');
 
     limit.on('change', function() {
         limitCustom.val("");

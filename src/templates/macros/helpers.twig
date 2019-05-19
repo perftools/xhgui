@@ -25,7 +25,7 @@
 {% if paging.sort == sort %}
     {% set classname = "sort-#{direction}" %}
 {% endif %}
-{% set params = {'direction': direction, 'sort': sort}|merge(search) %}
+{% set params = search|merge({'direction': direction, 'sort': sort}) %}
 
 <a class="sort-link {{ classname }}" href="{{ url(url, params) }}">{{ text }}</a>
 {% endmacro %}

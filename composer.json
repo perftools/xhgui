@@ -5,7 +5,8 @@
     "autoload": {
         "psr-0": {
             "Xhgui_": "src/"
-        }
+        },
+        "classmap": ["src/"]
     },
     "require": {
         "php": "^5.6 || ^7.0",
@@ -29,6 +30,7 @@
         "ext-uprofiler": "You need to install either xhprof or uprofiler to use XHGui.",
         "ext-mongo": "Mongo is needed to store profiler results for PHP < 7.",
         "ext-mongodb": "Mongo is needed to store profiler results for PHP > 7.",
+        "ext-igbinary": "Alternative serializer",
         "alcaeus/mongo-php-adapter": "Mongo PHP Adapter is required for PHP >7 (when using ext-mongodb)"
     }
 }

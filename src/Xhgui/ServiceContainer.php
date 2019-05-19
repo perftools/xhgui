@@ -34,11 +34,12 @@ class Xhgui_ServiceContainer extends Pimple
 
             $view->twigTemplateDirs = array(dirname(__DIR__) . '/templates');
             $view->parserOptions = array(
-                'charset' => 'utf-8',
-                'cache' => $cacheDir,
-                'auto_reload' => true,
-                'strict_variables' => false,
-                'autoescape' => true
+                'charset'           => 'utf-8',
+                'cache'             => $cacheDir,
+                'auto_reload'       => true,
+                'debug'             => true,
+                'strict_variables'  => false,
+                'autoescape'        => true
             );
 
             return $view;
@@ -71,18 +72,30 @@ class Xhgui_ServiceContainer extends Pimple
     protected function _services()
     {
         $this['db'] = $this->share(function ($c) {
-            $config = $c['config'];
-            if (empty($config['db.options'])) {
-                $config['db.options'] = array();
-            }
-            $mongo = new MongoClient($config['db.host'], $config['db.options']);
-            $mongo->{$config['db.db']}->results->findOne();
+            switch($c['config']['save.handler']) {
+                case 'pdo':
+                    return new \Xhgui_Storage_PDO($c['config']);
 
-            return $mongo->{$config['db.db']};
+                case 'mongodb':
+                    return new \Xhgui_Storage_Mongo($c['config']);
+
+                case 'file':
+                    return new \Xhgui_Storage_File($c['config']);
+            }
         });
 
         $this['watchFunctions'] = function ($c) {
-            return new Xhgui_WatchFunctions($c['db']);
+
+            switch($c['config']['save.handler']) {
+                case 'pdo':
+                    return $c['db'];
+
+                case 'mongodb':
+                    return $c['db'];
+
+                case 'file':
+                    return $c['db'];
+            }
         };
 
         $this['profiles'] = function ($c) {

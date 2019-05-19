@@ -24,6 +24,8 @@ class Xhgui_Controller
 
     public function render()
     {
+        $container = $this->app->container->all();
+        $this->_templateVars['config'] = $container['settings'];
         $this->app->render($this->_template, $this->_templateVars);
     }
 

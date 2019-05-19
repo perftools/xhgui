@@ -8,7 +8,7 @@
 {% block content %}
 <h1>{{ title }}</h1>
 
-{% if runs|length or has_search %}
+{% if runs|length or filter.hasSearch() %}
 <div class="searchbar clearfix">
     <a href="{{ url('run.deleteAll.form') }}" class="pull-right btn btn-small delete-all" title="Delete all">
         <i class="icon-trash"></i> Delete all
@@ -18,19 +18,20 @@
         <i class="icon-search"></i> Search
     </a>
 
-    <form action="{{ url('home') }}" method="get" class="row hide search-form form-inline">
+    <form action="{{ url('home') }}" method="get" class="row search-form form-inline">
         <a href="#" class="search-collapse close" title="Hide search form">&times;</a>
         <div class="control-group span4">
-            <label class="control-label" for="start_date">Date range</label>
+            <label class="control-label" for="startDate">Date range</label>
             <div class="controls">
-                <input type="text" data-date-format="yyyy-mm-dd" id="date_start" name="date_start" class="datepicker span2" value="{{ search.date_start }}">
-                <input type="text" id="date_end" data-date-format="yyyy-mm-dd" name="date_end" class="datepicker span2" value="{{ search.date_end }}">
+                <input type="text" id="startDate" data-date-format="yyyy-mm-dd" name="startDate" class="span2" value="{{ search.startDate }}">
+                <input type="text" id="endDate" data-date-format="yyyy-mm-dd" name="endDate" class="span2" value="{{ search.endDate }}">
+                <small class="muted">Either unix timestamps or date time string formatted as YYYY-MM-DD H:i:s</small>
             </div>
         </div>
         <div class="control-group span4">
             <label class="control-label" for="url">URL</label>
             <div class="controls">
-                <input type="text" id="url" name="url" value="{{ search.url }}">
+                <input type="text" id="url" name="url" value="{{ search.getUrl() }}">
             </div>
         </div>
         <div class="form-actions">
@@ -41,7 +42,7 @@
 {% endif %}
 
 {# No run data, and no search, must be just getting started #}
-{% if not runs|length and not has_search %}
+{% if not runs|length and not filter.hasSearch() %}
 <div class="hero-unit">
     <h3>Looks like you haven't done any profiling</h3>
     <p>To get started with XHGUI you'll need to collect some profiling data.</p>
@@ -54,7 +55,7 @@
 </div>
 {% endif %}
 
-{% if runs|length or has_search %}
+{% if runs|length or filter.hasSearch() %}
     {% include 'runs/paginated-list.twig' %}
 {% endif %}
 

@@ -16,10 +16,10 @@
     <form action="{{ url('waterfall.list') }}" method="get" class="row hide search-form form-inline">
         <a href="#" class="search-collapse close" title="Hide search form">&times;</a>
         <div class="control-group span4">
-            <label class="control-label" for="start_date">Date/time range</label>
+            <label class="control-label" for="startDate">Date/time range</label>
             <div class="controls">
-                <input type="text" class="span2" name="request_start" value="{{ search.request_start }}">
-                <input type="text" class="span2" name="request_end" value="{{ search.request_end }}">
+                <input type="text" class="span2" name="startDate" value="{{ search.startDate }}">
+                <input type="text" class="span2" name="endDate" value="{{ search.endDate }}">
                 <small class="muted">Either unix timestamps or date time string formatted as YYYY-MM-DD H:i:s</small>
             </div>
         </div>
@@ -131,8 +131,8 @@
 $(document).ready(function() {
     {% set query = {
         remote_addr: search.remote_addr,
-        request_start: search.request_start,
-        request_end: search.request_end
+        startDate: search.startDate,
+        endDate: search.endDate
     } %}
     Xhgui.waterfall('#waterfall', {
         dataUrl: '{{ url("waterfall.data", query)|raw }}',
