@@ -17,9 +17,9 @@ unset($di, $config);
 /**
  * Load a fixture into the database.
  */
-function loadFixture($profiles, $file) {
-    $contents = file_get_contents($file);
-    $data = json_decode($contents, true);
+function loadFixture(Xhgui_Saver_Interface $saver, $file)
+{
+    $data = json_decode(file_get_contents($file), true);
     foreach ($data as $record) {
         if (isset($record['meta']['request_time'])) {
             $time = strtotime($record['meta']['request_time']);
@@ -28,6 +28,6 @@ function loadFixture($profiles, $file) {
         if (isset($record['_id'])) {
             $record['_id'] = new MongoId($record['_id']);
         }
-        $profiles->insert($record);
+        $saver->save($record);
     }
 }

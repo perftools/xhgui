@@ -2,15 +2,27 @@
 
 use Slim\Slim;
 
-class Xhgui_Controller
+abstract class Xhgui_Controller
 {
+    /**
+     * @var array
+     */
     protected $_templateVars = array();
+
+    /**
+     * @var string|null
+     */
     protected $_template = null;
 
     /**
      * @var Slim
      */
     protected $app;
+
+    public function __construct(Slim $app)
+    {
+        $this->app = $app;
+    }
 
     public function set($vars)
     {

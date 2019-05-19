@@ -21,7 +21,7 @@ if (!$fp) {
 }
 
 $container = Xhgui_ServiceContainer::instance();
-$saver = $container['saverMongo'];
+$saver = $container['saver.mongo'];
 
 
 while (!feof($fp)) {

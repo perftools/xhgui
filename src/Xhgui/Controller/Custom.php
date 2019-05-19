@@ -5,14 +5,14 @@ use Slim\Slim;
 class Xhgui_Controller_Custom extends Xhgui_Controller
 {
     /**
-     * @var Xhgui_Profiles
+     * @var Xhgui_Searcher_Interface
      */
-    protected $profiles;
+    protected $searcher;
 
-    public function __construct(Slim $app, Xhgui_Profiles $profiles)
+    public function __construct(Slim $app, Xhgui_Searcher_Interface $searcher)
     {
-        $this->app = $app;
-        $this->profiles = $profiles;
+        parent::__construct($app);
+        $this->searcher = $searcher;
     }
 
     public function get()
@@ -24,9 +24,9 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
     {
         $request = $this->app->request();
         if ($request->get('id')) {
-            $res = $this->profiles->get($request->get('id'));
+            $res = $this->searcher->get($request->get('id'));
         } else {
-            $res = $this->profiles->latest();
+            $res = $this->searcher->latest();
         }
         $this->_template = 'custom/help.twig';
         $this->set(array(
@@ -42,12 +42,12 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
 
         $query = json_decode($request->post('query'), true);
         $error = array();
-        if (is_null($query)) {
+        if (null === $query) {
             $error['query'] = json_last_error();
         }
 
         $retrieve = json_decode($request->post('retrieve'), true);
-        if (is_null($retrieve)) {
+        if (null === $retrieve) {
             $error['retrieve'] = json_last_error();
         }
 
@@ -58,9 +58,8 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
 
         $perPage = $this->app->config('page.limit');
 
-        $res = $this->profiles->query($query, $retrieve)
-            ->limit($perPage);
-        $r = iterator_to_array($res);
-        return $response->body(json_encode($r));
+        $res = $this->searcher->query($query, $perPage, $retrieve);
+
+        return $response->body(json_encode($res));
     }
 }
