@@ -16,7 +16,7 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
      */
     public function __construct(Slim $app, Xhgui_Profiles $profiles)
     {
-        $this->app      = $app;
+        parent::__construct($app);
         $this->profiles = $profiles;
     }
 

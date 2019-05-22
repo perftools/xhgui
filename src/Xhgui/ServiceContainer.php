@@ -17,6 +17,7 @@ class Xhgui_ServiceContainer extends Pimple
 
     public function __construct()
     {
+        parent::__construct();
         $this['config'] = Xhgui_Config::all();
         $this->_slimApp();
         $this->_services();
@@ -79,6 +80,7 @@ class Xhgui_ServiceContainer extends Pimple
                 case 'mongodb':
                     return new \Xhgui_Storage_Mongo($c['config']);
 
+                default:
                 case 'file':
                     return new \Xhgui_Storage_File($c['config']);
             }
@@ -93,6 +95,7 @@ class Xhgui_ServiceContainer extends Pimple
                 case 'mongodb':
                     return $c['db'];
 
+                default:
                 case 'file':
                     return $c['db'];
             }

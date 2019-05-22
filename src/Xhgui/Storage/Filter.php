@@ -1,4 +1,7 @@
 <?php
+
+use Slim\Http\Request;
+
 /**
  * Class Xhgui_Storage_Filter
  */
@@ -60,7 +63,7 @@ class Xhgui_Storage_Filter {
      * @param $request
      * @return Xhgui_Storage_Filter
      */
-    public static function fromRequest(\Slim\Http\Request $request) {
+    public static function fromRequest(Request $request) {
         $instance = new self;
 
         $instance->setUrl($request->get('url', null));

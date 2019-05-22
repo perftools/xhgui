@@ -13,4 +13,8 @@ interface Xhgui_StorageInterface {
     public function remove($id);
 
     public function drop();
+
+    public function insert(array $data);
+
+    public function update($_id, array $data);
 }

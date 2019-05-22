@@ -1,6 +1,6 @@
 <?php
 
-class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunctionsStorageInterface
+class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctionsStorageInterface
 {
 
     /**
@@ -39,6 +39,11 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
     protected $countCache;
 
     /**
+     * @var Xhgui_Storage_Filter
+     */
+    private $filter;
+
+    /**
      * Xhgui_Storage_File constructor.
      * @param $config
      */
@@ -61,7 +66,7 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
      * @param bool $projections
      * @return Xhgui_Storage_ResultSet
      */
-    public function find(\Xhgui_Storage_Filter $filter, $projections = false)
+    public function find(Xhgui_Storage_Filter $filter, $projections = false)
     {
         $result       = glob($this->path. $this->prefix . '*');
         sort($result);
@@ -121,10 +126,14 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
             }
         }
 
-        if (!empty($filter->getSort()) AND !empty($ret)) {
-            $this->filter = $filter;
-            usort($ret, array($this, 'sortByColumn'));
-            unset($this->filter);
+        try {
+            if (!empty($filter->getSort()) AND !empty($ret)) {
+                $this->filter = $filter;
+                usort($ret, array($this, 'sortByColumn'));
+                unset($this->filter);
+            }
+        }catch (InvalidArgumentException $e) {
+            
         }
         $cacheId = md5(serialize($filter->toArray()));
 
@@ -132,14 +141,14 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
         $ret = array_slice($ret, $filter->getPerPage()*($filter->getPage()-1), $filter->getPerPage());
         $ret = array_column($ret, null, '_id');
 
-        return new \Xhgui_Storage_ResultSet($ret, $this->countCache[$cacheId]);
+        return new Xhgui_Storage_ResultSet($ret, $this->countCache[$cacheId]);
     }
 
     /**
      * @param Xhgui_Storage_Filter $filter
      * @return int
      */
-    public function count(\Xhgui_Storage_Filter $filter)
+    public function count(Xhgui_Storage_Filter $filter)
     {
         $cacheId = md5(serialize($filter->toArray()));
         if (empty($this->countCache[$cacheId])) {
@@ -154,7 +163,7 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
      */
     public function findOne($id)
     {
-        $filter = new \Xhgui_Storage_Filter();
+        $filter = new Xhgui_Storage_Filter();
         $filter->setId($id);
         $resultSet = $this->find($id);
         return $resultSet->current();
@@ -192,7 +201,7 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
      * @param int $percentile
      * @return array
      */
-    public function aggregate(\Xhgui_Storage_Filter $filter, $col, $percentile = 1)
+    public function aggregate(Xhgui_Storage_Filter $filter, $col, $percentile = 1)
     {
         $ret = $this->find($filter);
 
@@ -252,6 +261,10 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
                 $aValue = $a['meta'][$sort];
                 $bValue = $b['meta'][$sort];
                 break;
+
+            default:
+                throw new InvalidArgumentException('Invalid sort mode');
+                break;
         }
 
         if ($aValue == $bValue){
@@ -299,30 +312,32 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
     {
 
         try {
-            $date = new \DateTime($timestamp);
+            $date = new DateTime($timestamp);
             return $date;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            // leave empty to try parse different format below
         }
 
         try {
-            $date = \DateTime::createFromFormat('U', $timestamp);
+            $date = DateTime::createFromFormat('U', $timestamp);
             return $date;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            // leave empty to try parse different format below
         }
 
         try {
-            $date = \DateTime::createFromFormat('Y-m-d H:i:s', $timestamp);
+            $date = DateTime::createFromFormat('Y-m-d H:i:s', $timestamp);
             return $date;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            // last attempt failed. Throw generic exception.
+            throw new RuntimeException('Unable to parse date from string: '.$timestamp, null, $e);
         }
-
-        throw new \RuntimeException('Unable to parse date from string: '.$timestamp);
     }
 
     /**
      * @param $data
      */
-    public function insert($data)
+    public function insert(array $data)
     {
 
         if (empty($data['_id'])) {
@@ -336,7 +351,7 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
      * @param $id
      * @param $data
      */
-    public function update($id, $data)
+    public function update($id, array $data)
     {
         file_put_contents($this->path.''.$this->prefix.$id.'.json', json_encode($data));
     }
@@ -362,7 +377,6 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
             default:
             case 'json':
                 return json_decode(file_get_contents($path), true);
-                break;
 
             case 'serialize':
                 if (PHP_MAJOR_VERSION > 7) {
@@ -371,17 +385,16 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
                 /** @noinspection UnserializeExploitsInspection */
                 return unserialize(file_get_contents($path));
 
-                break;
-
             case 'igbinary_serialize':
             case 'igbinary_unserialize':
             case 'igbinary':
+                /** @noinspection PhpComposerExtensionStubsInspection */
                 return igbinary_unserialize(file_get_contents($path));
-                break;
 
             // this is a path to a file on disk
             case 'php':
             case 'var_export':
+                /** @noinspection PhpIncludeInspection */
                 return include $path;
         }
     }
@@ -410,7 +423,8 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
             return false;
         }
         $id = md5($name);
-        file_put_contents($this->watchedFunctionsPathPrefix.$id.'.json', json_encode(['id'=>$id, 'name'=>$name]));
+        $i = file_put_contents($this->watchedFunctionsPathPrefix.$id.'.json', json_encode(['id'=>$id, 'name'=>$name]));
+        return $i > 0;
     }
 
     /**
@@ -425,7 +439,8 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
             return false;
         }
 
-        file_put_contents($this->watchedFunctionsPathPrefix.$id.'.json', json_encode(['id'=>$id, 'name'=>trim($name)]));
+        $i = file_put_contents($this->watchedFunctionsPathPrefix.$id.'.json', json_encode(['id'=>$id, 'name'=>trim($name)]));
+        return $i > 0;
     }
 
     /**
@@ -440,17 +455,17 @@ class Xhgui_Storage_File implements \Xhgui_StorageInterface, \Xhgui_WatchedFunct
 
     /**
      * @param $fileName
-     * @return bool|\DateTime
+     * @return bool|DateTime
      */
     public function getRequestTimeFromFilename($fileName)
     {
         $matches = [];
         // default pattern is: xhgui.data.<timestamp>.<microseconds>_a68888
         //  xhgui.data.15 55 31 04 66 .6606_a68888
-        preg_match('/(?<t>[0-9]{10})(\.(?<m>[0-9]{1,6})){0,1}.+/i', $fileName, $matches);
+        preg_match('/(?<t>[\d]{10})(\.(?<m>[\d]{1,6}))?.+/i', $fileName, $matches);
         try {
-            return \DateTime::createFromFormat('U u', $matches['t'].' '.$matches['m']);
-        } catch (\Exception $e) {
+            return DateTime::createFromFormat('U u', $matches['t'].' '. $matches['m']);
+        } catch (Exception $e) {
             return null;
         }
     }

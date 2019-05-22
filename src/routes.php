@@ -74,11 +74,11 @@ $app->get('/run/callgraph', function () use ($di, $app) {
 })->name('run.callgraph');
 
 $app->get('/run/callgraph/data', function () use ($di, $app) {
-    $di['runController']->callgraphData();
+    $di['runController']->callgraphData(false);
 })->name('run.callgraph.data');
 
 $app->get('/run/callgraph/dot', function () use ($di, $app) {
-    $di['runController']->callgraphDataDot();
+    $di['runController']->callgraphDataDot(true);
 })->name('run.callgraph.dot');
 
 // Import route

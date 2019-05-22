@@ -14,7 +14,8 @@
         "slim/views": "^0.1.0",
         "twig/twig": "~1.17",
         "pimple/pimple": "^1.0.2",
-        "perftools/xhgui-collector": "^1.7.0"
+        "perftools/xhgui-collector": "^1.7.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "alcaeus/mongo-php-adapter": "^1.1",

@@ -158,9 +158,10 @@ class Xhgui_Profile
             return $data;
         }
         $parts = explode('.', $key);
-        foreach ($parts as $key) {
-            if (is_array($data) && isset($data[$key])) {
-                $data =& $data[$key];
+
+        foreach ($parts as $partsKey) {
+            if (is_array($data) && isset($data[$partsKey])) {
+                $data =& $data[$partsKey];
             } else {
                 return null;
             }

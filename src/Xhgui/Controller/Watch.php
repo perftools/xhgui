@@ -16,7 +16,7 @@ class Xhgui_Controller_Watch extends Xhgui_Controller
      */
     public function __construct(Slim $app, \Xhgui_WatchedFunctionsStorageInterface $watches)
     {
-        $this->app      = $app;
+        parent::__construct($app);
         $this->watches  = $watches;
     }
 

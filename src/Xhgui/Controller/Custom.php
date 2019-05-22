@@ -5,11 +5,11 @@ use Slim\Slim;
 class Xhgui_Controller_Custom extends Xhgui_Controller
 {
     /**
-     * @var Xhgui_Searcher_Interface
+     * @var Xhgui_StorageInterface
      */
     protected $searcher;
 
-    public function __construct(Slim $app, Xhgui_Searcher_Interface $searcher)
+    public function __construct(Slim $app, Xhgui_StorageInterface $searcher)
     {
         parent::__construct($app);
         $this->searcher = $searcher;

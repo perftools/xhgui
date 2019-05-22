@@ -22,7 +22,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
      */
     public function __construct(Slim $app, Xhgui_Profiles $profiles, \Xhgui_WatchedFunctionsStorageInterface $watches)
     {
-        $this->app      = $app;
+        parent::__construct($app);
         $this->profiles = $profiles;
         $this->watches  = $watches;
     }
@@ -143,7 +143,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         }
 
         // Delete the profile run.
-        $delete = $this->profiles->delete($id);
+        $this->profiles->delete($id);
 
         $this->app->flash('success', 'Deleted profile ' . $id);
 
@@ -163,10 +163,8 @@ class Xhgui_Controller_Run extends Xhgui_Controller
      */
     public function deleteAllSubmit()
     {
-        $request = $this->app->request();
-
         // Delete all profile runs.
-        $delete = $this->profiles->truncate();
+        $this->profiles->truncate();
 
         $this->app->flash('success', 'Deleted all profiles');
 
@@ -202,7 +200,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'paging'        => $paging,
             'base_url'      => 'url.view',
             'runs'          => $result['results'],
-            'url'           => $filter->getUrl('url'),
+            'url'           => $filter->getUrl(),
             'chart_data'    => $chartData,
             'date_format'   => $this->app->config('date.format'),
             'search'        => array_merge($filter->toArray(), array('url' => $request->get('url'))),
@@ -332,30 +330,19 @@ class Xhgui_Controller_Run extends Xhgui_Controller
      * @return string
      * @throws Exception
      */
-    public function callgraphData()
+    public function callgraphData($nodes = false)
     {
         $request    = $this->app->request();
         $response   = $this->app->response();
         $profile    = $this->profiles->get($request->get('id'));
         $metric     = $request->get('metric') ?: 'wt';
         $threshold  = (float)$request->get('threshold') ?: 0.01;
-        $callgraph  = $profile->getCallgraph($metric, $threshold);
 
-        $response['Content-Type'] = 'application/json';
-        return $response->body(json_encode($callgraph));
-    }
-
-    /**
-     * @return string
-     */
-    public function callgraphDataDot()
-    {
-        $request    = $this->app->request();
-        $response   = $this->app->response();
-        $profile    = $this->profiles->get($request->get('id'));
-        $metric     = $request->get('metric') ?: 'wt';
-        $threshold  = (float)$request->get('threshold') ?: 0.01;
-        $callgraph  = $profile->getCallgraphNodes($metric, $threshold);
+        if ($nodes) {
+            $callgraph  = $profile->getCallgraphNodes($metric, $threshold);
+        } else {
+            $callgraph  = $profile->getCallgraph($metric, $threshold);
+        }
 
         $response['Content-Type'] = 'application/json';
         return $response->body(json_encode($callgraph));

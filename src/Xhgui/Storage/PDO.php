@@ -155,8 +155,8 @@ from
                 $sql .= ' order by version';
                 break;
 
-            default:
             case 'time':
+            default:
                 $sql .= ' order by request_time';
                 break;
         }
@@ -326,7 +326,7 @@ where
     }
 
     /**
-     * @param \Xhgui_Storage_Filter $options
+     * @param string|int $date
      * @return \DateTime
      */
     protected function getDateTimeFromString($date) {
@@ -348,5 +348,13 @@ where
         }
 
         throw new \InvalidArgumentException('Unable to parse date');
+    }
+
+    public function insert(array $data) {
+        // TODO: Implement insert() method.
+    }
+
+    public function update($_id, array $data) {
+        // TODO: Implement update() method.
     }
 }

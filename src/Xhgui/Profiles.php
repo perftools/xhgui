@@ -66,13 +66,13 @@ class Xhgui_Profiles
     public function paginate(Xhgui_Storage_Filter $filter)
     {
         $projection = false;
-        if (isset($options['projection'])) {
-            if ($options['projection'] === true) {
-                $projection = array('meta' => 1, 'profile.main()' => 1);
-            } else {
-                $projection = $options['projection'];
-            }
-        }
+//        if (isset($options['projection'])) {
+//            if ($options['projection'] === true) {
+//                $projection = array('meta' => 1, 'profile.main()' => 1);
+//            } else {
+//                $projection = $options['projection'];
+//            }
+//        }
 
         if ($projection === false) {
             $result = $this->storage->find($filter, null);
@@ -155,7 +155,7 @@ class Xhgui_Profiles
      */
     public function insert($profile)
     {
-        return $this->storage->insert($profile, array('w' => 0));
+        return $this->storage->insert($profile);
     }
 
     /**

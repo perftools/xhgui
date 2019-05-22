@@ -137,7 +137,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
      * @throws \MongoCursorTimeoutException
      * @throws \MongoException
      */
-    public function insert($data)
+    public function insert(array $data)
     {
         return $this->connection->{$this->collection}->insert(
             $data,
@@ -153,7 +153,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
      * @throws \MongoException
      * @throws \MongoWriteConcernException
      */
-    public function update($id, $data)
+    public function update($id, array $data)
     {
         return $this->connection->{$this->collection}->update(
             array('_id' => new MongoId($id)),
@@ -242,6 +242,8 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
                 $ret[] = ['id'=>$row['_id']->__toString(), 'name'=>$row['name']];
             }
         } catch (\Exception $e) {
+            // if something goes wrong just return empty array
+            // @todo add exception
         }
         return $ret;
     }
@@ -269,6 +271,8 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
 
             return true;
         } catch (\Exception $e) {
+            // if something goes wrong just ignore for now
+            // @todo add exception
         }
         return false;
     }
@@ -319,22 +323,31 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
-     * @param \Xhgui_Storage_Filter $options
+     * @param string|int $date
      * @return \DateTime
      */
     protected function getDateTimeFromString($date)
     {
 
         try {
-            return \DateTime::createFromFormat('Y-m-d H:i:s', $date);
+            $parsedDate = \DateTime::createFromFormat('Y-m-d H:i:s', $date);
+            if (!empty($parsedDate)) {
+                return $parsedDate;
+            }
+
         } catch (\Exception $e){
+            // leave empty to try parse different format below
         }
 
         try {
-            return \DateTime::createFromFormat('U', $date);
-        } catch (\Exception $e){
-        }
+            $parsedDate = \DateTime::createFromFormat('U', $date);
+            if (!empty($parsedDate)) {
+                return $parsedDate;
+            }
 
+        } catch (\Exception $e){
+            // throw generic exception on failure
+        }
         throw new \InvalidArgumentException('Unable to parse date');
     }
 
@@ -370,7 +383,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
                  ] as $dbField => $field) {
             $method = 'get' . ucfirst($field);
             if ($filter->{$method}()) {
-                $conditions['meta.' . $dbField] = $filter->get{$method}();
+                $conditions['meta.' . $dbField] = $filter->{$method}();
             }
         }
 
