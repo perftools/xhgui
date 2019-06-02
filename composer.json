@@ -8,6 +8,9 @@
         },
         "classmap": ["src/"]
     },
+    "autoload-dev": {
+        "classmap": ["tests/"]
+    },
     "require": {
         "php": "^5.6 || ^7.0",
         "slim/slim": "^2.6.3",

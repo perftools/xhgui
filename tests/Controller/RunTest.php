@@ -4,7 +4,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Slim;
 
-class Controller_RunTest extends PHPUnit\Framework\TestCase
+class Controller_RunTest extends CommonTestCase
 {
     /**
      * @var PHPUnit_Framework_MockObject_MockObject|Xhgui_StorageInterface
@@ -15,10 +15,6 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
      * @var Xhgui_Controller_Run
      */
     protected $runs;
-    /**
-     * @var PHPUnit_Framework_MockObject_MockObject|Request
-     */
-    protected $requestMock;
 
     /**
      * @var PHPUnit_Framework_MockObject_MockObject|Xhgui_Profiles
@@ -48,14 +44,16 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
                                        'getAll',
                                        'get',
                                        'getPercentileForUrl',
-                                       'getRelatives'
+                                       'getRelatives',
+                                       'delete',
+                                       'truncate'
                                    ])
                                    ->disableOriginalConstructor()
                                    ->getMock();
 
 
         $this->appMock = $this->getMockBuilder('Slim\Slim')
-            ->setMethods(array('redirect', 'render', 'urlFor', 'request', 'response'))
+            ->setMethods(array('redirect', 'render', 'urlFor', 'request', 'response', 'flash'))
             ->setConstructorArgs(array($di['config']))
             ->getMock();
 
@@ -63,11 +61,6 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
                            ->setMethods(['getAll', 'getWatchedFunctions'])
                            ->disableOriginalConstructor()
                            ->getMock();
-
-        $this->requestMock = $this->getMockBuilder(Request::class)
-            ->setMethods(['get'])
-            ->disableOriginalConstructor()
-            ->getMock();
 
         $this->appMock->expects(self::any())->method('request')->willReturn($this->requestMock);
 
@@ -102,7 +95,7 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
             'has_search'    => 'No search being done.'
         ]);
 
-        $this->prepareRequestMock(['sort', 'time']);
+        $this->prepareGetRequestMock(['sort', 'time']);
 
         $this->runs->index();
         $result = $this->runs->templateVars();
@@ -122,7 +115,7 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
      */
     public function testIndexWithSearch()
     {
-        $this->prepareRequestMock(['sort', 'time']);
+        $this->prepareGetRequestMock(['sort', 'time']);
 
         $this->runs->index();
         $result = $this->runs->templateVars();
@@ -137,7 +130,7 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
      */
     public function testView() {
         $id = 1;
-        $this->prepareRequestMock([
+        $this->prepareGetRequestMock([
             ['id', null, $id],
         ]);
         
@@ -189,7 +182,7 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
     public function testUrl()
     {
         $url = 'testUrl';
-        $this->prepareRequestMock([
+        $this->prepareGetRequestMock([
             ['url', $url],
         ]);
 
@@ -228,7 +221,7 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
     {
         $base = null;
         $head = null;
-        $this->prepareRequestMock([
+        $this->prepareGetRequestMock([
             ['base', null, $base],
             ['head', null, $head],
         ]);
@@ -250,7 +243,7 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
         $base = 1;
         $head = null;
         $url = 'testUrl';
-        $this->prepareRequestMock([
+        $this->prepareGetRequestMock([
             ['base', null, $base],
             ['head', null, $head]
         ]);
@@ -304,7 +297,7 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
         $url = 'testUrl';
         $compareResult = "CompareResult";
 
-        $this->prepareRequestMock([
+        $this->prepareGetRequestMock([
             ['base', null, $base],
             ['head', null, $head]
         ]);
@@ -351,7 +344,7 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
         $id = 1;
         $symbol = 'main()';
 
-        $this->prepareRequestMock([
+        $this->prepareGetRequestMock([
             ['id',      null, $id],
             ['symbol',  null, $symbol]
         ]);
@@ -394,7 +387,7 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
         $symbol = 'main()';
         $metric = 3;
 
-        $this->prepareRequestMock([
+        $this->prepareGetRequestMock([
             ['id',          null, $id],
             ['threshold',   null, $threshold],
             ['symbol',      null, $symbol],
@@ -436,7 +429,7 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
     {
         $id = 1;
 
-        $this->prepareRequestMock([
+        $this->prepareGetRequestMock([
             ['id',          null, $id],
         ]);
 
@@ -466,7 +459,7 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
         $metric = 'metric';
         $threshold = 1;
 
-        $this->prepareRequestMock([
+        $this->prepareGetRequestMock([
             ['id',          null, $id],
             ['metric',      null, $metric],
             ['threshold',   null, $threshold],
@@ -502,23 +495,74 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
     }
 
     /**
-     * @param array $override
+     * @throws Exception
      */
-    protected function prepareRequestMock($override = []) {
+    public function testDeleteForm()
+    {
+        $id = 1;
 
-        $default = [
-            ['url',         null, 'testUrl'],
-            ['startDate',   null, '2019-01-01'],
-            ['endDate',     null, '2019-02-01'],
-            ['sort',        null, 'time'],
-            ['direction',   null, 'desc'],
-            ['page',        null, '1'],
-        ];
+        $this->prepareGetRequestMock([
+            ['id',          null, $id],
+        ]);
 
-        $this->requestMock->expects(self::any())
-                          ->method('get')
-                          ->willReturnMap(array_merge($default, $override));
+        // mocked result set.
+        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
+                            ->setMethods([
+                            ])
+                            ->disableOriginalConstructor()
+                            ->getMock();
+
+        $this->profilesMock->expects(self::any())
+                           ->method('get')
+                           ->with($this->equalTo($id))
+                           ->willReturn($profileMock);
+
+        $this->runs->deleteForm();
+        $result = $this->runs->templateVars();
+        
+        self::assertArrayHasKey('result', $result);
+        self::assertSame($profileMock, $result['result']);
+
     }
 
+    /**
+     * 
+     */
+    public function testDeleteSubmit()
+    {
+        $id = 1;
 
+        $this->preparePostRequestMock([
+            ['id',          null, $id],
+        ]);
+
+        // mocked result set.
+        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
+                            ->setMethods([
+                            ])
+                            ->disableOriginalConstructor()
+                            ->getMock();
+
+        $this->profilesMock->expects(self::any())
+                           ->method('delete')
+                           ->with($this->equalTo($id))
+                           ->willReturn($profileMock);
+
+        $this->appMock->expects(self::once())->method('urlFor');
+        $this->appMock->expects(self::once())->method('redirect');
+        
+        $this->runs->deleteSubmit();
+    }
+
+    public function testDeleteAllSubmit()
+    {
+        $this->profilesMock->expects(self::any())
+                           ->method('truncate');
+        
+        $this->appMock->expects(self::once())->method('urlFor');
+        $this->appMock->expects(self::once())->method('redirect');
+
+        $this->runs->deleteAllSubmit();
+
+    }
 }

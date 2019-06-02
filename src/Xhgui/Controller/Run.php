@@ -112,7 +112,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     {
         $request = $this->app->request();
         $id = $request->get('id');
-        if (!is_string($id) || !strlen($id)) {
+        if (empty($id)) {
             throw new Exception('The "id" parameter is required.');
         }
 
@@ -136,7 +136,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
         // Don't call profilers->delete() unless $id is set,
         // otherwise it will turn the null into a MongoId and return "Sucessful".
-        if (!is_string($id) || !strlen($id)) {
+        if (empty($id)) {
             // Form checks this already,
             // only reachable by handcrafted or malformed requests.
             throw new Exception('The "id" parameter is required.');
