@@ -7,12 +7,12 @@ class Xhgui_Controller_Import extends Xhgui_Controller
     /**
      * @var Xhgui_Saver_Interface
      */
-    private $saver;
+    private $profiles;
 
-    public function __construct(Slim $app, Xhgui_Saver_Interface $saver)
+    public function __construct(Slim $app, Xhgui_Profiles $profiles)
     {
         parent::__construct($app);
-        $this->saver = $saver;
+        $this->profiles = $profiles;
     }
 
     public function import()
@@ -21,7 +21,7 @@ class Xhgui_Controller_Import extends Xhgui_Controller
         $response = $this->app->response();
 
         $data = json_decode($request->getBody(), true);
-        $this->saver->save($data);
+        $this->profiles->save($data);
 
         $response['Content-Type'] = 'application/json';
         $response->body(json_encode(['ok' => true]));

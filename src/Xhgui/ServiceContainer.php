@@ -7,6 +7,9 @@ class Xhgui_ServiceContainer extends Pimple
 {
     protected static $_instance;
 
+    /**
+     * @return \Xhgui_ServiceContainer
+     */
     public static function instance()
     {
         if (empty(static::$_instance)) {
@@ -105,16 +108,9 @@ class Xhgui_ServiceContainer extends Pimple
             return new Xhgui_Profiles($c['db']);
         };
 
-        $this['saver'] = function($c) {
-            return Xhgui_Saver::factory($c['config']);
-        };
-
-        $this['saverMongo'] = function($c) {
-            $config = $c['config'];
-            $config['save.handler'] = 'mongodb';
-
-            return Xhgui_Saver::factory($config);
-        };
+//        $this['saver'] = function($c) {
+//            return Xhgui_Saver::factory($c['config']);
+//        };
     }
 
     /**
@@ -139,7 +135,7 @@ class Xhgui_ServiceContainer extends Pimple
         };
 
         $this['importController'] = function ($c) {
-            return new Xhgui_Controller_Import($c['app'], $c['saverMongo']);
+            return new Xhgui_Controller_Import($c['app'], $c['db']);
         };
     }
 

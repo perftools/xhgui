@@ -1,153 +1,460 @@
 <?php
 use Slim\Environment;
+use Slim\Http\Request;
+use Slim\Http\Response;
+use Slim\Slim;
 
 class Controller_RunTest extends PHPUnit\Framework\TestCase
 {
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject|Xhgui_StorageInterface
+     */
+    protected $dbMock;
+
+    /**
+     * @var Xhgui_Controller_Run
+     */
+    protected $runs;
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject|Request
+     */
+    protected $requestMock;
+
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject|Xhgui_Profiles
+     */
+    protected $profilesMock;
+
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject|Response
+     */
+    protected $responseMock;
+
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject|Slim
+     */
+    protected $appMock;
+
+    /**
+     * @return mixed|void
+     */
     public function setUp()
     {
         parent::setUp();
-        Environment::mock(array(
-            'SCRIPT_NAME' => 'index.php',
-            'PATH_INFO' => '/'
-        ));
-
         $di = Xhgui_ServiceContainer::instance();
-        $mock = $this->getMockBuilder('Slim\Slim')
-            ->setMethods(array('redirect', 'render', 'urlFor'))
+
+        $this->profilesMock = $this->getMockBuilder(Xhgui_Profiles::class)
+                                   ->setMethods([
+                                       'getAll',
+                                       'get',
+                                       'getPercentileForUrl',
+                                       'getRelatives'
+                                   ])
+                                   ->disableOriginalConstructor()
+                                   ->getMock();
+
+
+        $this->appMock = $this->getMockBuilder('Slim\Slim')
+            ->setMethods(array('redirect', 'render', 'urlFor', 'request', 'response'))
             ->setConstructorArgs(array($di['config']))
             ->getMock();
 
-        $di['app'] = $di->share(function ($c) use ($mock) {
-            return $mock;
+        $this->dbMock = $this->getMockBuilder(Xhgui_Storage_File::class)
+                           ->setMethods(['getAll', 'getWatchedFunctions'])
+                           ->disableOriginalConstructor()
+                           ->getMock();
+
+        $this->requestMock = $this->getMockBuilder(Request::class)
+            ->setMethods(['get'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->appMock->expects(self::any())->method('request')->willReturn($this->requestMock);
+
+        $di['db'] = $di->share(function ($c) {
+            return $this->dbMock;
         });
-        $this->import = $di['importController'];
+
+        $di['app'] = $di->share(function ($c) {
+            return $this->appMock;
+        });
+
+        $di['profiles'] = $di->share(function ($c) {
+            return $this->profilesMock;
+        });
+
         $this->runs = $di['runController'];
         $this->app = $di['app'];
-        $this->profiles = $di['searcher.mongo'];
-        $this->profiles->truncate();
-        $this->saver = $di['saver.mongo'];
+
+        $this->runs->setWatches($this->dbMock);
     }
 
+    /**
+     */
     public function testIndexEmpty()
     {
+        $sort = 'time';
+        $this->profilesMock->expects(self::once())->method('getAll')->willReturn([
+            'totalPages'    => 1,
+            'page'          => 1,
+            'direction'     => $sort,
+            'results'       => [],
+            'has_search'    => 'No search being done.'
+        ]);
+
+        $this->prepareRequestMock(['sort', 'time']);
+
         $this->runs->index();
         $result = $this->runs->templateVars();
 
         $this->assertEquals('Recent runs', $result['title']);
-        $this->assertFalse($result['has_search'], 'No search being done.');
         $expected = array(
-            'total_pages' => 1,
-            'page' => 1,
-            'sort' => null,
-            'direction' => 'desc',
+            'total_pages'   => 1,
+            'sort'          => 'time',
+            'page'          => 1,
+            'direction'     => $sort,
         );
         $this->assertEquals($expected, $result['paging']);
     }
 
-    public function testIndexSortedWallTime()
-    {
-        Environment::mock(array(
-            'SCRIPT_NAME' => 'index.php',
-            'PATH_INFO' => '/',
-            'QUERY_STRING' => 'sort=wt',
-        ));
-
-        $this->runs->index();
-        $result = $this->runs->templateVars();
-        $this->assertEquals('Longest wall time', $result['title']);
-        $this->assertEquals('wt', $result['paging']['sort']);
-    }
-
-    public function testIndexSortedCpu()
-    {
-        Environment::mock(array(
-            'SCRIPT_NAME' => 'index.php',
-            'PATH_INFO' => '/',
-            'QUERY_STRING' => 'sort=cpu&direction=desc',
-        ));
-
-        $this->runs->index();
-        $result = $this->runs->templateVars();
-        $this->assertEquals('Most CPU time', $result['title']);
-        $this->assertEquals('cpu', $result['paging']['sort']);
-        $this->assertEquals('desc', $result['paging']['direction']);
-    }
-
+    /**
+     *
+     */
     public function testIndexWithSearch()
     {
-        Environment::mock(array(
-            'SCRIPT_NAME' => 'index.php',
-            'PATH_INFO' => '/',
-            'QUERY_STRING' => 'sort=mu&direction=asc&url=index.php',
-        ));
+        $this->prepareRequestMock(['sort', 'time']);
 
         $this->runs->index();
         $result = $this->runs->templateVars();
-        $this->assertEquals('Highest memory use', $result['title']);
-        $this->assertEquals('mu', $result['paging']['sort']);
-        $this->assertEquals('asc', $result['paging']['direction']);
-        $this->assertEquals(array('url' => 'index.php'), $result['search']);
-        $this->assertTrue($result['has_search']);
+        $this->assertEquals('Recent runs', $result['title']);
+        $this->assertEquals('time', $result['paging']['sort']);
+        $this->assertArrayHasKey('url',  $result['search']);
+        $this->assertEquals('testUrl', $result['search']['url']);
     }
+
+    /**
+     *
+     */
+    public function testView() {
+        $id = 1;
+        $this->prepareRequestMock([
+            ['id', null, $id],
+        ]);
+        
+        // mocked result set.
+        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
+                           ->setMethods([
+                               'calculateSelf',
+                               'extractDimension',
+                               'getWatched',
+                               'getProfile',
+                               'sort'
+                           ])
+                           ->disableOriginalConstructor()
+                           ->getMock();
+
+        $profileMock->expects(self::any())->method('calculateSelf');
+        $profileMock->expects(self::exactly(2))->method('extractDimension')->willReturnOnConsecutiveCalls(
+            'ewt_values',
+            'emu_values'
+        );
+
+        // watched functions
+        $profileMock->expects(self::any())->method('sort')->willReturnSelf();
+
+        $this->dbMock->expects(self::any())->method('getWatchedFunctions')->willReturn([
+            ['name'=>'testWatchedFunction']
+        ]);
+
+        // mergein matched function 
+        $profileMock->expects(self::any())
+                   ->method('getWatched')
+                   ->with($this->stringContains('testWatchedFunction'))
+                   ->willReturn(['test']);
+
+        $this->profilesMock->expects(self::any())->method('get')->willReturn($profileMock);
+
+        // run controller action
+        $this->runs->view();
+        // get results passed to template
+        $result = $this->runs->templateVars();
+
+        self::assertSame($profileMock, $result['profile']);
+        self::assertSame($profileMock, $result['result']);
+        self::assertSame('ewt_values', $result['wall_time']);
+        self::assertSame('emu_values', $result['memory']);
+    }
+
 
     public function testUrl()
     {
-        Environment::mock(array(
-            'SCRIPT_NAME' => 'index.php',
-            'PATH_INFO' => '/url/view',
-            'QUERY_STRING' => 'url=%2Ftasks',
-        ));
+        $url = 'testUrl';
+        $this->prepareRequestMock([
+            ['url', $url],
+        ]);
+
+        // make sure that we call profiles storage with url filter
+        $this->profilesMock->expects(self::once())
+                           ->method('getAll')
+                           ->with($this->callback(function ($filter) use ($url){
+            if (!($filter instanceof Xhgui_Storage_Filter)) {
+                return false;
+            }
+
+            return $filter->getUrl() == $url;
+        }))->willReturn([
+            'results'       => ['fake_results'],
+            'totalPages'    => 0,
+            'page'          => 0,
+            'direction'     => 'desc',
+        ]);
+
+        // chart data. For this we mock it with fake data, we don't process it action
+        // we just pass it to view
+        $this->profilesMock->expects(self::once())
+                           ->method('getPercentileForUrl')
+                           ->willReturn('mocked_chart_data');
 
         $this->runs->url();
 
         $result = $this->runs->templateVars();
-        $this->assertEquals('url.view', $result['base_url']);
-        $this->assertEquals('/tasks', $result['url']);
-        $this->assertArrayHasKey('chart_data', $result);
-        $this->assertArrayHasKey('runs', $result);
-    }
 
-    public function testUrlWithSearch()
-    {
-        $this->markTestIncomplete('Not done');
-    }
-
-    public function testUrlWithSearchInterval()
-    {
-        $this->markTestIncomplete('Not done');
+        self::assertSame($url, $result['url']);
+        self::assertSame(['fake_results'], $result['runs']);
+        self::assertSame(['fake_results'], $result['runs']);
     }
 
     public function testCompareNoBase()
     {
-        $this->markTestIncomplete('Not done');
+        $base = null;
+        $head = null;
+        $this->prepareRequestMock([
+            ['base', null, $base],
+            ['head', null, $head],
+        ]);
+
+        $this->runs->compare();
+        $result = $this->runs->templateVars();
+
+        self::assertNull($result['base_run']);
+        self::assertNull($result['head_run']);
+        self::assertSame($base, $result['search']['base']);
+        self::assertSame($head, $result['search']['head']);
+
+        self::assertNull($result['candidates']);
+        self::assertNull($result['comparison']);
     }
 
     public function testCompareWithBase()
     {
-        $this->markTestIncomplete('Not done');
+        $base = 1;
+        $head = null;
+        $url = 'testUrl';
+        $this->prepareRequestMock([
+            ['base', null, $base],
+            ['head', null, $head]
+        ]);
+
+        // mocked result set.
+        $baseRunMock = $this->getMockBuilder(Xhgui_Profile::class)
+                           ->setMethods([
+                               'getMeta',
+                               'compare',
+                           ])
+                           ->disableOriginalConstructor()
+                           ->getMock();
+        $baseRunMock->expects(self::any())->method('getMeta')->willReturnMap([
+            ['simple_url', $url]
+        ]);
+        $this->profilesMock->expects(self::once())->method('get')->willReturn($baseRunMock);
+
+        // get candidate
+        $this->profilesMock->expects(self::once())
+            ->method('getAll')
+            ->with($this->callback(function ($filter) use ($url){
+                if (!($filter instanceof Xhgui_Storage_Filter)) {
+                    return false;
+                }
+
+                return $filter->getUrl() == $url;
+            }))
+            ->willReturn([
+                'results'       => ['fake_results'],
+                'totalPages'    => 0,
+                'page'          => 0,
+                'direction'     => 'desc',
+            ]);
+
+        $this->runs->compare();
+        $result = $this->runs->templateVars();
+
+        self::assertInstanceOf(Xhgui_Profile::class, $result['base_run']);
+        self::assertNull($result['head_run']);
+        self::assertSame($base, $result['search']['base']);
+        self::assertSame($head, $result['search']['head']);
+
+        self::assertNotNull($result['candidates']['results']);
+        self::assertNull($result['comparison']);
     }
 
     public function testCompareWithBaseAndHead()
     {
-        $this->markTestIncomplete('Not done');
+        $base = 1;
+        $head = 2;
+        $url = 'testUrl';
+        $compareResult = "CompareResult";
+
+        $this->prepareRequestMock([
+            ['base', null, $base],
+            ['head', null, $head]
+        ]);
+
+        // mocked result set.
+        $baseRunMock = $this->getMockBuilder(Xhgui_Profile::class)
+            ->setMethods([
+                'getMeta',
+                'compare',
+            ])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $baseRunMock->expects(self::any())->method('getMeta')->willReturnMap([
+            ['simple_url', $url]
+        ]);
+        $baseRunMock->expects(self::once())->method('compare')->willReturn($compareResult);
+        
+        // mocked result set.
+        $headRunMock = $this->getMockBuilder(Xhgui_Profile::class)
+                            ->setMethods([
+                            ])
+                            ->disableOriginalConstructor()
+                            ->getMock();
+        $this->profilesMock->expects(self::exactly(2))->method('get')->willReturnMap([
+            [$base, $baseRunMock],
+            [$head, $headRunMock]
+        ]);
+
+        $this->runs->compare();
+        $result = $this->runs->templateVars();
+
+        self::assertInstanceOf(Xhgui_Profile::class, $result['base_run']);
+        self::assertInstanceOf(Xhgui_Profile::class, $result['head_run']);
+        self::assertSame($base, $result['search']['base']);
+        self::assertSame($head, $result['search']['head']);
+
+        self::assertNull($result['candidates']['results']);
+        self::assertSame($compareResult, $result['comparison']);
     }
 
     public function testSymbol()
     {
-        $this->markTestIncomplete('Not done');
+        $id = 1;
+        $symbol = 'main()';
+
+        $this->prepareRequestMock([
+            ['id',      null, $id],
+            ['symbol',  null, $symbol]
+        ]);
+        // mocked result set.
+        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
+            ->setMethods([
+                'calculateSelf',
+                'getRelatives',
+            ])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $profileMock->expects(self::any())
+                   ->method('calculateSelf');
+
+
+        $profileMock->expects(self::any())
+                   ->method('getRelatives')
+                   ->with($this->equalTo($symbol))
+                   ->willReturn(['parents', 'current', 'children']);
+
+        $this->profilesMock->expects(self::any())
+            ->method('get')
+            ->with($this->equalTo($id))
+            ->willReturn($profileMock);
+
+        $this->runs->symbol();
+        $result = $this->runs->templateVars();
+
+        self::assertSame('parents', $result['parents']);
+        self::assertSame('current', $result['current']);
+        self::assertSame('children', $result['children']);
+
+    }
+
+    public function testSymbolShort()
+    {
+        $id = 1;
+        $threshold = 2;
+        $symbol = 'main()';
+        $metric = 3;
+
+        $this->prepareRequestMock([
+            ['id',          null, $id],
+            ['threshold',   null, $threshold],
+            ['symbol',      null, $symbol],
+            ['metric',      null, $metric],
+        ]);
+        // mocked result set.
+        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
+            ->setMethods([
+                'calculateSelf',
+                'getRelatives',
+            ])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $profileMock->expects(self::any())
+                   ->method('calculateSelf');
+
+
+        $profileMock->expects(self::any())
+                   ->method('getRelatives')
+                   ->with($this->equalTo($symbol), $this->equalTo($metric), $this->equalTo($threshold))
+                   ->willReturn(['parents', 'current', 'children']);
+
+        $this->profilesMock->expects(self::any())
+            ->method('get')
+            ->with($this->equalTo($id))
+            ->willReturn($profileMock);
+
+        $this->runs->symbolShort();
+        $result = $this->runs->templateVars();
+
+        self::assertSame('parents', $result['parents']);
+        self::assertSame('current', $result['current']);
+        self::assertSame('children', $result['children']);
+
     }
 
     public function testCallgraph()
     {
-        loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
-        Environment::mock(array(
-            'SCRIPT_NAME' => 'index.php',
-            'PATH_INFO' => '/',
-            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
-        ));
+        $id = 1;
+
+        $this->prepareRequestMock([
+            ['id',          null, $id],
+        ]);
+
+        // mocked result set.
+        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
+                            ->setMethods([
+                            ])
+                            ->disableOriginalConstructor()
+                            ->getMock();
+
+        $this->profilesMock->expects(self::any())
+                           ->method('get')
+                           ->with($this->equalTo($id))
+                           ->willReturn($profileMock);
 
         $this->runs->callgraph();
         $result = $this->runs->templateVars();
+        
         $this->assertArrayHasKey('profile', $result);
         $this->assertArrayHasKey('date_format', $result);
         $this->assertArrayNotHasKey('callgraph', $result);
@@ -155,12 +462,37 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
 
     public function testCallgraphData()
     {
-        loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
-        Environment::mock(array(
-            'SCRIPT_NAME' => 'index.php',
-            'PATH_INFO' => '/',
-            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
-        ));
+        $id = 1;
+        $metric = 'metric';
+        $threshold = 1;
+
+        $this->prepareRequestMock([
+            ['id',          null, $id],
+            ['metric',      null, $metric],
+            ['threshold',   null, $threshold],
+        ]);
+
+        // mocked result set.
+        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
+                            ->setMethods([
+                                'getCallgraphNodes',
+                                'getCallgraph'
+                            ])
+                            ->disableOriginalConstructor()
+                            ->getMock();
+
+        $this->profilesMock->expects(self::any())
+                           ->method('get')
+                           ->with($this->equalTo($id))
+                           ->willReturn($profileMock);
+
+        $responseMock = $this->getMockBuilder(Response::class)->setMethods(['body'])->disableOriginalConstructor()->getMock();
+        $responseMock->expects(self::exactly(2))->method('body')->willReturnOnConsecutiveCalls(
+            [''],
+            '{"'
+        );
+        
+        $this->appMock->expects(self::exactly(2))->method('response')->willReturn($responseMock);
 
         $this->runs->callgraphData();
         $response = $this->app->response();
@@ -169,105 +501,24 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
         $this->assertStringStartsWith('{"', $response->body());
     }
 
-    public function testDeleteSubmit()
-    {
-        loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+    /**
+     * @param array $override
+     */
+    protected function prepareRequestMock($override = []) {
 
-        Environment::mock(array(
-            'REQUEST_METHOD' => 'POST',
-            'SCRIPT_NAME' => 'index.php',
-            'PATH_INFO' => '/run/delete',
-            'slim.request.form_hash' => [
-                'id' => 'aaaaaaaaaaaaaaaaaaaaaaaa',
-            ],
-        ));
+        $default = [
+            ['url',         null, 'testUrl'],
+            ['startDate',   null, '2019-01-01'],
+            ['endDate',     null, '2019-02-01'],
+            ['sort',        null, 'time'],
+            ['direction',   null, 'desc'],
+            ['page',        null, '1'],
+        ];
 
-        $this->app->expects($this->once())
-            ->method('urlFor')
-            ->with('home');
-
-        $this->app->expects($this->once())
-            ->method('redirect');
-
-        $result = $this->profiles->getAll();
-        $this->assertCount(5, $result['results']);
-
-        $this->runs->deleteSubmit();
-
-        $result = $this->profiles->getAll();
-        $this->assertCount(4, $result['results']);
+        $this->requestMock->expects(self::any())
+                          ->method('get')
+                          ->willReturnMap(array_merge($default, $override));
     }
 
-    public function testDeleteAllSubmit()
-    {
-        loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
 
-        Environment::mock(array(
-          'SCRIPT_NAME' => 'index.php',
-          'PATH_INFO' => '/run/delete_all',
-        ));
-
-        $this->app->expects($this->once())
-          ->method('urlFor')
-          ->with('home');
-
-        $this->app->expects($this->once())
-          ->method('redirect');
-
-        $result = $this->profiles->getAll();
-        $this->assertCount(5, $result['results']);
-
-        $this->runs->deleteAllSubmit();
-
-        $result = $this->profiles->getAll();
-        $this->assertCount(0, $result['results']);
-    }
-
-    public function testFilterCustomMethods()
-    {
-        loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
-
-        Environment::mock(array(
-            'SCRIPT_NAME' => 'index.php',
-            'PATH_INFO' => '/run/view',
-            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*,strpos()',
-        ));
-
-        $this->runs->view();
-        $result = $this->runs->templateVars();
-
-        $this->assertCount(1, $result['profile']);
-    }
-
-    public function testFilterCustomMethod()
-    {
-        loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
-
-        Environment::mock(array(
-            'SCRIPT_NAME' => 'index.php',
-            'PATH_INFO' => '/run/view',
-            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*',
-        ));
-
-        $this->runs->view();
-        $result = $this->runs->templateVars();
-
-        $this->assertCount(2, $result['profile']);
-    }
-
-    public function testFilterMethods()
-    {
-        loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
-
-        Environment::mock(array(
-            'SCRIPT_NAME' => 'index.php',
-            'PATH_INFO' => '/run/view',
-            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=true',
-        ));
-
-        $this->runs->view();
-        $result = $this->runs->templateVars();
-
-        $this->assertCount(2, $result['profile']);
-    }
 }

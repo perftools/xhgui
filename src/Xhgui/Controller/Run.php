@@ -23,8 +23,8 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     public function __construct(Slim $app, Xhgui_Profiles $profiles, \Xhgui_WatchedFunctionsStorageInterface $watches)
     {
         parent::__construct($app);
-        $this->profiles = $profiles;
-        $this->watches  = $watches;
+        $this->setProfiles($profiles);
+        $this->setWatches($watches);
     }
 
     /**
@@ -36,7 +36,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
         $filter = Xhgui_Storage_Filter::fromRequest($request);
 
-        $result = $this->profiles->getAll($filter);
+        $result = $this->getProfiles()->getAll($filter);
         $title = 'Recent runs';
         $titleMap = array(
             'wt'    => 'Longest wall time',
@@ -72,7 +72,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     {
         $request = $this->app->request();
         $detailCount = $this->app->config('detail.count');
-        $result = $this->profiles->get($request->get('id'));
+        $result = $this->getProfiles()->get($request->get('id'));
 
         $result->calculateSelf();
 
@@ -84,7 +84,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
         // Watched Functions Block
         $watchedFunctions = array();
-        foreach ($this->watches->getWatchedFunctions() as $watch) {
+        foreach ($this->getWatches()->getWatchedFunctions() as $watch) {
             $matches = $result->getWatched($watch['name']);
 
             if ($matches) {
@@ -117,7 +117,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         }
 
         // Get details
-        $result = $this->profiles->get($id);
+        $result = $this->getProfiles()->get($id);
 
         $this->_template = 'runs/delete-form.twig';
         $this->set(array(
@@ -143,7 +143,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         }
 
         // Delete the profile run.
-        $this->profiles->delete($id);
+        $this->getProfiles()->delete($id);
 
         $this->app->flash('success', 'Deleted profile ' . $id);
 
@@ -164,7 +164,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     public function deleteAllSubmit()
     {
         // Delete all profile runs.
-        $this->profiles->truncate();
+        $this->getProfiles()->truncate();
 
         $this->app->flash('success', 'Deleted all profiles');
 
@@ -180,9 +180,9 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
         $filter = Xhgui_Storage_Filter::fromRequest($request);
         $filter->setUrl($request->get('url'));
-        $result = $this->profiles->getAll($filter);
+        $result = $this->getProfiles()->getAll($filter);
 
-        $chartData = $this->profiles->getPercentileForUrl(
+        $chartData = $this->getProfiles()->getPercentileForUrl(
             90,
             $request->get('url'),
             $filter
@@ -218,7 +218,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $paging = array();
 
         if ($request->get('base')) {
-            $baseRun = $this->profiles->get($request->get('base'));
+            $baseRun = $this->getProfiles()->get($request->get('base'));
         }
 
         // we have one selected but we need to list other runs.
@@ -226,7 +226,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             $filter = Xhgui_Storage_Filter::fromRequest($request);
             $filter->setUrl($baseRun->getMeta('simple_url'));
 
-            $candidates = $this->profiles->getAll($filter);
+            $candidates = $this->getProfiles()->getAll($filter);
 
             $paging = array(
                 'total_pages'   => $candidates['totalPages'],
@@ -237,7 +237,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         }
 
         if ($request->get('head')) {
-            $headRun = $this->profiles->get($request->get('head'));
+            $headRun = $this->getProfiles()->get($request->get('head'));
         }
 
         if ($baseRun && $headRun) {
@@ -270,7 +270,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $id         = $request->get('id');
         $symbol     = $request->get('symbol');
 
-        $profile = $this->profiles->get($id);
+        $profile = $this->getProfiles()->get($id);
         $profile->calculateSelf();
         list($parents, $current, $children) = $profile->getRelatives($symbol);
 
@@ -296,7 +296,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $symbol     = $request->get('symbol');
         $metric     = $request->get('metric');
 
-        $profile = $this->profiles->get($id);
+        $profile = $this->getProfiles()->get($id);
         $profile->calculateSelf();
         list($parents, $current, $children) = $profile->getRelatives($symbol, $metric, $threshold);
 
@@ -317,7 +317,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     public function callgraph()
     {
         $request = $this->app->request();
-        $profile = $this->profiles->get($request->get('id'));
+        $profile = $this->getProfiles()->get($request->get('id'));
 
         $this->_template = 'runs/callgraph.twig';
         $this->set(array(
@@ -334,7 +334,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     {
         $request    = $this->app->request();
         $response   = $this->app->response();
-        $profile    = $this->profiles->get($request->get('id'));
+        $profile    = $this->getProfiles()->get($request->get('id'));
         $metric     = $request->get('metric') ?: 'wt';
         $threshold  = (float)$request->get('threshold') ?: 0.01;
 
@@ -346,5 +346,33 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
         $response['Content-Type'] = 'application/json';
         return $response->body(json_encode($callgraph));
+    }
+
+    /**
+     * @return Xhgui_WatchedFunctionsStorageInterface
+     */
+    public function getWatches() {
+        return $this->watches;
+    }
+
+    /**
+     * @param Xhgui_WatchedFunctionsStorageInterface $watches
+     */
+    public function setWatches($watches) {
+        $this->watches = $watches;
+    }
+
+    /**
+     * @return Xhgui_Profiles
+     */
+    public function getProfiles() {
+        return $this->profiles;
+    }
+
+    /**
+     * @param Xhgui_Profiles $profiles
+     */
+    public function setProfiles($profiles) {
+        $this->profiles = $profiles;
     }
 }
