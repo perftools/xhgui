@@ -10,6 +10,9 @@ class CommonTestCase extends PHPUnit\Framework\TestCase {
      */
     protected $requestMock;
 
+    /**
+     *
+     */
     public function setUp(){
         $this->requestMock = $this->getMockBuilder(Request::class)
                                   ->setMethods(['get', 'post'])
@@ -24,12 +27,12 @@ class CommonTestCase extends PHPUnit\Framework\TestCase {
     protected function prepareGetRequestMock($override = []) {
 
         $default = [
-            ['url', null, 'testUrl'],
-            ['startDate', null, '2019-01-01'],
-            ['endDate', null, '2019-02-01'],
-            ['sort', null, 'time'],
-            ['direction', null, 'desc'],
-            ['page', null, '1'],
+            ['url',         null, 'testUrl'],
+            ['startDate',   null, '2019-01-01'],
+            ['endDate',     null, '2019-02-01'],
+            ['sort',        null, 'time'],
+            ['direction',   null, 'desc'],
+            ['page',        null, '1'],
         ];
 
         $this->requestMock->expects(PHPUnit_Framework_TestCase::any())
@@ -46,4 +49,16 @@ class CommonTestCase extends PHPUnit\Framework\TestCase {
                           ->method('post')
                           ->willReturnMap($override);
     }
+
+    /**
+     * Shorthand helper for mock creation
+     *
+     * @param $class
+     * @param array $methods
+     * @return PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function m($class, $methods = []){
+        return $this->getMockBuilder($class)->disableOriginalConstructor()->setMethods($methods)->getMock();
+    }
+
 }

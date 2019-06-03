@@ -1,92 +1,86 @@
 <?php
 use Slim\Environment;
+use Slim\Slim;
 
-class Controller_WatchTest extends PHPUnit\Framework\TestCase
+class Controller_WatchTest extends CommonTestCase
 {
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject|Xhgui_StorageInterface
+     */
+    protected $dbMock;
+
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject|Slim
+     */
+    protected $appMock;
+    
+    /**
+     * 
+     */
     public function setUp()
     {
         parent::setUp();
-        Environment::mock(array(
-           'SCRIPT_NAME' => 'index.php',
-           'PATH_INFO' => '/watch'
-        ));
         $di = Xhgui_ServiceContainer::instance();
-        unset($di['app']);
 
-        $mock = $this->getMockBuilder('Slim\Slim')
-            ->setMethods(array('redirect', 'render', 'urlFor'))
-            ->setConstructorArgs(array($di['config']))
-            ->getMock();
-        $di['app'] = $di->share(function ($c) use ($mock) {
-            return $mock;
+        $this->appMock  = $this->m(Slim::class,['redirect', 'render', 'urlFor', 'request', 'response', 'flash']);
+
+        $this->dbMock   = $this->m(Xhgui_Storage_File::class, [
+            'getAll',
+            'getWatchedFunctions',
+            'addWatchedFunction',
+            'removeWatchedFunction',
+            'updateWatchedFunction'
+        ]);
+
+        $this->appMock->expects(self::any())->method('request')->willReturn($this->requestMock);
+
+        $di['app'] = $di->share(function ($c) {
+            return $this->appMock;
         });
+
+        $di['db'] = $di->share(function ($c) {
+            return $this->dbMock;
+        });
+
         $this->watches = $di['watchController'];
         $this->app = $di['app'];
-        $this->searcher = $di['searcher'];
-        $this->searcher->truncateWatches();
     }
 
     public function testGet()
     {
+        $expected = 'getWatchedFunctions return';
+        $this->dbMock->expects(self::once())->method('getWatchedFunctions')->willReturn($expected);
+
         $this->watches->get();
         $result = $this->watches->templateVars();
-        $this->assertEquals(array(), $result['watched']);
+        $this->assertEquals($expected, $result['watched']);
     }
 
-    public function testPostAdd()
-    {
-        $_POST = array(
-            'watch' => array(
-                array('name' => 'strlen'),
-                array('name' => 'strpos')
-            )
-        );
-        $this->app->expects($this->once())
-            ->method('urlFor')
-            ->with('watch.list');
 
-        $this->app->expects($this->once())
-            ->method('redirect');
+    /**
+     * @param string $method
+     * @param array  $payload
+     * @dataProvider postDataProvider
+     */
+    public function testPost($method, $payload)
+    {
+        $this->preparePostRequestMock([
+            ['watch', null, $payload],
+        ]);
+
+        $this->dbMock->expects(self::exactly(2))->method($method);
+
+        $this->appMock->expects(self::once())->method('urlFor');
+        $this->appMock->expects(self::once())->method('redirect');
 
         $this->watches->post();
-        $result = $this->searcher->getAllWatches();
-
-        $this->assertCount(2, $result);
-        $this->assertEquals('strlen', $result[0]['name']);
-        $this->assertEquals('strpos', $result[1]['name']);
     }
 
-    public function testPostModify()
-    {
-        $this->searcher->saveWatch(array('name' => 'strlen'));
-        $saved = $this->searcher->getAllWatches();
-
-        $_POST = array(
-            'watch' => array(
-                array('name' => 'strpos', '_id' => $saved[0]['_id'])
-            )
-        );
-        $this->watches->post();
-        $result = $this->searcher->getAllWatches();
-
-        $this->assertCount(1, $result);
-        $this->assertEquals('strpos', $result[0]['name']);
+    public function postDataProvider() {
+        return [
+            ['updateWatchedFunction', [['id'=>1, 'name'=>'test'], ['id'=>2, 'name'=>'different test']]],
+            ['addWatchedFunction', [['name'=>'test'], ['name'=>'different test']]],
+            ['removeWatchedFunction', [['id'=>1, 'removed'=>'1'], ['id'=>2, 'removed'=>'1']]],
+        ];
     }
-
-    public function testPostDelete()
-    {
-        $this->searcher->saveWatch(array('name' => 'strlen'));
-        $saved = $this->searcher->getAllWatches();
-
-        $_POST = array(
-            'watch' => array(
-                array('removed' => 1, 'name' => 'strpos', '_id' => $saved[0]['_id'])
-            )
-        );
-        $this->watches->post();
-        $result = $this->searcher->getAllWatches();
-
-        $this->assertCount(0, $result);
-    }
-
 }

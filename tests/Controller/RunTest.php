@@ -39,28 +39,18 @@ class Controller_RunTest extends CommonTestCase
         parent::setUp();
         $di = Xhgui_ServiceContainer::instance();
 
-        $this->profilesMock = $this->getMockBuilder(Xhgui_Profiles::class)
-                                   ->setMethods([
-                                       'getAll',
-                                       'get',
-                                       'getPercentileForUrl',
-                                       'getRelatives',
-                                       'delete',
-                                       'truncate'
-                                   ])
-                                   ->disableOriginalConstructor()
-                                   ->getMock();
+        $this->profilesMock = $this->m(Xhgui_Profiles::class,[
+            'getAll',
+            'get',
+            'getPercentileForUrl',
+            'getRelatives',
+            'delete',
+            'truncate'
+        ]);
 
-
-        $this->appMock = $this->getMockBuilder('Slim\Slim')
-            ->setMethods(array('redirect', 'render', 'urlFor', 'request', 'response', 'flash'))
-            ->setConstructorArgs(array($di['config']))
-            ->getMock();
-
-        $this->dbMock = $this->getMockBuilder(Xhgui_Storage_File::class)
-                           ->setMethods(['getAll', 'getWatchedFunctions'])
-                           ->disableOriginalConstructor()
-                           ->getMock();
+        $this->appMock  = $this->m(Slim::class,['redirect', 'render', 'urlFor', 'request', 'response', 'flash']);
+        
+        $this->dbMock   = $this->m(Xhgui_Storage_File::class, ['getAll', 'getWatchedFunctions']);
 
         $this->appMock->expects(self::any())->method('request')->willReturn($this->requestMock);
 
@@ -135,16 +125,13 @@ class Controller_RunTest extends CommonTestCase
         ]);
         
         // mocked result set.
-        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
-                           ->setMethods([
-                               'calculateSelf',
-                               'extractDimension',
-                               'getWatched',
-                               'getProfile',
-                               'sort'
-                           ])
-                           ->disableOriginalConstructor()
-                           ->getMock();
+        $profileMock = $this->m(Xhgui_Profile::class,[
+            'calculateSelf',
+            'extractDimension',
+            'getWatched',
+            'getProfile',
+            'sort'
+        ]);
 
         $profileMock->expects(self::any())->method('calculateSelf');
         $profileMock->expects(self::exactly(2))->method('extractDimension')->willReturnOnConsecutiveCalls(
@@ -249,13 +236,11 @@ class Controller_RunTest extends CommonTestCase
         ]);
 
         // mocked result set.
-        $baseRunMock = $this->getMockBuilder(Xhgui_Profile::class)
-                           ->setMethods([
-                               'getMeta',
-                               'compare',
-                           ])
-                           ->disableOriginalConstructor()
-                           ->getMock();
+        $baseRunMock = $this->m(Xhgui_Profile::class,[
+            'getMeta',
+            'compare',
+        ]);
+
         $baseRunMock->expects(self::any())->method('getMeta')->willReturnMap([
             ['simple_url', $url]
         ]);
@@ -303,13 +288,10 @@ class Controller_RunTest extends CommonTestCase
         ]);
 
         // mocked result set.
-        $baseRunMock = $this->getMockBuilder(Xhgui_Profile::class)
-            ->setMethods([
-                'getMeta',
-                'compare',
-            ])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $baseRunMock = $this->m(Xhgui_Profile::class,[
+            'getMeta',
+            'compare',
+        ]);
 
         $baseRunMock->expects(self::any())->method('getMeta')->willReturnMap([
             ['simple_url', $url]
@@ -317,11 +299,8 @@ class Controller_RunTest extends CommonTestCase
         $baseRunMock->expects(self::once())->method('compare')->willReturn($compareResult);
         
         // mocked result set.
-        $headRunMock = $this->getMockBuilder(Xhgui_Profile::class)
-                            ->setMethods([
-                            ])
-                            ->disableOriginalConstructor()
-                            ->getMock();
+        $headRunMock = $this->m(Xhgui_Profile::class);
+        
         $this->profilesMock->expects(self::exactly(2))->method('get')->willReturnMap([
             [$base, $baseRunMock],
             [$head, $headRunMock]
@@ -349,13 +328,10 @@ class Controller_RunTest extends CommonTestCase
             ['symbol',  null, $symbol]
         ]);
         // mocked result set.
-        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
-            ->setMethods([
-                'calculateSelf',
-                'getRelatives',
-            ])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $profileMock = $this->m(Xhgui_Profile::class,[
+            'calculateSelf',
+            'getRelatives',
+        ]);
 
         $profileMock->expects(self::any())
                    ->method('calculateSelf');
@@ -394,13 +370,10 @@ class Controller_RunTest extends CommonTestCase
             ['metric',      null, $metric],
         ]);
         // mocked result set.
-        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
-            ->setMethods([
-                'calculateSelf',
-                'getRelatives',
-            ])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $profileMock = $this->m(Xhgui_Profile::class,[
+            'calculateSelf',
+            'getRelatives',
+        ]);
 
         $profileMock->expects(self::any())
                    ->method('calculateSelf');
@@ -434,11 +407,7 @@ class Controller_RunTest extends CommonTestCase
         ]);
 
         // mocked result set.
-        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
-                            ->setMethods([
-                            ])
-                            ->disableOriginalConstructor()
-                            ->getMock();
+        $profileMock = $this->m(Xhgui_Profile::class);
 
         $this->profilesMock->expects(self::any())
                            ->method('get')
@@ -466,20 +435,17 @@ class Controller_RunTest extends CommonTestCase
         ]);
 
         // mocked result set.
-        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
-                            ->setMethods([
-                                'getCallgraphNodes',
-                                'getCallgraph'
-                            ])
-                            ->disableOriginalConstructor()
-                            ->getMock();
+        $profileMock = $this->m(Xhgui_Profile::class,[
+            'getCallgraphNodes',
+            'getCallgraph'
+        ]);
 
         $this->profilesMock->expects(self::any())
                            ->method('get')
                            ->with($this->equalTo($id))
                            ->willReturn($profileMock);
 
-        $responseMock = $this->getMockBuilder(Response::class)->setMethods(['body'])->disableOriginalConstructor()->getMock();
+        $responseMock = $this->m(Response::class,['body']);
         $responseMock->expects(self::exactly(2))->method('body')->willReturnOnConsecutiveCalls(
             [''],
             '{"'
@@ -506,11 +472,7 @@ class Controller_RunTest extends CommonTestCase
         ]);
 
         // mocked result set.
-        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
-                            ->setMethods([
-                            ])
-                            ->disableOriginalConstructor()
-                            ->getMock();
+        $profileMock = $this->m(Xhgui_Profile::class);
 
         $this->profilesMock->expects(self::any())
                            ->method('get')
@@ -537,11 +499,7 @@ class Controller_RunTest extends CommonTestCase
         ]);
 
         // mocked result set.
-        $profileMock = $this->getMockBuilder(Xhgui_Profile::class)
-                            ->setMethods([
-                            ])
-                            ->disableOriginalConstructor()
-                            ->getMock();
+        $profileMock = $this->m(Xhgui_Profile::class);
 
         $this->profilesMock->expects(self::any())
                            ->method('delete')

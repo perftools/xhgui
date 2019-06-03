@@ -17,7 +17,7 @@ class Xhgui_Controller_Watch extends Xhgui_Controller
     public function __construct(Slim $app, \Xhgui_WatchedFunctionsStorageInterface $watches)
     {
         parent::__construct($app);
-        $this->watches  = $watches;
+        $this->setWatches($watches);
     }
 
     /**
@@ -25,7 +25,7 @@ class Xhgui_Controller_Watch extends Xhgui_Controller
      */
     public function get()
     {
-        $watched = $this->watches->getWatchedFunctions();
+        $watched = $this->getWatches()->getWatchedFunctions();
 
         $this->_template = 'watch/list.twig';
         $this->set(array('watched' => $watched));
@@ -44,7 +44,7 @@ class Xhgui_Controller_Watch extends Xhgui_Controller
         foreach ((array)$request->post('watch') as $data) {
             if (empty($data['id'])) {
                 $watches->addWatchedFunction($data['name']);
-            } elseif ($data['removed'] === '1') {
+            } elseif (!empty($data['removed']) && $data['removed'] === '1') {
                 $watches->removeWatchedFunction($data['id']);
             } else {
                 $watches->updateWatchedFunction($data['id'], $data['name']);
@@ -55,5 +55,19 @@ class Xhgui_Controller_Watch extends Xhgui_Controller
             $app->flash('success', 'Watch functions updated.');
         }
         $app->redirect($app->urlFor('watch.list'));
+    }
+
+    /**
+     * @return Xhgui_WatchedFunctionsStorageInterface
+     */
+    public function getWatches() {
+        return $this->watches;
+    }
+
+    /**
+     * @param Xhgui_WatchedFunctionsStorageInterface $watches
+     */
+    public function setWatches($watches) {
+        $this->watches = $watches;
     }
 }
