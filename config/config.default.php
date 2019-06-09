@@ -14,7 +14,7 @@ return array(
 
     // For file
     'save.handler'                    => 'file',
-    'save.handler.filename'           => dirname(__DIR__) . '/cache/' . 'xhgui.data.' . microtime(true) . '_' . substr(md5($_SERVER['REQUEST_URI']), 0, 6),
+    'save.handler.filename'           => dirname(__DIR__) . '/cache/' . 'xhgui.data.' . microtime(true) . '_' . substr(md5(!empty($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : microtime(true).getmypid().uniqid('fallback_requiest_id', true)), 0, 6),
     'save.handler.separate_meta'      => false,
     'save.handler.meta_serializer'    => 'php',
 

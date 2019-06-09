@@ -35,7 +35,7 @@ class CommonTestCase extends PHPUnit\Framework\TestCase {
             ['page',        null, '1'],
         ];
 
-        $this->requestMock->expects(PHPUnit_Framework_TestCase::any())
+        $this->requestMock->expects(self::any())
                           ->method('get')
                           ->willReturnMap(array_merge($default, $override));
     }
@@ -45,7 +45,7 @@ class CommonTestCase extends PHPUnit\Framework\TestCase {
      */
     protected function preparePostRequestMock($override = []) {
 
-        $this->requestMock->expects(PHPUnit_Framework_TestCase::any())
+        $this->requestMock->expects(self::any())
                           ->method('post')
                           ->willReturnMap($override);
     }
