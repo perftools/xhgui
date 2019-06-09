@@ -13,15 +13,15 @@ return array(
     // Can be mongodb, file, upload or pdo.
 
     // For file
-    //'save.handler'                    => 'file',
-    //'save.handler.filename'           => dirname(__DIR__) . '/cache/' . 'xhgui.data.' . microtime(true) . '_' . substr(md5($_SERVER['REQUEST_URI']), 0, 6),
-    //'save.handler.separate_meta'      => false,
-    //'save.handler.meta_serializer'    => 'php',
+    'save.handler'                    => 'file',
+    'save.handler.filename'           => dirname(__DIR__) . '/cache/' . 'xhgui.data.' . microtime(true) . '_' . substr(md5($_SERVER['REQUEST_URI']), 0, 6),
+    'save.handler.separate_meta'      => false,
+    'save.handler.meta_serializer'    => 'php',
 
     // serialize handler for all compatible data: json, serialize, igbinary. This affects only serialization to files
     // because mongo handler and db handlers use json for native database support.
     // Defaults to json. Best performance: 'php'
-    //'save.handler.serializer'        => 'json',
+    'save.handler.serializer'        => 'json',
 
     // to make output compatible with old xhprof gui set
     //      save.handler.serializer     to serialize,
