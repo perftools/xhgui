@@ -6,6 +6,8 @@
 class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunctionsStorageInterface
 {
 
+    protected $config;
+
     /**
      * @var \MongoDB
      */
@@ -19,7 +21,8 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     /**
      * @var string
      */
-    protected $collection;
+    protected $collectionName;
+
     /**
      * @var \MongoClient
      */
@@ -33,12 +36,12 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
      */
     public function __construct($config, $collection = 'results')
     {
-
+        $this->config = $config;
         // set default number of rows for all results. This can be changed
         // for each query
         $this->defaultPerPage = $config['page.limit'];
 
-        $this->collection = $collection;
+        $this->collectionName = $collection;
 
         // make sure options is an array
         if (empty($config['db.options'])) {
@@ -46,11 +49,6 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
         }
 
         $config['db.options']['connect'] = true;
-
-        // create client
-        $this->mongoClient = new \MongoClient($config['db.host'], $config['db.options']);
-
-        $this->connection = $this->mongoClient->{$config['db.db']};
     }
 
     /**
@@ -68,7 +66,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
             case 'cpu':
             case 'mu':
             case 'pmu':
-                $sort['profile.main().'.$filter->getSort()] = $filter->getDirection() === 'asc' ? 1 : -1;
+                $sort['profile.main().' . $filter->getSort()] = $filter->getDirection() === 'asc' ? 1 : -1;
                 break;
             case 'time':
                 $sort['meta.request_ts'] = $filter->getDirection() === 'asc' ? 1 : -1;
@@ -77,11 +75,11 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
 
         $conditions = $this->getConditions($filter);
 
-        $ret = $this->connection->{$this->collection}
-            ->find($conditions)
-            ->sort($sort)
-            ->skip((int)($filter->getPage() - 1) * $filter->getPerPage())
-            ->limit($filter->getPerPage());
+        $ret = $this->getCollection()
+                    ->find($conditions)
+                    ->sort($sort)
+                    ->skip((int)($filter->getPage() - 1) * $filter->getPerPage())
+                    ->limit($filter->getPerPage());
 
 
         $result = new \Xhgui_Storage_ResultSet(iterator_to_array($ret));
@@ -98,7 +96,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     {
         $conditions = $this->getConditions($filter);
 
-        $ret = $this->connection->{$this->collection}->find($conditions,  array('_id' => 1))->count();
+        $ret = $this->getCollection()->find($conditions, array('_id' => 1))->count();
         return $ret;
     }
 
@@ -109,8 +107,8 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
      */
     public function findOne($id)
     {
-        $ret = $this->connection->{$this->collection}
-            ->findOne(['_id'=>new \MongoId($id)]);
+        $ret = $this->getCollection()
+                    ->findOne(['_id' => new \MongoId($id)]);
         return $ret;
 
     }
@@ -124,7 +122,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
      */
     public function remove($id)
     {
-        return $this->connection->{$this->collection}->remove(
+        return $this->getCollection()->remove(
             array('_id' => new MongoId($id)),
             array('w' => 1)
         );
@@ -139,7 +137,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
      */
     public function insert(array $data)
     {
-        return $this->connection->{$this->collection}->insert(
+        return $this->getCollection()->insert(
             $data,
             array('w' => 1)
         );
@@ -155,7 +153,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
      */
     public function update($id, array $data)
     {
-        return $this->connection->{$this->collection}->update(
+        return $this->getCollection()->update(
             array('_id' => new MongoId($id)),
             $data,
             array('w' => 1)
@@ -174,6 +172,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
      * @param $match
      * @param $col
      * @param int $percentile
+     * @codeCoverageIgnore despite appearances this is very simple function and there is nothing to test here.
      * @return array
      * @throws \MongoException
      */
@@ -185,41 +184,41 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
             ['$match' => $conditions],
             [
                 '$project' => [
-                    'date' => '$meta.request_ts',
+                    'date'           => '$meta.request_ts',
                     'profile.main()' => 1
                 ]
             ],
             [
                 '$group' => [
-                    '_id'           => '$date',
-                    'row_count'     => ['$sum'  => 1],
-                    'wall_times'    => ['$push' => '$profile.main().wt'],
-                    'cpu_times'     => ['$push' => '$profile.main().cpu'],
-                    'mu_times'      => ['$push' => '$profile.main().mu'],
-                    'pmu_times'     => ['$push' => '$profile.main().pmu'],
+                    '_id'        => '$date',
+                    'row_count'  => ['$sum' => 1],
+                    'wall_times' => ['$push' => '$profile.main().wt'],
+                    'cpu_times'  => ['$push' => '$profile.main().cpu'],
+                    'mu_times'   => ['$push' => '$profile.main().mu'],
+                    'pmu_times'  => ['$push' => '$profile.main().pmu'],
                 ]
             ],
             [
                 '$project' => [
-                    'date' => '$date',
-                    'row_count' => '$row_count',
-                    'raw_index' => [
+                    'date'       => '$date',
+                    'row_count'  => '$row_count',
+                    'raw_index'  => [
                         '$multiply' => [
                             '$row_count',
                             $percentile / 100
                         ]
                     ],
-                    'wall_times'    => '$wall_times',
-                    'cpu_times'     => '$cpu_times',
-                    'mu_times'      => '$mu_times',
-                    'pmu_times'     => '$pmu_times',
+                    'wall_times' => '$wall_times',
+                    'cpu_times'  => '$cpu_times',
+                    'mu_times'   => '$mu_times',
+                    'pmu_times'  => '$pmu_times',
                 ]
             ],
             [
                 '$sort' => ['_id' => 1]
             ],
         ];
-        $ret = $this->connection->{$this->collection}->aggregate(
+        $ret = $this->getCollection()->aggregate(
             $param,
             [
                 'cursor' => ['batchSize' => 0]
@@ -235,11 +234,11 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     public function getWatchedFunctions()
     {
         $ret = [];
-        try{
-            $cursor = $this->connection->watches->find()->sort(['name'=>1]);
+        try {
+            $cursor = $this->getConnection()->watches->find()->sort(['name' => 1]);
             $ret = [];
-            foreach($cursor as $row) {
-                $ret[] = ['id'=>$row['_id']->__toString(), 'name'=>$row['name']];
+            foreach ($cursor as $row) {
+                $ret[] = ['id' => $row['_id']->__toString(), 'name' => $row['name']];
             }
         } catch (\Exception $e) {
             // if something goes wrong just return empty array
@@ -264,10 +263,10 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
             $id = new \MongoId();
 
             $data = [
-                '_id'   => $id,
-                'name'  => $name
+                '_id'  => $id,
+                'name' => $name
             ];
-            $this->connection->watches->insert($data);
+            $this->getConnection()->watches->insert($data);
 
             return true;
         } catch (\Exception $e) {
@@ -292,10 +291,10 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
         try {
             $id = new \MongoId($id);
             $data = [
-                '_id'   => $id,
-                'name'  => $name
+                '_id'  => $id,
+                'name' => $name
             ];
-            $this->connection->watches->save($data);
+            $this->getConnection()->watches->save($data);
 
             return true;
         } catch (\Exception $e) {
@@ -314,7 +313,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
         try {
             $id = new \MongoId($id);
 
-            $this->connection->watches->remove(['_id'=>$id]);
+            $this->getConnection()->watches->remove(['_id' => $id]);
 
             return true;
         } catch (\Exception $e) {
@@ -335,7 +334,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
                 return $parsedDate;
             }
 
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             // leave empty to try parse different format below
         }
 
@@ -345,7 +344,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
                 return $parsedDate;
             }
 
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             // throw generic exception on failure
         }
         throw new \InvalidArgumentException('Unable to parse date');
@@ -388,5 +387,52 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
         }
 
         return $conditions;
+    }
+
+    /**
+     * @return MongoClient
+     */
+    public function getMongoClient()
+    {
+        if (empty($this->mongoClient)) {
+            $this->mongoClient = new \MongoClient($this->config['db.host'], $this->config['db.options']);
+        }
+        return $this->mongoClient;
+    }
+
+    /**
+     * @param MongoClient $mongoClient
+     */
+    public function setMongoClient($mongoClient)
+    {
+        $this->mongoClient = $mongoClient;
+    }
+
+    /**
+     * @return MongoDB
+     */
+    public function getConnection()
+    {
+        if (empty($this->connection)) {
+            $this->connection = $this->getMongoClient()->{$this->config['db.db']};
+        }
+
+        return $this->connection;
+    }
+
+    /**
+     * @param MongoDB $connection
+     */
+    public function setConnection($connection)
+    {
+        $this->connection = $connection;
+    }
+
+    /**
+     * @return MongoCollection
+     */
+    public function getCollection()
+    {
+        return $this->getConnection()->selectCollection($this->collectionName);
     }
 }

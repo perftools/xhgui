@@ -2,19 +2,52 @@
 
 class ProfileTest extends PHPUnit\Framework\TestCase
 {
+
+    /**
+     * Object of the test.
+     *
+     * @var Xhgui_Profile
+     */
+    public $object;
+
+    /**
+     * @var mixed
+     */
+    public $fixture;
+
+    /**
+     *
+     */
     public function setUp()
     {
         parent::setUp();
+
         $contents = file_get_contents(XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
-        $this->_fixture = json_decode($contents, true);
+        $this->fixture = json_decode($contents, true);
+    }
+
+    /**
+     *
+     */
+    public function testSplitName()
+    {
+        $this->object = new Xhgui_Profile([], false);
+        $ret = $this->object->splitName("main()==>test()");
+
+        self::assertSame('main()', $ret[0]);
+        self::assertSame('test()', $ret[1]);
+
+        $ret = $this->object->splitName("main()");
+
+        self::assertSame('main()', $ret[1]);
+
     }
 
     public function testProcessIncompleteData()
     {
         $data = array(
             'main()' => array(),
-            'main()==>do_thing()' => array(
-                // empty because of bad extension
+            'main()==>do_thing()' => array(// empty because of bad extension
             ),
             'other_thing()==>do_thing()' => array(
                 'cpu' => 1,
@@ -177,7 +210,7 @@ class ProfileTest extends PHPUnit\Framework\TestCase
 
     public function testGet()
     {
-        $fixture = $this->_fixture[0];
+        $fixture = $this->fixture[0];
         $profile = new Xhgui_Profile($fixture);
         $this->assertEquals($fixture['profile']['main()']['wt'], $profile->get('main()', 'wt'));
 
@@ -192,7 +225,7 @@ class ProfileTest extends PHPUnit\Framework\TestCase
 
     public function testGetMeta()
     {
-        $fixture = $this->_fixture[0];
+        $fixture = $this->fixture[0];
         $profile = new Xhgui_Profile($fixture);
 
         $this->assertEquals($fixture['meta'], $profile->getMeta());
@@ -206,7 +239,7 @@ class ProfileTest extends PHPUnit\Framework\TestCase
 
     public function testExtractDimension()
     {
-        $profile = new Xhgui_Profile($this->_fixture[0]);
+        $profile = new Xhgui_Profile($this->fixture[0]);
         $result = $profile->extractDimension('mu', 1);
 
         $this->assertCount(1, $result);
@@ -219,7 +252,7 @@ class ProfileTest extends PHPUnit\Framework\TestCase
 
     public function testCalculateSelf()
     {
-        $profile = new Xhgui_Profile($this->_fixture[1]);
+        $profile = new Xhgui_Profile($this->fixture[1]);
         $result = $profile->calculateSelf()->getProfile();
 
         $main = $result['main()'];
@@ -260,7 +293,7 @@ class ProfileTest extends PHPUnit\Framework\TestCase
 
     public function testGetWatched()
     {
-        $fixture = $this->_fixture[0];
+        $fixture = $this->fixture[0];
         $profile = new Xhgui_Profile($fixture);
         $data = $profile->getProfile();
 
@@ -287,7 +320,7 @@ class ProfileTest extends PHPUnit\Framework\TestCase
 
     public function testGetFunctionCount()
     {
-        $fixture = $this->_fixture[0];
+        $fixture = $this->fixture[0];
         $profile = new Xhgui_Profile($fixture);
 
         $this->assertEquals(11, $profile->getFunctionCount());
@@ -295,7 +328,7 @@ class ProfileTest extends PHPUnit\Framework\TestCase
 
     public function testCompareAllTheSame()
     {
-        $fixture = $this->_fixture[0];
+        $fixture = $this->fixture[0];
         $base = new Xhgui_Profile($fixture);
         $head = new Xhgui_Profile($fixture);
 
@@ -316,9 +349,9 @@ class ProfileTest extends PHPUnit\Framework\TestCase
 
     public function testCompareWithDifferences()
     {
-        $fixture = $this->_fixture[0];
-        $base = new Xhgui_Profile($this->_fixture[3]);
-        $head = new Xhgui_Profile($this->_fixture[4]);
+        $fixture = $this->fixture[0];
+        $base = new Xhgui_Profile($this->fixture[3]);
+        $head = new Xhgui_Profile($this->fixture[4]);
         $result = $base->compare($head);
 
         $this->assertEquals(0, $result['diff']['main()']['ct']);
@@ -339,7 +372,7 @@ class ProfileTest extends PHPUnit\Framework\TestCase
 
     public function testGetCallgraph()
     {
-        $profile = new Xhgui_Profile($this->_fixture[1]);
+        $profile = new Xhgui_Profile($this->fixture[1]);
 
         $expected = array(
             'metric' => 'wt',
@@ -415,7 +448,7 @@ class ProfileTest extends PHPUnit\Framework\TestCase
 
     public function testGetCallgraphNoDuplicates()
     {
-        $profile = new Xhgui_Profile($this->_fixture[2]);
+        $profile = new Xhgui_Profile($this->fixture[2]);
 
         $expected = array(
             'metric' => 'wt',
@@ -479,6 +512,73 @@ class ProfileTest extends PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testGetCallgraphWithMetricFromExclusiveList()
+    {
+        $profile = new Xhgui_Profile($this->fixture[2]);
+
+
+        $expected = array(
+            'metric' => 'ewt',
+            'total' => 30139,
+            'nodes' => array(
+                array(
+                    'name' => 'main()',
+                    'callCount' => 1,
+                    'value' => 30139,
+                ),
+                array(
+                    'name' => 'load_file()',
+                    'callCount' => 1,
+                    'value' => 5000,
+                ),
+                array(
+                    'name' => 'open()',
+                    'callCount' => 2,
+                    'value' => 5000,
+                ),
+                array(
+                    'name' => 'strlen()',
+                    'callCount' => 1,
+                    'value' => 5000,
+                ),
+                array(
+                    'name' => 'parse_string()',
+                    'callCount' => 1,
+                    'value' => 5000,
+                ),
+            ),
+            'links' => array(
+                array(
+                    'source' => 'main()',
+                    'target' => 'load_file()',
+                    'callCount' => 1,
+                ),
+                array(
+                    'source' => 'load_file()',
+                    'target' => 'open()',
+                    'callCount' => 2,
+                ),
+                array(
+                    'source' => 'open()',
+                    'target' => 'strlen()',
+                    'callCount' => 1,
+                ),
+                array(
+                    'source' => 'main()',
+                    'target' => 'parse_string()',
+                    'callCount' => 1,
+                ),
+                array(
+                    'source' => 'parse_string()',
+                    'target' => 'open()',
+                    'callCount' => 2,
+                ),
+            ),
+        );
+        $result = $profile->getCallgraph('ewt');
+        $this->assertEquals($expected, $result);
+    }
+
     public function testGetDateFallback()
     {
         $data = array(
@@ -489,5 +589,13 @@ class ProfileTest extends PHPUnit\Framework\TestCase
         $profile = new Xhgui_Profile($data);
         $result = $profile->getDate();
         $this->assertInstanceOf('DateTime', $result);
+    }
+
+    /**
+     *
+     */
+    public function testFilter()
+    {
+
     }
 }

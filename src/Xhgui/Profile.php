@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Domain object for handling profile runs.
  *
@@ -11,22 +12,53 @@ class Xhgui_Profile
      */
     const NO_PARENT = '__xhgui_top__';
 
+    /**
+     * @var array
+     */
     protected $_data;
+
+    /**
+     * @var array
+     */
     protected $_collapsed;
+
+    /**
+     * @var array
+     */
     protected $_indexed;
+
+    /**
+     * @var array
+     */
     protected $_visited;
 
+    /**
+     * @var array
+     */
     protected $_keys = array('ct', 'wt', 'cpu', 'mu', 'pmu');
+
+    /**
+     * @var array
+     */
     protected $_exclusiveKeys = array('ewt', 'ecpu', 'emu', 'epmu');
+
+    /**
+     * @var int
+     */
     protected $_functionCount;
 
+    /**
+     * Xhgui_Profile constructor.
+     * @param array $profile
+     * @param bool $convert
+     */
     public function __construct(array $profile, $convert = true)
     {
         $this->_data = $profile;
 
         // cast MongoIds to string
         if (isset($this->_data['_id']) && !is_string($this->_data['_id'])) {
-            $this->_data['_id'] = (string) $this->_data['_id'];
+            $this->_data['_id'] = (string)$this->_data['_id'];
         }
 
         if (!empty($profile['profile']) && $convert) {
@@ -88,6 +120,12 @@ class Xhgui_Profile
         return $a;
     }
 
+    /**
+     * @param $a
+     * @param $b
+     * @param bool $includeSelf
+     * @return mixed
+     */
     protected function _diffKeys($a, $b, $includeSelf = true)
     {
         $keys = $this->_keys;
@@ -100,6 +138,12 @@ class Xhgui_Profile
         return $a;
     }
 
+    /**
+     * @param $a
+     * @param $b
+     * @param bool $includeSelf
+     * @return array
+     */
     protected function _diffPercentKeys($a, $b, $includeSelf = true)
     {
         $out = array();
@@ -122,7 +166,7 @@ class Xhgui_Profile
      *
      * TODO remove this and move all the features using it into this/
      * other classes.
-     *
+     * @codeCoverageIgnore Simple getter
      * @return array
      */
     public function getProfile()
@@ -130,11 +174,19 @@ class Xhgui_Profile
         return $this->_collapsed;
     }
 
+    /**
+     * @codeCoverageIgnore Simple getter
+     * @return mixed
+     */
     public function getId()
     {
         return $this->_data['_id'];
     }
 
+    /**
+     * @return DateTime
+     * @throws Exception
+     */
     public function getDate()
     {
         $date = $this->getMeta('SERVER.REQUEST_TIME');
@@ -234,8 +286,6 @@ class Xhgui_Profile
      */
     public function getRelatives($symbol, $metric = null, $threshold = 0)
     {
-        $parents = array();
-
         // If the function doesn't exist, it won't have parents/children
         if (empty($this->_collapsed[$symbol])) {
             return array(
@@ -327,7 +377,7 @@ class Xhgui_Profile
         $extract = array();
         foreach ($slice as $func => $funcData) {
             $extract[] = array(
-                'name' => $func,
+                'name'  => $func,
                 'value' => $funcData[$dimension]
             );
         }
@@ -407,25 +457,6 @@ class Xhgui_Profile
     }
 
     /**
-     * @param array $profileData
-     * @param array $filters
-     *
-     * @return array
-     */
-    public function filter($profileData, $filters = [])
-    {
-        foreach ($filters as $key => $item) {
-            foreach ($profileData as $keyItem => $method) {
-                if (fnmatch($item, $keyItem)) {
-                    unset($profileData[ $keyItem ]);
-                }
-            }
-        }
-
-        return $profileData;
-    }
-
-    /**
      * Split a key name into the parent==>child format.
      *
      * @param string $name The name to split.
@@ -492,9 +523,9 @@ class Xhgui_Profile
         $diffPercent['functionCount'] = $head->getFunctionCount() / $this->getFunctionCount();
 
         return array(
-            'base' => $this,
-            'head' => $head,
-            'diff' => $diff,
+            'base'        => $this,
+            'head'        => $head,
+            'diff'        => $diff,
             'diffPercent' => $diffPercent,
         );
     }
@@ -545,14 +576,21 @@ class Xhgui_Profile
         $this->_callgraphData(self::NO_PARENT, $main, $metric, $threshold);
         $out = array(
             'metric' => $metric,
-            'total' => $main,
-            'nodes' => $this->_nodes,
-            'links' => $this->_links
+            'total'  => $main,
+            'nodes'  => $this->_nodes,
+            'links'  => $this->_links
         );
         unset($this->_visited, $this->_nodes, $this->_links);
         return $out;
     }
 
+    /**
+     * @param $parentName
+     * @param $main
+     * @param $metric
+     * @param $threshold
+     * @param null $parentIndex
+     */
     protected function _callgraphData($parentName, $main, $metric, $threshold, $parentIndex = null)
     {
         // Leaves don't have children, and don't have links/nodes to add.
@@ -575,9 +613,9 @@ class Xhgui_Profile
                 $this->_visited[$childName] = $index;
 
                 $this->_nodes[] = array(
-                    'name' => $childName,
+                    'name'      => $childName,
                     'callCount' => $metrics['ct'],
-                    'value' => $metrics[$metric],
+                    'value'     => $metrics[$metric],
                 );
             } else {
                 $revisit = true;
@@ -586,8 +624,8 @@ class Xhgui_Profile
 
             if ($parentIndex !== null) {
                 $this->_links[] = array(
-                    'source' => $parentName,
-                    'target' => $childName,
+                    'source'    => $parentName,
+                    'target'    => $childName,
                     'callCount' => $metrics['ct'],
                 );
             }
@@ -600,6 +638,10 @@ class Xhgui_Profile
         }
     }
 
+    /**
+     * @codeCoverageIgnore Simple getter
+     * @return array
+     */
     public function toArray()
     {
         return $this->_data;

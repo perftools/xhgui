@@ -5,12 +5,32 @@ use Slim\Http\Request;
 /**
  * Class Xhgui_Storage_Filter
  */
-class Xhgui_Storage_Filter {
+class Xhgui_Storage_Filter
+{
 
-    const SORT_WT   = 1;
-    const SORT_CPU  = 2;
-    const SORT_MU   = 3;
-    const SORT_PMU  = 4;
+    /**
+     *
+     */
+    const SORT_WT = 1;
+
+    /**
+     *
+     */
+    const SORT_CPU = 2;
+
+    /**
+     *
+     */
+    const SORT_MU = 3;
+
+    /**
+     *
+     */
+    const SORT_PMU = 4;
+
+    /**
+     *
+     */
     const SORT_TIME = 5;
 
     /**
@@ -18,39 +38,50 @@ class Xhgui_Storage_Filter {
      */
     protected $data;
 
+    /**
+     * @var bool
+     */
     protected $hasSearch = false;
 
+    /**
+     * @var int
+     */
     protected $page = 1;
 
+    /**
+     * @var int
+     */
     protected $perPage = 25;
 
     /**
      * Xhgui_Storage_Filter constructor.
      */
-    public function __construct() {
-        $this->data= [
-            'id'                    => null,
-            'startDate'             => null,
-            'endDate'               => null,
-            'url'                   => null,
-            'method'                => null,
-            'sessionId'             => null,
-            'controller'            => null,
-            'action'                => null,
-            'version'               => null,
-            'branch'                => null,
-            'application'           => null,
-            'sort'                  => null,
-            'direction'             => null,
+    public function __construct()
+    {
+        $this->data = [
+            'id'          => null,
+            'startDate'   => null,
+            'endDate'     => null,
+            'url'         => null,
+            'method'      => null,
+            'sessionId'   => null,
+            'controller'  => null,
+            'action'      => null,
+            'version'     => null,
+            'branch'      => null,
+            'application' => null,
+            'sort'        => null,
+            'direction'   => null,
         ];
     }
 
     /**
      * @return array
      */
-    public function toArray(){
+    public function toArray()
+    {
         $ret = [];
-        foreach($this->data as $key => $value) {
+        foreach ($this->data as $key => $value) {
             if (isset($this->data[$key])) {
                 $ret[$key] = $value;
             }
@@ -63,7 +94,8 @@ class Xhgui_Storage_Filter {
      * @param $request
      * @return Xhgui_Storage_Filter
      */
-    public static function fromRequest(Request $request) {
+    public static function fromRequest(Request $request)
+    {
         $instance = new self;
 
         $instance->setUrl($request->get('url', null));
@@ -81,7 +113,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return string
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->data['id'];
     }
 
@@ -89,7 +122,8 @@ class Xhgui_Storage_Filter {
      * @param string $id
      * @return Xhgui_Storage_Filter
      */
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->hasSearch = true;
         $this->data['id'] = $id;
         return $this;
@@ -98,7 +132,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return DateTime
      */
-    public function getStartDate() {
+    public function getStartDate()
+    {
         return $this->data['startDate'];
     }
 
@@ -106,7 +141,8 @@ class Xhgui_Storage_Filter {
      * @param DateTime $startDate
      * @return Xhgui_Storage_Filter
      */
-    public function setStartDate($startDate) {
+    public function setStartDate($startDate)
+    {
         if (empty($startDate)) {
             return $this;
         }
@@ -119,7 +155,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return DateTime
      */
-    public function getEndDate() {
+    public function getEndDate()
+    {
         return $this->data['endDate'];
     }
 
@@ -127,7 +164,8 @@ class Xhgui_Storage_Filter {
      * @param DateTime $endDate
      * @return Xhgui_Storage_Filter
      */
-    public function setEndDate($endDate) {
+    public function setEndDate($endDate)
+    {
         if (empty($endDate)) {
             return $this;
         }
@@ -140,7 +178,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return string
      */
-    public function getUrl() {
+    public function getUrl()
+    {
         return $this->data['url'];
     }
 
@@ -148,7 +187,8 @@ class Xhgui_Storage_Filter {
      * @param string $url
      * @return Xhgui_Storage_Filter
      */
-    public function setUrl($url) {
+    public function setUrl($url)
+    {
         if (empty($url)) {
             return $this;
         }
@@ -157,11 +197,12 @@ class Xhgui_Storage_Filter {
         $this->data['url'] = $url;
         return $this;
     }
-    
+
     /**
      * @return string
      */
-    public function getMethod() {
+    public function getMethod()
+    {
         return $this->data['method'];
     }
 
@@ -169,7 +210,8 @@ class Xhgui_Storage_Filter {
      * @param string $method
      * @return Xhgui_Storage_Filter
      */
-    public function setMethod($method) {
+    public function setMethod($method)
+    {
         $this->hasSearch = true;
 
         $this->data['method'] = $method;
@@ -179,7 +221,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return string
      */
-    public function getSessionId() {
+    public function getSessionId()
+    {
         return $this->data['sessionId'];
     }
 
@@ -187,7 +230,8 @@ class Xhgui_Storage_Filter {
      * @param string $sessionId
      * @return Xhgui_Storage_Filter
      */
-    public function setSessionId($sessionId) {
+    public function setSessionId($sessionId)
+    {
         $this->hasSearch = true;
 
         $this->data['sessionId'] = $sessionId;
@@ -197,7 +241,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return string
      */
-    public function getController() {
+    public function getController()
+    {
         return $this->data['controller'];
     }
 
@@ -205,7 +250,8 @@ class Xhgui_Storage_Filter {
      * @param string $controller
      * @return Xhgui_Storage_Filter
      */
-    public function setController($controller) {
+    public function setController($controller)
+    {
         $this->hasSearch = true;
 
         $this->data['controller'] = $controller;
@@ -215,7 +261,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return string
      */
-    public function getAction() {
+    public function getAction()
+    {
         return $this->data['action'];
     }
 
@@ -223,7 +270,8 @@ class Xhgui_Storage_Filter {
      * @param string $action
      * @return Xhgui_Storage_Filter
      */
-    public function setAction($action) {
+    public function setAction($action)
+    {
         $this->hasSearch = true;
 
         $this->data['action'] = $action;
@@ -233,7 +281,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return string
      */
-    public function getVersion() {
+    public function getVersion()
+    {
         return $this->data['version'];
     }
 
@@ -241,7 +290,8 @@ class Xhgui_Storage_Filter {
      * @param string $version
      * @return Xhgui_Storage_Filter
      */
-    public function setVersion($version) {
+    public function setVersion($version)
+    {
         $this->hasSearch = true;
 
         $this->data['version'] = $version;
@@ -251,7 +301,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return string
      */
-    public function getBranch() {
+    public function getBranch()
+    {
         return $this->data['branch'];
     }
 
@@ -259,7 +310,8 @@ class Xhgui_Storage_Filter {
      * @param string $branch
      * @return Xhgui_Storage_Filter
      */
-    public function setBranch($branch) {
+    public function setBranch($branch)
+    {
         $this->hasSearch = true;
 
         $this->data['branch'] = $branch;
@@ -269,7 +321,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return string
      */
-    public function getApplication() {
+    public function getApplication()
+    {
         return $this->data['application'];
     }
 
@@ -277,7 +330,8 @@ class Xhgui_Storage_Filter {
      * @param string $application
      * @return Xhgui_Storage_Filter
      */
-    public function setApplication($application) {
+    public function setApplication($application)
+    {
         $this->hasSearch = true;
 
         $this->data['application'] = $application;
@@ -287,7 +341,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return int
      */
-    public function getPage() {
+    public function getPage()
+    {
         return $this->page;
     }
 
@@ -295,7 +350,8 @@ class Xhgui_Storage_Filter {
      * @param int $page
      * @return Xhgui_Storage_Filter
      */
-    public function setPage($page) {
+    public function setPage($page)
+    {
         if (empty($page)) {
             return $this;
         }
@@ -306,7 +362,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return int
      */
-    public function getPerPage() {
+    public function getPerPage()
+    {
         return $this->perPage;
     }
 
@@ -314,7 +371,8 @@ class Xhgui_Storage_Filter {
      * @param int $perPage
      * @return Xhgui_Storage_Filter
      */
-    public function setPerPage($perPage) {
+    public function setPerPage($perPage)
+    {
         $this->perPage = $perPage;
         return $this;
     }
@@ -322,7 +380,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return string
      */
-    public function getSort() {
+    public function getSort()
+    {
         return $this->data['sort'];
     }
 
@@ -330,7 +389,8 @@ class Xhgui_Storage_Filter {
      * @param string $sort
      * @return Xhgui_Storage_Filter
      */
-    public function setSort($sort) {
+    public function setSort($sort)
+    {
         if (empty($sort)) {
             return $this;
         }
@@ -341,7 +401,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return string
      */
-    public function getDirection() {
+    public function getDirection()
+    {
         return $this->data['direction'];
     }
 
@@ -349,7 +410,8 @@ class Xhgui_Storage_Filter {
      * @param string $direction
      * @return Xhgui_Storage_Filter
      */
-    public function setDirection($direction) {
+    public function setDirection($direction)
+    {
         if (empty($direction)) {
             return $this;
         }
@@ -360,7 +422,8 @@ class Xhgui_Storage_Filter {
     /**
      * @return bool
      */
-    public function hasSearch() {
+    public function hasSearch()
+    {
         return $this->hasSearch;
     }
 
@@ -368,7 +431,8 @@ class Xhgui_Storage_Filter {
      * @param bool $hasSearch
      * @return Xhgui_Storage_Filter
      */
-    public function setHasSearch($hasSearch) {
+    public function setHasSearch($hasSearch)
+    {
         $this->hasSearch = $hasSearch;
         return $this;
     }

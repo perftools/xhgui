@@ -1,6 +1,5 @@
 <?php
-use Slim\Environment;
-use Slim\Http\Request;
+
 use Slim\Http\Response;
 use Slim\Slim;
 
@@ -14,7 +13,7 @@ class Controller_RunTest extends CommonTestCase
     /**
      * @var Xhgui_Controller_Run
      */
-    protected $runs;
+    protected $object;
 
     /**
      * @var PHPUnit_Framework_MockObject_MockObject|Xhgui_Profiles
@@ -39,7 +38,7 @@ class Controller_RunTest extends CommonTestCase
         parent::setUp();
         $di = Xhgui_ServiceContainer::instance();
 
-        $this->profilesMock = $this->m(Xhgui_Profiles::class,[
+        $this->profilesMock = $this->m(Xhgui_Profiles::class, [
             'getAll',
             'get',
             'getPercentileForUrl',
@@ -48,9 +47,9 @@ class Controller_RunTest extends CommonTestCase
             'truncate'
         ]);
 
-        $this->appMock  = $this->m(Slim::class,['redirect', 'render', 'urlFor', 'request', 'response', 'flash']);
-        
-        $this->dbMock   = $this->m(Xhgui_Storage_File::class, ['getAll', 'getWatchedFunctions']);
+        $this->appMock = $this->m(Slim::class, ['redirect', 'render', 'urlFor', 'request', 'response', 'flash']);
+
+        $this->dbMock = $this->m(Xhgui_Storage_File::class, ['getAll', 'getWatchedFunctions']);
 
         $this->appMock->expects(self::any())->method('request')->willReturn($this->requestMock);
 
@@ -66,10 +65,10 @@ class Controller_RunTest extends CommonTestCase
             return $this->profilesMock;
         });
 
-        $this->runs = $di['runController'];
+        $this->object = $di['runController'];
         $this->app = $di['app'];
 
-        $this->runs->setWatches($this->dbMock);
+        $this->object->setWatches($this->dbMock);
     }
 
     /**
@@ -78,24 +77,24 @@ class Controller_RunTest extends CommonTestCase
     {
         $sort = 'time';
         $this->profilesMock->expects(self::once())->method('getAll')->willReturn([
-            'totalPages'    => 1,
-            'page'          => 1,
-            'direction'     => $sort,
-            'results'       => [],
-            'has_search'    => 'No search being done.'
+            'totalPages' => 1,
+            'page' => 1,
+            'direction' => $sort,
+            'results' => [],
+            'has_search' => 'No search being done.'
         ]);
 
         $this->prepareGetRequestMock(['sort', 'time']);
 
-        $this->runs->index();
-        $result = $this->runs->templateVars();
+        $this->object->index();
+        $result = $this->object->templateVars();
 
         $this->assertEquals('Recent runs', $result['title']);
         $expected = array(
-            'total_pages'   => 1,
-            'sort'          => 'time',
-            'page'          => 1,
-            'direction'     => $sort,
+            'total_pages' => 1,
+            'sort' => 'time',
+            'page' => 1,
+            'direction' => $sort,
         );
         $this->assertEquals($expected, $result['paging']);
     }
@@ -107,25 +106,26 @@ class Controller_RunTest extends CommonTestCase
     {
         $this->prepareGetRequestMock(['sort', 'time']);
 
-        $this->runs->index();
-        $result = $this->runs->templateVars();
+        $this->object->index();
+        $result = $this->object->templateVars();
         $this->assertEquals('Recent runs', $result['title']);
         $this->assertEquals('time', $result['paging']['sort']);
-        $this->assertArrayHasKey('url',  $result['search']);
+        $this->assertArrayHasKey('url', $result['search']);
         $this->assertEquals('testUrl', $result['search']['url']);
     }
 
     /**
      *
      */
-    public function testView() {
+    public function testView()
+    {
         $id = 1;
         $this->prepareGetRequestMock([
             ['id', null, $id],
         ]);
-        
+
         // mocked result set.
-        $profileMock = $this->m(Xhgui_Profile::class,[
+        $profileMock = $this->m(Xhgui_Profile::class, [
             'calculateSelf',
             'extractDimension',
             'getWatched',
@@ -143,21 +143,21 @@ class Controller_RunTest extends CommonTestCase
         $profileMock->expects(self::any())->method('sort')->willReturnSelf();
 
         $this->dbMock->expects(self::any())->method('getWatchedFunctions')->willReturn([
-            ['name'=>'testWatchedFunction']
+            ['name' => 'testWatchedFunction']
         ]);
 
         // mergein matched function 
         $profileMock->expects(self::any())
-                   ->method('getWatched')
-                   ->with($this->stringContains('testWatchedFunction'))
-                   ->willReturn(['test']);
+                    ->method('getWatched')
+                    ->with($this->stringContains('testWatchedFunction'))
+                    ->willReturn(['test']);
 
         $this->profilesMock->expects(self::any())->method('get')->willReturn($profileMock);
 
         // run controller action
-        $this->runs->view();
+        $this->object->view();
         // get results passed to template
-        $result = $this->runs->templateVars();
+        $result = $this->object->templateVars();
 
         self::assertSame($profileMock, $result['profile']);
         self::assertSame($profileMock, $result['result']);
@@ -176,18 +176,18 @@ class Controller_RunTest extends CommonTestCase
         // make sure that we call profiles storage with url filter
         $this->profilesMock->expects(self::once())
                            ->method('getAll')
-                           ->with($this->callback(function ($filter) use ($url){
-            if (!($filter instanceof Xhgui_Storage_Filter)) {
-                return false;
-            }
+                           ->with($this->callback(function ($filter) use ($url) {
+                               if (!($filter instanceof Xhgui_Storage_Filter)) {
+                                   return false;
+                               }
 
-            return $filter->getUrl() == $url;
-        }))->willReturn([
-            'results'       => ['fake_results'],
-            'totalPages'    => 0,
-            'page'          => 0,
-            'direction'     => 'desc',
-        ]);
+                               return $filter->getUrl() == $url;
+                           }))->willReturn([
+                'results' => ['fake_results'],
+                'totalPages' => 0,
+                'page' => 0,
+                'direction' => 'desc',
+            ]);
 
         // chart data. For this we mock it with fake data, we don't process it action
         // we just pass it to view
@@ -195,9 +195,9 @@ class Controller_RunTest extends CommonTestCase
                            ->method('getPercentileForUrl')
                            ->willReturn('mocked_chart_data');
 
-        $this->runs->url();
+        $this->object->url();
 
-        $result = $this->runs->templateVars();
+        $result = $this->object->templateVars();
 
         self::assertSame($url, $result['url']);
         self::assertSame(['fake_results'], $result['runs']);
@@ -213,8 +213,8 @@ class Controller_RunTest extends CommonTestCase
             ['head', null, $head],
         ]);
 
-        $this->runs->compare();
-        $result = $this->runs->templateVars();
+        $this->object->compare();
+        $result = $this->object->templateVars();
 
         self::assertNull($result['base_run']);
         self::assertNull($result['head_run']);
@@ -236,7 +236,7 @@ class Controller_RunTest extends CommonTestCase
         ]);
 
         // mocked result set.
-        $baseRunMock = $this->m(Xhgui_Profile::class,[
+        $baseRunMock = $this->m(Xhgui_Profile::class, [
             'getMeta',
             'compare',
         ]);
@@ -248,23 +248,23 @@ class Controller_RunTest extends CommonTestCase
 
         // get candidate
         $this->profilesMock->expects(self::once())
-            ->method('getAll')
-            ->with($this->callback(function ($filter) use ($url){
-                if (!($filter instanceof Xhgui_Storage_Filter)) {
-                    return false;
-                }
+                           ->method('getAll')
+                           ->with($this->callback(function ($filter) use ($url) {
+                               if (!($filter instanceof Xhgui_Storage_Filter)) {
+                                   return false;
+                               }
 
-                return $filter->getUrl() == $url;
-            }))
-            ->willReturn([
-                'results'       => ['fake_results'],
-                'totalPages'    => 0,
-                'page'          => 0,
-                'direction'     => 'desc',
-            ]);
+                               return $filter->getUrl() == $url;
+                           }))
+                           ->willReturn([
+                               'results' => ['fake_results'],
+                               'totalPages' => 0,
+                               'page' => 0,
+                               'direction' => 'desc',
+                           ]);
 
-        $this->runs->compare();
-        $result = $this->runs->templateVars();
+        $this->object->compare();
+        $result = $this->object->templateVars();
 
         self::assertInstanceOf(Xhgui_Profile::class, $result['base_run']);
         self::assertNull($result['head_run']);
@@ -288,7 +288,7 @@ class Controller_RunTest extends CommonTestCase
         ]);
 
         // mocked result set.
-        $baseRunMock = $this->m(Xhgui_Profile::class,[
+        $baseRunMock = $this->m(Xhgui_Profile::class, [
             'getMeta',
             'compare',
         ]);
@@ -297,17 +297,17 @@ class Controller_RunTest extends CommonTestCase
             ['simple_url', $url]
         ]);
         $baseRunMock->expects(self::once())->method('compare')->willReturn($compareResult);
-        
+
         // mocked result set.
         $headRunMock = $this->m(Xhgui_Profile::class);
-        
+
         $this->profilesMock->expects(self::exactly(2))->method('get')->willReturnMap([
             [$base, $baseRunMock],
             [$head, $headRunMock]
         ]);
 
-        $this->runs->compare();
-        $result = $this->runs->templateVars();
+        $this->object->compare();
+        $result = $this->object->templateVars();
 
         self::assertInstanceOf(Xhgui_Profile::class, $result['base_run']);
         self::assertInstanceOf(Xhgui_Profile::class, $result['head_run']);
@@ -324,31 +324,31 @@ class Controller_RunTest extends CommonTestCase
         $symbol = 'main()';
 
         $this->prepareGetRequestMock([
-            ['id',      null, $id],
-            ['symbol',  null, $symbol]
+            ['id', null, $id],
+            ['symbol', null, $symbol]
         ]);
         // mocked result set.
-        $profileMock = $this->m(Xhgui_Profile::class,[
+        $profileMock = $this->m(Xhgui_Profile::class, [
             'calculateSelf',
             'getRelatives',
         ]);
 
         $profileMock->expects(self::any())
-                   ->method('calculateSelf');
+                    ->method('calculateSelf');
 
 
         $profileMock->expects(self::any())
-                   ->method('getRelatives')
-                   ->with($this->equalTo($symbol))
-                   ->willReturn(['parents', 'current', 'children']);
+                    ->method('getRelatives')
+                    ->with($this->equalTo($symbol))
+                    ->willReturn(['parents', 'current', 'children']);
 
         $this->profilesMock->expects(self::any())
-            ->method('get')
-            ->with($this->equalTo($id))
-            ->willReturn($profileMock);
+                           ->method('get')
+                           ->with($this->equalTo($id))
+                           ->willReturn($profileMock);
 
-        $this->runs->symbol();
-        $result = $this->runs->templateVars();
+        $this->object->symbol();
+        $result = $this->object->templateVars();
 
         self::assertSame('parents', $result['parents']);
         self::assertSame('current', $result['current']);
@@ -364,33 +364,33 @@ class Controller_RunTest extends CommonTestCase
         $metric = 3;
 
         $this->prepareGetRequestMock([
-            ['id',          null, $id],
-            ['threshold',   null, $threshold],
-            ['symbol',      null, $symbol],
-            ['metric',      null, $metric],
+            ['id', null, $id],
+            ['threshold', null, $threshold],
+            ['symbol', null, $symbol],
+            ['metric', null, $metric],
         ]);
         // mocked result set.
-        $profileMock = $this->m(Xhgui_Profile::class,[
+        $profileMock = $this->m(Xhgui_Profile::class, [
             'calculateSelf',
             'getRelatives',
         ]);
 
         $profileMock->expects(self::any())
-                   ->method('calculateSelf');
+                    ->method('calculateSelf');
 
 
         $profileMock->expects(self::any())
-                   ->method('getRelatives')
-                   ->with($this->equalTo($symbol), $this->equalTo($metric), $this->equalTo($threshold))
-                   ->willReturn(['parents', 'current', 'children']);
+                    ->method('getRelatives')
+                    ->with($this->equalTo($symbol), $this->equalTo($metric), $this->equalTo($threshold))
+                    ->willReturn(['parents', 'current', 'children']);
 
         $this->profilesMock->expects(self::any())
-            ->method('get')
-            ->with($this->equalTo($id))
-            ->willReturn($profileMock);
+                           ->method('get')
+                           ->with($this->equalTo($id))
+                           ->willReturn($profileMock);
 
-        $this->runs->symbolShort();
-        $result = $this->runs->templateVars();
+        $this->object->symbolShort();
+        $result = $this->object->templateVars();
 
         self::assertSame('parents', $result['parents']);
         self::assertSame('current', $result['current']);
@@ -403,7 +403,7 @@ class Controller_RunTest extends CommonTestCase
         $id = 1;
 
         $this->prepareGetRequestMock([
-            ['id',          null, $id],
+            ['id', null, $id],
         ]);
 
         // mocked result set.
@@ -414,9 +414,9 @@ class Controller_RunTest extends CommonTestCase
                            ->with($this->equalTo($id))
                            ->willReturn($profileMock);
 
-        $this->runs->callgraph();
-        $result = $this->runs->templateVars();
-        
+        $this->object->callgraph();
+        $result = $this->object->templateVars();
+
         $this->assertArrayHasKey('profile', $result);
         $this->assertArrayHasKey('date_format', $result);
         $this->assertArrayNotHasKey('callgraph', $result);
@@ -429,13 +429,13 @@ class Controller_RunTest extends CommonTestCase
         $threshold = 1;
 
         $this->prepareGetRequestMock([
-            ['id',          null, $id],
-            ['metric',      null, $metric],
-            ['threshold',   null, $threshold],
+            ['id', null, $id],
+            ['metric', null, $metric],
+            ['threshold', null, $threshold],
         ]);
 
         // mocked result set.
-        $profileMock = $this->m(Xhgui_Profile::class,[
+        $profileMock = $this->m(Xhgui_Profile::class, [
             'getCallgraphNodes',
             'getCallgraph'
         ]);
@@ -445,15 +445,15 @@ class Controller_RunTest extends CommonTestCase
                            ->with($this->equalTo($id))
                            ->willReturn($profileMock);
 
-        $responseMock = $this->m(Response::class,['body']);
+        $responseMock = $this->m(Response::class, ['body']);
         $responseMock->expects(self::exactly(2))->method('body')->willReturnOnConsecutiveCalls(
             [''],
             '{"'
         );
-        
+
         $this->appMock->expects(self::exactly(2))->method('response')->willReturn($responseMock);
 
-        $this->runs->callgraphData();
+        $this->object->callgraphData();
         $response = $this->app->response();
 
         $this->assertEquals('application/json', $response['Content-Type']);
@@ -468,7 +468,7 @@ class Controller_RunTest extends CommonTestCase
         $id = 1;
 
         $this->prepareGetRequestMock([
-            ['id',          null, $id],
+            ['id', null, $id],
         ]);
 
         // mocked result set.
@@ -479,23 +479,23 @@ class Controller_RunTest extends CommonTestCase
                            ->with($this->equalTo($id))
                            ->willReturn($profileMock);
 
-        $this->runs->deleteForm();
-        $result = $this->runs->templateVars();
-        
+        $this->object->deleteForm();
+        $result = $this->object->templateVars();
+
         self::assertArrayHasKey('result', $result);
         self::assertSame($profileMock, $result['result']);
 
     }
 
     /**
-     * 
+     *
      */
     public function testDeleteSubmit()
     {
         $id = 1;
 
         $this->preparePostRequestMock([
-            ['id',          null, $id],
+            ['id', null, $id],
         ]);
 
         // mocked result set.
@@ -508,19 +508,19 @@ class Controller_RunTest extends CommonTestCase
 
         $this->appMock->expects(self::once())->method('urlFor');
         $this->appMock->expects(self::once())->method('redirect');
-        
-        $this->runs->deleteSubmit();
+
+        $this->object->deleteSubmit();
     }
 
     public function testDeleteAllSubmit()
     {
         $this->profilesMock->expects(self::any())
                            ->method('truncate');
-        
+
         $this->appMock->expects(self::once())->method('urlFor');
         $this->appMock->expects(self::once())->method('redirect');
 
-        $this->runs->deleteAllSubmit();
+        $this->object->deleteAllSubmit();
 
     }
 }
