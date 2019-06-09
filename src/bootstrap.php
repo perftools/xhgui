@@ -3,6 +3,7 @@
  * Boostrapping and common utility definition.
  */
 define('XHGUI_ROOT_DIR', dirname(__DIR__));
+print 'geneeral bootstrap';
 
 if (file_exists(XHGUI_ROOT_DIR . '/vendor/autoload.php')) {
     require XHGUI_ROOT_DIR . '/vendor/autoload.php';

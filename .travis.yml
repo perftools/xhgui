@@ -11,9 +11,6 @@ matrix:
     - php: 7.2
       env: COVERAGE=1
 
-services:
-  - mongodb
-
 install:
   - .travis/install.sh
 
