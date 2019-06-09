@@ -14,6 +14,6 @@ if (file_exists(XHGUI_ROOT_DIR . '/vendor/autoload.php')) {
 
 Xhgui_Config::load(XHGUI_ROOT_DIR . '/config/config.default.php');
 if (file_exists(XHGUI_ROOT_DIR . '/config/config.php')) {
-    print "config loaded\n"
+    print "config loaded\n";
     Xhgui_Config::load(XHGUI_ROOT_DIR . '/config/config.php');
 }
