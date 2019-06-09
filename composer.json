@@ -25,7 +25,7 @@
         "phpunit/phpunit": "^5.7.27 | ^6.5.13"
     },
     "scripts": {
-        "test": "phpunit",
+        "test": "phpunit --bootstrap tests/bootstrap.php",
         "cover": "phpunit --coverage-clover=unittest-coverage.clover"
     },
     "suggest": {
