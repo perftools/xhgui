@@ -40,7 +40,7 @@ abstract class Xhgui_Controller
         // The simplest way to do that is Slim::render, but that is not allowed
         // in middleware, because it uses Slim\View::display which prints
         // directly to the native PHP output buffer.
-        // Doing that is problematic, because the HTTP readers set via $app->response()
+        // Doing that is problematic, because the HTTP headers set via $app->response()
         // must be output first, which won't happen until after the middleware
         // is completed. Output of headers and body is done by the Slim::run entry point.
 
