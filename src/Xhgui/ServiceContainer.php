@@ -18,6 +18,9 @@ class Xhgui_ServiceContainer extends Pimple
         return static::$_instance;
     }
 
+    /**
+     * Xhgui_ServiceContainer constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -27,7 +30,9 @@ class Xhgui_ServiceContainer extends Pimple
         $this->_controllers();
     }
 
-    // Create the Slim app.
+    /**
+     * Create the Slim app.
+     */
     protected function _slimApp()
     {
         $this['view'] = function ($c) {
@@ -76,29 +81,15 @@ class Xhgui_ServiceContainer extends Pimple
     protected function _services()
     {
         $this['db'] = $this->share(function ($c) {
-            switch($c['config']['save.handler']) {
-                case 'pdo':
-                    return new \Xhgui_Storage_PDO($c['config']);
-
-                case 'mongodb':
-                    return new \Xhgui_Storage_Mongo($c['config']);
-
-                default:
-                case 'file':
-                    return new \Xhgui_Storage_File($c['config']);
-            }
+            return Xhgui_Storage_Factory::factory($c['config']);
         });
 
         $this['watchFunctions'] = function ($c) {
 
             switch($c['config']['save.handler']) {
-                case 'pdo':
-                    return $c['db'];
-
-                case 'mongodb':
-                    return $c['db'];
-
                 default:
+                case 'pdo':
+                case 'mongodb':
                 case 'file':
                     return $c['db'];
             }
@@ -135,7 +126,7 @@ class Xhgui_ServiceContainer extends Pimple
         };
 
         $this['importController'] = function ($c) {
-            return new Xhgui_Controller_Import($c['app'], $c['db']);
+            return new Xhgui_Controller_Import($c['app'], $c['profiles']);
         };
     }
 

@@ -1,0 +1,39 @@
+{% extends 'layout/base.twig' %}
+{% import 'macros/helpers.twig' as helpers %}
+
+{% block title %}
+    - Import 
+{% endblock %}
+
+{% block content %}
+    <h1>Import data from external source</h1>
+
+    <form method="post" action="{{ url('import.data') }}">
+        <div class="row-fluid row-spaced">
+            <div class="span6">
+                <h3>Source:</h3>
+                <select name="source">
+                    <option value="">Please select</option>
+                    {% for handler in configured_handlers %}
+                        <option value="{{ handler }}">{{ handler }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="span6">
+                <h3>Target:</h3>
+                <select name="target">
+                    <option value="">Please select</option>
+                    {% for handler in configured_handlers %}
+                        <option value="{{ handler }}">{{ handler }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Import data</button>
+            </div>
+        </div>
+    </form>
+
+{% endblock%}

@@ -82,10 +82,15 @@ $app->get('/run/callgraph/dot', function () use ($di, $app) {
 })->name('run.callgraph.dot');
 
 // Import route
-$app->post('/run/import', function () use ($di, $app) {
+$app->get('/import', function () use ($di, $app) {
+    $app->controller = $di['importController'];
+    $app->controller->index();
+})->name('import');
+
+$app->post('/import', function () use ($di, $app) {
     $app->controller = $di['importController'];
     $app->controller->import();
-})->name('run.import');
+})->name('import.data');
 
 
 // Watch function routes.

@@ -29,11 +29,7 @@ class Xhgui_Storage_PDO implements \Xhgui_StorageInterface, \Xhgui_WatchedFuncti
     public function find(\Xhgui_Storage_Filter $filter, $projections = false)
     {
         list($query, $params) = $this->getQuery($filter, false);
-//        print '<pre>';
-//        print_r($query);
-//        print_r($params);
-//        print '</pre>';
-//        exit;
+        
         try {
             $stmt = $this->connection->prepare($query);
             $stmt->execute($params);
@@ -179,9 +175,8 @@ from
 
         if ($filter->getPage()) {
             $sql                .= ' OFFSET :offset ';
-            $params['offset']   = ($filter->getPerPage()*($filter->getPage()-1));
+            $params['offset']   = (int)($filter->getPerPage()*($filter->getPage()-1));
         }
-
         return [$sql, $params];
     }
 

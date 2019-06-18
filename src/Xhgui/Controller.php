@@ -38,7 +38,9 @@ abstract class Xhgui_Controller
     {
         $container = $this->app->container->all();
         $this->_templateVars['config'] = $container['settings'];
-        $this->app->render($this->_template, $this->_templateVars);
+        if (!empty($this->_template)) {
+            $this->app->render($this->_template, $this->_templateVars);
+        }
     }
 
 }
