@@ -20,6 +20,9 @@ class Xhgui_Controller_Import extends Xhgui_Controller
         $this->setProfiles($profiles);
     }
 
+    /**
+     * Import main page. Use to select source and target.
+     */
     public function index()
     {
 
@@ -49,9 +52,10 @@ class Xhgui_Controller_Import extends Xhgui_Controller
     }
 
     /**
-     *
+     * Main import function. It does all the work.
      */
-    public function import(){
+    public function import()
+    {
         $request = $this->app->request();
         $this->_template = '';
         
@@ -94,9 +98,7 @@ class Xhgui_Controller_Import extends Xhgui_Controller
         }
 
         $this->app->redirect($this->app->urlFor('import'));
-
     }
-
 
     /**
      * @return Xhgui_Profiles

@@ -6,6 +6,41 @@
  * and return an array from there with your overriding settings.
  */
 
+// for example: php script was called from cli.
+if (empty($_SERVER['REQUEST_URI'])) {
+    if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
+        try {
+            $fileNamePattern = dirname(__DIR__) .
+                '/cache/xhgui.data.' .
+                microtime(true) .
+                bin2hex(random_bytes(5));
+        } catch (Exception $e) {
+        }
+    }
+    if (
+        empty($fileNamePattern) &&
+        function_exists('openssl_random_pseudo_bytes') &&
+        $b = openssl_random_pseudo_bytes(5, $strong)
+    ) {
+        $fileNamePattern = dirname(__DIR__) .
+            '/cache/xhgui.data.' .
+            microtime(true).
+            bin2hex($b);
+    } elseif (empty($fileNamePattern)) {
+            $fileNamePattern = dirname(__DIR__) .
+                '/cache/xhgui.data.' .
+                microtime(true).
+                getmypid().
+                uniqid('last_resort_unique_string', true);
+    }
+
+} else {
+    $fileNamePattern = dirname(__DIR__) .
+        '/cache/xhgui.data.' .
+        microtime(true).
+        substr(md5($_SERVER['REQUEST_URI']),0,10);
+}
+
 return array(
     'debug'     => false,
     'mode'      => 'development',
@@ -14,7 +49,7 @@ return array(
 
     // For file
     'save.handler'                    => 'file',
-    'save.handler.filename'           => dirname(__DIR__) . '/cache/' . 'xhgui.data.' . microtime(true) . '_' . substr(md5(!empty($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : microtime(true).getmypid().uniqid('fallback_requiest_id', true)), 0, 6),
+    'save.handler.filename'           => $fileNamePattern,
     'save.handler.separate_meta'      => false,
     'save.handler.meta_serializer'    => 'php',
 
@@ -67,12 +102,12 @@ return array(
 
     // Profile x in 100 requests. (E.g. set XHGUI_PROFLING_RATIO=50 to profile 50% of requests)
     // You can return true to profile every request.
-    'profiler.enable' => function() {
+    'profiler.enable' => function () {
         $ratio = getenv('XHGUI_PROFILING_RATIO') ?: 100;
         return (getenv('XHGUI_PROFILING') !== false) && (mt_rand(1, 100) <= $ratio);
     },
 
-    'profiler.simple_url' => function($url) {
+    'profiler.simple_url' => function ($url) {
         return preg_replace('/\=\d+/', '', $url);
     },
 

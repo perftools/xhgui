@@ -351,28 +351,32 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     /**
      * @return Xhgui_WatchedFunctionsStorageInterface
      */
-    public function getWatches() {
+    public function getWatches()
+    {
         return $this->watches;
     }
 
     /**
      * @param Xhgui_WatchedFunctionsStorageInterface $watches
      */
-    public function setWatches($watches) {
+    public function setWatches($watches)
+    {
         $this->watches = $watches;
     }
 
     /**
      * @return Xhgui_Profiles
      */
-    public function getProfiles() {
+    public function getProfiles()
+    {
         return $this->profiles;
     }
 
     /**
      * @param Xhgui_Profiles $profiles
      */
-    public function setProfiles($profiles) {
+    public function setProfiles($profiles)
+    {
         $this->profiles = $profiles;
     }
 }

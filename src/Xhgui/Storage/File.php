@@ -72,7 +72,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
         sort($result);
 
         $ret = [];
-        foreach($result as $i => $file) {
+        foreach ($result as $i => $file) {
             // skip meta files.
             if (strpos($file, '.meta') !== false) {
                 continue;
@@ -81,11 +81,17 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
             // try to detect timestamp in filename.
             $requestTimeFromFilename = $this->getRequestTimeFromFilename($file);
             if (!empty($requestTimeFromFilename)) {
-                if (null !== $filter->getStartDate() && $this->getDateTimeFromStringOrTimestamp($filter->getStartDate()) >= $requestTimeFromFilename) {
+                if (
+                    null !== $filter->getStartDate() &&
+                    $this->getDateTimeFromStringOrTimestamp($filter->getStartDate()) >= $requestTimeFromFilename)
+                {
                     continue;
                 }
 
-                if (null !== $filter->getEndDate() && $this->getDateTimeFromStringOrTimestamp($filter->getEndDate()) <= $requestTimeFromFilename) {
+                if (
+                    null !== $filter->getEndDate() &&
+                    $this->getDateTimeFromStringOrTimestamp($filter->getEndDate()) <= $requestTimeFromFilename
+                ) {
                     continue;
                 }
             }
@@ -127,14 +133,15 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
         }
 
         try {
-            if (!empty($filter->getSort()) AND !empty($ret)) {
+            if (!empty($filter->getSort()) && !empty($ret)) {
                 $this->filter = $filter;
                 usort($ret, array($this, 'sortByColumn'));
                 unset($this->filter);
             }
-        }catch (InvalidArgumentException $e) {
-            
+        } catch (InvalidArgumentException $e) {
+            // ignore for now.
         }
+        
         $cacheId = md5(serialize($filter->toArray()));
 
         $this->countCache[$cacheId] = count($ret);
@@ -210,20 +217,22 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
             'result'    => [],
         ];
 
-        foreach($ret as $row) {
-            $result['result'][$row['meta']['request_date']]['wall_times'][]    = $row['profile']['main()']['wt'];
-            $result['result'][$row['meta']['request_date']]['cpu_times'][]     = $row['profile']['main()']['cpu'];
-            $result['result'][$row['meta']['request_date']]['mu_times'][]      = $row['profile']['main()']['mu'];
-            $result['result'][$row['meta']['request_date']]['pmu_times'][]     = $row['profile']['main()']['pmu'];
+        foreach ($ret as $row) {
+            $request_date = $row['meta']['request_date'];
+            $result['result'][$request_date]['wall_times'][]    = $row['profile']['main()']['wt'];
+            $result['result'][$request_date]['cpu_times'][]     = $row['profile']['main()']['cpu'];
+            $result['result'][$request_date]['mu_times'][]      = $row['profile']['main()']['mu'];
+            $result['result'][$request_date]['pmu_times'][]     = $row['profile']['main()']['pmu'];
 
-            if (empty($result['result'][$row['meta']['request_date']]['row_count'])) {
-                $result['result'][$row['meta']['request_date']]['row_count'] = 0;
+            if (empty($result['result'][$request_date]['row_count'])) {
+                $result['result'][$request_date]['row_count'] = 0;
             }
-            $result['result'][$row['meta']['request_date']]['row_count']++;
+            $result['result'][$request_date]['row_count']++;
 
-            $result['result'][$row['meta']['request_date']]['raw_index'] = $result['result'][$row['meta']['request_date']]['row_count']*($percentile/100);
+            $result['result'][$request_date]['raw_index'] =
+                $result['result'][$request_date]['row_count']*($percentile/100);
 
-            $result['result'][$row['meta']['request_date']]['_id']=$row['meta']['request_date'];
+            $result['result'][$request_date]['_id']= $request_date;
         }
 
         return $result;
@@ -238,7 +247,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
     public function sortByColumn($a, $b)
     {
         $sort = $this->filter->getSort();
-        switch($sort) {
+        switch ($sort) {
             case 'ct':
             case 'wt':
             case 'cpu':
@@ -267,7 +276,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
                 break;
         }
 
-        if ($aValue == $bValue){
+        if ($aValue == $bValue) {
             return 0;
         }
 
@@ -314,21 +323,21 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
         try {
             $date = new DateTime($timestamp);
             return $date;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             // leave empty to try parse different format below
         }
 
         try {
             $date = DateTime::createFromFormat('U', $timestamp);
             return $date;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             // leave empty to try parse different format below
         }
 
         try {
             $date = DateTime::createFromFormat('Y-m-d H:i:s', $timestamp);
             return $date;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             // last attempt failed. Throw generic exception.
             throw new RuntimeException('Unable to parse date from string: '.$timestamp, null, $e);
         }
@@ -373,7 +382,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
             return false;
         }
         
-        switch ($serializer){
+        switch ($serializer) {
             default:
             case 'json':
                 return json_decode(file_get_contents($path), true);

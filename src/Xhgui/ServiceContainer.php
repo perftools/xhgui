@@ -86,7 +86,7 @@ class Xhgui_ServiceContainer extends Pimple
 
         $this['watchFunctions'] = function ($c) {
 
-            switch($c['config']['save.handler']) {
+            switch ($c['config']['save.handler']) {
                 default:
                 case 'pdo':
                 case 'mongodb':

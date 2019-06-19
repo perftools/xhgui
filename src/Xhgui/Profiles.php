@@ -23,7 +23,7 @@ class Xhgui_Profiles
                                 ->sort(array('meta.request_date' => -1))
                                 ->limit(1);
         $result = $cursor->getNext();
-        return $this->_wrap($result);
+        return $this->wrap($result);
     }
 
     public function query($conditions, $fields = null)
@@ -40,7 +40,7 @@ class Xhgui_Profiles
      */
     public function get($id)
     {
-        return $this->_wrap($this->storage->findOne($id));
+        return $this->wrap($this->storage->findOne($id));
     }
 
     /**
@@ -84,7 +84,7 @@ class Xhgui_Profiles
         $totalPages = max(ceil($totalRows / $filter->getPerPage()), 1);
 
         return array(
-            'results'       => $this->_wrap($result),
+            'results'       => $this->wrap($result),
             'sort'          => $filter->getSort(),
             'direction'     => $filter->getDirection(),
             'page'          => $filter->getPage(),
@@ -122,7 +122,12 @@ class Xhgui_Profiles
             'pmu_times'     => 'pmu'
         );
         foreach ($results['result'] as &$result) {
-            $result['date'] = ($result['_id'] instanceof MongoDate) ? date('Y-m-d H:i:s', $result['_id']->sec) : $result['_id'];
+            if ($result['_id'] instanceof MongoDate) {
+                $result['date'] = date('Y-m-d H:i:s', $result['_id']->sec);
+            } else {
+                $result['date'] = $result['_id'];
+            }
+            
             unset($result['_id']);
             $index = max(round($result['raw_index']) - 1, 0);
             foreach ($keys as $key => $out) {
@@ -188,7 +193,7 @@ class Xhgui_Profiles
      * @return Xhgui_Profile|array The transformed/wrapped results.
      * @throws Exception
      */
-    protected function _wrap($data)
+    protected function wrap($data)
     {
         if ($data === null) {
             throw new Exception('No profile data found.');

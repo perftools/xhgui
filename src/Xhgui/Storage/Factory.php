@@ -1,10 +1,19 @@
 <?php
 
-
+/**
+ * Factory for storage classes
+ */
 class Xhgui_Storage_Factory
 {
-    public static function factory($config) {
-        switch($config['save.handler']) {
+    /**
+     * @param $config
+     * @return Xhgui_Storage_File|Xhgui_Storage_Mongo|Xhgui_Storage_PDO
+     * @throws MongoConnectionException
+     * @throws MongoException
+     */
+    public static function factory($config)
+    {
+        switch ($config['save.handler']) {
             case 'pdo':
                 return new \Xhgui_Storage_PDO($config);
 
