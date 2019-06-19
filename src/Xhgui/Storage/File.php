@@ -83,14 +83,12 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
             $requestTimeFromFilename = $this->getRequestTimeFromFilename($file);
             if (!empty($requestTimeFromFilename)) {
                 if (null !== $filter->getStartDate() &&
-                    $this->getDateTimeFromStringOrTimestamp($filter->getStartDate()) >= $requestTimeFromFilename)
-                {
+                    $this->getDateTimeFromStringOrTimestamp($filter->getStartDate()) >= $requestTimeFromFilename) {
                     continue;
                 }
 
                 if (null !== $filter->getEndDate() &&
-                    $this->getDateTimeFromStringOrTimestamp($filter->getEndDate()) <= $requestTimeFromFilename
-                ) {
+                    $this->getDateTimeFromStringOrTimestamp($filter->getEndDate()) <= $requestTimeFromFilename ) {
                     continue;
                 }
             }
