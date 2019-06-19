@@ -344,7 +344,6 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
             if (!empty($parsedDate)) {
                 return $parsedDate;
             }
-
         } catch (\Exception $e) {
             // leave empty to try parse different format below
         }
@@ -427,7 +426,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
-     * Get connection. 
+     * Get connection.
      *
      * @return MongoDB
      * @throws MongoConnectionException

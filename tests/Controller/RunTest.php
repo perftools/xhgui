@@ -180,16 +180,16 @@ class Controller_RunTest extends CommonTestCase
         $this->profilesMock->expects(self::once())
                            ->method('getAll')
                            ->with($this->callback(function ($filter) use ($url) {
-                                if (!($filter instanceof Xhgui_Storage_Filter)) {
-                                    return false;
-                                }
+                            if (!($filter instanceof Xhgui_Storage_Filter)) {
+                                return false;
+                            }
 
-                                return $filter->getUrl() == $url;
+                            return $filter->getUrl() == $url;
                            }))->willReturn([
-                                'results' => ['fake_results'],
-                                'totalPages' => 0,
-                                'page' => 0,
-                                'direction' => 'desc',
+                            'results' => ['fake_results'],
+                            'totalPages' => 0,
+                            'page' => 0,
+                            'direction' => 'desc',
                            ]);
 
         // chart data. For this we mock it with fake data, we don't process it action
@@ -259,17 +259,17 @@ class Controller_RunTest extends CommonTestCase
         $this->profilesMock->expects(self::once())
                            ->method('getAll')
                            ->with($this->callback(function ($filter) use ($url) {
-                                if (!($filter instanceof Xhgui_Storage_Filter)) {
-                                    return false;
-                                }
+                            if (!($filter instanceof Xhgui_Storage_Filter)) {
+                                return false;
+                            }
 
-                                return $filter->getUrl() == $url;
+                            return $filter->getUrl() == $url;
                            }))
                            ->willReturn([
-                                'results' => ['fake_results'],
-                                'totalPages' => 0,
-                                'page' => 0,
-                                'direction' => 'desc',
+                            'results' => ['fake_results'],
+                            'totalPages' => 0,
+                            'page' => 0,
+                            'direction' => 'desc',
                            ]);
 
         $this->object->compare();

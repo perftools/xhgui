@@ -15,7 +15,7 @@ class Controller_WatchTest extends CommonTestCase
     protected $appMock;
     
     /**
-     * 
+     * Setup method
      */
     public function setUp()
     {

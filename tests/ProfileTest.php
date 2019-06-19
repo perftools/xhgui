@@ -590,12 +590,4 @@ class ProfileTest extends PHPUnit\Framework\TestCase
         $result = $profile->getDate();
         $this->assertInstanceOf('DateTime', $result);
     }
-
-    /**
-     *
-     */
-    public function testFilter()
-    {
-
-    }
 }

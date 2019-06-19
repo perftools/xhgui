@@ -14,7 +14,8 @@ class CommonTestCase extends PHPUnit\Framework\TestCase
     /**
      *
      */
-    public function setUp(){
+    public function setUp()
+    {
         $this->requestMock = $this->getMockBuilder(Request::class)
                                   ->setMethods(['get', 'post'])
                                   ->disableOriginalConstructor()

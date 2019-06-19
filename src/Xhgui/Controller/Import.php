@@ -90,8 +90,8 @@ class Xhgui_Controller_Import extends Xhgui_Controller
                 }
 
                 $filter->setPage($page++);
-
             } while ($allRows->count() > 0);
+            
             $this->app->flash('success', 'Import successful');
         } catch (Exception $e) {
             $this->app->flash('failure', 'Import failed');

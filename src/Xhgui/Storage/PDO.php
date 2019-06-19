@@ -246,7 +246,6 @@ where
         try {
             $stmt = $this->connection->prepare($query);
             $stmt->execute($params);
-
         } catch (\Exception $e) {
             print_r($e->getMessage());
             exit;
@@ -374,14 +373,15 @@ where
      * @param string|int $date
      * @return \DateTime
      */
-    protected function getDateTimeFromString($date) {
+    protected function getDateTimeFromString($date)
+    {
 
         try {
             $datetime = \DateTime::createFromFormat('Y-m-d H:i:s', $date);
             if ($datetime instanceof \DateTime) {
                 return $datetime;
             }
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
         }
 
         try {
@@ -389,7 +389,7 @@ where
             if ($datetime instanceof \DateTime) {
                 return $datetime;
             }
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
         }
 
         throw new \InvalidArgumentException('Unable to parse date');
@@ -399,7 +399,8 @@ where
      * @inheritDoc
      * @param array $data
      */
-    public function insert(array $data) {
+    public function insert(array $data)
+    {
         // TODO: Implement insert() method.
     }
 
@@ -408,7 +409,8 @@ where
      * @param $_id
      * @param array $data
      */
-    public function update($_id, array $data) {
+    public function update($_id, array $data)
+    {
         // TODO: Implement update() method.
     }
 }

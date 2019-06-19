@@ -17,8 +17,7 @@ if (empty($_SERVER['REQUEST_URI'])) {
         } catch (Exception $e) {
         }
     }
-    if (
-        empty($fileNamePattern) &&
+    if (empty($fileNamePattern) &&
         function_exists('openssl_random_pseudo_bytes') &&
         $b = openssl_random_pseudo_bytes(5, $strong)
     ) {
@@ -33,12 +32,11 @@ if (empty($_SERVER['REQUEST_URI'])) {
                 getmypid().
                 uniqid('last_resort_unique_string', true);
     }
-
 } else {
     $fileNamePattern = dirname(__DIR__) .
         '/cache/xhgui.data.' .
         microtime(true).
-        substr(md5($_SERVER['REQUEST_URI']),0,10);
+        substr(md5($_SERVER['REQUEST_URI']), 0, 10);
 }
 
 return array(

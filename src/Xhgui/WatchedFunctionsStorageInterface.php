@@ -3,7 +3,8 @@
 /**
  * Watched functions interface
  */
-interface Xhgui_WatchedFunctionsStorageInterface {
+interface Xhgui_WatchedFunctionsStorageInterface
+{
 
     /**
      * Return list of watched functions

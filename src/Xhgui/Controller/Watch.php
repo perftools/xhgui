@@ -60,14 +60,16 @@ class Xhgui_Controller_Watch extends Xhgui_Controller
     /**
      * @return Xhgui_WatchedFunctionsStorageInterface
      */
-    public function getWatches() {
+    public function getWatches()
+    {
         return $this->watches;
     }
 
     /**
      * @param Xhgui_WatchedFunctionsStorageInterface $watches
      */
-    public function setWatches($watches) {
+    public function setWatches($watches)
+    {
         $this->watches = $watches;
     }
 }
