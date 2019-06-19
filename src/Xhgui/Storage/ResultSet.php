@@ -124,7 +124,7 @@ class Xhgui_Storage_ResultSet implements \Iterator
      */
     public function valid()
     {
-        return !empty($this->keys[$this->i]) AND !empty($this->data[$this->keys[$this->i]]) AND $this->i < $this->limit;
+        return !empty($this->keys[$this->i]) && !empty($this->data[$this->keys[$this->i]]) && $this->i < $this->limit;
     }
 
     /**

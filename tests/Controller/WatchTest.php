@@ -22,7 +22,7 @@ class Controller_WatchTest extends CommonTestCase
         parent::setUp();
         $di = Xhgui_ServiceContainer::instance();
 
-        $this->appMock  = $this->m(Slim::class,['redirect', 'render', 'urlFor', 'request', 'response', 'flash']);
+        $this->appMock  = $this->m(Slim::class, ['redirect', 'render', 'urlFor', 'request', 'response', 'flash']);
 
         $this->dbMock   = $this->m(Xhgui_Storage_File::class, [
             'getAll',
@@ -76,7 +76,8 @@ class Controller_WatchTest extends CommonTestCase
         $this->watches->post();
     }
 
-    public function postDataProvider() {
+    public function postDataProvider()
+    {
         return [
             ['updateWatchedFunction', [['id'=>1, 'name'=>'test'], ['id'=>2, 'name'=>'different test']]],
             ['addWatchedFunction', [['name'=>'test'], ['name'=>'different test']]],

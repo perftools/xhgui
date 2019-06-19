@@ -52,6 +52,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * @inheritDoc
      * @param $options
      * @param bool $projections
      * @return Xhgui_Storage_ResultSet
@@ -87,6 +88,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * @inheritDoc
      * @param $options
      * @return int
      * @throws \MongoCursorTimeoutException
@@ -101,6 +103,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * @inheritDoc
      * @param $id
      * @return array|null
      * @throws \MongoException
@@ -110,10 +113,10 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
         $ret = $this->getCollection()
                     ->findOne(['_id' => new \MongoId($id)]);
         return $ret;
-
     }
 
     /**
+     * @inheritDoc
      * @param $id
      * @return array|bool
      * @throws MongoCursorException
@@ -129,6 +132,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * @inheritDoc
      * @param $data
      * @return array|bool
      * @throws \MongoCursorException
@@ -144,6 +148,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * @inheritDoc
      * @param $id
      * @param $data
      * @return array|bool
@@ -161,7 +166,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
-     *
+     * @inheritDoc
      */
     public function drop()
     {
@@ -169,6 +174,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * @inheritDoc
      * @param $match
      * @param $col
      * @param int $percentile
@@ -229,6 +235,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * @inheritDoc
      * @return array
      */
     public function getWatchedFunctions()
@@ -248,6 +255,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * @inheritDoc
      * @param $name
      * @return bool
      */
@@ -277,6 +285,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * @inheritDoc
      * @param $id
      * @param $name
      * @return bool
@@ -304,6 +313,7 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * @inheritDoc
      * @param $id
      * @return bool
      */
@@ -322,12 +332,13 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * Try to parse given string as a datetime or unix timestamp
+     *
      * @param string|int $date
      * @return \DateTime
      */
     protected function getDateTimeFromString($date)
     {
-
         try {
             $parsedDate = \DateTime::createFromFormat('Y-m-d H:i:s', $date);
             if (!empty($parsedDate)) {
@@ -343,7 +354,6 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
             if (!empty($parsedDate)) {
                 return $parsedDate;
             }
-
         } catch (\Exception $e) {
             // throw generic exception on failure
         }
@@ -351,6 +361,8 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * Convert filter into mongo condition
+     *
      * @param \Xhgui_Storage_Filter $filter
      * @return array
      */
@@ -358,14 +370,15 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     {
         $conditions = [];
         if (null !== $filter->getStartDate()) {
-            $conditions['meta.request_ts']['$gte'] = new \MongoDate($this->getDateTimeFromString($filter->getStartDate())
-                                                                         ->format('U'));
+            $conditions['meta.request_ts']['$gte'] = new \MongoDate(
+                $this->getDateTimeFromString($filter->getStartDate())->format('U')
+            );
         }
 
         if (null !== $filter->getEndDate()) {
-            $conditions['meta.request_ts']['$lte'] = new \MongoDate($this->getDateTimeFromString($filter->getEndDate())
-                                                                         ->format('U'));
-
+            $conditions['meta.request_ts']['$lte'] = new \MongoDate(
+                $this->getDateTimeFromString($filter->getEndDate())->format('U')
+            );
         }
 
         if (null !== $filter->getUrl()) {
@@ -390,7 +403,10 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * Get mongo client from config
+     *
      * @return MongoClient
+     * @throws MongoConnectionException
      */
     public function getMongoClient()
     {
@@ -401,6 +417,8 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * Set prepared mongo client.
+     *
      * @param MongoClient $mongoClient
      */
     public function setMongoClient($mongoClient)
@@ -409,7 +427,10 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * Get connection. 
+     *
      * @return MongoDB
+     * @throws MongoConnectionException
      */
     public function getConnection()
     {
@@ -421,6 +442,8 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * Set existing connection
+     *
      * @param MongoDB $connection
      */
     public function setConnection($connection)
@@ -429,7 +452,10 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
+     * Select specific connection
+     *
      * @return MongoCollection
+     * @throws Exception
      */
     public function getCollection()
     {

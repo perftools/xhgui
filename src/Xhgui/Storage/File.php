@@ -62,6 +62,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
     }
 
     /**
+     * @inheritDoc
      * @param Xhgui_Storage_Filter $filter
      * @param bool $projections
      * @return Xhgui_Storage_ResultSet
@@ -152,6 +153,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
     }
 
     /**
+     * @inheritDoc
      * @param Xhgui_Storage_Filter $filter
      * @return int
      */
@@ -165,6 +167,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
     }
 
     /**
+     * @inheritDoc
      * @param $id
      * @return mixed
      */
@@ -177,6 +180,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
     }
 
     /**
+     * @inheritDoc
      * @param $id
      * @return bool
      */
@@ -194,7 +198,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
     }
 
     /**
-     *
+     * @inheritDoc
      */
     public function drop()
     {
@@ -203,6 +207,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
     }
 
     /**
+     * @inheritDoc
      * @param $match
      * @param $col
      * @param int $percentile
@@ -240,6 +245,8 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
 
 
     /**
+     * Column sorter
+     *
      * @param $a
      * @param $b
      * @return int
@@ -300,9 +307,11 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
         return strnatcmp($bValue, $aValue);
     }
 
-
-
     /**
+     * Generate meta profile name from profile file name.
+     *
+     * In most cases just add .meta extension
+     *
      * @param $file
      * @return mixed
      */
@@ -314,6 +323,8 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
 
 
     /**
+     * Try to parse string or unix timestamp ane return \DateTime
+     *
      * @param $timestamp
      * @return bool|DateTime
      */
@@ -344,6 +355,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
     }
 
     /**
+     * @inheritDoc
      * @param $data
      */
     public function insert(array $data)
@@ -357,6 +369,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
     }
 
     /**
+     * @inheritDoc
      * @param $id
      * @param $data
      */
@@ -366,6 +379,8 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
     }
 
     /**
+     * Load profile file from disk, prepare it and return parsed array
+     *
      * @param $path
      * @param bool $meta
      * @return mixed
@@ -409,6 +424,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
     }
 
     /**
+     * @inheritDoc
      * @return array
      */
     public function getWatchedFunctions()
@@ -422,6 +438,7 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
     }
 
     /**
+     * @inheritDoc
      * @param $name
      * @return bool
      */
@@ -432,11 +449,15 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
             return false;
         }
         $id = md5($name);
-        $i = file_put_contents($this->watchedFunctionsPathPrefix.$id.'.json', json_encode(['id'=>$id, 'name'=>$name]));
+        $i = file_put_contents(
+            $this->watchedFunctionsPathPrefix.$id.'.json',
+            json_encode(['id'=>$id, 'name'=>$name])
+        );
         return $i > 0;
     }
 
     /**
+     * @inheritDoc
      * @param $id
      * @param $name
      * @return bool
@@ -448,11 +469,15 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
             return false;
         }
 
-        $i = file_put_contents($this->watchedFunctionsPathPrefix.$id.'.json', json_encode(['id'=>$id, 'name'=>trim($name)]));
+        $i = file_put_contents(
+            $this->watchedFunctionsPathPrefix.$id.'.json',
+            json_encode(['id'=>$id, 'name'=>trim($name)])
+        );
         return $i > 0;
     }
 
     /**
+     * @inheritDoc
      * @param $id
      */
     public function removeWatchedFunction($id)
@@ -463,6 +488,8 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
     }
 
     /**
+     * Parse filename and try to get request time from filename
+     *
      * @param $fileName
      * @return bool|DateTime
      */

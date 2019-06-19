@@ -66,13 +66,6 @@ class Xhgui_Profiles
     public function paginate(Xhgui_Storage_Filter $filter)
     {
         $projection = false;
-//        if (isset($options['projection'])) {
-//            if ($options['projection'] === true) {
-//                $projection = array('meta' => 1, 'profile.main()' => 1);
-//            } else {
-//                $projection = $options['projection'];
-//            }
-//        }
 
         if ($projection === false) {
             $result = $this->storage->find($filter, null);
@@ -107,9 +100,6 @@ class Xhgui_Profiles
     public function getPercentileForUrl($percentile, $url, $filter)
     {
         $col = '$meta.request_date';
-//        if (!empty($search['limit']) && $search['limit'][0] == "P") {
-//            $col = '$meta.request_ts';
-//        }
 
         $results = $this->storage->aggregate($filter, $col, $percentile);
         if (empty($results['result'])) {

@@ -146,7 +146,7 @@ class Controller_RunTest extends CommonTestCase
             ['name' => 'testWatchedFunction']
         ]);
 
-        // mergein matched function 
+        // mergein matched function
         $profileMock->expects(self::any())
                     ->method('getWatched')
                     ->with($this->stringContains('testWatchedFunction'))
@@ -166,6 +166,9 @@ class Controller_RunTest extends CommonTestCase
     }
 
 
+    /**
+     *
+     */
     public function testUrl()
     {
         $url = 'testUrl';
@@ -177,17 +180,17 @@ class Controller_RunTest extends CommonTestCase
         $this->profilesMock->expects(self::once())
                            ->method('getAll')
                            ->with($this->callback(function ($filter) use ($url) {
-                               if (!($filter instanceof Xhgui_Storage_Filter)) {
-                                   return false;
-                               }
+                                if (!($filter instanceof Xhgui_Storage_Filter)) {
+                                    return false;
+                                }
 
-                               return $filter->getUrl() == $url;
+                                return $filter->getUrl() == $url;
                            }))->willReturn([
-                'results' => ['fake_results'],
-                'totalPages' => 0,
-                'page' => 0,
-                'direction' => 'desc',
-            ]);
+                                'results' => ['fake_results'],
+                                'totalPages' => 0,
+                                'page' => 0,
+                                'direction' => 'desc',
+                           ]);
 
         // chart data. For this we mock it with fake data, we don't process it action
         // we just pass it to view
@@ -204,6 +207,9 @@ class Controller_RunTest extends CommonTestCase
         self::assertSame(['fake_results'], $result['runs']);
     }
 
+    /**
+     *
+     */
     public function testCompareNoBase()
     {
         $base = null;
@@ -225,6 +231,9 @@ class Controller_RunTest extends CommonTestCase
         self::assertNull($result['comparison']);
     }
 
+    /**
+     *
+     */
     public function testCompareWithBase()
     {
         $base = 1;
@@ -250,17 +259,17 @@ class Controller_RunTest extends CommonTestCase
         $this->profilesMock->expects(self::once())
                            ->method('getAll')
                            ->with($this->callback(function ($filter) use ($url) {
-                               if (!($filter instanceof Xhgui_Storage_Filter)) {
-                                   return false;
-                               }
+                                if (!($filter instanceof Xhgui_Storage_Filter)) {
+                                    return false;
+                                }
 
-                               return $filter->getUrl() == $url;
+                                return $filter->getUrl() == $url;
                            }))
                            ->willReturn([
-                               'results' => ['fake_results'],
-                               'totalPages' => 0,
-                               'page' => 0,
-                               'direction' => 'desc',
+                                'results' => ['fake_results'],
+                                'totalPages' => 0,
+                                'page' => 0,
+                                'direction' => 'desc',
                            ]);
 
         $this->object->compare();
@@ -275,6 +284,9 @@ class Controller_RunTest extends CommonTestCase
         self::assertNull($result['comparison']);
     }
 
+    /**
+     *
+     */
     public function testCompareWithBaseAndHead()
     {
         $base = 1;
@@ -318,6 +330,9 @@ class Controller_RunTest extends CommonTestCase
         self::assertSame($compareResult, $result['comparison']);
     }
 
+    /**
+     *
+     */
     public function testSymbol()
     {
         $id = 1;
@@ -356,6 +371,9 @@ class Controller_RunTest extends CommonTestCase
 
     }
 
+    /**
+     *
+     */
     public function testSymbolShort()
     {
         $id = 1;
@@ -398,6 +416,9 @@ class Controller_RunTest extends CommonTestCase
 
     }
 
+    /**
+     *
+     */
     public function testCallgraph()
     {
         $id = 1;
@@ -422,6 +443,9 @@ class Controller_RunTest extends CommonTestCase
         $this->assertArrayNotHasKey('callgraph', $result);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testCallgraphData()
     {
         $id = 1;
@@ -512,6 +536,9 @@ class Controller_RunTest extends CommonTestCase
         $this->object->deleteSubmit();
     }
 
+    /**
+     *
+     */
     public function testDeleteAllSubmit()
     {
         $this->profilesMock->expects(self::any())

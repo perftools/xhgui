@@ -4,7 +4,8 @@
 use PHPUnit\Framework\TestCase;
 use Slim\Http\Request;
 
-class CommonTestCase extends PHPUnit\Framework\TestCase {
+class CommonTestCase extends PHPUnit\Framework\TestCase
+{
     /**
      * @var PHPUnit_Framework_MockObject_MockObject|\Slim\Http\Request
      */
@@ -24,7 +25,8 @@ class CommonTestCase extends PHPUnit\Framework\TestCase {
     /**
      * @param array $override
      */
-    protected function prepareGetRequestMock($override = []) {
+    protected function prepareGetRequestMock($override = [])
+    {
 
         $default = [
             ['url',         null, 'testUrl'],
@@ -43,7 +45,8 @@ class CommonTestCase extends PHPUnit\Framework\TestCase {
     /**
      * @param array $override
      */
-    protected function preparePostRequestMock($override = []) {
+    protected function preparePostRequestMock($override = [])
+    {
 
         $this->requestMock->expects(self::any())
                           ->method('post')
@@ -57,8 +60,8 @@ class CommonTestCase extends PHPUnit\Framework\TestCase {
      * @param array $methods
      * @return PHPUnit_Framework_MockObject_MockObject
      */
-    protected function m($class, $methods = []){
+    protected function m($class, $methods = [])
+    {
         return $this->getMockBuilder($class)->disableOriginalConstructor()->setMethods($methods)->getMock();
     }
-
 }

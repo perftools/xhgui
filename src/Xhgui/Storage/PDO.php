@@ -1,5 +1,9 @@
 <?php
-class Xhgui_Storage_PDO implements \Xhgui_StorageInterface, \Xhgui_WatchedFunctionsStorageInterface {
+/**
+ * Get profiles using PDO database connection
+ */
+class Xhgui_Storage_PDO implements \Xhgui_StorageInterface, \Xhgui_WatchedFunctionsStorageInterface
+{
 
     /**
      * @var \PDO
@@ -22,6 +26,7 @@ class Xhgui_Storage_PDO implements \Xhgui_StorageInterface, \Xhgui_WatchedFuncti
     }
 
     /**
+     * @inheritDoc
      * @param \Xhgui_Storage_Filter $filter
      * @param bool $projections
      * @return \Xhgui_Storage_ResultSet
@@ -33,7 +38,6 @@ class Xhgui_Storage_PDO implements \Xhgui_StorageInterface, \Xhgui_WatchedFuncti
         try {
             $stmt = $this->connection->prepare($query);
             $stmt->execute($params);
-
         } catch (\Exception $e) {
             print_r($e->getMessage());
             exit;
@@ -50,11 +54,14 @@ class Xhgui_Storage_PDO implements \Xhgui_StorageInterface, \Xhgui_WatchedFuncti
     }
 
     /**
+     * Get query that is used for both list and count
+     *
      * @param \Xhgui_Storage_Filter $filter
      * @param bool $count
      * @return array
      */
-    protected function getQuery(\Xhgui_Storage_Filter $filter, $count = false) {
+    protected function getQuery(\Xhgui_Storage_Filter $filter, $count = false)
+    {
         $params = [];
 
         if ($count === true) {
@@ -74,7 +81,7 @@ from
 
         $where = [];
 
-        foreach([
+        foreach ([
             'url'               => 'url',
             'method'            => 'method',
             'application'       => 'application',
@@ -83,7 +90,6 @@ from
             'controller'        => 'controller',
             'action'            => 'action',
             ] as $dbField => $field) {
-
             $method = 'get'.ucfirst($field);
 
             if ($filter->{$method}()) {
@@ -180,6 +186,14 @@ from
         return [$sql, $params];
     }
 
+    /**
+     * @inheritDoc
+     * @param Xhgui_Storage_Filter $filter
+     * @param $col
+     * @param int $percentile
+     * @return array
+     * @throws Exception
+     */
     public function aggregate(\Xhgui_Storage_Filter $filter, $col, $percentile = 1)
     {
         $stmt = $this->connection->prepare('select 
@@ -210,7 +224,8 @@ where
             $aggregatedData[$formattedDate]['pmu_times'][]  = $row['main_pmu'];
             $aggregatedData[$formattedDate]['row_count']++;
             $aggregatedData[$formattedDate]['_id']          = $formattedDate;
-            $aggregatedData[$formattedDate]['raw_index']    = $aggregatedData[$formattedDate]['row_count']*($percentile/100);
+            $aggregatedData[$formattedDate]['raw_index']    =
+                $aggregatedData[$formattedDate]['row_count']*($percentile/100);
         }
 
         $return = [
@@ -220,8 +235,13 @@ where
         return $return;
     }
 
-
-    public function count(\Xhgui_Storage_Filter $filter) {
+    /**
+     * @inheritDoc
+     * @@param Xhgui_Storage_Filter $filter
+     * @return int
+     */
+    public function count(\Xhgui_Storage_Filter $filter)
+    {
         list($query, $params) = $this->getQuery($filter, true);
         try {
             $stmt = $this->connection->prepare($query);
@@ -240,6 +260,11 @@ where
         return 0;
     }
 
+    /**
+     * @inheritDoc
+     * @param $id
+     * @return mixed
+     */
     public function findOne($id)
     {
         $stmt = $this->connection->prepare('
@@ -262,6 +287,10 @@ where
         return $row;
     }
 
+    /**
+     * @inheritDoc
+     * @param $id
+     */
     public function remove($id)
     {
         $this->connection->beginTransaction();
@@ -282,7 +311,8 @@ where
     }
 
     /**
-     *
+     * @inheritDoc
+     * Remove all data from profile tables
      */
     public function drop()
     {
@@ -291,12 +321,21 @@ where
         $this->connection->exec('delete from profiles_info');
     }
 
+    /**
+     * @inheritDoc
+     * @return array
+     */
     public function getWatchedFunctions()
     {
         $stmt = $this->connection->query('select * from watched order by name desc');
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    /**
+     * @inheritDoc
+     * @param $name
+     * @return bool
+     */
     public function addWatchedFunction($name)
     {
         $name = trim($name);
@@ -308,12 +347,21 @@ where
         return true;
     }
 
+    /**
+     * @inheritDoc
+     * @param $id
+     * @param $name
+     */
     public function updateWatchedFunction($id, $name)
     {
         $stmt = $this->connection->prepare('update watched set name=:name where id = :id');
         $stmt->execute(['id'=>$id, 'name'=>$name]);
     }
 
+    /**
+     * @inheritDoc
+     * @param $id
+     */
     public function removeWatchedFunction($id)
     {
         $stmt = $this->connection->prepare('delete from watched where id = :id');
@@ -321,6 +369,8 @@ where
     }
 
     /**
+     * Try to get date from Y-m-d H:i:s or from timestamp
+     *
      * @param string|int $date
      * @return \DateTime
      */
@@ -345,10 +395,19 @@ where
         throw new \InvalidArgumentException('Unable to parse date');
     }
 
+    /**
+     * @inheritDoc
+     * @param array $data
+     */
     public function insert(array $data) {
         // TODO: Implement insert() method.
     }
 
+    /**
+     * @inheritDoc
+     * @param $_id
+     * @param array $data
+     */
     public function update($_id, array $data) {
         // TODO: Implement update() method.
     }

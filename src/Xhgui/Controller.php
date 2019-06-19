@@ -19,21 +19,38 @@ abstract class Xhgui_Controller
      */
     protected $app;
 
+    /**
+     * Xhgui_Controller constructor.
+     * @param Slim $app
+     */
     public function __construct(Slim $app)
     {
         $this->app = $app;
     }
 
-    public function set($vars)
+    /**
+     * Set template variables
+     *
+     * @param $vars
+     */
+    public function set(array $vars = [])
     {
         $this->_templateVars = array_merge($this->_templateVars, $vars);
     }
 
+    /**
+     * Get all defined template variables
+     *
+     * @return array
+     */
     public function templateVars()
     {
         return $this->_templateVars;
     }
 
+    /**
+     * Render template if template name is set.
+     */
     public function render()
     {
         $container = $this->app->container->all();
