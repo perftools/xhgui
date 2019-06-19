@@ -63,8 +63,9 @@ abstract class Xhgui_Controller
 
         // The below is copied from Slim::render (slim/slim@2.6.3).
         // Modified to use View::fetch + Response::write, instead of View::display.
-
         $this->app->view->appendData($this->_templateVars);
+
+        // render body only if template is set. Useful for ajax/json response.
         if (!empty($this->_template)) {
             $body = $this->app->view->fetch($this->_template);
             $this->app->response->write($body);

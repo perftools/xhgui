@@ -32,6 +32,13 @@ class Xhgui_Controller_Run extends Xhgui_Controller
      */
     public function index()
     {
+        $response = $this->app->response();
+        // The list changes whenever new profiles are recorded.
+        // Generally avoid caching, but allow re-use in browser's bfcache
+        // and by cache proxies for concurrent requests.
+        // https://github.com/perftools/xhgui/issues/261
+        $response->headers->set('Cache-Control', 'public, max-age=0');
+
         $request = $this->app->request();
 
         $filter = Xhgui_Storage_Filter::fromRequest($request);
@@ -70,6 +77,16 @@ class Xhgui_Controller_Run extends Xhgui_Controller
      */
     public function view()
     {
+        $response = $this->app->response();
+        // Permalink views to a specific run are meant to be public and immutable.
+        // But limit the cache to only a short period of time (enough to allow
+        // handling of abuse or other stampedes). This way we don't have to
+        // deal with any kind of purging system for when profiles are deleted,
+        // or for after XHGui itself is upgraded and static assets may be
+        // incompatible etc.
+        // https://github.com/perftools/xhgui/issues/261
+        $response->headers->set('Cache-Control', 'public, max-age=60, must-revalidate');
+
         $request = $this->app->request();
         $detailCount = $this->app->config('detail.count');
         $result = $this->getProfiles()->get($request->get('id'));
