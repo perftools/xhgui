@@ -414,7 +414,6 @@ class Controller_RunTest extends CommonTestCase
         self::assertSame('parents', $result['parents']);
         self::assertSame('current', $result['current']);
         self::assertSame('children', $result['children']);
-
     }
 
     /**
