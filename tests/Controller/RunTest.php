@@ -52,6 +52,7 @@ class Controller_RunTest extends CommonTestCase
         $this->dbMock = $this->m(Xhgui_Storage_File::class, ['getAll', 'getWatchedFunctions']);
 
         $this->appMock->expects(self::any())->method('request')->willReturn($this->requestMock);
+        $this->appMock->expects(self::any())->method('response')->willReturn($this->responseMock);
 
         $di['db'] = $di->share(function ($c) {
             return $this->dbMock;
@@ -469,19 +470,11 @@ class Controller_RunTest extends CommonTestCase
                            ->with($this->equalTo($id))
                            ->willReturn($profileMock);
 
-        $responseMock = $this->m(Response::class, ['body']);
-        $responseMock->expects(self::exactly(2))->method('body')->willReturnOnConsecutiveCalls(
-            [''],
-            '{"'
-        );
-
-        $this->appMock->expects(self::exactly(2))->method('response')->willReturn($responseMock);
+        $this->responseMock->expects(self::exactly(1))->method('body')->willReturn(['']);
 
         $this->object->callgraphData();
-        $response = $this->app->response();
 
-        $this->assertEquals('application/json', $response['Content-Type']);
-        $this->assertStringStartsWith('{"', $response->body());
+        $this->assertEquals('application/json', $this->responseMock->headers->get('Content-Type'));
     }
 
     /**

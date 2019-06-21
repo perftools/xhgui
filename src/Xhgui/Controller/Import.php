@@ -80,12 +80,6 @@ class Xhgui_Controller_Import extends Xhgui_Controller
             do {
                 $allRows = $reader->find($filter);
                 foreach ($allRows as $row) {
-                    $row['meta']['application'] = 'test';
-                    $row['meta']['version'] = 'test';
-                    $row['meta']['branch'] = 'test';
-                    $row['meta']['controller'] = 'test';
-                    $row['meta']['action'] = 'test';
-                    $row['meta']['session_id'] = 'test';
                     $saver->save($row);
                 }
 

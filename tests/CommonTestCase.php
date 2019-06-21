@@ -2,7 +2,9 @@
 
 
 use PHPUnit\Framework\TestCase;
+use Slim\Http\Headers;
 use Slim\Http\Request;
+use Slim\Http\Response;
 
 class CommonTestCase extends PHPUnit\Framework\TestCase
 {
@@ -12,12 +14,27 @@ class CommonTestCase extends PHPUnit\Framework\TestCase
     protected $requestMock;
 
     /**
-     *
+     * @var PHPUnit_Framework_MockObject_MockObject|\Slim\Http\Response
+     */
+    protected $responseMock;
+
+    /**
+     * Basic setup
      */
     public function setUp()
     {
         $this->requestMock = $this->getMockBuilder(Request::class)
                                   ->setMethods(['get', 'post'])
+                                  ->disableOriginalConstructor()
+                                  ->getMock();
+
+        $this->responseMock = $this->getMockBuilder(Response::class)
+                                  ->setMethods(['get', 'post', 'body'])
+                                  ->disableOriginalConstructor()
+                                  ->getMock();
+
+        $this->responseMock->headers = $this->getMockBuilder(Headers::class)
+                                  ->setMethods()
                                   ->disableOriginalConstructor()
                                   ->getMock();
     }

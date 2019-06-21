@@ -1,15 +1,6 @@
--- we don't know how to generate schema main (class Schema) :(
-create table profiles
-(
-    profile_id char(32) not null
-        constraint profiles_pk
-        primary key,
-    profiles text not null
-);
-
 create table profiles_info
 (
-    id char(32) not null
+    id varchar(100) not null
         constraint profiles_info_pk
         primary key,
     url text,
@@ -29,14 +20,26 @@ create table profiles_info
     session_id varchar(150) default null
 );
 
+create table profiles
+(
+	profile_id varchar(100) not null
+		constraint profiles_pk
+			primary key
+		references profiles_info
+			on update cascade on delete cascade,
+	profiles text not null
+);
+
 create unique index profiles_info_id_uindex
     on profiles_info (id);
 
 create table profiles_meta
 (
-    profile_id char(32) not null
+    profile_id varchar(100) not null
         constraint profiles_meta_pk
-        primary key,
+			primary key
+		references profiles_info
+			on update cascade on delete cascade,
     meta text not null
 );
 

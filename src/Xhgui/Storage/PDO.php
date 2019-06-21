@@ -23,6 +23,7 @@ class Xhgui_Storage_PDO implements \Xhgui_StorageInterface, \Xhgui_WatchedFuncti
             !empty($config['db.options'])   ? $config['db.options'] : []
         );
         $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->connection->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
     }
 
     /**
@@ -99,12 +100,12 @@ from
         }
         
         if ($filter->getStartDate()) {
-            $where[]                = ' request_time >= datetime(:startDate)';
+            $where[]                = ' request_time >= :startDate';
             $params['startDate']   = $this->getDateTimeFromString($filter->getStartDate())->format('Y-m-d H:i:s');
         }
 
         if ($filter->getEndDate()) {
-            $where[]                = ' request_time <= datetime(:endDate)';
+            $where[]                = ' request_time <= :endDate';
             $params['endDate']   = $this->getDateTimeFromString($filter->getEndDate())->format('Y-m-d H:i:s');
         }
 
@@ -176,7 +177,7 @@ from
 
         if ($filter->getPerPage()) {
             $sql            .= ' LIMIT :limit ';
-            $params['limit'] = $filter->getPerPage();
+            $params['limit'] = (int)$filter->getPerPage();
         }
 
         if ($filter->getPage()) {

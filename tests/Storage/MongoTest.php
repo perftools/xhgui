@@ -1,7 +1,7 @@
 <?php
 
 
-class _MongoTest extends CommonTestCase
+class MongoTest extends CommonTestCase
 {
 
     /**

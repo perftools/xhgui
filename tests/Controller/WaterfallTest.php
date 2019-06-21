@@ -47,6 +47,7 @@ class Controller_WaterfallTest extends CommonTestCase
         $this->dbMock = $this->m(Xhgui_Storage_File::class, ['getAll', 'getWatchedFunctions']);
 
         $this->appMock->expects(self::any())->method('request')->willReturn($this->requestMock);
+        $this->appMock->expects(self::any())->method('response')->willReturn($this->responseMock);
 
         $di['db'] = $di->share(function ($c) {
             return $this->dbMock;
@@ -100,10 +101,8 @@ class Controller_WaterfallTest extends CommonTestCase
                 ->willReturnOnConsecutiveCalls(1, 'url');
         $profile->expects(self::once())->method('getId')->willReturn('id');
 
-        $responseMock = $this->m(Response::class, ['body']);
-        $this->appMock->expects(self::exactly(1))->method('response')->willReturn($responseMock);
 
-        $responseMock->expects(self::once())->method('body')->with($this->callback(function ($resp) {
+        $this->responseMock->expects(self::once())->method('body')->with($this->callback(function ($resp) {
             return '[{"id":"id","title":"url","start":1000,"duration":0.01}]' === $resp;
         }));
 

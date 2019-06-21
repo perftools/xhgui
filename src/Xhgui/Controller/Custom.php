@@ -38,7 +38,7 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
     {
         $request = $this->app->request();
         $response = $this->app->response();
-        $response['Content-Type'] = 'application/json';
+        $response->headers->set('Content-Type', 'application/json');
 
         $query = json_decode($request->post('query'), true);
         $error = array();

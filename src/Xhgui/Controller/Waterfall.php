@@ -71,7 +71,7 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
             );
         }
         $response->body(json_encode($datas));
-        $response['Content-Type'] = 'application/json';
+        $response->headers->set('Content-Type', 'application/json');
     }
 
 }
