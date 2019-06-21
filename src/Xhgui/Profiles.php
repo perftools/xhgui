@@ -4,28 +4,25 @@
  */
 class Xhgui_Profiles
 {
+    /**
+     * @var Xhgui_StorageInterface
+     */
     protected $storage;
 
+    /**
+     * Xhgui_Profiles constructor.
+     * @param Xhgui_StorageInterface $storage
+     */
     public function __construct(\Xhgui_StorageInterface $storage)
     {
         $this->storage = $storage;
     }
 
     /**
-     * Get the latest profile data.
-     *
-     * @return Xhgui_Profile
-     * @throws Exception
+     * @param $conditions
+     * @param null $fields
+     * @return mixed
      */
-    public function latest()
-    {
-        $cursor = $this->storage->find()
-                                ->sort(array('meta.request_date' => -1))
-                                ->limit(1);
-        $result = $cursor->getNext();
-        return $this->wrap($result);
-    }
-
     public function query($conditions, $fields = null)
     {
         return $this->storage->find($conditions, $fields);
@@ -63,6 +60,11 @@ class Xhgui_Profiles
         return $this->paginate($options);
     }
 
+    /**
+     * @param Xhgui_Storage_Filter $filter
+     * @return array
+     * @throws Exception
+     */
     public function paginate(Xhgui_Storage_Filter $filter)
     {
         $projection = false;
@@ -198,5 +200,21 @@ class Xhgui_Profiles
             $results[] = new Xhgui_Profile($row, true);
         }
         return $results;
+    }
+
+    /**
+     * @return Xhgui_StorageInterface
+     */
+    public function getStorage()
+    {
+        return $this->storage;
+    }
+
+    /**
+     * @param Xhgui_StorageInterface $storage
+     */
+    public function setStorage($storage)
+    {
+        $this->storage = $storage;
     }
 }

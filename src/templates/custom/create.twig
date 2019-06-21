@@ -1,6 +1,14 @@
 {% extends 'layout/base.twig' %}
 
-{% block content %}
+{% block content_not_supported %}
+    <div class="row-fluid">
+        <div class="span12">
+            <h1>This function is not supported by this save handler.</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content_ok %}
 <div class="row-fluid">
 
 <div class="span9">
@@ -139,4 +147,16 @@
         });
     })
 </script>
+{% endblock %}
+
+
+{% block content %}
+
+    {% if save_handler == 'mongodb' %}
+        {{ block('content_ok') }}
+    {% else %}
+        {{ block('content_not_supported') }}
+
+    {% endif %}
+
 {% endblock %}

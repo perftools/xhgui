@@ -5,35 +5,56 @@ use Slim\Slim;
 class Xhgui_Controller_Custom extends Xhgui_Controller
 {
     /**
-     * @var Xhgui_StorageInterface
+     * @var Xhgui_Profiles
      */
-    protected $searcher;
+    protected $profiles;
 
-    public function __construct(Slim $app, Xhgui_StorageInterface $searcher)
+    /**
+     * Xhgui_Controller_Custom constructor.
+     * @param Slim $app
+     * @param Xhgui_Profiles $searcher
+     */
+    public function __construct(Slim $app, Xhgui_Profiles $profiles)
     {
         parent::__construct($app);
-        $this->searcher = $searcher;
+        $this->setProfiles($profiles);
     }
 
+    /**
+     *
+     */
     public function get()
     {
         $this->_template = 'custom/create.twig';
+        $this->set([
+            'save_handler' => $this->app->config('save.handler'),
+        ]);
     }
 
+    /**
+     *
+     */
     public function help()
     {
         $request = $this->app->request();
         if ($request->get('id')) {
-            $res = $this->searcher->get($request->get('id'));
+            $res = $this->getProfiles()->get($request->get('id'));
         } else {
-            $res = $this->searcher->latest();
+            $filter = new Xhgui_Storage_Filter();
+            $filter->setPerPage(1);
+            $filter->setPage(0);
+
+            $res = $this->getProfiles()->getAll($filter);
         }
         $this->_template = 'custom/help.twig';
         $this->set(array(
-            'data' => print_r($res->toArray(), 1)
+            'data' => print_r($res['results'], 1)
         ));
     }
 
+    /**
+     * @return string
+     */
     public function query()
     {
         $request = $this->app->request();
@@ -58,8 +79,24 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
 
         $perPage = $this->app->config('page.limit');
 
-        $res = $this->searcher->query($query, $perPage, $retrieve);
+        $res = $this->getProfiles()->getStorage()->getCollection()->find($query, $retrieve)->limit($perPage);
+        $r = iterator_to_array($res);
+        return $response->body(json_encode($r));
+    }
 
-        return $response->body(json_encode($res));
+    /**
+     * @return Xhgui_Profiles
+     */
+    public function getProfiles()
+    {
+        return $this->profiles;
+    }
+
+    /**
+     * @param Xhgui_Profiles $profiles
+     */
+    public function setProfiles($profiles)
+    {
+        $this->profiles = $profiles;
     }
 }
