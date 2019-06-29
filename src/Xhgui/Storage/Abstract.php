@@ -1,9 +1,11 @@
 <?php
-
-
+/**
+ * Abstract class for all storage drivers.
+ *
+ * CAUTION: please use interface as a typehint!
+ */
 class Xhgui_Storage_Abstract
 {
-
     /**
      * Try to get date from Y-m-d H:i:s or from timestamp
      *
@@ -27,9 +29,9 @@ class Xhgui_Storage_Abstract
             if (!empty($datetime) && $datetime instanceof \DateTime) {
 
                 if ($direction === 'start') {
-                    $datetime->setTime(0,0,0);
+                    $datetime->setTime(0, 0, 0);
                 } elseif ($direction === 'end') {
-                    $datetime->setTime(23,59,59);
+                    $datetime->setTime(23, 59, 59);
                 }
 
                 return $datetime;

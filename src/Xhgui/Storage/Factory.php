@@ -34,7 +34,8 @@ class Xhgui_Storage_Factory
      * @throws MongoConnectionException
      * @throws MongoException
      */
-    public function create($config) {
+    public function create($config)
+    {
         return self::factory($config);
     }
 }

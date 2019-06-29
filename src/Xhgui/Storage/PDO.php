@@ -2,7 +2,8 @@
 /**
  * Get profiles using PDO database connection
  */
-class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements \Xhgui_StorageInterface, \Xhgui_WatchedFunctionsStorageInterface
+class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements \Xhgui_StorageInterface,
+    \Xhgui_WatchedFunctionsStorageInterface
 {
 
     /**
@@ -101,12 +102,14 @@ from
         
         if ($filter->getStartDate()) {
             $where[]                = ' request_time >= :startDate';
-            $params['startDate']   = $this->getDateTimeFromString($filter->getStartDate(), 'start')->format('Y-m-d H:i:s');
+            $params['startDate']   = $this->getDateTimeFromString($filter->getStartDate(), 'start')
+                                          ->format('Y-m-d H:i:s');
         }
 
         if ($filter->getEndDate()) {
             $where[]                = ' request_time <= :endDate';
-            $params['endDate']   = $this->getDateTimeFromString($filter->getEndDate(), 'end')->format('Y-m-d H:i:s');
+            $params['endDate']   = $this->getDateTimeFromString($filter->getEndDate(), 'end')
+                                        ->format('Y-m-d H:i:s');
         }
 
         if (!empty($where)) {

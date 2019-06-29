@@ -3,7 +3,8 @@
 /**
  * Class Xhgui_Storage_Mongo
  */
-class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements \Xhgui_StorageInterface, \Xhgui_WatchedFunctionsStorageInterface
+class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements \Xhgui_StorageInterface,
+    \Xhgui_WatchedFunctionsStorageInterface
 {
 
     protected $config;

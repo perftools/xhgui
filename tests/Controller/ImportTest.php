@@ -33,7 +33,15 @@ class Controller_ImportTest extends CommonTestCase
         parent::setUp();
         $di = Xhgui_ServiceContainer::instance();
 
-        $this->appMock = $this->m(Slim::class, ['redirect', 'render', 'urlFor', 'request', 'response', 'flash', 'flashData']);
+        $this->appMock = $this->m(Slim::class, [
+            'redirect',
+            'render',
+            'urlFor',
+            'request',
+            'response',
+            'flash',
+            'flashData'
+        ]);
 
         $this->appMock->expects(self::any())->method('request')->willReturn($this->requestMock);
         $this->appMock->expects(self::any())->method('response')->willReturn($this->responseMock);
@@ -65,10 +73,10 @@ class Controller_ImportTest extends CommonTestCase
         ]);
         $this->object->index();
         $result = $this->object->templateVars();
-        self::assertContains('file',    $result['configured_handlers']);
-        self::assertContains('upload',  $result['configured_handlers']);
+        self::assertContains('file', $result['configured_handlers']);
+        self::assertContains('upload', $result['configured_handlers']);
         self::assertContains('mongodb', $result['configured_handlers']);
-        self::assertContains('pdo',     $result['configured_handlers']);
+        self::assertContains('pdo', $result['configured_handlers']);
     }
 
     /**
@@ -94,8 +102,8 @@ class Controller_ImportTest extends CommonTestCase
             ['target', null, 'pdo'],
         ]);
 
-        $reader = $this->m(Xhgui_Storage_File::class,   ['find']);
-        $saver  = $this->m(Xhgui_Saver_File::class,     ['save']);
+        $reader = $this->m(Xhgui_Storage_File::class, ['find']);
+        $saver  = $this->m(Xhgui_Saver_File::class, ['save']);
 
         $storageFactoryMock->expects(self::once())->method('create')->willReturn($reader);
         $saverMock->expects(self::once())->method('create')->willReturn($saver);
