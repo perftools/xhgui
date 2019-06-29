@@ -2,7 +2,8 @@
 /**
  * Get profiles using PDO database connection
  */
-class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements \Xhgui_StorageInterface,
+class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements
+    \Xhgui_StorageInterface,
     \Xhgui_WatchedFunctionsStorageInterface
 {
 

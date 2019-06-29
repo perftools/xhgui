@@ -1,6 +1,7 @@
 <?php
 
-class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements Xhgui_StorageInterface,
+class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
+    Xhgui_StorageInterface,
     Xhgui_WatchedFunctionsStorageInterface
 {
 

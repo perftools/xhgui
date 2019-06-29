@@ -27,7 +27,6 @@ class Xhgui_Storage_Abstract
         try {
             $datetime = \DateTime::createFromFormat('Y-m-d', $date);
             if (!empty($datetime) && $datetime instanceof \DateTime) {
-
                 if ($direction === 'start') {
                     $datetime->setTime(0, 0, 0);
                 } elseif ($direction === 'end') {
