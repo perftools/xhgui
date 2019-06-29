@@ -4,20 +4,26 @@ use Slim\Slim;
 
 class Xhgui_Controller_Import extends Xhgui_Controller
 {
+
     /**
-     * @var Xhgui_Profiles
+     * @var Xhgui_Storage_Factory
      */
-    private $profiles;
+    protected $storageFactory;
+
+    /**
+     * @var Xhgui_Saver
+     */
+    protected $saver;
 
     /**
      * Xhgui_Controller_Import constructor.
      * @param Slim $app
-     * @param Xhgui_Profiles $profiles
      */
-    public function __construct(Slim $app, Xhgui_Profiles $profiles)
+    public function __construct(Slim $app, Xhgui_Storage_Factory $storageFactory, Xhgui_Saver $saver)
     {
         parent::__construct($app);
-        $this->setProfiles($profiles);
+        $this->setStorageFactory($storageFactory);
+        $this->setSaver($saver);
     }
 
     /**
@@ -37,7 +43,7 @@ class Xhgui_Controller_Import extends Xhgui_Controller
             $handlers[] = 'upload';
         }
 
-        if (!empty($settings['db.host']) && strpos($settings['db.host'], 'mongodb')) {
+        if (!empty($settings['db.host']) && strpos($settings['db.host'], 'mongodb') !== false) {
             $handlers[] = 'mongodb';
         }
         if (!empty($settings['db.dsn'])) {
@@ -66,12 +72,11 @@ class Xhgui_Controller_Import extends Xhgui_Controller
 
         // get data to import
         $readConfig['save.handler'] = $source;
-        $reader = Xhgui_Storage_Factory::factory($readConfig);
+        $reader = $this->getStorageFactory()->create($readConfig);
 
         // get save handler:
         $saveHandlerConfig['save.handler'] = $target;
-        $saver = Xhgui_Saver::factory($saveHandlerConfig);
-
+        $saver = $this->getSaver()->create($saveHandlerConfig);
 
         try {
             $filter = new Xhgui_Storage_Filter();
@@ -84,7 +89,7 @@ class Xhgui_Controller_Import extends Xhgui_Controller
                 }
 
                 $filter->setPage($page++);
-            } while ($allRows->count() > 0);
+            } while (count($allRows) > 0);
             
             $this->app->flash('success', 'Import successful');
         } catch (Exception $e) {
@@ -95,18 +100,34 @@ class Xhgui_Controller_Import extends Xhgui_Controller
     }
 
     /**
-     * @return Xhgui_Profiles
+     * @return Xhgui_Storage_Factory
      */
-    public function getProfiles()
+    public function getStorageFactory()
     {
-        return $this->profiles;
+        return $this->storageFactory;
     }
 
     /**
-     * @param Xhgui_Profiles $profiles
+     * @param Xhgui_Storage_Factory $storageFactory
      */
-    public function setProfiles($profiles)
+    public function setStorageFactory($storageFactory)
     {
-        $this->profiles = $profiles;
+        $this->storageFactory = $storageFactory;
+    }
+
+    /**
+     * @return Xhgui_Saver
+     */
+    public function getSaver()
+    {
+        return $this->saver;
+    }
+
+    /**
+     * @param Xhgui_Saver $saver
+     */
+    public function setSaver($saver)
+    {
+        $this->saver = $saver;
     }
 }

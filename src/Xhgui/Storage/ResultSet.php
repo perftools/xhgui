@@ -3,7 +3,7 @@
 /**
  * Class Xhgui_Storage_ResultSet
  */
-class Xhgui_Storage_ResultSet implements \Iterator
+class Xhgui_Storage_ResultSet implements \Iterator, \Countable
 {
 
     /**

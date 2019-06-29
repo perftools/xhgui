@@ -99,6 +99,10 @@ class Xhgui_ServiceContainer extends Pimple
             return new Xhgui_Profiles($c['db']);
         };
 
+        $this['storageFactory'] = function ($c) {
+            return new Xhgui_Storage_Factory();
+        };
+
 //        $this['saver'] = function($c) {
 //            return Xhgui_Saver::factory($c['config']);
 //        };
@@ -126,7 +130,7 @@ class Xhgui_ServiceContainer extends Pimple
         };
 
         $this['importController'] = function ($c) {
-            return new Xhgui_Controller_Import($c['app'], $c['profiles']);
+            return new Xhgui_Controller_Import($c['app'], new Xhgui_Storage_Factory(), new Xhgui_Saver());
         };
     }
 

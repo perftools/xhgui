@@ -5,6 +5,11 @@ use Slim\Slim;
 class Xhgui_Controller_Run extends Xhgui_Controller
 {
     /**
+     * HTTP GET attribute name for comma separated filters
+     */
+    const FILTER_ARGUMENT_NAME = 'filter';
+    
+    /**
      * @var Xhgui_Profiles
      */
     private $profiles;
@@ -109,7 +114,11 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             }
         }
 
-        $profile = $result->sort('ewt', $result->getProfile());
+        if (false !== $request->get(self::FILTER_ARGUMENT_NAME, false)) {
+            $profile = $result->sort('ewt', $result->filter($result->getProfile(), $this->getFilters()));
+        } else {
+            $profile = $result->sort('ewt', $result->getProfile());
+        }
 
         $this->_template = 'runs/view.twig';
         $this->set(array(
@@ -122,6 +131,22 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         ));
     }
 
+    /**
+     * @return array
+     */
+    protected function getFilters()
+    {
+        $request = $this->app->request();
+        $filterString = $request->get(self::FILTER_ARGUMENT_NAME);
+        if (strlen($filterString) > 1 && $filterString !== 'true') {
+            $filters = array_map('trim', explode(',', $filterString));
+        } else {
+            $filters = $this->app->config('run.view.filter.names');
+        }
+
+        return $filters;
+    }
+    
     /**
      * @throws Exception
      */

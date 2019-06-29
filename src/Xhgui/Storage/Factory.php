@@ -25,4 +25,16 @@ class Xhgui_Storage_Factory
                 return new \Xhgui_Storage_File($config);
         }
     }
+
+    /**
+     * For usage with factory instance - for example for easier testing
+     *
+     * @param $config
+     * @return Xhgui_Storage_File|Xhgui_Storage_Mongo|Xhgui_Storage_PDO
+     * @throws MongoConnectionException
+     * @throws MongoException
+     */
+    public function create($config) {
+        return self::factory($config);
+    }
 }
