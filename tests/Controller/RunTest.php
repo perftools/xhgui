@@ -123,6 +123,7 @@ class Controller_RunTest extends CommonTestCase
         $id = 1;
         $this->prepareGetRequestMock([
             ['id', null, $id],
+            [Xhgui_Controller_Run::FILTER_ARGUMENT_NAME, false, false],
         ]);
 
         // mocked result set.

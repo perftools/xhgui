@@ -1,68 +1,115 @@
 <?php
 
-class Controller_ImportTest extends PHPUnit\Framework\TestCase
-{
-//    public function setUp()
-//    {
-//        parent::setUp();
-//        Environment::mock(array(
-//            'SCRIPT_NAME' => 'index.php',
-//            'PATH_INFO' => '/'
-//        ));
-//
-//        $di = Xhgui_ServiceContainer::instance();
-//        $mock = $this->getMockBuilder('Slim\Slim')
-//            ->setMethods(array('redirect', 'render', 'urlFor'))
-//            ->setConstructorArgs(array($di['config']))
-//            ->getMock();
-//
-//        $di['app'] = $di->share(function ($c) use ($mock) {
-//            return $mock;
-//        });
-//        $this->import = $di['importController'];
-//        $this->app = $di['app'];
-//
-//        $this->profiles = $di['searcher.mongo'];
-//        $this->profiles->truncate();
-//    }
+use Slim\Http\Response;
+use Slim\Slim;
 
-    public function testImportSuccess()
+class Controller_ImportTest extends CommonTestCase
+{
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject|Xhgui_StorageInterface
+     */
+    protected $dbMock;
+    
+    /**
+     * @var Xhgui_Controller_Import
+     */
+    protected $object;
+
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject|Response
+     */
+    protected $responseMock;
+
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject|Slim
+     */
+    protected $appMock;
+    
+    /**
+     * Common setup
+     */
+    public function setUp()
     {
-        self::markTestSkipped('Controller needs an update');
-//        $data = [
-//            'meta' => [
-//                'url' => '/things?key=value',
-//                'simple_url' => '/things',
-//                'get' => [],
-//                'env' => [],
-//                'SERVER' => ['REQUEST_TIME' => 1358787612],
-//                'request_date' => '2013-01-21',
-//                'request_ts' => ['sec' => 1358787612, 'usec' => 0],
-//                'request_ts_micro' => ['sec' => 1358787612, 'usec' => 123456]
-//            ],
-//            'profile' => [
-//                "main()" => [
-//                    "ct" => 1,
-//                    "wt" => 50139,
-//                    "cpu" => 49513,
-//                    "mu" => 3449360,
-//                    "pmu" => 3535120
-//                ]
-//            ]
-//        ];
-//        Environment::mock(array(
-//            'SCRIPT_NAME' => 'index.php',
-//            'PATH_INFO' => '/',
-//            'slim.input' => json_encode($data)
-//        ));
-//
-//        $before = $this->profiles->getForUrl('/things', []);
-//        $this->assertEmpty($before['results']);
-//
-//        $this->import->import();
-//
-//        $after = $this->profiles->getForUrl('/things', []);
-//        $this->assertNotEmpty($after['results']);
-//        $this->assertInstanceOf(Xhgui_Profile::class, $after['results'][0]);
+        parent::setUp();
+        $di = Xhgui_ServiceContainer::instance();
+
+        $this->appMock = $this->m(Slim::class, ['redirect', 'render', 'urlFor', 'request', 'response', 'flash', 'flashData']);
+
+        $this->appMock->expects(self::any())->method('request')->willReturn($this->requestMock);
+        $this->appMock->expects(self::any())->method('response')->willReturn($this->responseMock);
+
+        $di['db'] = $di->share(function ($c) {
+            return $this->dbMock;
+        });
+
+        $di['app'] = $di->share(function ($c) {
+            return $this->appMock;
+        });
+
+        $this->object = $di['importController'];
+        $this->app = $di['app'];
+
+        $this->app->container = $this->m(\Slim\Helper\Set::class, ['get']);
+    }
+
+    /**
+     * Test index action and make sure all handlers are present in UI
+     */
+    public function testIndex()
+    {
+        $this->app->container->expects(self::once())->method('get')->willReturn([
+            'save.handler.filename'     => true,
+            'save.handler.upload.uri'   => true,
+            'db.host'                   => 'mongodb',
+            'db.dsn'                    => true,
+        ]);
+        $this->object->index();
+        $result = $this->object->templateVars();
+        self::assertContains('file',    $result['configured_handlers']);
+        self::assertContains('upload',  $result['configured_handlers']);
+        self::assertContains('mongodb', $result['configured_handlers']);
+        self::assertContains('pdo',     $result['configured_handlers']);
+    }
+
+    /**
+     * Test import action
+     */
+    public function testImport()
+    {
+        $saverMock = $this->m(Xhgui_Saver::class, ['create']);
+        $storageFactoryMock = $this->m(Xhgui_Storage_Factory::class, ['create']);
+
+        $this->object->setSaver($saverMock);
+        $this->object->setStorageFactory($storageFactoryMock);
+
+        $this->app->container->expects(self::exactly(2))->method('get')->willReturn([
+            'save.handler.filename'     => true,
+            'save.handler.upload.uri'   => true,
+            'db.host'                   => 'mongodb',
+            'db.dsn'                    => true,
+        ]);
+
+        $this->preparePostRequestMock([
+            ['source', null, 'file'],
+            ['target', null, 'pdo'],
+        ]);
+
+        $reader = $this->m(Xhgui_Storage_File::class,   ['find']);
+        $saver  = $this->m(Xhgui_Saver_File::class,     ['save']);
+
+        $storageFactoryMock->expects(self::once())->method('create')->willReturn($reader);
+        $saverMock->expects(self::once())->method('create')->willReturn($saver);
+
+        $reader->expects(self::exactly(2))->method('find')->willReturnOnConsecutiveCalls(
+            [
+                ['row1'],
+                ['row2'],
+            ],
+            []
+        );
+
+        $saver->expects(self::exactly(2))->method('save');
+
+        $this->object->import();
     }
 }

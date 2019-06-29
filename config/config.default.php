@@ -7,37 +7,7 @@
  */
 
 // for example: php script was called from cli.
-if (empty($_SERVER['REQUEST_URI'])) {
-    if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
-        try {
-            $fileNamePattern = dirname(__DIR__) .
-                '/cache/xhgui.data.' .
-                microtime(true) .
-                bin2hex(random_bytes(5));
-        } catch (Exception $e) {
-        }
-    }
-    if (empty($fileNamePattern) &&
-        function_exists('openssl_random_pseudo_bytes') &&
-        $b = openssl_random_pseudo_bytes(5, $strong)
-    ) {
-        $fileNamePattern = dirname(__DIR__) .
-            '/cache/xhgui.data.' .
-            microtime(true).
-            bin2hex($b);
-    } elseif (empty($fileNamePattern)) {
-            $fileNamePattern = dirname(__DIR__) .
-                '/cache/xhgui.data.' .
-                microtime(true).
-                getmypid().
-                uniqid('last_resort_unique_string', true);
-    }
-} else {
-    $fileNamePattern = dirname(__DIR__) .
-        '/cache/xhgui.data.' .
-        microtime(true).
-        substr(md5($_SERVER['REQUEST_URI']), 0, 10);
-}
+
 
 return array(
     'debug'     => false,
@@ -47,7 +17,7 @@ return array(
 
     // For file
     'save.handler'                    => 'file',
-    'save.handler.filename'           => $fileNamePattern,
+    'save.handler.filename'           => Xhgui_Saver_File::getFilename(__DIR__),
     'save.handler.separate_meta'      => false,
     'save.handler.meta_serializer'    => 'php',
 
@@ -91,7 +61,10 @@ return array(
 
     // Allows you to pass additional options like replicaSet to MongoClient or pdo settings.
     'db.options' => array(),
-
+    'run.view.filter.names' => array(
+        'Zend*',
+        'Composer*',
+    ),
     // store extra data in profile information, for example information about db queries
     //'additional_data'    => ['DB_PROFILE']
 

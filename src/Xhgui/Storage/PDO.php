@@ -2,7 +2,7 @@
 /**
  * Get profiles using PDO database connection
  */
-class Xhgui_Storage_PDO implements \Xhgui_StorageInterface, \Xhgui_WatchedFunctionsStorageInterface
+class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements \Xhgui_StorageInterface, \Xhgui_WatchedFunctionsStorageInterface
 {
 
     /**
@@ -101,12 +101,12 @@ from
         
         if ($filter->getStartDate()) {
             $where[]                = ' request_time >= :startDate';
-            $params['startDate']   = $this->getDateTimeFromString($filter->getStartDate())->format('Y-m-d H:i:s');
+            $params['startDate']   = $this->getDateTimeFromString($filter->getStartDate(), 'start')->format('Y-m-d H:i:s');
         }
 
         if ($filter->getEndDate()) {
             $where[]                = ' request_time <= :endDate';
-            $params['endDate']   = $this->getDateTimeFromString($filter->getEndDate())->format('Y-m-d H:i:s');
+            $params['endDate']   = $this->getDateTimeFromString($filter->getEndDate(), 'end')->format('Y-m-d H:i:s');
         }
 
         if (!empty($where)) {
@@ -366,34 +366,6 @@ where
     {
         $stmt = $this->connection->prepare('delete from watched where id = :id');
         $stmt->execute(['id'=>$id]);
-    }
-
-    /**
-     * Try to get date from Y-m-d H:i:s or from timestamp
-     *
-     * @param string|int $date
-     * @return \DateTime
-     */
-    protected function getDateTimeFromString($date)
-    {
-
-        try {
-            $datetime = \DateTime::createFromFormat('Y-m-d H:i:s', $date);
-            if ($datetime instanceof \DateTime) {
-                return $datetime;
-            }
-        } catch (\Exception $e) {
-        }
-
-        try {
-            $datetime = \DateTime::createFromFormat('U', $date);
-            if ($datetime instanceof \DateTime) {
-                return $datetime;
-            }
-        } catch (\Exception $e) {
-        }
-
-        throw new \InvalidArgumentException('Unable to parse date');
     }
 
     /**

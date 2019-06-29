@@ -3,7 +3,7 @@
 /**
  * Class Xhgui_Storage_Mongo
  */
-class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunctionsStorageInterface
+class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements \Xhgui_StorageInterface, \Xhgui_WatchedFunctionsStorageInterface
 {
 
     protected $config;
@@ -332,34 +332,6 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
     }
 
     /**
-     * Try to parse given string as a datetime or unix timestamp
-     *
-     * @param string|int $date
-     * @return \DateTime
-     */
-    protected function getDateTimeFromString($date)
-    {
-        try {
-            $parsedDate = \DateTime::createFromFormat('Y-m-d H:i:s', $date);
-            if (!empty($parsedDate)) {
-                return $parsedDate;
-            }
-        } catch (\Exception $e) {
-            // leave empty to try parse different format below
-        }
-
-        try {
-            $parsedDate = \DateTime::createFromFormat('U', $date);
-            if (!empty($parsedDate)) {
-                return $parsedDate;
-            }
-        } catch (\Exception $e) {
-            // throw generic exception on failure
-        }
-        throw new \InvalidArgumentException('Unable to parse date');
-    }
-
-    /**
      * Convert filter into mongo condition
      *
      * @param \Xhgui_Storage_Filter $filter
@@ -370,13 +342,13 @@ class Xhgui_Storage_Mongo implements \Xhgui_StorageInterface, \Xhgui_WatchedFunc
         $conditions = [];
         if (null !== $filter->getStartDate()) {
             $conditions['meta.request_ts']['$gte'] = new \MongoDate(
-                $this->getDateTimeFromString($filter->getStartDate())->format('U')
+                $this->getDateTimeFromString($filter->getStartDate(), 'start')->format('U')
             );
         }
 
         if (null !== $filter->getEndDate()) {
             $conditions['meta.request_ts']['$lte'] = new \MongoDate(
-                $this->getDateTimeFromString($filter->getEndDate())->format('U')
+                $this->getDateTimeFromString($filter->getEndDate(), 'end')->format('U')
             );
         }
 

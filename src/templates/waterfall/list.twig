@@ -18,8 +18,8 @@
         <div class="control-group span4">
             <label class="control-label" for="startDate">Date/time range</label>
             <div class="controls">
-                <input type="text" class="span2" name="startDate" value="{{ search.startDate }}">
-                <input type="text" class="span2" name="endDate" value="{{ search.endDate }}">
+                <input type="text" class="datepicker span2" data-date-format="yyyy-mm-dd" name="startDate" value="{{ search.startDate }}">
+                <input type="text" class="datepicker span2" data-date-format="yyyy-mm-dd" name="endDate" value="{{ search.endDate }}">
                 <small class="muted">Either unix timestamps or date time string formatted as YYYY-MM-DD H:i:s</small>
             </div>
         </div>

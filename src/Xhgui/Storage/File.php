@@ -1,6 +1,6 @@
 <?php
 
-class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctionsStorageInterface
+class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements Xhgui_StorageInterface, Xhgui_WatchedFunctionsStorageInterface
 {
 
     /**
@@ -83,12 +83,12 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
             $requestTimeFromFilename = $this->getRequestTimeFromFilename($file);
             if (!empty($requestTimeFromFilename)) {
                 if (null !== $filter->getStartDate() &&
-                    $this->getDateTimeFromStringOrTimestamp($filter->getStartDate()) >= $requestTimeFromFilename) {
+                    $this->getDateTimeFromString($filter->getStartDate(), 'start') >= $requestTimeFromFilename) {
                     continue;
                 }
 
                 if (null !== $filter->getEndDate() &&
-                    $this->getDateTimeFromStringOrTimestamp($filter->getEndDate()) <= $requestTimeFromFilename ) {
+                    $this->getDateTimeFromString($filter->getEndDate(), 'end') <= $requestTimeFromFilename ) {
                     continue;
                 }
             }
@@ -317,38 +317,6 @@ class Xhgui_Storage_File implements Xhgui_StorageInterface, Xhgui_WatchedFunctio
         return $metaFile;
     }
 
-
-    /**
-     * Try to parse string or unix timestamp ane return \DateTime
-     *
-     * @param $timestamp
-     * @return bool|DateTime
-     */
-    protected function getDateTimeFromStringOrTimestamp($timestamp)
-    {
-
-        try {
-            $date = new DateTime($timestamp);
-            return $date;
-        } catch (Exception $e) {
-            // leave empty to try parse different format below
-        }
-
-        try {
-            $date = DateTime::createFromFormat('U', $timestamp);
-            return $date;
-        } catch (Exception $e) {
-            // leave empty to try parse different format below
-        }
-
-        try {
-            $date = DateTime::createFromFormat('Y-m-d H:i:s', $timestamp);
-            return $date;
-        } catch (Exception $e) {
-            // last attempt failed. Throw generic exception.
-            throw new RuntimeException('Unable to parse date from string: '.$timestamp, null, $e);
-        }
-    }
 
     /**
      * @inheritDoc
