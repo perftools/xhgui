@@ -21,18 +21,12 @@ return array(
     'save.handler.separate_meta'      => false,
     'save.handler.meta_serializer'    => 'php',
 
-    // serialize handler for all compatible data: json, serialize, igbinary. This affects only serialization to files
+    // serialize handler for all compatible data: json, igbinary. This affects only serialization to files
     // because mongo handler and db handlers use json for native database support.
     // Defaults to json. Best performance: 'php'
-    'save.handler.serializer'        => 'json',
+    //'save.handler.serializer'        => 'json',
 
-    // to make output compatible with old xhprof gui set
-    //      save.handler.serializer     to serialize,
-    //      save.handler.separate_meta  to true
-    //      save.handler.filename       to dirname(__DIR__).'/cache/' . \Xhgui_Util::getXHProfFileName . '.data.xhprof'
-
-    // for best performance it is recommended to use separate meta file and php serializer.
-
+    // for best performance it is recommended to use separate meta file and php as serializer.
     // For upload
     // Saving profile data by upload is only recommended with HTTPS
     // endpoints that have IP whitelists applied.
