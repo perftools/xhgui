@@ -67,8 +67,13 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
      */
     public function find(Xhgui_Storage_Filter $filter, $projections = false)
     {
-        $result       = glob($this->path. $this->prefix . '*');
-        sort($result);
+
+        if ($filter->getId()) {
+            $result = glob($this->path. DIRECTORY_SEPARATOR.$filter->getId());
+        } else {
+            $result = glob($this->path. $this->prefix . '*');
+            sort($result);
+        }
 
         $ret = [];
         foreach ($result as $i => $file) {
