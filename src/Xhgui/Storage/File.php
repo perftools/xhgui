@@ -82,16 +82,17 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
                 continue;
             }
 
-            // try to detect timestamp in filename.
-            $requestTimeFromFilename = $this->getRequestTimeFromFilename($file);
-            if (!empty($requestTimeFromFilename)) {
+            // try to detect timestamp in filename, to optimize searching.
+            // If that fails we need to get it after file import from meta.
+            $reqTimeFromFilename = $this->getRequestTimeFromFilename($file);
+            if (!empty($reqTimeFromFilename)) {
                 if (null !== $filter->getStartDate() &&
-                    $this->getDateTimeFromString($filter->getStartDate(), 'start') >= $requestTimeFromFilename) {
+                    $this->getDateTimeFromString($filter->getStartDate(), 'start') >= $reqTimeFromFilename) {
                     continue;
                 }
 
                 if (null !== $filter->getEndDate() &&
-                    $this->getDateTimeFromString($filter->getEndDate(), 'end') <= $requestTimeFromFilename ) {
+                    $this->getDateTimeFromString($filter->getEndDate(), 'end') <= $reqTimeFromFilename ) {
                     continue;
                 }
             }
@@ -110,6 +111,21 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
 
             if (!empty($profile['meta'])) {
                 $meta = array_merge($meta, $profile['meta']);
+            }
+
+            if (empty($reqTimeFromFilename) && (null !== $filter->getStartDate() || null !== $filter->getEndDate())){
+                if (null !== $filter->getStartDate() &&
+                    $this->getDateTimeFromString($filter->getStartDate(), 'start') >= $filter->getStartDate()) {
+                    continue;
+                }
+                if (null !== $filter->getEndDate() &&
+                    $this->getDateTimeFromString($filter->getEndDate(), 'end') <= $filter->getEndDate()) {
+                    continue;
+                }
+            }
+
+            if ($filter->getUrl() && strpos($meta['url'], $filter->getUrl()) === false) {
+                continue;
             }
 
             if (!empty($profile['profile'])) {

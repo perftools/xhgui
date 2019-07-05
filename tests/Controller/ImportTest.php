@@ -66,7 +66,7 @@ class Controller_ImportTest extends CommonTestCase
     public function testIndex()
     {
         $this->app->container->expects(self::once())->method('get')->willReturn([
-            'save.handler.filename'     => true,
+            'save.handler.path'         => true,
             'save.handler.upload.uri'   => true,
             'db.host'                   => 'mongodb',
             'db.dsn'                    => true,
