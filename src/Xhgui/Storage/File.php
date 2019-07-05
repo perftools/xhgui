@@ -51,13 +51,9 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
      */
     public function __construct($config)
     {
+        $this->prefix           = 'xhgui.data';
 
-        // @todo config!
-        $this->path         = '../data/';
-
-        // @todo config!
-        $this->prefix       = 'xhgui.data';
-
+        $this->path             = $config['save.handler.path'];
         $this->separateMeta     = $config['save.handler.separate_meta'];
         $this->dataSerializer   = $config['save.handler.serializer'];
         $this->metaSerializer   = $config['save.handler.meta_serializer'];
@@ -173,7 +169,7 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
     {
         $filter = new Xhgui_Storage_Filter();
         $filter->setId($id);
-        $resultSet = $this->find($id);
+        $resultSet = $this->find($filter);
         return $resultSet->current();
     }
 
@@ -398,7 +394,7 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
         $ret = [];
         $files = glob($this->watchedFunctionsPathPrefix.'*.json');
         foreach ($files as $file) {
-            $ret[] = json_decode(file_get_contents($file));
+            $ret[] = json_decode(file_get_contents($file), true);
         }
         return $ret;
     }
