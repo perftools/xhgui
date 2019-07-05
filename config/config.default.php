@@ -6,9 +6,6 @@
  * and return an array from there with your overriding settings.
  */
 
-// for example: php script was called from cli.
-
-
 return array(
     'debug'     => false,
     'mode'      => 'development',
@@ -17,14 +14,16 @@ return array(
 
     // For file
     'save.handler'                    => 'file',
-    'save.handler.filename'           => Xhgui_Saver_File::getFilename(__DIR__),
-    'save.handler.separate_meta'      => false,
+    'save.handler.path'               => '/data/profiles/',
+    // provide name to save current run to, or leave empty for default pattern
+    //'save.handler.filename'           => Xhgui_Saver_File::getFilename(__DIR__),
+    'save.handler.separate_meta'      => true,
     'save.handler.meta_serializer'    => 'php',
 
-    // serialize handler for all compatible data: json, igbinary. This affects only serialization to files
+    // serialize handler for all compatible data: json, igbinary, php. This affects only serialization to files
     // because mongo handler and db handlers use json for native database support.
     // Defaults to json. Best performance: 'php'
-    //'save.handler.serializer'        => 'json',
+    'save.handler.serializer'         => 'php',
 
     // for best performance it is recommended to use separate meta file and php as serializer.
     // For upload
