@@ -124,7 +124,7 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
                 }
             }
 
-            if ($filter->getUrl() && strpos($meta['url'], $filter->getUrl()) === false) {
+            if ($filter->getUrl() && strpos($meta['simple_url'], $filter->getUrl()) === false) {
                 continue;
             }
 
