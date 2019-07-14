@@ -131,7 +131,7 @@ For Apache, you can do the following to enable URL rewriting:
 
 3. XHGui comes with a `.htaccess` file to enable the remaining rewrite rules.
 
-For nginx and fast-cgi, you can the following snippet as a start:
+For nginx and fast-cgi, you can use the following snippet as a start:
 
 ```nginx
 server {
@@ -160,7 +160,7 @@ server {
 Configure XHGui Profiling Rate
 -------------------------------
 
-After installing XHGui, you may want to do change how frequently you
+After installing XHGui, you may want to change how frequently you
 profile the host application. The `profiler.enable` configuration option
 allows you to provide a callback function that specifies the requests that
 are profiled. By default, XHGui profiles 1 in 100 requests.
