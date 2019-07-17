@@ -103,7 +103,7 @@ class Xhgui_Storage_Filter
         $instance->setEndDate($request->get('endDate', null));
 
         $instance->setSort($request->get('sort', null));
-        $instance->setDirection($request->get('direction', null));
+        $instance->setDirection($request->get('direction', 'desc'));
 
         $instance->setPage($request->get('page', null));
 
