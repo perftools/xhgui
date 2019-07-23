@@ -321,7 +321,7 @@ class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements
         }
 
         if (null !== $filter->getUrl()) {
-            $conditions['meta.url'] = $filter->getUrl();
+            $conditions['meta.simple_url'] = $filter->getUrl();
         }
 
         foreach ([

@@ -223,9 +223,9 @@ from
 from 
     profiles_info
 where 
-    url = :url
+    simple_url = :simple_url OR url = :url
 ');
-        $stmt->execute(['url'=> $filter->getUrl()]);
+        $stmt->execute(['url'=> $filter->getUrl(), 'simple_url'=> $filter->getUrl()]);
         $aggregatedData = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $date = new \DateTime($row['request_time']);
