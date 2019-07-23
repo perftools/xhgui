@@ -96,8 +96,25 @@ from
             $method = 'get'.ucfirst($field);
 
             if ($filter->{$method}()) {
-                $where[]        = ' '.$dbField.' = :'.$field.' ';
-                $params[$field]  = $filter->{$method}();
+                switch($field) {
+                    case 'url':
+                        $url = $filter->{$method}();
+                        $where[]              = ' ( url like :url OR simple_url like :simple_url)';
+                        $params['url']        = '%'.$url.'%';
+                        $params['simple_url'] = '%'.$url.'%';
+                        break;
+
+                    case 'action':
+                    case 'controller':
+                        $where[]        = ' '.$dbField.' like :'.$field.' ';
+                        $params[$field] = ($filter->{$method}()).'%';
+                        break;
+
+                    default:
+                        $where[]        = ' '.$dbField.' = :'.$field.' ';
+                        $params[$field] = $filter->{$method}();
+                        break;
+                }
             }
         }
         

@@ -4,6 +4,7 @@ create table profiles_info
         constraint profiles_info_pk
         primary key,
     url text,
+    simple_url text,
     request_time timestamp not null,
     method varchar(20) not null,
     main_ct bigint,

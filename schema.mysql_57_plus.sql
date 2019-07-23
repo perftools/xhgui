@@ -3,6 +3,7 @@ create table profiles_info
     id varchar(100) not null
         primary key,
     url text null,
+    simple_url text null,
     request_time timestamp default current_timestamp() not null,
     method varchar(20) not null,
     main_ct bigint null,

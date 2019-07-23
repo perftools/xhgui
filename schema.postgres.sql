@@ -3,7 +3,8 @@ create table profiles_info
     id varchar(100) not null
         constraint profiles_info_pkey
             primary key,
-    url text,
+    url text default null,
+    simple_url text default null,
     request_time timestamp default now(),
     method varchar(20) not null,
     main_ct bigint,
