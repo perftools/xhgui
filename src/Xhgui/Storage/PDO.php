@@ -230,8 +230,8 @@ where
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $date = new \DateTime($row['request_time']);
             $formattedDate = $date->format('Y-m-d H:i');
-            if (empty($aggregatedData[$date->format('Y-m-d H:i')])) {
-                $aggregatedData[$date->format('Y-m-d H:i')] = [
+            if (empty($aggregatedData[$formattedDate])) {
+                $aggregatedData[$formattedDate] = [
                     'wall_times'    => [],
                     'cpu_times'     => [],
                     'mu_times'      => [],
@@ -241,7 +241,7 @@ where
             }
 
             $aggregatedData[$formattedDate]['wall_times'][] = $row['main_wt'];
-            $aggregatedData[$formattedDate]['cpu_times'][]  = $row['main_ct'];
+            $aggregatedData[$formattedDate]['cpu_times'][]  = $row['main_cpu'];
             $aggregatedData[$formattedDate]['mu_times'][]   = $row['main_mu'];
             $aggregatedData[$formattedDate]['pmu_times'][]  = $row['main_pmu'];
             $aggregatedData[$formattedDate]['row_count']++;

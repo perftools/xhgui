@@ -241,21 +241,32 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
         ];
 
         foreach ($ret as $row) {
-            $request_date = $row['meta']['request_date'];
-            $result['result'][$request_date]['wall_times'][]    = $row['profile']['main()']['wt'];
-            $result['result'][$request_date]['cpu_times'][]     = $row['profile']['main()']['cpu'];
-            $result['result'][$request_date]['mu_times'][]      = $row['profile']['main()']['mu'];
-            $result['result'][$request_date]['pmu_times'][]     = $row['profile']['main()']['pmu'];
+            $date = \DateTime::createFromFormat(
+                'U u',
+                $row['meta']['request_ts_micro']['sec'].' '.$row['meta']['request_ts_micro']['usec']
+            );
+            $formattedDate = $date->format('Y-m-d H:i');
 
-            if (empty($result['result'][$request_date]['row_count'])) {
-                $result['result'][$request_date]['row_count'] = 0;
+            if (empty($result['result'][$formattedDate])) {
+                $result['result'][$formattedDate] = [
+                    'wall_times'    => [],
+                    'cpu_times'     => [],
+                    'mu_times'      => [],
+                    'pmu_times'     => [],
+                    'row_count'     => 0
+                ];
             }
-            $result['result'][$request_date]['row_count']++;
 
-            $result['result'][$request_date]['raw_index'] =
-                $result['result'][$request_date]['row_count']*($percentile/100);
+            $result['result'][$formattedDate]['wall_times'][]    = $row['profile']['main()']['wt'];
+            $result['result'][$formattedDate]['cpu_times'][]     = $row['profile']['main()']['cpu'];
+            $result['result'][$formattedDate]['mu_times'][]      = $row['profile']['main()']['mu'];
+            $result['result'][$formattedDate]['pmu_times'][]     = $row['profile']['main()']['pmu'];
+            $result['result'][$formattedDate]['row_count']++;
 
-            $result['result'][$request_date]['_id']= $request_date;
+            $result['result'][$formattedDate]['raw_index'] =
+                $result['result'][$formattedDate]['row_count']*($percentile/100);
+
+            $result['result'][$formattedDate]['_id']= $date->format('Y-m-d H:i:s');
         }
 
         return $result;
