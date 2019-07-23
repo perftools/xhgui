@@ -104,6 +104,7 @@ class Xhgui_Profiles
         $col = '$meta.request_date';
 
         $results = $this->storage->aggregate($filter, $col, $percentile);
+
         if (empty($results['result'])) {
             return array();
         }
@@ -140,19 +141,6 @@ class Xhgui_Profiles
     public function getAll($filter)
     {
         return $this->paginate($filter);
-    }
-
-    /**
-     * Insert a profile run.
-     *
-     * Does unchecked inserts.
-     *
-     * @param array $profile The profile data to save.
-     * @return
-     */
-    public function insert($profile)
-    {
-        return $this->storage->insert($profile);
     }
 
     /**

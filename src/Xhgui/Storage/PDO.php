@@ -229,9 +229,9 @@ where
         $aggregatedData = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $date = new \DateTime($row['request_time']);
-            $formattedDate = $date->format('Y-m-d');
-            if (empty($aggregatedData[$date->format('Y-m-d')])) {
-                $aggregatedData[$date->format('Y-m-d')] = [
+            $formattedDate = $date->format('Y-m-d H:i');
+            if (empty($aggregatedData[$date->format('Y-m-d H:i')])) {
+                $aggregatedData[$date->format('Y-m-d H:i')] = [
                     'wall_times'    => [],
                     'cpu_times'     => [],
                     'mu_times'      => [],
@@ -245,7 +245,7 @@ where
             $aggregatedData[$formattedDate]['mu_times'][]   = $row['main_mu'];
             $aggregatedData[$formattedDate]['pmu_times'][]  = $row['main_pmu'];
             $aggregatedData[$formattedDate]['row_count']++;
-            $aggregatedData[$formattedDate]['_id']          = $formattedDate;
+            $aggregatedData[$formattedDate]['_id']          = $date->format('Y-m-d H:i:s');
             $aggregatedData[$formattedDate]['raw_index']    =
                 $aggregatedData[$formattedDate]['row_count']*($percentile/100);
         }
@@ -387,24 +387,5 @@ where
     {
         $stmt = $this->connection->prepare('delete from watched where id = :id');
         $stmt->execute(['id'=>$id]);
-    }
-
-    /**
-     * @inheritDoc
-     * @param array $data
-     */
-    public function insert(array $data)
-    {
-        // TODO: Implement insert() method.
-    }
-
-    /**
-     * @inheritDoc
-     * @param $_id
-     * @param array $data
-     */
-    public function update($_id, array $data)
-    {
-        // TODO: Implement update() method.
     }
 }

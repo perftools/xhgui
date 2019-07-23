@@ -135,40 +135,6 @@ class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements
 
     /**
      * @inheritDoc
-     * @param $data
-     * @return array|bool
-     * @throws \MongoCursorException
-     * @throws \MongoCursorTimeoutException
-     * @throws \MongoException
-     */
-    public function insert(array $data)
-    {
-        return $this->getCollection()->insert(
-            $data,
-            array('w' => 1)
-        );
-    }
-
-    /**
-     * @inheritDoc
-     * @param $id
-     * @param $data
-     * @return array|bool
-     * @throws \MongoCursorException
-     * @throws \MongoException
-     * @throws \MongoWriteConcernException
-     */
-    public function update($id, array $data)
-    {
-        return $this->getCollection()->update(
-            array('_id' => new MongoId($id)),
-            $data,
-            array('w' => 1)
-        );
-    }
-
-    /**
-     * @inheritDoc
      */
     public function drop()
     {
@@ -355,7 +321,7 @@ class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements
         }
 
         if (null !== $filter->getUrl()) {
-            $conditions['meta.simple_url'] = $filter->getUrl();
+            $conditions['meta.url'] = $filter->getUrl();
         }
 
         foreach ([

@@ -339,31 +339,6 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
         return $metaFile;
     }
 
-
-    /**
-     * @inheritDoc
-     * @param $data
-     */
-    public function insert(array $data)
-    {
-
-        if (empty($data['_id'])) {
-            $data['_id'] = md5($data['name']);
-        }
-
-        file_put_contents($this->path.''.$this->prefix.$data['_id'].'.json', json_encode($data));
-    }
-
-    /**
-     * @inheritDoc
-     * @param $id
-     * @param $data
-     */
-    public function update($id, array $data)
-    {
-        file_put_contents($this->path.''.$this->prefix.$id.'.json', json_encode($data));
-    }
-
     /**
      * Load profile file from disk, prepare it and return parsed array
      *

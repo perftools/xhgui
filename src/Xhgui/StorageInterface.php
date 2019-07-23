@@ -54,21 +54,4 @@ interface Xhgui_StorageInterface
      * @return mixed
      */
     public function drop();
-
-    /**
-     * Add one profile
-     *
-     * @param array $data
-     * @return mixed
-     */
-    public function insert(array $data);
-
-    /**
-     * Update profile by id with given data
-     *
-     * @param $_id
-     * @param array $data
-     * @return mixed
-     */
-    public function update($_id, array $data);
 }

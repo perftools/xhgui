@@ -90,19 +90,14 @@ class MongoTest extends CommonTestCase
 
 
     /**
-     * @param $expected
-     * @param $method
-     * @param $return
-     * @param $argument
-     * @dataProvider crudDataProvider
+     * 
      */
-    public function testCRUD($expected, $method, $return, $argument)
+    public function testRemove()
     {
-        $this->collectionMock->expects(self::once())->method($method)->willReturn($return);
-
-
-        $ret = call_user_func_array([$this->object, $method], $argument);
-        self::assertSame($expected, $ret);
+        $this->collectionMock->expects(self::once())->method('remove')->willReturn(true);
+        
+        $ret = $this->object->remove(1);
+        self::assertTrue($ret);
     }
 
     /**
@@ -112,8 +107,6 @@ class MongoTest extends CommonTestCase
     {
         return [
             [true, 'remove', true, [1]],
-            [true, 'insert', true, [[1]]],
-            [true, 'update', true, [1, [1]]],
         ];
     }
 
