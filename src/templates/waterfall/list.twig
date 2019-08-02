@@ -132,7 +132,8 @@ $(document).ready(function() {
     {% set query = {
         remote_addr: search.remote_addr,
         startDate: search.startDate,
-        endDate: search.endDate
+        endDate: search.endDate,
+        cookie: search.cookie,
     } %}
     Xhgui.waterfall('#waterfall', {
         dataUrl: '{{ url("waterfall.data", query)|raw }}',

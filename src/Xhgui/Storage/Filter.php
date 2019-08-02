@@ -72,6 +72,7 @@ class Xhgui_Storage_Filter
             'application' => null,
             'sort'        => null,
             'direction'   => null,
+            'cookie'      => null,
         ];
     }
 
@@ -106,6 +107,8 @@ class Xhgui_Storage_Filter
         $instance->setDirection($request->get('direction', 'desc'));
 
         $instance->setPage($request->get('page', null));
+
+        $instance->setCookie($request->get('cookie', null));
 
         return $instance;
     }
@@ -416,6 +419,27 @@ class Xhgui_Storage_Filter
             return $this;
         }
         $this->data['direction'] = $direction;
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getCookie()
+    {
+        return $this->data['cookie'];
+    }
+
+    /**
+     * @param string $cookie
+     * @return Xhgui_Storage_Filter
+     */
+    public function setCookie($cookie)
+    {
+        if (empty($cookie)) {
+            return $this;
+        }
+        $this->data['cookie'] = $cookie;
         return $this;
     }
 

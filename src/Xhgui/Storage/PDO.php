@@ -48,9 +48,18 @@ class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements
 
         $tmp = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $meta = json_decode($row['meta'], true);
+            if ($filter->getCookie()) {
+                // because cookie is not parsed and stored in separate structure we need to double check if
+                // value that we search is in fact in http cookie server field. SQL filter only checks whole
+                // meta
+                if (strpos($meta['SERVER']['HTTP_COOKIE'], $filter->getCookie()) === false) {
+                    continue;
+                }
+            }
             $tmp[$row['id']] = $row;
             $tmp[$row['id']]['profile']    = json_decode($row['profiles'], true);
-            $tmp[$row['id']]['meta']       = json_decode($row['meta'], true);
+            $tmp[$row['id']]['meta']       = $meta;
         }
         
         return new \Xhgui_Storage_ResultSet($tmp);
@@ -92,6 +101,7 @@ from
             'branch'            => 'branch',
             'controller'        => 'controller',
             'action'            => 'action',
+            'cookie'            => 'cookie',
             ] as $dbField => $field) {
             $method = 'get'.ucfirst($field);
 
@@ -108,6 +118,12 @@ from
                     case 'controller':
                         $where[]        = ' '.$dbField.' like :'.$field.' ';
                         $params[$field] = ($filter->{$method}()).'%';
+                        break;
+
+                    case 'cookie':
+                        $where[]        = ' meta like :cookie ';
+                        $params[$field] = '%'.($filter->{$method}()).'%';
+
                         break;
 
                     default:
