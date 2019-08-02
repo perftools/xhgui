@@ -73,6 +73,7 @@ class Xhgui_Storage_Filter
             'sort'        => null,
             'direction'   => null,
             'cookie'      => null,
+            'ip'          => null,
         ];
     }
 
@@ -109,6 +110,7 @@ class Xhgui_Storage_Filter
         $instance->setPage($request->get('page', null));
 
         $instance->setCookie($request->get('cookie', null));
+        $instance->setIp($request->get('remote_addr', null));
 
         return $instance;
     }
@@ -440,6 +442,27 @@ class Xhgui_Storage_Filter
             return $this;
         }
         $this->data['cookie'] = $cookie;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIp()
+    {
+        return $this->data['ip'];
+    }
+
+    /**
+     * @param string $ip
+     * @return Xhgui_Storage_Filter
+     */
+    public function setIp($ip)
+    {
+        if (empty($ip)) {
+            return $this;
+        }
+        $this->data['ip'] = $ip;
         return $this;
     }
 

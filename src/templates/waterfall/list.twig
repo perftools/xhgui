@@ -130,10 +130,10 @@
 <script>
 $(document).ready(function() {
     {% set query = {
-        remote_addr: search.remote_addr,
+        remote_addr: search.ip,
         startDate: search.startDate,
         endDate: search.endDate,
-        cookie: search.cookie,
+        cookie: search.cookie
     } %}
     Xhgui.waterfall('#waterfall', {
         dataUrl: '{{ url("waterfall.data", query)|raw }}',

@@ -102,6 +102,7 @@ from
             'controller'        => 'controller',
             'action'            => 'action',
             'cookie'            => 'cookie',
+            'remote_addr'       => 'ip',
             ] as $dbField => $field) {
             $method = 'get'.ucfirst($field);
 
