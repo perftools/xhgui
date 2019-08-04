@@ -13,6 +13,11 @@ class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements
     protected $connection;
 
     /**
+     * @var bool 
+     */
+    protected $jsonMode = false;
+
+    /**
      * PDO constructor.
      * @param $config
      */
@@ -26,6 +31,12 @@ class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements
         );
         $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->connection->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
+
+        if (!isset($config['db.json_mode']) && !empty($config['db.dsn'])) {
+            $this->jsonMode = substr($config['db.dsn'], 0, strpos($config['db.dsn'], ':'));
+        } else {
+            $this->jsonMode = $config['db.json_mode'];
+        }
     }
 
     /**
@@ -122,9 +133,15 @@ from
                         break;
 
                     case 'cookie':
-                        $where[]        = ' meta like :cookie ';
-                        $params[$field] = '%'.($filter->{$method}()).'%';
-
+                        // @todo move this to driver specific storage class
+                        list($where, $params) = $this->compareWithJson(
+                            $where,
+                            $params,
+                            $field,
+                            $filter->{$method}(),
+                            'meta',
+                            ['SERVER', 'HTTP_COOKIE']
+                        );
                         break;
 
                     default:
@@ -404,5 +421,40 @@ where
     {
         $stmt = $this->connection->prepare('delete from watched where id = :id');
         $stmt->execute(['id'=>$id]);
+    }
+
+    /**
+     * This method will look into json stored data in native way (if db supports that) and it will match row based on that.
+     *
+     * @todo this should be moved to engine specific storage classes in the future.
+     * @param array $where
+     * @param array $params
+     * @param $field
+     * @param $value
+     * @param $fieldToLookIn
+     * @param array $path
+     * @return array
+     */
+    protected function compareWithJson(array $where, array $params, $field, $value, $fieldToLookIn, array $path)
+    {
+        switch ($this->jsonMode) {
+            case 'mysql':
+                $where[] = ' JSON_EXTRACT(' .$fieldToLookIn.", '$.".join('.', $path)."') like :cookie";
+                $params[$field] = '%' . $value . '%';
+                break;
+
+            case 'pgsql':
+                // to match using like we need to cast last leaf to a string.
+                $lastElement = array_pop($path);
+                $where[] = ' ' .$fieldToLookIn."->'".join("'->'", $path)."'->>'".$lastElement."' like :cookie";
+                $params[$field] = '%' . $value . '%';
+
+                break;
+            default:
+                $where[] = ' '.$fieldToLookIn.' like :cookie ';
+                $params[$field] = '%' . $value . '%';
+                break;
+        }
+        return array($where, $params);
     }
 }
