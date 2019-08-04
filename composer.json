@@ -17,7 +17,7 @@
         "slim/views": "^0.1.0",
         "twig/twig": "~1.17",
         "pimple/pimple": "^1.0.2",
-        "xhgui/xhgui-collector": "dev-master",
+        "perftools/xhgui-collector": "dev-master",
         "ext-json": "*"
     },
     "require-dev": {
