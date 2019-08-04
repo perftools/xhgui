@@ -131,6 +131,14 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
                 continue;
             }
 
+            if (null !== $filter->getCookie() && strpos($meta['SERVER']['HTTP_COOKIE'], $filter->getCookie()) === false) {
+                continue;
+            }
+
+            if (null !== $filter->getIp() && $meta['SERVER']['REMOTE_ADDR'] !== $filter->getIp()) {
+                continue;
+            }
+
             if (!empty($profile['profile'])) {
                 $profile = $profile['profile'];
             }
