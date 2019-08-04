@@ -55,7 +55,6 @@ abstract class Xhgui_Controller
     {
         // render body only if template is set. Useful for ajax/json response.
         if (!empty($this->_template)) {
-
             // assign application settings to template variable named config.
             $container = $this->app->container->all();
             $this->_templateVars['config'] = $container['settings'];

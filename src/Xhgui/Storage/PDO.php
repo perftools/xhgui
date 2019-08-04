@@ -425,7 +425,8 @@ where
     }
 
     /**
-     * This method will look into json stored data in native way (if db supports that) and it will match row based on that.
+     * This method will look into json stored data in native way (if db supports that) and it will match row based on
+     * that.
      *
      * @param array $where
      * @param array $params
@@ -447,8 +448,8 @@ where
             case 'pgsql':
                 // to match using like we need to cast last leaf to a string.
                 $lastElement = array_pop($path);
-                $where[] = ' ' . $fieldToLookIn . "->'" . join("'->'",
-                        $path) . "'->>'" . $lastElement . "' like :cookie";
+                $where[] = ' ' . $fieldToLookIn . "->'" . join("'->'", $path)
+                    . "'->>'" . $lastElement . "' like :cookie";
                 $params[$field] = '%' . $value . '%';
 
                 break;

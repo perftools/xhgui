@@ -131,8 +131,9 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
                 continue;
             }
 
-            if (null !== $filter->getCookie() && strpos($meta['SERVER']['HTTP_COOKIE'],
-                    $filter->getCookie()) === false) {
+            if (null !== $filter->getCookie() &&
+                strpos($meta['SERVER']['HTTP_COOKIE'],$filter->getCookie()) === false
+            ) {
                 continue;
             }
 
