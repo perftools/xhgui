@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Get profiles using PDO database connection
  */
@@ -13,7 +14,7 @@ class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements
     protected $connection;
 
     /**
-     * @var bool 
+     * @var bool
      */
     protected $jsonMode = false;
 
@@ -25,9 +26,9 @@ class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements
     {
         $this->connection = new \PDO(
             $config['db.dsn'],
-            !empty($config['db.user'])      ? $config['db.user'] : null,
-            !empty($config['db.password'])  ? $config['db.password'] : null,
-            !empty($config['db.options'])   ? $config['db.options'] : []
+            !empty($config['db.user']) ? $config['db.user'] : null,
+            !empty($config['db.password']) ? $config['db.password'] : null,
+            !empty($config['db.options']) ? $config['db.options'] : []
         );
         $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->connection->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
@@ -48,7 +49,7 @@ class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements
     public function find(\Xhgui_Storage_Filter $filter, $projections = false)
     {
         list($query, $params) = $this->getQuery($filter, false);
-        
+
         try {
             $stmt = $this->connection->prepare($query);
             $stmt->execute($params);
@@ -69,10 +70,10 @@ class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements
                 }
             }
             $tmp[$row['id']] = $row;
-            $tmp[$row['id']]['profile']    = json_decode($row['profiles'], true);
-            $tmp[$row['id']]['meta']       = $meta;
+            $tmp[$row['id']]['profile'] = json_decode($row['profiles'], true);
+            $tmp[$row['id']]['meta'] = $meta;
         }
-        
+
         return new \Xhgui_Storage_ResultSet($tmp);
     }
 
@@ -105,31 +106,31 @@ from
         $where = [];
 
         foreach ([
-            'url'               => 'url',
-            'method'            => 'method',
-            'application'       => 'application',
-            'version'           => 'version',
-            'branch'            => 'branch',
-            'controller'        => 'controller',
-            'action'            => 'action',
-            'cookie'            => 'cookie',
-            'remote_addr'       => 'ip',
-            ] as $dbField => $field) {
-            $method = 'get'.ucfirst($field);
+                     'url'         => 'url',
+                     'method'      => 'method',
+                     'application' => 'application',
+                     'version'     => 'version',
+                     'branch'      => 'branch',
+                     'controller'  => 'controller',
+                     'action'      => 'action',
+                     'cookie'      => 'cookie',
+                     'remote_addr' => 'ip',
+                 ] as $dbField => $field) {
+            $method = 'get' . ucfirst($field);
 
             if ($filter->{$method}()) {
-                switch($field) {
+                switch ($field) {
                     case 'url':
                         $url = $filter->{$method}();
-                        $where[]              = ' ( url like :url OR simple_url like :simple_url)';
-                        $params['url']        = '%'.$url.'%';
-                        $params['simple_url'] = '%'.$url.'%';
+                        $where[] = ' ( url like :url OR simple_url like :simple_url)';
+                        $params['url'] = '%' . $url . '%';
+                        $params['simple_url'] = '%' . $url . '%';
                         break;
 
                     case 'action':
                     case 'controller':
-                        $where[]        = ' '.$dbField.' like :'.$field.' ';
-                        $params[$field] = ($filter->{$method}()).'%';
+                        $where[] = ' ' . $dbField . ' like :' . $field . ' ';
+                        $params[$field] = ($filter->{$method}()) . '%';
                         break;
 
                     case 'cookie':
@@ -145,27 +146,27 @@ from
                         break;
 
                     default:
-                        $where[]        = ' '.$dbField.' = :'.$field.' ';
+                        $where[] = ' ' . $dbField . ' = :' . $field . ' ';
                         $params[$field] = $filter->{$method}();
                         break;
                 }
             }
         }
-        
-        if ($filter->getStartDate()) {
-            $where[]                = ' request_time >= :startDate';
-            $params['startDate']   = $this->getDateTimeFromString($filter->getStartDate(), 'start')
-                                          ->format('Y-m-d H:i:s');
-        }
 
-        if ($filter->getEndDate()) {
-            $where[]                = ' request_time <= :endDate';
-            $params['endDate']   = $this->getDateTimeFromString($filter->getEndDate(), 'end')
+        if ($filter->getStartDate()) {
+            $where[] = ' request_time >= :startDate';
+            $params['startDate'] = $this->getDateTimeFromString($filter->getStartDate(), 'start')
                                         ->format('Y-m-d H:i:s');
         }
 
+        if ($filter->getEndDate()) {
+            $where[] = ' request_time <= :endDate';
+            $params['endDate'] = $this->getDateTimeFromString($filter->getEndDate(), 'end')
+                                      ->format('Y-m-d H:i:s');
+        }
+
         if (!empty($where)) {
-            $sql .= ' WHERE '.join(' AND ', $where);
+            $sql .= ' WHERE ' . join(' AND ', $where);
         }
 
         if ($count === true) {
@@ -231,13 +232,13 @@ from
         }
 
         if ($filter->getPerPage()) {
-            $sql            .= ' LIMIT :limit ';
+            $sql .= ' LIMIT :limit ';
             $params['limit'] = (int)$filter->getPerPage();
         }
 
         if ($filter->getPage()) {
-            $sql                .= ' OFFSET :offset ';
-            $params['offset']   = (int)($filter->getPerPage()*($filter->getPage()-1));
+            $sql .= ' OFFSET :offset ';
+            $params['offset'] = (int)($filter->getPerPage() * ($filter->getPage() - 1));
         }
         return [$sql, $params];
     }
@@ -259,34 +260,34 @@ from
 where 
     simple_url = :simple_url OR url = :url
 ');
-        $stmt->execute(['url'=> $filter->getUrl(), 'simple_url'=> $filter->getUrl()]);
+        $stmt->execute(['url' => $filter->getUrl(), 'simple_url' => $filter->getUrl()]);
         $aggregatedData = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $date = new \DateTime($row['request_time']);
             $formattedDate = $date->format('Y-m-d H:i');
             if (empty($aggregatedData[$formattedDate])) {
                 $aggregatedData[$formattedDate] = [
-                    'wall_times'    => [],
-                    'cpu_times'     => [],
-                    'mu_times'      => [],
-                    'pmu_times'     => [],
-                    'row_count'     => 0
+                    'wall_times' => [],
+                    'cpu_times'  => [],
+                    'mu_times'   => [],
+                    'pmu_times'  => [],
+                    'row_count'  => 0
                 ];
             }
 
             $aggregatedData[$formattedDate]['wall_times'][] = $row['main_wt'];
-            $aggregatedData[$formattedDate]['cpu_times'][]  = $row['main_cpu'];
-            $aggregatedData[$formattedDate]['mu_times'][]   = $row['main_mu'];
-            $aggregatedData[$formattedDate]['pmu_times'][]  = $row['main_pmu'];
+            $aggregatedData[$formattedDate]['cpu_times'][] = $row['main_cpu'];
+            $aggregatedData[$formattedDate]['mu_times'][] = $row['main_mu'];
+            $aggregatedData[$formattedDate]['pmu_times'][] = $row['main_pmu'];
             $aggregatedData[$formattedDate]['row_count']++;
-            $aggregatedData[$formattedDate]['_id']          = $date->format('Y-m-d H:i:s');
-            $aggregatedData[$formattedDate]['raw_index']    =
-                $aggregatedData[$formattedDate]['row_count']*($percentile/100);
+            $aggregatedData[$formattedDate]['_id'] = $date->format('Y-m-d H:i:s');
+            $aggregatedData[$formattedDate]['raw_index'] =
+                $aggregatedData[$formattedDate]['row_count'] * ($percentile / 100);
         }
 
         $return = [
-            'ok'    => 1,
-            'result'=> array_values($aggregatedData),
+            'ok'     => 1,
+            'result' => array_values($aggregatedData),
         ];
         return $return;
     }
@@ -333,11 +334,11 @@ where
     p.profile_id = :id
 ');
 
-        $stmt->execute(['id'=>$id]);
+        $stmt->execute(['id' => $id]);
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
         $row['profile'] = json_decode($row['profiles'], true);
-        $row['meta']    = json_decode($row['meta'], true);
-        $row['_id']     = $id;
+        $row['meta'] = json_decode($row['meta'], true);
+        $row['_id'] = $id;
 
         return $row;
     }
@@ -351,14 +352,14 @@ where
         $this->connection->beginTransaction();
         try {
             $profileStmt = $this->connection->prepare('delete from profiles where profile_id = :id');
-            $profileStmt->execute(['id'=>$id]);
+            $profileStmt->execute(['id' => $id]);
 
             $metaStmt = $this->connection->prepare('delete from profiles_meta where profile_id = :id');
-            $metaStmt->execute(['id'=>$id]);
+            $metaStmt->execute(['id' => $id]);
 
             $infoStmt = $this->connection->prepare('delete from profiles_info where id = :id');
-            $infoStmt->execute(['id'=>$id]);
-            
+            $infoStmt->execute(['id' => $id]);
+
             $this->connection->commit();
         } catch (\Exception $e) {
             $this->connection->rollBack();
@@ -398,7 +399,7 @@ where
             return false;
         }
         $stmt = $this->connection->prepare('INSERT INTO watched (name) VALUES (:name)');
-        $stmt->execute(['name'=>trim($name)]);
+        $stmt->execute(['name' => trim($name)]);
         return true;
     }
 
@@ -410,7 +411,7 @@ where
     public function updateWatchedFunction($id, $name)
     {
         $stmt = $this->connection->prepare('update watched set name=:name where id = :id');
-        $stmt->execute(['id'=>$id, 'name'=>$name]);
+        $stmt->execute(['id' => $id, 'name' => $name]);
     }
 
     /**
@@ -420,13 +421,12 @@ where
     public function removeWatchedFunction($id)
     {
         $stmt = $this->connection->prepare('delete from watched where id = :id');
-        $stmt->execute(['id'=>$id]);
+        $stmt->execute(['id' => $id]);
     }
 
     /**
      * This method will look into json stored data in native way (if db supports that) and it will match row based on that.
      *
-     * @todo this should be moved to engine specific storage classes in the future.
      * @param array $where
      * @param array $params
      * @param $field
@@ -434,24 +434,26 @@ where
      * @param $fieldToLookIn
      * @param array $path
      * @return array
+     * @todo this should be moved to engine specific storage classes in the future.
      */
     protected function compareWithJson(array $where, array $params, $field, $value, $fieldToLookIn, array $path)
     {
         switch ($this->jsonMode) {
             case 'mysql':
-                $where[] = ' JSON_EXTRACT(' .$fieldToLookIn.", '$.".join('.', $path)."') like :cookie";
+                $where[] = ' JSON_EXTRACT(' . $fieldToLookIn . ", '$." . join('.', $path) . "') like :cookie";
                 $params[$field] = '%' . $value . '%';
                 break;
 
             case 'pgsql':
                 // to match using like we need to cast last leaf to a string.
                 $lastElement = array_pop($path);
-                $where[] = ' ' .$fieldToLookIn."->'".join("'->'", $path)."'->>'".$lastElement."' like :cookie";
+                $where[] = ' ' . $fieldToLookIn . "->'" . join("'->'",
+                        $path) . "'->>'" . $lastElement . "' like :cookie";
                 $params[$field] = '%' . $value . '%';
 
                 break;
             default:
-                $where[] = ' '.$fieldToLookIn.' like :cookie ';
+                $where[] = ' ' . $fieldToLookIn . ' like :cookie ';
                 $params[$field] = '%' . $value . '%';
                 break;
         }
