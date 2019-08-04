@@ -321,7 +321,15 @@ class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements
         }
 
         if (null !== $filter->getUrl()) {
-            $conditions['meta.simple_url'] = $filter->getUrl();
+            $conditions['meta.simple_url'] = new \MongoRegex('/'.preg_quote($filter->getUrl(), '/').'/');
+        }
+
+        if (null !== $filter->getIp()) {
+            $conditions['meta.SERVER.REMOTE_ADDR'] = $filter->getIp();
+        }
+
+        if (null !== $filter->getCookie()) {
+            $conditions['meta.SERVER.HTTP_COOKIE'] = new \MongoRegex('/'.preg_quote($filter->getCookie(), '/').'/');
         }
 
         foreach ([
