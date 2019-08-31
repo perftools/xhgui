@@ -178,6 +178,7 @@ register_shutdown_function(
         try {
             $config = Xhgui_Config::all();
             $config += array('db.options' => array());
+            $config += array('db.driverOptions' => array());
             $saver = Xhgui_Saver::factory($config);
             $saver->save($data);
         } catch (Exception $e) {
