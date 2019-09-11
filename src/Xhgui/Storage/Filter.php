@@ -406,7 +406,8 @@ class Xhgui_Storage_Filter
     /**
      * @return bool
      */
-    public function hasSort() {
+    public function hasSort()
+    {
         return !empty($this->data['sort']);
     }
 

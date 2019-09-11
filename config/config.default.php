@@ -71,7 +71,7 @@ return array(
         return (getenv('XHGUI_PROFILING') !== false) && (mt_rand(1, 100) <= $ratio);
     },
 
-    'profiler.simple_url' => function($url) {
+    'profiler.simple_url' => function ($url) {
         return preg_replace('/\=\d+/', '', $url);
     },
 
