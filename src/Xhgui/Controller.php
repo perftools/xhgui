@@ -33,7 +33,7 @@ abstract class Xhgui_Controller
      *
      * @param $vars
      */
-    public function set(array $vars = [])
+    public function set(array $vars = array())
     {
         $this->_templateVars = array_merge($this->_templateVars, $vars);
     }

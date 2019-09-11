@@ -58,7 +58,7 @@ class Xhgui_Storage_Filter
      */
     public function __construct()
     {
-        $this->data = [
+        $this->data = array(
             'id'          => null,
             'startDate'   => null,
             'endDate'     => null,
@@ -74,7 +74,7 @@ class Xhgui_Storage_Filter
             'direction'   => null,
             'cookie'      => null,
             'ip'          => null,
-        ];
+        );
     }
 
     /**
@@ -82,7 +82,7 @@ class Xhgui_Storage_Filter
      */
     public function toArray()
     {
-        $ret = [];
+        $ret = array();
         foreach ($this->data as $key => $value) {
             if (isset($this->data[$key])) {
                 $ret[$key] = $value;
@@ -401,6 +401,13 @@ class Xhgui_Storage_Filter
         }
         $this->data['sort'] = $sort;
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasSort() {
+        return !empty($this->data['sort']);
     }
 
     /**

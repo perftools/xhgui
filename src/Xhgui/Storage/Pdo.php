@@ -3,7 +3,7 @@
 /**
  * Get profiles using PDO database connection
  */
-class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements
+class Xhgui_Storage_Pdo extends Xhgui_Storage_Abstract implements
     \Xhgui_StorageInterface,
     \Xhgui_WatchedFunctionsStorageInterface
 {
@@ -28,7 +28,7 @@ class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements
             $config['db.dsn'],
             !empty($config['db.user']) ? $config['db.user'] : null,
             !empty($config['db.password']) ? $config['db.password'] : null,
-            !empty($config['db.options']) ? $config['db.options'] : []
+            !empty($config['db.options']) ? $config['db.options'] : array()
         );
         $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->connection->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
@@ -58,7 +58,7 @@ class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements
             exit;
         }
 
-        $tmp = [];
+        $tmp = array();
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $meta = json_decode($row['meta'], true);
             if ($filter->getCookie()) {
@@ -86,7 +86,7 @@ class Xhgui_Storage_PDO extends Xhgui_Storage_Abstract implements
      */
     protected function getQuery(\Xhgui_Storage_Filter $filter, $count = false)
     {
-        $params = [];
+        $params = array();
 
         if ($count === true) {
             $columns = ' count(*) as c ';
@@ -103,9 +103,9 @@ from
     profiles_meta as m on (p.profile_id = m.profile_id)
 ";
 
-        $where = [];
+        $where = array();
 
-        foreach ([
+        foreach (array(
                      'url'         => 'url',
                      'method'      => 'method',
                      'application' => 'application',
@@ -115,7 +115,7 @@ from
                      'action'      => 'action',
                      'cookie'      => 'cookie',
                      'remote_addr' => 'ip',
-                 ] as $dbField => $field) {
+                 ) as $dbField => $field) {
             $method = 'get' . ucfirst($field);
 
             if ($filter->{$method}()) {
@@ -141,7 +141,7 @@ from
                             $field,
                             $filter->{$method}(),
                             'meta',
-                            ['SERVER', 'HTTP_COOKIE']
+                            array('SERVER', 'HTTP_COOKIE')
                         );
                         break;
 
@@ -170,7 +170,7 @@ from
         }
 
         if ($count === true) {
-            return [$sql, $params];
+            return array($sql, $params);
         }
 
         switch ($filter->getSort()) {
@@ -240,7 +240,7 @@ from
             $sql .= ' OFFSET :offset ';
             $params['offset'] = (int)($filter->getPerPage() * ($filter->getPage() - 1));
         }
-        return [$sql, $params];
+        return array($sql, $params);
     }
 
     /**
@@ -260,19 +260,19 @@ from
 where 
     simple_url = :simple_url OR url = :url
 ');
-        $stmt->execute(['url' => $filter->getUrl(), 'simple_url' => $filter->getUrl()]);
-        $aggregatedData = [];
+        $stmt->execute(array('url' => $filter->getUrl(), 'simple_url' => $filter->getUrl()));
+        $aggregatedData = array();
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $date = new \DateTime($row['request_time']);
             $formattedDate = $date->format('Y-m-d H:i');
             if (empty($aggregatedData[$formattedDate])) {
-                $aggregatedData[$formattedDate] = [
-                    'wall_times' => [],
-                    'cpu_times'  => [],
-                    'mu_times'   => [],
-                    'pmu_times'  => [],
+                $aggregatedData[$formattedDate] = array(
+                    'wall_times' => array(),
+                    'cpu_times'  => array(),
+                    'mu_times'   => array(),
+                    'pmu_times'  => array(),
                     'row_count'  => 0
-                ];
+                );
             }
 
             $aggregatedData[$formattedDate]['wall_times'][] = $row['main_wt'];
@@ -285,10 +285,10 @@ where
                 $aggregatedData[$formattedDate]['row_count'] * ($percentile / 100);
         }
 
-        $return = [
+        $return = array(
             'ok'     => 1,
             'result' => array_values($aggregatedData),
-        ];
+        );
         return $return;
     }
 
@@ -334,7 +334,7 @@ where
     p.profile_id = :id
 ');
 
-        $stmt->execute(['id' => $id]);
+        $stmt->execute(array('id' => $id));
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
         $row['profile'] = json_decode($row['profiles'], true);
         $row['meta'] = json_decode($row['meta'], true);
@@ -352,13 +352,13 @@ where
         $this->connection->beginTransaction();
         try {
             $profileStmt = $this->connection->prepare('delete from profiles where profile_id = :id');
-            $profileStmt->execute(['id' => $id]);
+            $profileStmt->execute(array('id' => $id));
 
             $metaStmt = $this->connection->prepare('delete from profiles_meta where profile_id = :id');
-            $metaStmt->execute(['id' => $id]);
+            $metaStmt->execute(array('id' => $id));
 
             $infoStmt = $this->connection->prepare('delete from profiles_info where id = :id');
-            $infoStmt->execute(['id' => $id]);
+            $infoStmt->execute(array('id' => $id));
 
             $this->connection->commit();
         } catch (\Exception $e) {
@@ -399,7 +399,7 @@ where
             return false;
         }
         $stmt = $this->connection->prepare('INSERT INTO watched (name) VALUES (:name)');
-        $stmt->execute(['name' => trim($name)]);
+        $stmt->execute(array('name' => trim($name)));
         return true;
     }
 
@@ -411,7 +411,7 @@ where
     public function updateWatchedFunction($id, $name)
     {
         $stmt = $this->connection->prepare('update watched set name=:name where id = :id');
-        $stmt->execute(['id' => $id, 'name' => $name]);
+        $stmt->execute(array('id' => $id, 'name' => $name));
     }
 
     /**
@@ -421,7 +421,7 @@ where
     public function removeWatchedFunction($id)
     {
         $stmt = $this->connection->prepare('delete from watched where id = :id');
-        $stmt->execute(['id' => $id]);
+        $stmt->execute(array('id' => $id));
     }
 
     /**

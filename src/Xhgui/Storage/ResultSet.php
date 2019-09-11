@@ -9,11 +9,11 @@ class Xhgui_Storage_ResultSet implements \Iterator, \Countable
     /**
      * @var array|null
      */
-    protected $data = [];
+    protected $data = array();
     /**
      * @var array
      */
-    protected $keys = [];
+    protected $keys = array();
 
     /**
      * @var int

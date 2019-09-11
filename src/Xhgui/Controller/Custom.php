@@ -26,9 +26,9 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
     public function get()
     {
         $this->_template = 'custom/create.twig';
-        $this->set([
+        $this->set(array(
             'save_handler' => $this->app->config('save.handler'),
-        ]);
+        ));
     }
 
     /**

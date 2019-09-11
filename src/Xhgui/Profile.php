@@ -462,7 +462,7 @@ class Xhgui_Profile
      *
      * @return array
      */
-    public function filter($profileData, $filters = [])
+    public function filter($profileData, $filters = array())
     {
         foreach ($filters as $key => $item) {
             foreach ($profileData as $keyItem => $method) {

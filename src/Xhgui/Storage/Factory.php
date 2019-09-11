@@ -7,7 +7,7 @@ class Xhgui_Storage_Factory
 {
     /**
      * @param $config
-     * @return Xhgui_Storage_File|Xhgui_Storage_Mongo|Xhgui_Storage_PDO
+     * @return Xhgui_Storage_File|Xhgui_Storage_Mongo|Xhgui_Storage_Pdo
      * @throws MongoConnectionException
      * @throws MongoException
      */
@@ -15,7 +15,7 @@ class Xhgui_Storage_Factory
     {
         switch ($config['save.handler']) {
             case 'pdo':
-                return new \Xhgui_Storage_PDO($config);
+                return new \Xhgui_Storage_Pdo($config);
 
             case 'mongodb':
                 return new \Xhgui_Storage_Mongo($config);
@@ -30,7 +30,7 @@ class Xhgui_Storage_Factory
      * For usage with factory instance - for example for easier testing
      *
      * @param $config
-     * @return Xhgui_Storage_File|Xhgui_Storage_Mongo|Xhgui_Storage_PDO
+     * @return Xhgui_Storage_File|Xhgui_Storage_Mongo|Xhgui_Storage_Pdo
      * @throws MongoConnectionException
      * @throws MongoException
      */

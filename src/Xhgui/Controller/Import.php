@@ -34,7 +34,7 @@ class Xhgui_Controller_Import extends Xhgui_Controller
 
         $settings = $this->app->container->get('settings');
 
-        $handlers = [];
+        $handlers = array();
         if (!empty($settings['save.handler.path'])) {
             $handlers[] = 'file';
         }

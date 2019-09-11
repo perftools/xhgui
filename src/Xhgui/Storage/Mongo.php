@@ -62,7 +62,7 @@ class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements
      */
     public function find(\Xhgui_Storage_Filter $filter, $projections = false)
     {
-        $sort = [];
+        $sort = array();
         switch ($filter->getSort()) {
             case 'ct':
             case 'wt':
@@ -113,7 +113,7 @@ class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements
     public function findOne($id)
     {
         $ret = $this->getCollection()
-                    ->findOne(['_id' => new \MongoId($id)]);
+                    ->findOne(array('_id' => new \MongoId($id)));
         return $ret;
     }
 
@@ -154,49 +154,49 @@ class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements
     {
 
         $conditions = $this->getConditions($filter);
-        $param = [
-            ['$match' => $conditions],
-            [
-                '$project' => [
+        $param = array(
+            array('$match' => $conditions),
+            array(
+                '$project' => array(
                     'date'           => '$meta.request_ts',
                     'profile.main()' => 1
-                ]
-            ],
-            [
-                '$group' => [
+                )
+            ),
+            array(
+                '$group' => array(
                     '_id'        => '$date',
-                    'row_count'  => ['$sum' => 1],
-                    'wall_times' => ['$push' => '$profile.main().wt'],
-                    'cpu_times'  => ['$push' => '$profile.main().cpu'],
-                    'mu_times'   => ['$push' => '$profile.main().mu'],
-                    'pmu_times'  => ['$push' => '$profile.main().pmu'],
-                ]
-            ],
-            [
-                '$project' => [
+                    'row_count'  => array('$sum' => 1),
+                    'wall_times' => array('$push' => '$profile.main().wt'),
+                    'cpu_times'  => array('$push' => '$profile.main().cpu'),
+                    'mu_times'   => array('$push' => '$profile.main().mu'),
+                    'pmu_times'  => array('$push' => '$profile.main().pmu'),
+                )
+            ),
+            array(
+                '$project' => array(
                     'date'       => '$date',
                     'row_count'  => '$row_count',
-                    'raw_index'  => [
-                        '$multiply' => [
+                    'raw_index'  => array(
+                        '$multiply' => array(
                             '$row_count',
                             $percentile / 100
-                        ]
-                    ],
+                        )
+                    ),
                     'wall_times' => '$wall_times',
                     'cpu_times'  => '$cpu_times',
                     'mu_times'   => '$mu_times',
                     'pmu_times'  => '$pmu_times',
-                ]
-            ],
-            [
-                '$sort' => ['_id' => 1]
-            ],
-        ];
+                )
+            ),
+            array(
+                '$sort' => array('_id' => 1)
+            ),
+        );
         $ret = $this->getCollection()->aggregate(
             $param,
-            [
-                'cursor' => ['batchSize' => 0]
-            ]
+            array(
+                'cursor' => array('batchSize' => 0)
+            )
         );
 
         return $ret;
@@ -208,12 +208,12 @@ class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements
      */
     public function getWatchedFunctions()
     {
-        $ret = [];
+        $ret = array();
         try {
-            $cursor = $this->getConnection()->watches->find()->sort(['name' => 1]);
-            $ret = [];
+            $cursor = $this->getConnection()->watches->find()->sort(array('name' => 1));
+            $ret = array();
             foreach ($cursor as $row) {
-                $ret[] = ['id' => $row['_id']->__toString(), 'name' => $row['name']];
+                $ret[] = array('id' => $row['_id']->__toString(), 'name' => $row['name']);
             }
         } catch (\Exception $e) {
             // if something goes wrong just return empty array
@@ -238,10 +238,10 @@ class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements
         try {
             $id = new \MongoId();
 
-            $data = [
+            $data = array(
                 '_id'  => $id,
                 'name' => $name
-            ];
+            );
             $this->getConnection()->watches->insert($data);
 
             return true;
@@ -267,10 +267,10 @@ class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements
 
         try {
             $id = new \MongoId($id);
-            $data = [
+            $data = array(
                 '_id'  => $id,
                 'name' => $name
-            ];
+            );
             $this->getConnection()->watches->save($data);
 
             return true;
@@ -291,7 +291,7 @@ class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements
         try {
             $id = new \MongoId($id);
 
-            $this->getConnection()->watches->remove(['_id' => $id]);
+            $this->getConnection()->watches->remove(array('_id' => $id));
 
             return true;
         } catch (\Exception $e) {
@@ -307,7 +307,7 @@ class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements
      */
     protected function getConditions(\Xhgui_Storage_Filter $filter)
     {
-        $conditions = [];
+        $conditions = array();
         if (null !== $filter->getStartDate()) {
             $conditions['meta.request_ts']['$gte'] = new \MongoDate(
                 $this->getDateTimeFromString($filter->getStartDate(), 'start')->format('U')
@@ -332,14 +332,14 @@ class Xhgui_Storage_Mongo extends Xhgui_Storage_Abstract implements
             $conditions['meta.SERVER.HTTP_COOKIE'] = new \MongoRegex('/'.preg_quote($filter->getCookie(), '/').'/');
         }
 
-        foreach ([
+        foreach (array(
                      'method'      => 'method',
                      'application' => 'application',
                      'version'     => 'version',
                      'branch'      => 'branch',
                      'controller'  => 'controller',
                      'action'      => 'action',
-                 ] as $dbField => $field) {
+                 ) as $dbField => $field) {
             $method = 'get' . ucfirst($field);
             if ($filter->{$method}()) {
                 $conditions['meta.' . $dbField] = $filter->{$method}();

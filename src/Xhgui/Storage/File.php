@@ -75,7 +75,7 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
             sort($result);
         }
 
-        $ret = [];
+        $ret = array();
         foreach ($result as $i => $file) {
             // skip meta files.
             if (strpos($file, '.meta') !== false) {
@@ -151,18 +151,18 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
                 $id = basename($file);
             }
             if (!empty($profile)) {
-                $ret[$id] = [
+                $ret[$id] = array(
                     'profile' => $profile,
                     '_id'     => $id,
                     'meta'    => $meta,
-                ];
+                );
             } else {
                 $ret[$id] = $profile;
             }
         }
 
         try {
-            if (!empty($filter->getSort()) && !empty($ret)) {
+            if (!empty($ret) && $filter->hasSort()) {
                 $this->filter = $filter;
                 usort($ret, array($this, 'sortByColumn'));
                 unset($this->filter);
@@ -245,10 +245,10 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
     {
         $ret = $this->find($filter);
 
-        $result = [
+        $result = array(
             'ok'     => 1,
-            'result' => [],
-        ];
+            'result' => array(),
+        );
 
         foreach ($ret as $row) {
             $date = \DateTime::createFromFormat(
@@ -258,13 +258,13 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
             $formattedDate = $date->format('Y-m-d H:i');
 
             if (empty($result['result'][$formattedDate])) {
-                $result['result'][$formattedDate] = [
-                    'wall_times' => [],
-                    'cpu_times'  => [],
-                    'mu_times'   => [],
-                    'pmu_times'  => [],
+                $result['result'][$formattedDate] = array(
+                    'wall_times' => array(),
+                    'cpu_times'  => array(),
+                    'mu_times'   => array(),
+                    'pmu_times'  => array(),
                     'row_count'  => 0
-                ];
+                );
             }
 
             $result['result'][$formattedDate]['wall_times'][] = $row['profile']['main()']['wt'];
@@ -411,7 +411,7 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
      */
     public function getWatchedFunctions()
     {
-        $ret = [];
+        $ret = array();
         $files = glob($this->watchedFunctionsPathPrefix . '*.json');
         foreach ($files as $file) {
             $ret[] = json_decode(file_get_contents($file), true);
@@ -433,7 +433,7 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
         $id = md5($name);
         $i = file_put_contents(
             $this->watchedFunctionsPathPrefix . $id . '.json',
-            json_encode(['id' => $id, 'name' => $name])
+            json_encode(array('id' => $id, 'name' => $name))
         );
         return $i > 0;
     }
@@ -453,7 +453,7 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
 
         $i = file_put_contents(
             $this->watchedFunctionsPathPrefix . $id . '.json',
-            json_encode(['id' => $id, 'name' => trim($name)])
+            json_encode(array('id' => $id, 'name' => trim($name)))
         );
         return $i > 0;
     }
@@ -477,7 +477,7 @@ class Xhgui_Storage_File extends Xhgui_Storage_Abstract implements
      */
     public function getRequestTimeFromFilename($fileName)
     {
-        $matches = [];
+        $matches = array();
         // default pattern is: xhgui.data.<timestamp>.<microseconds>_a68888
         //  xhgui.data.15 55 31 04 66 .6606_a68888
         preg_match('/(?<t>[\d]{10})(\.(?<m>[\d]{1,6}))?.+/i', $fileName, $matches);
