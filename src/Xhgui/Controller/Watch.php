@@ -20,9 +20,6 @@ class Xhgui_Controller_Watch extends Xhgui_Controller
         $this->setWatches($watches);
     }
 
-    /**
-     *
-     */
     public function get()
     {
         $watched = $this->getWatches()->getWatchedFunctions();
@@ -31,12 +28,9 @@ class Xhgui_Controller_Watch extends Xhgui_Controller
         $this->set(array('watched' => $watched));
     }
 
-    /**
-     *
-     */
     public function post()
     {
-        $app     = $this->app;
+        $app = $this->app;
         $watches = $this->watches;
 
         $saved = false;

@@ -4,7 +4,6 @@ use Slim\Slim;
 
 class Xhgui_Controller_Import extends Xhgui_Controller
 {
-
     /**
      * @var Xhgui_Storage_Factory
      */
@@ -31,18 +30,15 @@ class Xhgui_Controller_Import extends Xhgui_Controller
      */
     public function index()
     {
-
         $settings = $this->app->container->get('settings');
 
         $handlers = array();
         if (!empty($settings['save.handler.path'])) {
             $handlers[] = 'file';
         }
-
         if (!empty($settings['save.handler.upload.uri'])) {
             $handlers[] = 'upload';
         }
-
         if (!empty($settings['db.host']) && strpos($settings['db.host'], 'mongodb') !== false) {
             $handlers[] = 'mongodb';
         }
@@ -65,10 +61,10 @@ class Xhgui_Controller_Import extends Xhgui_Controller
         $request = $this->app->request();
         $this->_template = '';
         
-        $readConfig         = $this->app->container->get('settings');
-        $saveHandlerConfig  = $this->app->container->get('settings');
-        $source             = $request->post('source');
-        $target             = $request->post('target');
+        $readConfig = $this->app->container->get('settings');
+        $saveHandlerConfig = $this->app->container->get('settings');
+        $source = $request->post('source');
+        $target = $request->post('target');
 
         // get data to import
         $readConfig['save.handler'] = $source;

@@ -20,9 +20,6 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
         $this->setProfiles($profiles);
     }
 
-    /**
-     *
-     */
     public function get()
     {
         $this->_template = 'custom/create.twig';
@@ -31,9 +28,6 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
         ));
     }
 
-    /**
-     *
-     */
     public function help()
     {
         $request = $this->app->request();

@@ -8,7 +8,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
      * HTTP GET attribute name for comma separated filters
      */
     const FILTER_ARGUMENT_NAME = 'filter';
-    
+
     /**
      * @var Xhgui_Profiles
      */
@@ -32,9 +32,6 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $this->setWatches($watches);
     }
 
-    /**
-     *
-     */
     public function index()
     {
         $response = $this->app->response();
@@ -51,35 +48,31 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $result = $this->getProfiles()->getAll($filter);
         $title = 'Recent runs';
         $titleMap = array(
-            'wt'    => 'Longest wall time',
-            'cpu'   => 'Most CPU time',
-            'mu'    => 'Highest memory use',
+            'wt' => 'Longest wall time',
+            'cpu' => 'Most CPU time',
+            'mu' => 'Highest memory use',
         );
         if (isset($titleMap[$filter->getSort()])) {
             $title = $titleMap[$filter->getSort()];
         }
         $paging = array(
-            'total_pages'   => $result['totalPages'],
-            'page'          => $result['page'],
-            'sort'          => $filter->getSort(),
-            'direction'     => $result['direction']
+            'total_pages' => $result['totalPages'],
+            'page' => $result['page'],
+            'sort' => $filter->getSort(),
+            'direction' => $result['direction']
         );
 
         $this->_template = 'runs/list.twig';
-
         $this->set(array(
-            'paging'        => $paging,
-            'base_url'      => 'home',
-            'runs'          => $result['results'],
-            'date_format'   => $this->app->config('date.format'),
-            'search'        => $filter->toArray(),
-            'title'         => $title
+            'paging' => $paging,
+            'base_url' => 'home',
+            'runs' => $result['results'],
+            'date_format' => $this->app->config('date.format'),
+            'search' => $filter->toArray(),
+            'title'=> $title
         ));
     }
 
-    /**
-     *
-     */
     public function view()
     {
         $response = $this->app->response();
@@ -108,7 +101,6 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $watchedFunctions = array();
         foreach ($this->getWatches()->getWatchedFunctions() as $watch) {
             $matches = $result->getWatched($watch['name']);
-
             if ($matches) {
                 $watchedFunctions = array_merge($watchedFunctions, $matches);
             }
@@ -122,12 +114,12 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
         $this->_template = 'runs/view.twig';
         $this->set(array(
-            'profile'       => $profile,
-            'result'        => $result,
-            'wall_time'     => $timeChart,
-            'memory'        => $memoryChart,
-            'watches'       => $watchedFunctions,
-            'date_format'   => $this->app->config('date.format'),
+            'profile' => $profile,
+            'result' => $result,
+            'wall_time' => $timeChart,
+            'memory' => $memoryChart,
+            'watches' => $watchedFunctions,
+            'date_format' => $this->app->config('date.format'),
         ));
     }
 
@@ -175,7 +167,6 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     {
         $request = $this->app->request();
         $id = $request->post('id');
-
         // Don't call profilers->delete() unless $id is set,
         // otherwise it will turn the null into a MongoId and return "Sucessful".
         if (empty($id)) {
@@ -192,17 +183,11 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $this->app->redirect($this->app->urlFor('home'));
     }
 
-    /**
-     *
-     */
     public function deleteAllForm()
     {
         $this->_template = 'runs/delete-all-form.twig';
     }
 
-    /**
-     *
-     */
     public function deleteAllSubmit()
     {
         // Delete all profile runs.
@@ -213,9 +198,6 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $this->app->redirect($this->app->urlFor('home'));
     }
 
-    /**
-     *
-     */
     public function url()
     {
         $request = $this->app->request();
@@ -231,27 +213,24 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         );
 
         $paging = array(
-            'total_pages'   => $result['totalPages'],
-            'sort'          => $filter->getSort(),
-            'page'          => $result['page'],
-            'direction'     => $result['direction']
+            'total_pages' => $result['totalPages'],
+            'sort' => $filter->getSort(),
+            'page' => $result['page'],
+            'direction' => $result['direction']
         );
 
         $this->_template = 'runs/url.twig';
         $this->set(array(
-            'paging'        => $paging,
-            'base_url'      => 'url.view',
-            'runs'          => $result['results'],
-            'url'           => $filter->getUrl(),
-            'chart_data'    => $chartData,
-            'date_format'   => $this->app->config('date.format'),
-            'search'        => array_merge($filter->toArray(), array('url' => $request->get('url'))),
+            'paging' => $paging,
+            'base_url' => 'url.view',
+            'runs' => $result['results'],
+            'url' => $filter->getUrl(),
+            'chart_data' => $chartData,
+            'date_format' => $this->app->config('date.format'),
+            'search' => array_merge($filter->toArray(), array('url' => $request->get('url'))),
         ));
     }
 
-    /**
-     *
-     */
     public function compare()
     {
         $request = $this->app->request();
@@ -271,10 +250,10 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             $candidates = $this->getProfiles()->getAll($filter);
 
             $paging = array(
-                'total_pages'   => $candidates['totalPages'],
-                'page'          => $candidates['page'],
-                'sort'          => $filter->getSort(),
-                'direction'     => $candidates['direction']
+                'total_pages' => $candidates['totalPages'],
+                'sort' => $filter->getSort(),
+                'page' => $candidates['page'],
+                'direction' => $candidates['direction']
             );
         }
 
@@ -288,29 +267,26 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
         $this->_template = 'runs/compare.twig';
         $this->set(array(
-            'base_url'      => 'run.compare',
-            'base_run'      => $baseRun,
-            'head_run'      => $headRun,
-            'candidates'    => $candidates,
-            'url_params'    => $request->get(),
-            'date_format'   => $this->app->config('date.format'),
-            'comparison'    => $comparison,
-            'paging'        => $paging,
-            'search'        => array(
+            'base_url' => 'run.compare',
+            'base_run' => $baseRun,
+            'head_run' => $headRun,
+            'candidates' => $candidates,
+            'url_params' => $request->get(),
+            'date_format' => $this->app->config('date.format'),
+            'comparison' => $comparison,
+            'paging' => $paging,
+            'search' => array(
                 'base' => $request->get('base'),
                 'head' => $request->get('head'),
             )
         ));
     }
 
-    /**
-     *
-     */
     public function symbol()
     {
-        $request    = $this->app->request();
-        $id         = $request->get('id');
-        $symbol     = $request->get('symbol');
+        $request = $this->app->request();
+        $id = $request->get('id');
+        $symbol = $request->get('symbol');
 
         $profile = $this->getProfiles()->get($id);
         $profile->calculateSelf();
@@ -318,25 +294,22 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
         $this->_template = 'runs/symbol.twig';
         $this->set(array(
-            'symbol'    => $symbol,
-            'id'        => $id,
-            'main'      => $profile->get('main()'),
-            'parents'   => $parents,
-            'current'   => $current,
-            'children'  => $children,
+            'symbol' => $symbol,
+            'id' => $id,
+            'main' => $profile->get('main()'),
+            'parents' => $parents,
+            'current' => $current,
+            'children' => $children,
         ));
     }
 
-    /**
-     *
-     */
     public function symbolShort()
     {
-        $request    = $this->app->request();
-        $id         = $request->get('id');
-        $threshold  = $request->get('threshold');
-        $symbol     = $request->get('symbol');
-        $metric     = $request->get('metric');
+        $request = $this->app->request();
+        $id = $request->get('id');
+        $threshold = $request->get('threshold');
+        $symbol = $request->get('symbol');
+        $metric = $request->get('metric');
 
         $profile = $this->getProfiles()->get($id);
         $profile->calculateSelf();
@@ -344,18 +317,15 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
         $this->_template = 'runs/symbol-short.twig';
         $this->set(array(
-            'symbol'    => $symbol,
-            'id'        => $id,
-            'main'      => $profile->get('main()'),
-            'parents'   => $parents,
-            'current'   => $current,
-            'children'  => $children,
+            'symbol' => $symbol,
+            'id' => $id,
+            'main' => $profile->get('main()'),
+            'parents' => $parents,
+            'current' => $current,
+            'children' => $children,
         ));
     }
 
-    /**
-     *
-     */
     public function callgraph()
     {
         $request = $this->app->request();
@@ -363,8 +333,8 @@ class Xhgui_Controller_Run extends Xhgui_Controller
 
         $this->_template = 'runs/callgraph.twig';
         $this->set(array(
-            'profile'       => $profile,
-            'date_format'   => $this->app->config('date.format'),
+            'profile' => $profile,
+            'date_format' => $this->app->config('date.format'),
         ));
     }
 
@@ -374,16 +344,16 @@ class Xhgui_Controller_Run extends Xhgui_Controller
      */
     public function callgraphData($nodes = false)
     {
-        $request    = $this->app->request();
-        $response   = $this->app->response();
-        $profile    = $this->getProfiles()->get($request->get('id'));
-        $metric     = $request->get('metric') ?: 'wt';
-        $threshold  = (float)$request->get('threshold') ?: 0.01;
+        $request = $this->app->request();
+        $response = $this->app->response();
+        $profile = $this->getProfiles()->get($request->get('id'));
+        $metric = $request->get('metric') ?: 'wt';
+        $threshold = (float)$request->get('threshold') ?: 0.01;
 
         if ($nodes) {
-            $callgraph  = $profile->getCallgraphNodes($metric, $threshold);
+            $callgraph = $profile->getCallgraphNodes($metric, $threshold);
         } else {
-            $callgraph  = $profile->getCallgraph($metric, $threshold);
+            $callgraph = $profile->getCallgraph($metric, $threshold);
         }
 
         $response->headers->set('Content-Type', 'application/json');

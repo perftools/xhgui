@@ -7,23 +7,23 @@
  */
 
 return array(
-    'debug'     => false,
-    'mode'      => 'development',
+    'debug' => false,
+    'mode' => 'development',
 
     // Can be mongodb, file, upload or pdo.
 
     // For file
-    'save.handler'                    => 'file',
-    'save.handler.path'               => '/data/profiles/',
+    'save.handler' => 'file',
+    'save.handler.path' => '/data/profiles/',
     // provide name to save current run to, or leave empty for default pattern
-    //'save.handler.filename'           => Xhgui_Saver_File::getFilename(__DIR__),
-    'save.handler.separate_meta'      => true,
-    'save.handler.meta_serializer'    => 'php',
+    //'save.handler.filename'  => Xhgui_Saver_File::getFilename(__DIR__),
+    'save.handler.separate_meta' => true,
+    'save.handler.meta_serializer' => 'php',
 
     // serialize handler for all compatible data: json, igbinary, php. This affects only serialization to files
     // because mongo handler and db handlers use json for native database support.
     // Defaults to json. Best performance: 'php'
-    'save.handler.serializer'         => 'php',
+    'save.handler.serializer' => 'php',
 
     // for best performance it is recommended to use separate meta file and php as serializer.
     // For upload
@@ -32,25 +32,25 @@ return array(
     //
     // The timeout option is in seconds and defaults to 3 if unspecified.
     //
-    //'save.handler'                => 'upload',
-    //'save.handler.upload.uri'     => 'https://example.com/run/import',
+    //'save.handler' => 'upload',
+    //'save.handler.upload.uri' => 'https://example.com/run/import',
     //'save.handler.upload.timeout' => 3,
 
 
     // For MongoDB
-    //'save.handler'  => 'mongodb',
-    //'db.host'       => 'mongodb://127.0.0.1:27017',
-    //'db.db'         => getenv('XHGUI_MONGO_DB') ?: 'xhprof',
+    //'save.handler' => 'mongodb',
+    //'db.host' => 'mongodb://127.0.0.1:27017',
+    //'db.db' => getenv('XHGUI_MONGO_DB') ?: 'xhprof',
 
 
     // for PDO
-    //'save.handler'  => 'pdo',
-    //'db.dsn'        => 'sqlite:/var/www/web/test.sq3',
+    //'save.handler' => 'pdo',
+    //'db.dsn' => 'sqlite:/var/www/web/test.sq3',
 
 
     // authentication for db (for both pdo AND mongo)
-    //'db.user'       => '',
-    //'db.password'   => '',
+    //'db.user' => '',
+    //'db.password' => '',
 
     // Allows you to pass additional options like replicaSet to MongoClient or pdo settings.
     'db.options' => array(),
@@ -59,19 +59,19 @@ return array(
         'Composer*',
     ),
     // store extra data in profile information, for example information about db queries
-    //'additional_data'    => ['DB_PROFILE']
+    //'additional_data' => ['DB_PROFILE']
 
     // call fastcgi_finish_request() in shutdown handler
     'fastcgi_finish_request' => true,
 
     // Profile x in 100 requests. (E.g. set XHGUI_PROFLING_RATIO=50 to profile 50% of requests)
     // You can return true to profile every request.
-    'profiler.enable' => function () {
+    'profiler.enable' => function() {
         $ratio = getenv('XHGUI_PROFILING_RATIO') ?: 100;
         return (getenv('XHGUI_PROFILING') !== false) && (mt_rand(1, 100) <= $ratio);
     },
 
-    'profiler.simple_url' => function ($url) {
+    'profiler.simple_url' => function($url) {
         return preg_replace('/\=\d+/', '', $url);
     },
 
@@ -84,8 +84,8 @@ return array(
 
 
     // UI related settings
-    'templates.path'    => dirname(__DIR__) . '/src/templates',
-    'date.format'       => 'M jS H:i:s',
-    'detail.count'      => 6,
-    'page.limit'        => 25,
+    'templates.path' => dirname(__DIR__) . '/src/templates',
+    'date.format' => 'M jS H:i:s',
+    'detail.count' => 6,
+    'page.limit' => 25,
 );

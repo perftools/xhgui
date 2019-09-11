@@ -20,9 +20,6 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
         $this->profiles = $profiles;
     }
 
-    /**
-     *
-     */
     public function index()
     {
         $request = $this->app->request();
@@ -46,9 +43,6 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
         ));
     }
 
-    /**
-     *
-     */
     public function query()
     {
         $request = $this->app->request();

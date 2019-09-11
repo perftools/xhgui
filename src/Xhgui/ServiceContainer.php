@@ -43,12 +43,12 @@ class Xhgui_ServiceContainer extends Pimple
 
             $view->twigTemplateDirs = array(dirname(__DIR__) . '/templates');
             $view->parserOptions = array(
-                'charset'           => 'utf-8',
-                'cache'             => $cacheDir,
-                'auto_reload'       => true,
-                'debug'             => true,
-                'strict_variables'  => false,
-                'autoescape'        => true
+                'charset' => 'utf-8',
+                'cache' => $cacheDir,
+                'auto_reload' => true,
+                'debug' => true,
+                'strict_variables' => false,
+                'autoescape' => true
             );
 
             return $view;
