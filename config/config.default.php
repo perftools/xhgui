@@ -86,6 +86,11 @@ return array(
     // NOTE: Only applies to using the external/header.php include.
     'profiler.options' => array(),
 
+    // Whether to profile PHP built-in functions
+    //
+    // NOTE: Only applies to using the external/header.php include.
+    'profiler.skip_built_in' => false,
+
     // Date format used when browsing XHGui pages.
     //
     // Must be a format supported by the PHP date() function.

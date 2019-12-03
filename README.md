@@ -238,6 +238,9 @@ return array(
 );
 ```
 
+In addition, if you do not want to profile all PHP built-in functions,
+you can make use of the `profiler.skip_built_in` option.
+
 Profiling a Web Request or CLI script
 =====================================
 
