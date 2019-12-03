@@ -68,4 +68,6 @@ return array(
     //},
 
     'profiler.options' => array(),
+
+    'profiler.skip_built_in' => false,
 );
