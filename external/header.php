@@ -43,15 +43,18 @@
  *  Adds more information about function calls (this information is not currently used by XHGui)
  */
 
-/* Tideways support
- * The tideways extension is a fork of xhprof. See https://github.com/tideways/php-profiler-extension
+/* Tideways XHProf support
+ * The tideways_xhprof extension is a fork of xhprof. See https://github.com/tideways/php-profiler-extension
  *
  * It works on PHP 5.5+ and PHP 7 and improves on the ancient timing algorithms used by XHProf using
  * more modern Linux APIs to collect high performance timing data.
  *
- * The TIDEWAYS_* constants are similar to the ones by XHProf, however you need to disable timeline
+ * v4 (tideways): The TIDEWAYS_* constants are similar to the ones by XHProf, however you need to disable timeline
  * mode when using XHGui, because it only supports callgraphs and we can save the overhead. Use
  * TIDEWAYS_FLAGS_NO_SPANS to disable timeline mode.
+ *
+ * v5 (tideways_xhprof): The TIDEWAYS_XHPROF_* constants are similar to the ones by XHProf, however you cannot use
+ * additional TIDEWAYS_XHPROF_FLAGS_MEMORY_* flags since XHGui does not support the extra data that they produce.
  */
 
 // this file should not - under no circumstances - interfere with any other application
@@ -92,19 +95,42 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 
+$skipBuiltIn = Xhgui_Config::read('profiler.skip_built_in');
 $options = Xhgui_Config::read('profiler.options');
+
 if (extension_loaded('uprofiler')) {
-    uprofiler_enable(UPROFILER_FLAGS_CPU | UPROFILER_FLAGS_MEMORY, $options);
-} else if (extension_loaded('tideways')) {
-    tideways_enable(TIDEWAYS_FLAGS_CPU | TIDEWAYS_FLAGS_MEMORY | TIDEWAYS_FLAGS_NO_SPANS, $options);
-} elseif (extension_loaded('tideways_xhprof')) {
-    tideways_xhprof_enable(TIDEWAYS_XHPROF_FLAGS_CPU | TIDEWAYS_XHPROF_FLAGS_MEMORY);
-} else {
-    if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4) {
-        xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY | XHPROF_FLAGS_NO_BUILTINS, $options);
-    } else {
-        xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY, $options);
+    $flags = UPROFILER_FLAGS_CPU | UPROFILER_FLAGS_MEMORY;
+
+    if ($skipBuiltIn) {
+        $flags |= UPROFILER_FLAGS_NO_BUILTINS;
     }
+
+    uprofiler_enable($flags, $options);
+} else if (extension_loaded('tideways')) {
+    $flags = TIDEWAYS_FLAGS_CPU | TIDEWAYS_FLAGS_MEMORY | TIDEWAYS_FLAGS_NO_SPANS;
+
+    if ($skipBuiltIn) {
+        $flags |= TIDEWAYS_FLAGS_NO_BUILTINS;
+    }
+
+    tideways_enable($flags, $options);
+} elseif (extension_loaded('tideways_xhprof')) {
+    $flags = TIDEWAYS_XHPROF_FLAGS_CPU | TIDEWAYS_XHPROF_FLAGS_MEMORY;
+
+    if ($skipBuiltIn) {
+        $flags |= TIDEWAYS_XHPROF_FLAGS_NO_BUILTINS;
+    }
+
+    tideways_xhprof_enable($flags);
+} else {
+    $flags = XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY;
+
+    $isFaulted = (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 4);
+    if ($skipBuiltIn || $isFaulted) {
+        $flags |= XHPROF_FLAGS_NO_BUILTINS;
+    }
+
+    xhprof_enable($flags, $options);
 }
 
 register_shutdown_function(
