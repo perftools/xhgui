@@ -55,7 +55,7 @@ return array(
     //
     // Example (profile all requests):
     //
-    //     'profiler.enabled' => function() {
+    //     'profiler.enable' => function() {
     //         return true;
     //     },
     //
