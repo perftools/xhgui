@@ -2,7 +2,7 @@
 /**
  * Default configuration for XHGui.
  *
- * To change these, create a called `config.php` file in the same directory,
+ * To change these, create a file called `config.php` file in the same directory
  * and return an array from there with your overriding settings.
  */
 
