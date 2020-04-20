@@ -1,6 +1,2 @@
-# general excludes
-/.gitignore export-ignore
-/.gitmodules export-ignore
-
-# maintenance tools
-/.scrutinizer.yml export-ignore
+# Exclude files from git export
+/.* export-ignore
