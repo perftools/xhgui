@@ -17,13 +17,13 @@ return array(
     //     # to reduce locking problems (eg uniqid, time ...)
     //     'save.handler.filename' => __DIR__.'/../data/xhgui_'.date('Ymd').'.dat',
     //
-    'save.handler' => 'mongodb',
+    'save.handler' => getenv('XHGUI_SAVE_HANDLER') ?: 'mongodb',
 
     'pdo' => array(
-        'dsn' => null,
-        'user' => null,
-        'pass' => null,
-        'table' => 'results'
+        'dsn' => getenv('XHGUI_PDO_DSN') ?: null,
+        'user' => getenv('XHGUI_PDO_USER') ?: null,
+        'pass' => getenv('XHGUI_PDO_PASS') ?: null,
+        'table' => getenv('XHGUI_PDO_TABLE') ?: 'results'
     ),
 
     // Database options for MongoDB.
