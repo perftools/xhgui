@@ -30,15 +30,15 @@ return array(
     //'save.handler.upload.timeout' => 3,
 
     // For MongoDB
-    'save.handler' => 'mongodb',
+    'save.handler' => getenv('XHGUI_SAVE_HANDLER') ?: 'mongodb',
     'db.host' => sprintf('mongodb://%s', $mongoUri),
     'db.db' => $mongoDb,
 
     'pdo' => array(
-        'dsn' => 'sqlite:/tmp/xhgui.sqlite3',
-        'user' => null,
-        'pass' => null,
-        'table' => 'results'
+        'dsn' => getenv('XHGUI_PDO_DSN') ?: 'sqlite:/tmp/xhgui.sqlite3',
+        'user' => getenv('XHGUI_PDO_USER') ?: null,
+        'pass' => getenv('XHGUI_PDO_PASS') ?: null,
+        'table' => getenv('XHGUI_PDO_TABLE') ?: 'results'
     ),
 
     // Allows you to pass connection string options like replicaSet to MongoClient.
