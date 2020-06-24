@@ -44,6 +44,7 @@ return array(
         'Zend*',
         'Composer*',
     ),
+    'run.view.exclude_env_vars' => false,
 
     // Whether to instrument a user request.
     //

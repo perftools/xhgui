@@ -125,6 +125,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'memory' => $memoryChart,
             'watches' => $watchedFunctions,
             'date_format' => $this->app->config('date.format'),
+            'exclude_env_vars' => $this->app->config('run.view.exclude_env_vars'),
         ));
     }
 
