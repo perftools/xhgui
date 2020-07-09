@@ -9,6 +9,7 @@
     },
     "require": {
         "php": "^5.6 || ^7.0",
+        "ext-json": "*",
         "slim/slim": "^2.6.3",
         "slim/views": "^0.1.0",
         "twig/twig": "~1.17",
