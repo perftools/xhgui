@@ -100,7 +100,6 @@ class Xhgui_Twig_Extension extends Twig_Extension
 
     public function formatDiff($value)
     {
-        $class = 'diff-same';
         $class = $value > 0 ? 'diff-up' : 'diff-down';
         if ($value == 0) {
             $class = 'diff-same';
