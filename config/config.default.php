@@ -92,6 +92,11 @@ return array(
     // NOTE: Only applies to using the external/header.php include.
     'profiler.skip_built_in' => false,
 
+    // Setup timezone for date formatting
+    // Example: 'UTC', 'Europe/Tallinn'
+    // If left empty, php default will be used (php.ini or compiled in default)
+    'timezone' => '',
+
     // Date format used when browsing XHGui pages.
     //
     // Must be a format supported by the PHP date() function.
