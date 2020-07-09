@@ -124,4 +124,12 @@ interface Xhgui_Searcher_Interface
      * @return void
      */
     public function truncateWatches();
+
+    /**
+     * Return statistics about the size of all profiling data.
+     *
+     * @return array Array of stats.
+     */
+    public function stats();
+
 }

@@ -124,3 +124,8 @@ $app->get('/waterfall', function () use ($di, $app) {
 $app->get('/waterfall/data', function () use ($di) {
     $di['waterfallController']->query();
 })->name('waterfall.data');
+
+// Metrics
+$app->get('/metrics', function () use ($di, $app) {
+    $di['metricsController']->metrics();
+})->name('metrics');

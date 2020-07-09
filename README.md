@@ -235,6 +235,12 @@ Some Notes:
 - The waterfall display is still very much in alpha.
 - Feedback and pull requests are welcome :)
 
+# Monitoring
+
+[Prometheus](https://prometheus.io) metrics suitable for monitoring service
+health are exposed on `/metrics`.  (This currently only works if using PDO for
+storage.)
+
 # Releases / Changelog
 
 See the [releases](https://github.com/perftools/xhgui/releases) for changelogs,

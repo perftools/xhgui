@@ -154,6 +154,10 @@ class Xhgui_ServiceContainer extends Pimple
         $this['importController'] = function ($c) {
             return new Xhgui_Controller_Import($c['app'], $c['saver'], $c['config']['upload.token']);
         };
+
+        $this['metricsController'] = function ($c) {
+            return new Xhgui_Controller_Metrics($c['app'], $c['searcher']);
+        };
     }
 
 }

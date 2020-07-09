@@ -329,4 +329,16 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
         }
         return $results;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function stats()
+    {
+        return [
+            'profiles' => 0,
+            'latest'   => 0,
+            'bytes'    => 0,
+        ];
+    }
 }

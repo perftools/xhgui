@@ -271,4 +271,30 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
     public function truncateWatches()
     {
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function stats()
+    {
+        $stmt = $this->pdo->query("
+          SELECT
+            COUNT(*) AS profiles,
+            MAX(request_ts) AS latest,
+            SUM(LENGTH(profile)) AS bytes
+          FROM {$this->table}
+        ", PDO::FETCH_ASSOC);
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (false === $row) {
+            $row = [
+                'profiles' => 0,
+                'latest'   => 0,
+                'bytes'    => 0,
+            ];
+        }
+
+        return $row;
+    }
 }
