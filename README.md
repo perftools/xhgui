@@ -6,6 +6,10 @@
 This is a small standalone module which you can use to collect and store
 [XHProf][1] performance data for later usage in [XHGUI][2].
 
+NOTE: This package is being phased out, in new installatons, use [perftools/php-profiler] package.
+
+[perftools/php-profiler]: https://github.com/perftools/php-profiler
+
 ## Goals
  - Compatibility with PHP >= 5.3.0
  - No dependencies aside from the relevant extensions
