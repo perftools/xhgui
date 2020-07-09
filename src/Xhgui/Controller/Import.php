@@ -1,5 +1,6 @@
 <?php
 
+use Slim\Http\Request;
 use Slim\Slim;
 
 class Xhgui_Controller_Import extends Xhgui_Controller
@@ -9,10 +10,14 @@ class Xhgui_Controller_Import extends Xhgui_Controller
      */
     private $saver;
 
-    public function __construct(Slim $app, Xhgui_Saver_Interface $saver)
+    /** @var string */
+    private $token;
+
+    public function __construct(Slim $app, Xhgui_Saver_Interface $saver, $token)
     {
         parent::__construct($app);
         $this->saver = $saver;
+        $this->token = $token;
     }
 
     public function import()
@@ -20,10 +25,26 @@ class Xhgui_Controller_Import extends Xhgui_Controller
         $request = $this->app->request();
         $response = $this->app->response();
 
-        $data = json_decode($request->getBody(), true);
-        $this->saver->save($data);
+        try {
+            $this->runImport($request);
+            $result = ['ok' => true];
+        } catch (Exception $e) {
+            $result = ['error' => true, 'message' => $e->getMessage()];
+        }
 
         $response['Content-Type'] = 'application/json';
-        $response->body(json_encode(['ok' => true]));
+        $response->body(json_encode($result));
+    }
+
+    private function runImport(Request $request)
+    {
+        if ($this->token) {
+            if ($this->token !== $request->get('token')) {
+                throw new RuntimeException('Token validation failed');
+            }
+        }
+
+        $data = json_decode($request->getBody(), true);
+        $this->saver->save($data);
     }
 }

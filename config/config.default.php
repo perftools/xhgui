@@ -26,6 +26,9 @@ return array(
         'table' => getenv('XHGUI_PDO_TABLE') ?: 'results'
     ),
 
+    // If defined, add imports via upload (/run/import) must pass token parameter with this value
+    'upload.token' => getenv('XHGUI_UPLOAD_TOKEN') ?: '',
+
     // Database options for MongoDB.
     //
     // - db.host: Connection string in the form `mongodb://[ip or host]:[port]`.
