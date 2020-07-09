@@ -83,10 +83,10 @@ $app->get('/run/callgraph/dot', function () use ($di, $app) {
 
 // Import route
 $app->post('/run/import', function () use ($di, $app) {
-    $app->controller = $di['importController'];
-    $app->controller->import();
+    /** @var Xhgui_Controller_Import $controller */
+    $controller = $di['importController'];
+    $controller->import();
 })->name('run.import');
-
 
 // Watch function routes.
 $app->get('/watch', function () use ($di, $app) {
