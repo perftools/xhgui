@@ -27,7 +27,7 @@ class Xhgui_Controller_Import extends Xhgui_Controller
 
         try {
             $this->runImport($request);
-            $result = ['ok' => true];
+            $result = ['ok' => true, 'size' => $request->getContentLength()];
         } catch (Exception $e) {
             $result = ['error' => true, 'message' => $e->getMessage()];
         }
