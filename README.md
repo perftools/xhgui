@@ -315,7 +315,7 @@ extension="/path/to/tideways/tideways_xhprof.so"
 
 # Releases / Changelog
 
-See the [releases](https://github.com/preinheimer/xhgui/releases) for changelogs,
+See the [releases](https://github.com/perftools/xhgui/releases) for changelogs,
 and release information.
 
 # License
