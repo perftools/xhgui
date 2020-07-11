@@ -1,13 +1,11 @@
 # xhgui
 
-A graphical interface for XHProf data that can store data in MongoDB or PDO database.
+A graphical interface for XHProf profiling data that can store the results in MongoDB or PDO database.
 
-This tool requires that [XHProf](http://pecl.php.net/package/xhprof) or its one
-of its forks [Uprofiler](https://github.com/FriendsOfPHP/uprofiler),
-[Tideways](https://github.com/tideways/php-profiler-extension) are installed.
-XHProf is a PHP Extension that records and provides profiling data.
-XHGui (this tool) takes that information, saves it in MongoDB, and provides
-a convenient GUI for working with it.
+Application is [profiled](#profiling-a-web-request-or-cli-script) and the
+profiling data is transferred to XHGui, which takes that information, saves it
+in MongoDB (or PDO database), and provides a convenient GUI for working with
+it.
 
 [![Build Status](https://travis-ci.org/perftools/xhgui.svg?branch=master)](https://travis-ci.org/perftools/xhgui)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/perftools/xhgui/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/perftools/xhgui/?branch=master)
@@ -18,12 +16,37 @@ a convenient GUI for working with it.
 XHGui has the following requirements:
 
 - PHP version 5.6 up to 7.3.
-- [MongoDB Extension](http://pecl.php.net/package/mongodb) MongoDB PHP driver.
-  XHGui requires verison 1.3.0 or later.
-- [MongoDB](http://www.mongodb.org/) MongoDB Itself. XHGui requires version 2.2.0 or later.
+- If using MongoDB storage, see [MongoDB](#MongoDB) requirements
+- If using PDO storage, see [PDO](#PDO) requirements
 - To profile an application, one of the profiling PHP extensions is required.
   See [Profiling a Web Request or CLI script](#profiling-a-web-request-or-cli-script).
   The extension is not needed to run XHGui itself.
+
+## MongoDB
+
+The default installation uses MongoDB database. Most of the documentation speaks about MongoDB.
+
+- [MongoDB Extension][ext-mongodb] MongoDB PHP driver.
+  XHGui requires verison 1.3.0 or later.
+- [MongoDB][mongodb] MongoDB Itself. XHGui requires version 2.2.0 or later.
+
+[ext-mongodb]: https://pecl.php.net/package/mongodb
+[mongodb]: https://www.mongodb.com/
+
+## PDO
+
+- [PDO][ext-pdo] PHP extension
+
+Any of the drivers and accompanying database:
+
+- [SQLite (PDO)][ext-pdo_sqlite]
+- [MySQL (PDO)][ext-pdo_mysql]
+- [PostgreSQL (PDO)][ext-pdo_pgsql]
+
+[ext-pdo]: https://www.php.net/manual/en/book.pdo.php
+[ext-pdo_sqlite]: https://www.php.net/manual/en/ref.pdo-sqlite.php
+[ext-pdo_mysql]: https://www.php.net/manual/en/ref.pdo-mysql.php
+[ext-pdo_pgsql]: https://www.php.net/manual/en/ref.pdo-pgsql.php
 
 # Installation from source
 
