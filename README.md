@@ -233,38 +233,28 @@ you can make use of the `profiler.skip_built_in` option.
 
 # Profiling a Web Request or CLI script
 
-The recommended way of profile is to use [perftools/php-profiler] package.
+The recommended way tho profile an application is to use [perftools/php-profiler] package.
 
-You can use it to collect data from your web applications and CLI scripts.
-This data is then pushed into XHGUIs's database where it can be viewed with this application.
+You can use that package to collect data from your web applications and CLI
+scripts.
 
-[perftools/php-profiler]: https://github.com/perftools/php-profiler
+This data is then pushed into XHGUI database where it can be viewed with this
+application.
 
-## Saving & Importing Profiles
+It offers submitting data directly to XHGui instance once the profiling is
+complete at the end of the request.
 
-If your site cannot directly connect to your MongoDB instance, you can choose
-to save your data to a temporary file for a later import to XHGui's MongoDB
-database.
-
-To configure XHGui to save your data to a temporary file,
-change the `save.handler` setting to `file` and define your file's
-path with `save.handler.filename`.
-
-To import a saved file to MongoDB use XHGui's provided
-`external/import.php` script.
-
-Be aware of file locking: depending on your workload, you may need to
-change the `save.handler.filename` file path to avoid file locking
-during the import.
-
-The following demonstrate the use of `external/import.php`:
+If the site cannot directly connect to XGHui instance, the package offers
+solution to capture profiling data to file which you can import using
+`external/import.php` script:
 
 ```bash
-php external/import.php -f /path/to/file
+php external/import.php -f /path/to/jsonlinesfile.jsonl
 ```
 
-**Warning**: Importing the same file twice will load twice the run datas inside
-MongoDB, resulting in duplicate profiles
+**Warning**: Importing the same file twice will create duplicate profiles.
+
+[perftools/php-profiler]: https://github.com/perftools/php-profiler
 
 ## Limiting MongoDB Disk Usage
 
