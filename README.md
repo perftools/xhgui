@@ -1,6 +1,6 @@
 # xhgui
 
-A graphical interface for XHProf data built on MongoDB.
+A graphical interface for XHProf data that can store data in MongoDB or PDO database.
 
 This tool requires that [XHProf](http://pecl.php.net/package/xhprof) or its one
 of its forks [Uprofiler](https://github.com/FriendsOfPHP/uprofiler),
