@@ -44,6 +44,10 @@ class Xhgui_ServiceContainer extends Pimple
         };
 
         $this['app'] = $this->share(function ($c) {
+            if ($c['config']['timezone']) {
+                date_default_timezone_set($c['config']['timezone']);
+            }
+
             $app = new Slim($c['config']);
 
             // Enable cookie based sessions
