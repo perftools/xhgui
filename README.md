@@ -21,9 +21,9 @@ XHGui has the following requirements:
 - [MongoDB Extension](http://pecl.php.net/package/mongodb) MongoDB PHP driver.
   XHGui requires verison 1.3.0 or later.
 - [MongoDB](http://www.mongodb.org/) MongoDB Itself. XHGui requires version 2.2.0 or later.
-- One of [XHProf](http://pecl.php.net/package/xhprof),
-  [Uprofiler](https://github.com/FriendsOfPHP/uprofiler) or
-  [Tideways](https://github.com/tideways/php-profiler-extension) to actually profile the data.
+- To profile an application, one of the profiling PHP extensions is required.
+  See [Profiling a Web Request or CLI script](#profiling-a-web-request-or-cli-script).
+  The extension is not needed to run XHGui itself.
 - [dom](http://php.net/manual/en/book.dom.php) If you are running the tests
   you'll need the DOM extension (which is a dependency of PHPUnit).
 
@@ -293,18 +293,6 @@ Some Notes:
   granularity doesn't work well with waterfalls.
 - The waterfall display is still very much in alpha.
 - Feedback and pull requests are welcome :)
-
-# Using Tideways Extension
-
-The XHProf PHP extension is not compatible with PHP7.0+. Instead you'll need to
-use the [tideways_xhprof extension](https://github.com/tideways/php-profiler-extension).
-
-Once installed, you can use the following configuration data:
-
-```ini
-[tideways_xhprof]
-extension="/path/to/tideways/tideways_xhprof.so"
-```
 
 # Releases / Changelog
 
