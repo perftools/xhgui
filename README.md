@@ -233,9 +233,12 @@ you can make use of the `profiler.skip_built_in` option.
 
 # Profiling a Web Request or CLI script
 
-Using [xhgui-collector](https://github.com/perftools/xhgui-collector) you can
-collect data from your web applications and CLI scripts. This data is then
-pushed into xhgui's database where it can be viewed with this application.
+The recommended way of profile is to use [perftools/php-profiler] package.
+
+You can use it to collect data from your web applications and CLI scripts.
+This data is then pushed into XHGUIs's database where it can be viewed with this application.
+
+[perftools/php-profiler]: https://github.com/perftools/php-profiler
 
 ## Saving & Importing Profiles
 
