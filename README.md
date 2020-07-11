@@ -24,8 +24,6 @@ XHGui has the following requirements:
 - To profile an application, one of the profiling PHP extensions is required.
   See [Profiling a Web Request or CLI script](#profiling-a-web-request-or-cli-script).
   The extension is not needed to run XHGui itself.
-- [dom](http://php.net/manual/en/book.dom.php) If you are running the tests
-  you'll need the DOM extension (which is a dependency of PHPUnit).
 
 # Installation from source
 
