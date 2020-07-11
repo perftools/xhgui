@@ -1,5 +1,4 @@
-xhgui
-=====
+# xhgui
 
 A graphical interface for XHProf data built on MongoDB.
 
@@ -14,24 +13,21 @@ a convenient GUI for working with it.
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/perftools/xhgui/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/perftools/xhgui/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/perftools/xhgui/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/perftools/xhgui/?branch=master)
 
-System Requirements
-===================
+# System Requirements
 
 XHGui has the following requirements:
 
- * PHP version 5.6 up to 7.3.
- * [MongoDB Extension](http://pecl.php.net/package/mongodb) MongoDB PHP driver.
-   XHGui requires verison 1.3.0 or later.
- * [MongoDB](http://www.mongodb.org/) MongoDB Itself. XHGui requires version 2.2.0 or later.
- * One of [XHProf](http://pecl.php.net/package/xhprof),
-   [Uprofiler](https://github.com/FriendsOfPHP/uprofiler) or
-   [Tideways](https://github.com/tideways/php-profiler-extension) to actually profile the data.
- * [dom](http://php.net/manual/en/book.dom.php) If you are running the tests
-   you'll need the DOM extension (which is a dependency of PHPUnit).
+- PHP version 5.6 up to 7.3.
+- [MongoDB Extension](http://pecl.php.net/package/mongodb) MongoDB PHP driver.
+  XHGui requires verison 1.3.0 or later.
+- [MongoDB](http://www.mongodb.org/) MongoDB Itself. XHGui requires version 2.2.0 or later.
+- One of [XHProf](http://pecl.php.net/package/xhprof),
+  [Uprofiler](https://github.com/FriendsOfPHP/uprofiler) or
+  [Tideways](https://github.com/tideways/php-profiler-extension) to actually profile the data.
+- [dom](http://php.net/manual/en/book.dom.php) If you are running the tests
+  you'll need the DOM extension (which is a dependency of PHPUnit).
 
-
-Installation from source
-========================
+# Installation from source
 
 1. Clone or download `xhgui` from GitHub.
 
@@ -85,8 +81,7 @@ Installation from source
 8. Set up your webserver. The Configuration section below describes how
    to setup the rewrite rules for both nginx and apache.
 
-Installation with Docker
-========================
+# Installation with Docker
 
 This setup uses [docker-compose] to orchestrate docker containers.
 
@@ -102,11 +97,9 @@ This setup uses [docker-compose] to orchestrate docker containers.
 
 [docker-compose]: https://docs.docker.com/compose/
 
-Configuration
-=============
+# Configuration
 
-Configure Webserver Re-Write Rules
-----------------------------------
+## Configure Webserver Re-Write Rules
 
 XHGui prefers to have URL rewriting enabled, but will work without it.
 For Apache, you can do the following to enable URL rewriting:
@@ -114,20 +107,22 @@ For Apache, you can do the following to enable URL rewriting:
 1. Make sure that an .htaccess override is allowed and that AllowOverride
    has the directive FileInfo set for the correct DocumentRoot.
 
-    Example configuration for Apache 2.4:
-    ```apache
-    <Directory /var/www/xhgui/>
-        Options Indexes FollowSymLinks
-        AllowOverride FileInfo
-        Require all granted
-    </Directory>
-    ```
+   Example configuration for Apache 2.4:
+
+   ```apache
+   <Directory /var/www/xhgui/>
+       Options Indexes FollowSymLinks
+       AllowOverride FileInfo
+       Require all granted
+   </Directory>
+   ```
+
 2. Make sure you are loading up mod_rewrite correctly.
    You should see something like:
 
-    ```apache
-    LoadModule rewrite_module libexec/apache2/mod_rewrite.so
-    ```
+   ```apache
+   LoadModule rewrite_module libexec/apache2/mod_rewrite.so
+   ```
 
 3. XHGui comes with a `.htaccess` file to enable the remaining rewrite rules.
 
@@ -156,9 +151,7 @@ server {
 }
 ```
 
-
-Configure XHGui Profiling Rate
--------------------------------
+## Configure XHGui Profiling Rate
 
 After installing XHGui, you may want to change how frequently you
 profile the host application. The `profiler.enable` configuration option
@@ -185,7 +178,7 @@ return array(
 );
 ```
 
-In contrast, the following example configured XHGui to profile *every*
+In contrast, the following example configured XHGui to profile _every_
 request:
 
 ```php
@@ -198,9 +191,7 @@ return array(
 );
 ```
 
-
-Configure 'Simple' URLs Creation
---------------------------------
+## Configure 'Simple' URLs Creation
 
 XHGui generates 'simple' URLs for each profile collected. These URLs are
 used to generate the aggregate data used on the URL view. Since
@@ -221,8 +212,7 @@ return array(
 
 The URL argument is the `REQUEST_URI` or `argv` value.
 
-Configure ignored functions
----------------------------
+## Configure ignored functions
 
 You can use the `profiler.options` configuration value to set additional options
 for the profiler extension. This is useful when you want to exclude specific
@@ -241,15 +231,13 @@ return array(
 In addition, if you do not want to profile all PHP built-in functions,
 you can make use of the `profiler.skip_built_in` option.
 
-Profiling a Web Request or CLI script
-=====================================
+# Profiling a Web Request or CLI script
 
 Using [xhgui-collector](https://github.com/perftools/xhgui-collector) you can
 collect data from your web applications and CLI scripts. This data is then
 pushed into xhgui's database where it can be viewed with this application.
 
-Saving & Importing Profiles
----------------------------
+## Saving & Importing Profiles
 
 If your site cannot directly connect to your MongoDB instance, you can choose
 to save your data to a temporary file for a later import to XHGui's MongoDB
@@ -275,9 +263,7 @@ php external/import.php -f /path/to/file
 **Warning**: Importing the same file twice will load twice the run datas inside
 MongoDB, resulting in duplicate profiles
 
-
-Limiting MongoDB Disk Usage
----------------------------
+## Limiting MongoDB Disk Usage
 
 Disk usage can grow quickly, especially when profiling applications with large
 code bases or that use larger frameworks.
@@ -298,8 +284,7 @@ $ mongo
 > db.results.ensureIndex( { "meta.request_ts" : 1 }, { expireAfterSeconds : 432000 } )
 ```
 
-Waterfall Display
------------------
+## Waterfall Display
 
 The goal of XHGui's waterfall display is to recognize that concurrent requests can
 affect each other. Concurrent database requests, CPU-intensive
@@ -310,14 +295,13 @@ profiling a sample of requests, the waterfall fills you with impolite lies.
 
 Some Notes:
 
- * There should probably be more indexes on MongoDB for this to be performant.
- * The waterfall display introduces storage of a new `request_ts_micro` value, as second level
-   granularity doesn't work well with waterfalls.
- * The waterfall display is still very much in alpha.
- * Feedback and pull requests are welcome :)
+- There should probably be more indexes on MongoDB for this to be performant.
+- The waterfall display introduces storage of a new `request_ts_micro` value, as second level
+  granularity doesn't work well with waterfalls.
+- The waterfall display is still very much in alpha.
+- Feedback and pull requests are welcome :)
 
-Using Tideways Extension
-========================
+# Using Tideways Extension
 
 The XHProf PHP extension is not compatible with PHP7.0+. Instead you'll need to
 use the [tideways_xhprof extension](https://github.com/tideways/php-profiler-extension).
@@ -329,14 +313,12 @@ Once installed, you can use the following configuration data:
 extension="/path/to/tideways/tideways_xhprof.so"
 ```
 
-Releases / Changelog
-====================
+# Releases / Changelog
 
 See the [releases](https://github.com/preinheimer/xhgui/releases) for changelogs,
 and release information.
 
-License
-=======
+# License
 
 Copyright (c) 2013 Mark Story & Paul Reinheimer
 
