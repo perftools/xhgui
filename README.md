@@ -172,27 +172,6 @@ server {
 }
 ```
 
-## Configure 'Simple' URLs Creation
-
-XHGui generates 'simple' URLs for each profile collected. These URLs are
-used to generate the aggregate data used on the URL view. Since
-different applications have different requirements for how URLs map to
-logical blocks of code, the `profile.simple_url` configuration option
-allows you to provide specify the logic used to generate the simple URL.
-By default, all numeric values in the query string are removed.
-
-```php
-// In config/config.php
-return array(
-    // Other config
-    'profile.simple_url' => function($url) {
-        // Your code goes here.
-    }
-);
-```
-
-The URL argument is the `REQUEST_URI` or `argv` value.
-
 ## Configure ignored functions
 
 You can use the `profiler.options` configuration value to set additional options
