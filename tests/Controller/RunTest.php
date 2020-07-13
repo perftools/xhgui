@@ -44,9 +44,9 @@ class RunTest extends TestCase
         $this->import = $di['importController'];
         $this->runs = $di['runController'];
         $this->app = $di['app'];
-        $this->profiles = $di['searcher.mongo'];
+        $this->profiles = $di['searcher'];
         $this->profiles->truncate();
-        $this->saver = $di['saver.mongo'];
+        $this->saver = $di['saver'];
     }
 
     public function testIndexEmpty()

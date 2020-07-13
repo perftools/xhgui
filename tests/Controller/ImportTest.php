@@ -35,7 +35,7 @@ class ImportTest extends TestCase
         $this->import = $di['importController'];
         $this->app = $di['app'];
 
-        $this->profiles = $di['searcher.mongo'];
+        $this->profiles = $di['searcher'];
         $this->profiles->truncate();
     }
 
