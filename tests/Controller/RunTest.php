@@ -2,6 +2,7 @@
 
 namespace XHGui\Test\Controller;
 
+use Slim\Slim;
 use Slim\Environment;
 use XHGui\Test\TestCase;
 use Xhgui_Controller_Import;
@@ -32,7 +33,7 @@ class RunTest extends TestCase
         ));
 
         $di = Xhgui_ServiceContainer::instance();
-        $mock = $this->getMockBuilder('Slim\Slim')
+        $mock = $this->getMockBuilder(Slim::class)
             ->setMethods(array('redirect', 'render', 'urlFor'))
             ->setConstructorArgs(array($di['config']))
             ->getMock();

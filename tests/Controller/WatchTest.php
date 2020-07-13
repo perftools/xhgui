@@ -7,6 +7,7 @@ use XHGui\Test\TestCase;
 use Xhgui_Controller_Watch;
 use Xhgui_Searcher_Interface;
 use Xhgui_ServiceContainer;
+use Slim\Slim;
 
 class WatchTest extends TestCase
 {
@@ -27,7 +28,7 @@ class WatchTest extends TestCase
         $di = Xhgui_ServiceContainer::instance();
         unset($di['app']);
 
-        $mock = $this->getMockBuilder('Slim\Slim')
+        $mock = $this->getMockBuilder(Slim::class)
             ->setMethods(array('redirect', 'render', 'urlFor'))
             ->setConstructorArgs(array($di['config']))
             ->getMock();
