@@ -172,25 +172,6 @@ server {
 }
 ```
 
-## Configure ignored functions
-
-You can use the `profiler.options` configuration value to set additional options
-for the profiler extension. This is useful when you want to exclude specific
-functions from your profiler data:
-
-```php
-// In config/config.php
-return array(
-    //Other config
-    'profiler.options' => [
-        'ignored_functions' => ['call_user_func', 'call_user_func_array']
-    ]
-);
-```
-
-In addition, if you do not want to profile all PHP built-in functions,
-you can make use of the `profiler.skip_built_in` option.
-
 # Profiling a Web Request or CLI script
 
 The recommended way tho profile an application is to use [perftools/php-profiler] package.
