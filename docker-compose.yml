@@ -11,7 +11,7 @@ services:
       - XHGUI_MONGO_DATABASE=xhprof
 
   web:
-    image: nginx:1
+    image: nginx:1-alpine
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - webroot-share:/var/www/xhgui/webroot
