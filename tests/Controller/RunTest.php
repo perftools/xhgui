@@ -4,10 +4,25 @@ namespace XHGui\Test\Controller;
 
 use Slim\Environment;
 use XHGui\Test\TestCase;
+use Xhgui_Controller_Import;
+use Xhgui_Controller_Run;
+use Xhgui_Saver_Mongo;
+use Xhgui_Searcher_Mongo;
 use Xhgui_ServiceContainer;
 
 class RunTest extends TestCase
 {
+    /** @var Xhgui_Controller_Run */
+    private $runs;
+    /** @var Xhgui_Saver_Mongo */
+    private $saver;
+    /** @var Slim */
+    private $app;
+    /** @var Xhgui_Searcher_Mongo */
+    private $profiles;
+    /** @var Xhgui_Controller_Import */
+    private $import;
+
     public function setUp()
     {
         parent::setUp();

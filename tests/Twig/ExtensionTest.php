@@ -9,11 +9,14 @@ use Xhgui_Twig_Extension;
 
 class ExtensionTest extends TestCase
 {
+    /** @var Xhgui_Twig_Extension */
+    private $ext;
+
     public function setUp()
     {
         parent::setUp();
         $app = new Slim();
-        $app->get('/test', function () {})->name('test');
+        $app->get('/test', static function () {})->name('test');
         $this->ext = new Xhgui_Twig_Extension($app);
     }
 

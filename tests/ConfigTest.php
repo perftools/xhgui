@@ -37,5 +37,4 @@ class ConfigTest extends TestCase
         $this->assertNull(Xhgui_Config::clear());
         $this->assertNull(Xhgui_Config::read('test'));
     }
-
 }

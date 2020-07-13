@@ -2,13 +2,19 @@
 
 namespace XHGui\Test\Controller;
 
+use Slim\Slim;
 use Slim\Environment;
 use XHGui\Test\TestCase;
+use Xhgui_Controller_Import;
 use Xhgui_Profile;
 use Xhgui_ServiceContainer;
 
 class ImportTest extends TestCase
 {
+    private $profiles;
+    /** @var Xhgui_Controller_Import */
+    private $import;
+
     public function setUp()
     {
         parent::setUp();
@@ -18,12 +24,12 @@ class ImportTest extends TestCase
         ));
 
         $di = Xhgui_ServiceContainer::instance();
-        $mock = $this->getMockBuilder('Slim\Slim')
+        $mock = $this->getMockBuilder(Slim::class)
             ->setMethods(array('redirect', 'render', 'urlFor'))
             ->setConstructorArgs(array($di['config']))
             ->getMock();
 
-        $di['app'] = $di->share(function ($c) use ($mock) {
+        $di['app'] = $di->share(static function ($c) use ($mock) {
             return $mock;
         });
         $this->import = $di['importController'];

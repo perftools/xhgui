@@ -4,10 +4,19 @@ namespace XHGui\Test\Controller;
 
 use Slim\Environment;
 use XHGui\Test\TestCase;
+use Xhgui_Controller_Watch;
+use Xhgui_Searcher_Interface;
 use Xhgui_ServiceContainer;
 
 class WatchTest extends TestCase
 {
+    /** @var Xhgui_Controller_Watch */
+    private $watches;
+    /** @var Slim */
+    private $app;
+    /** @var Xhgui_Searcher_Interface */
+    private $searcher;
+
     public function setUp()
     {
         parent::setUp();

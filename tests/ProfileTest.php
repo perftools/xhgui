@@ -6,11 +6,13 @@ use Xhgui_Profile;
 
 class ProfileTest extends TestCase
 {
+    private $fixture;
+
     public function setUp()
     {
         parent::setUp();
         $contents = file_get_contents(XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
-        $this->_fixture = json_decode($contents, true);
+        $this->fixture = json_decode($contents, true);
     }
 
     public function testProcessIncompleteData()
@@ -180,7 +182,7 @@ class ProfileTest extends TestCase
 
     public function testGet()
     {
-        $fixture = $this->_fixture[0];
+        $fixture = $this->fixture[0];
         $profile = new Xhgui_Profile($fixture);
         $this->assertEquals($fixture['profile']['main()']['wt'], $profile->get('main()', 'wt'));
 
@@ -195,7 +197,7 @@ class ProfileTest extends TestCase
 
     public function testGetMeta()
     {
-        $fixture = $this->_fixture[0];
+        $fixture = $this->fixture[0];
         $profile = new Xhgui_Profile($fixture);
 
         $this->assertEquals($fixture['meta'], $profile->getMeta());
@@ -209,7 +211,7 @@ class ProfileTest extends TestCase
 
     public function testExtractDimension()
     {
-        $profile = new Xhgui_Profile($this->_fixture[0]);
+        $profile = new Xhgui_Profile($this->fixture[0]);
         $result = $profile->extractDimension('mu', 1);
 
         $this->assertCount(1, $result);
@@ -222,7 +224,7 @@ class ProfileTest extends TestCase
 
     public function testCalculateSelf()
     {
-        $profile = new Xhgui_Profile($this->_fixture[1]);
+        $profile = new Xhgui_Profile($this->fixture[1]);
         $result = $profile->calculateSelf()->getProfile();
 
         $main = $result['main()'];
@@ -263,7 +265,7 @@ class ProfileTest extends TestCase
 
     public function testGetWatched()
     {
-        $fixture = $this->_fixture[0];
+        $fixture = $this->fixture[0];
         $profile = new Xhgui_Profile($fixture);
         $data = $profile->getProfile();
 
@@ -290,7 +292,7 @@ class ProfileTest extends TestCase
 
     public function testGetFunctionCount()
     {
-        $fixture = $this->_fixture[0];
+        $fixture = $this->fixture[0];
         $profile = new Xhgui_Profile($fixture);
 
         $this->assertEquals(11, $profile->getFunctionCount());
@@ -298,7 +300,7 @@ class ProfileTest extends TestCase
 
     public function testCompareAllTheSame()
     {
-        $fixture = $this->_fixture[0];
+        $fixture = $this->fixture[0];
         $base = new Xhgui_Profile($fixture);
         $head = new Xhgui_Profile($fixture);
 
@@ -319,9 +321,9 @@ class ProfileTest extends TestCase
 
     public function testCompareWithDifferences()
     {
-        $fixture = $this->_fixture[0];
-        $base = new Xhgui_Profile($this->_fixture[3]);
-        $head = new Xhgui_Profile($this->_fixture[4]);
+        $fixture = $this->fixture[0];
+        $base = new Xhgui_Profile($this->fixture[3]);
+        $head = new Xhgui_Profile($this->fixture[4]);
         $result = $base->compare($head);
 
         $this->assertEquals(0, $result['diff']['main()']['ct']);
@@ -342,7 +344,7 @@ class ProfileTest extends TestCase
 
     public function testGetCallgraph()
     {
-        $profile = new Xhgui_Profile($this->_fixture[1]);
+        $profile = new Xhgui_Profile($this->fixture[1]);
 
         $expected = array(
             'metric' => 'wt',
@@ -418,7 +420,7 @@ class ProfileTest extends TestCase
 
     public function testGetCallgraphNoDuplicates()
     {
-        $profile = new Xhgui_Profile($this->_fixture[2]);
+        $profile = new Xhgui_Profile($this->fixture[2]);
 
         $expected = array(
             'metric' => 'wt',

@@ -10,6 +10,9 @@ use Xhgui_Db_Mapper;
 
 class MapperTest extends TestCase
 {
+    /** @var Xhgui_Db_Mapper */
+    private $mapper;
+
     public function setUp()
     {
         parent::setUp();
