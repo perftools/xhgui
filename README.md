@@ -219,7 +219,7 @@ The recommended way tho profile an application is to use [perftools/php-profiler
 You can use that package to collect data from your web applications and CLI
 scripts.
 
-This data is then pushed into XHGUI database where it can be viewed with this
+This data is then pushed into XHGui database where it can be viewed with this
 application.
 
 It offers submitting data directly to XHGui instance once the profiling is
