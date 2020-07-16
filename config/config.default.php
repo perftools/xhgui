@@ -29,6 +29,10 @@ return array(
     // If defined, add imports via upload (/run/import) must pass token parameter with this value
     'upload.token' => getenv('XHGUI_UPLOAD_TOKEN') ?: '',
 
+    // Add this path prefix to all links and resources
+    // If this is not defined, auto-detection will try to find it itself
+    'path.prefix' => null,
+
     // Database options for MongoDB.
     //
     // - db.host: Connection string in the form `mongodb://[ip or host]:[port]`.
