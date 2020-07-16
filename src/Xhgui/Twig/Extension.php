@@ -37,15 +37,6 @@ class Xhgui_Twig_Extension extends Twig_Extension
         );
     }
 
-    protected function _getBase()
-    {
-        $base = dirname($_SERVER['PHP_SELF']);
-        if ($base == '/') {
-            return '';
-        }
-        return $base;
-    }
-
     public function truncate($input, $length = 50)
     {
         if (strlen($input) < $length) {
