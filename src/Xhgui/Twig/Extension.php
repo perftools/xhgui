@@ -1,12 +1,22 @@
 <?php
 
+use Slim\Router;
+use Slim\Slim;
+
 class Xhgui_Twig_Extension extends Twig_Extension
 {
+    /** @var Slim */
     protected $_app;
+    /** @var Router */
+    private $router;
+    /** @var string */
+    private $pathPrefix;
 
-    public function __construct($app)
+    public function __construct(Slim $app)
     {
         $this->_app = $app;
+        $this->router = $app->router();
+        $this->pathPrefix = $app->config('path.prefix');
     }
 
     public function getName()
@@ -37,15 +47,6 @@ class Xhgui_Twig_Extension extends Twig_Extension
         );
     }
 
-    protected function _getBase()
-    {
-        $base = dirname($_SERVER['PHP_SELF']);
-        if ($base == '/') {
-            return '';
-        }
-        return $base;
-    }
-
     public function truncate($input, $length = 50)
     {
         if (strlen($input) < $length) {
@@ -57,8 +58,8 @@ class Xhgui_Twig_Extension extends Twig_Extension
     /**
      * Get a URL for xhgui.
      *
-     * @param string $path The file/path you want a link to
-     * @param array $queryarg Additional querystring arguments.
+     * @param string $name The file/path you want a link to
+     * @param array $queryargs Additional querystring arguments.
      * @return string url.
      */
     public function url($name, $queryargs = array())
@@ -67,7 +68,11 @@ class Xhgui_Twig_Extension extends Twig_Extension
         if (!empty($queryargs)) {
             $query = '?' . http_build_query($queryargs);
         }
-        return $this->_app->urlFor($name)  . $query;
+
+        // this is copy of \Slim\Slim::urlFor() to mix path prefix in
+        // \Slim\Slim::urlFor
+
+        return rtrim($this->pathPrefix(), '/') . $this->router->urlFor($name) . $query;
     }
 
     /**
@@ -76,16 +81,11 @@ class Xhgui_Twig_Extension extends Twig_Extension
      * @param string $path The file/path you want a link to
      * @return string url.
      */
-    public function staticUrl($url)
+    public function staticUrl($path)
     {
-        $rootUri = $this->_app->request()->getRootUri();
+        $rootUri = $this->pathPrefix();
 
-        // Get URL part prepending index.php
-        $indexPos = strpos($rootUri, 'index.php');
-        if ($indexPos > 0) {
-            return substr($rootUri, 0, $indexPos) . $url;
-        }
-        return $rootUri . '/' . $url;
+        return rtrim($rootUri, '/') . '/' . $path;
     }
 
     public function formatBytes($value)
@@ -120,5 +120,26 @@ class Xhgui_Twig_Extension extends Twig_Extension
     public function formatPercent($value)
     {
         return number_format((float)$value * 100, 0) . ' <span class="units">%</span>';
+    }
+
+    /**
+     * @return string
+     */
+    private function pathPrefix()
+    {
+        if ($this->pathPrefix !== null) {
+            return $this->pathPrefix;
+        }
+
+        $request = $this->_app->request();
+        $rootUri = $request->getRootUri();
+
+        // Get URL part prepending index.php
+        $indexPos = strpos($rootUri, 'index.php');
+        if ($indexPos > 0) {
+            return substr($rootUri, 0, $indexPos);
+        }
+
+        return $rootUri;
     }
 }
