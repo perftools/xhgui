@@ -1,7 +1,12 @@
 <?php
-use Slim\Environment;
 
-class Controller_RunTest extends PHPUnit\Framework\TestCase
+namespace XHGui\Test\Controller;
+
+use Slim\Environment;
+use XHGui\Test\TestCase;
+use Xhgui_ServiceContainer;
+
+class RunTest extends TestCase
 {
     public function setUp()
     {

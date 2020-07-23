@@ -1,6 +1,14 @@
 <?php
 
-class Db_MapperTest extends PHPUnit\Framework\TestCase
+namespace XHGui\Test\Db;
+
+use DateInterval;
+use DateTime;
+use MongoDate;
+use XHGui\Test\TestCase;
+use Xhgui_Db_Mapper;
+
+class MapperTest extends TestCase
 {
     public function setUp()
     {

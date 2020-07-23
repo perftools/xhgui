@@ -1,6 +1,10 @@
 <?php
 
-class ProfileTest extends PHPUnit\Framework\TestCase
+namespace XHGui\Test;
+
+use Xhgui_Profile;
+
+class ProfileTest extends TestCase
 {
     public function setUp()
     {
@@ -13,8 +17,7 @@ class ProfileTest extends PHPUnit\Framework\TestCase
     {
         $data = array(
             'main()' => array(),
-            'main()==>do_thing()' => array(
-                // empty because of bad extension
+            'main()==>do_thing()' => array(// empty because of bad extension
             ),
             'other_thing()==>do_thing()' => array(
                 'cpu' => 1,

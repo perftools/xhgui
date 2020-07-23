@@ -1,7 +1,13 @@
 <?php
-use Slim\Environment;
 
-class Controller_ImportTest extends PHPUnit\Framework\TestCase
+namespace XHGui\Test\Controller;
+
+use Slim\Environment;
+use XHGui\Test\TestCase;
+use Xhgui_Profile;
+use Xhgui_ServiceContainer;
+
+class ImportTest extends TestCase
 {
     public function setUp()
     {

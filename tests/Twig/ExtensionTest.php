@@ -1,8 +1,13 @@
 <?php
-use Slim\Slim;
-use Slim\Environment;
 
-class Xhgui_Twig_ExtensionTest extends PHPUnit\Framework\TestCase
+namespace XHGui\Test\Twig;
+
+use Slim\Environment;
+use Slim\Slim;
+use XHGui\Test\TestCase;
+use Xhgui_Twig_Extension;
+
+class ExtensionTest extends TestCase
 {
     public function setUp()
     {
@@ -29,7 +34,8 @@ class Xhgui_Twig_ExtensionTest extends PHPUnit\Framework\TestCase
     /**
      * @return array
      */
-    public function makePercentProvider() {
+    public function makePercentProvider()
+    {
         return array(
             array(
                 10,

@@ -1,6 +1,12 @@
 <?php
 
-class Saver_MongoTest extends PHPUnit\Framework\TestCase
+namespace XHGui\Test\Saver;
+
+use MongoCollection;
+use XHGui\Test\TestCase;
+use Xhgui_Saver_Mongo;
+
+class MongoTest extends TestCase
 {
     public function testSave()
     {

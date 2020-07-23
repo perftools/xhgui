@@ -1,6 +1,12 @@
 <?php
 
-class MongoTest extends PHPUnit\Framework\TestCase
+namespace XHGui\Test\Searcher;
+
+use XHGui\Test\TestCase;
+use Xhgui_Searcher_Mongo;
+use Xhgui_ServiceContainer;
+
+class MongoTest extends TestCase
 {
     /**
      * @var Xhgui_Searcher_Mongo
