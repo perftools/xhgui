@@ -88,6 +88,13 @@ $app->post('/run/import', function () use ($di, $app) {
     $controller->import();
 })->name('run.import');
 
+// Export
+$app->get('/export/cachegrind', function () use ($di) {
+    /** @var Xhgui_Controller_Export $controller */
+    $controller = $di['exportController'];
+    $controller->cachegrind();
+})->name('export.cachegrind');
+
 // Watch function routes.
 $app->get('/watch', function () use ($di, $app) {
     $app->controller = $di['watchController'];
