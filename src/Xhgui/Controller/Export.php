@@ -21,13 +21,15 @@ class Xhgui_Controller_Export extends Xhgui_Controller
     public function cachegrind()
     {
         $request = $this->app->request();
+        $id = $request->get('id');
+
+        $profile = $this->searcher->get($id);
+        $output = $this->converter->convertToCachegrind($profile->toArray()['profile']);
+
         $response = $this->app->response();
         $response['Content-Type'] = 'application/octet-stream';
         $response['Cache-Control'] = 'public, max-age=60, must-revalidate';
-
-        $profile = $this->searcher->get($request->get('id'));
-        $output = $this->converter->convertToCachegrind($profile->toArray()['profile']);
-
+        $response['Content-Disposition'] = sprintf('attachment; filename=cachegrind-%s.out', $id);
         $response->body($output);
     }
 }
