@@ -21,6 +21,7 @@
             <li><strong>CPU Time</strong> {{ result.get('main()', 'cpu')|as_time }}</li>
             <li><strong>Memory Usage</strong> {{ result.get('main()', 'mu')|as_bytes }}</li>
             <li><strong>Peak Memory Usage</strong> {{ result.get('main()', 'pmu')|as_bytes }}</li>
+            <li><a href="{{ url('export.cachegrind', {id: result.id|trim }) }}"><strong>Download as Cachegrind</strong></a></li>
 
             <li class="nav-header">GET</li>
             <li>{{ helpers.property_list('GET', result.meta('get')) }}</li>
