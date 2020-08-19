@@ -92,8 +92,8 @@ class Xhgui_ServiceContainer extends Pimple
         $this['pdo'] = $this->share(function ($c) {
             return new PDO(
                 $c['config']['pdo']['dsn'],
-                $c['config']['pdo']['pass'],
-                $c['config']['pdo']['user']
+                $c['config']['pdo']['user'],
+                $c['config']['pdo']['pass']
             );
         });
 
