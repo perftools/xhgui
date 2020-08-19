@@ -25,8 +25,6 @@
         "cover": "phpunit --coverage-clover=unittest-coverage.clover"
     },
     "suggest": {
-        "ext-xhprof": "You need to install either xhprof or uprofiler to use XHGui.",
-        "ext-uprofiler": "You need to install either xhprof or uprofiler to use XHGui.",
         "ext-mongo": "Mongo is needed to store profiler results for PHP < 7.",
         "ext-mongodb": "Mongo is needed to store profiler results for PHP > 7.",
         "alcaeus/mongo-php-adapter": "Mongo PHP Adapter is required for PHP >7 (when using ext-mongodb)"
