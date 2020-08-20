@@ -1,6 +1,6 @@
 {
     "name": "perftools/xhgui",
-    "description": "A web based interface for viewing profile data collected by XHProf.",
+    "description": "A web based interface for viewing profile data collected by XHProf",
     "license": "MIT",
     "autoload": {
         "psr-0": {
@@ -8,7 +8,7 @@
         }
     },
     "require": {
-        "php": "^5.6 || ^7.0",
+        "php": "^7.0",
         "ext-json": "*",
         "slim/slim": "^2.6.3",
         "slim/views": "^0.1.0",
@@ -25,10 +25,7 @@
         "cover": "phpunit --coverage-clover=unittest-coverage.clover"
     },
     "suggest": {
-        "ext-xhprof": "You need to install either xhprof or uprofiler to use XHGui.",
-        "ext-uprofiler": "You need to install either xhprof or uprofiler to use XHGui.",
-        "ext-mongo": "Mongo is needed to store profiler results for PHP < 7.",
-        "ext-mongodb": "Mongo is needed to store profiler results for PHP > 7.",
-        "alcaeus/mongo-php-adapter": "Mongo PHP Adapter is required for PHP >7 (when using ext-mongodb)"
+        "ext-mongodb": "Requried to store profiler results in MongoDB",
+        "alcaeus/mongo-php-adapter": "Required for storing profiler results in MongoDB"
     }
 }
