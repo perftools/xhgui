@@ -28,8 +28,12 @@ class Xhgui_Controller_Import extends Xhgui_Controller
         try {
             $this->runImport($request);
             $result = ['ok' => true, 'size' => $request->getContentLength()];
+        } catch (InvalidArgumentException $e) {
+            $result = ['error' => true, 'message' => $e->getMessage()];
+            $response->setStatus(401);
         } catch (Exception $e) {
             $result = ['error' => true, 'message' => $e->getMessage()];
+            $response->setStatus(500);
         }
 
         $response['Content-Type'] = 'application/json';
@@ -40,7 +44,7 @@ class Xhgui_Controller_Import extends Xhgui_Controller
     {
         if ($this->token) {
             if ($this->token !== $request->get('token')) {
-                throw new RuntimeException('Token validation failed');
+                throw new InvalidArgumentException('Token validation failed');
             }
         }
 
