@@ -146,10 +146,28 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
     {
         $sort = $options['sort'];
         $direction = $options['direction'];
-        $page = $options['page'];
-        $perPage = $options['perPage'];
+        $page = (int)$options['page'];
+        if ($page < 1) {
+            $page = 1;
+        }
+        $perPage = (int)$options['perPage'];
+        $url = $options['conditions']['url'] ?? "";
 
-        $stmt = $this->pdo->query("
+        $stmt = $this->pdo->prepare("
+          SELECT COUNT(*) AS count
+          FROM {$this->table}
+          WHERE simple_url LIKE :url
+        ");
+        $stmt->execute(['url' => '%'.$url.'%']);
+        $totalRows = (int)$stmt->fetchColumn();
+
+        $totalPages = max(ceil($totalRows/$perPage), 1);
+        if ($page > $totalPages) {
+            $page = $totalPages;
+        }
+        $skip = ($page-1) * $perPage;
+
+        $stmt = $this->pdo->prepare("
           SELECT
             id,
             url,
@@ -162,15 +180,18 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
             request_date,
             main_wt,
             main_ct,
-            main_cpu, 
+            main_cpu,
             main_mu,
             main_pmu
           FROM {$this->table}
+          WHERE simple_url LIKE :url
           ORDER BY request_ts DESC
-        ", PDO::FETCH_ASSOC);
+          LIMIT $skip, $perPage
+        ");
+        $stmt->execute(['url' => '%'.$url.'%']);
 
         $results = [];
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $results[] = new Xhgui_Profile([
                 '_id' => $row['id'],
                 'meta' => [
@@ -199,9 +220,9 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
             'results' => $results,
             'sort' => 'meta.request_ts',
             'direction' => 'desc',
-            'page' => 1,
-            'perPage' => count($results),
-            'totalPages' => 1
+            'page' => $page,
+            'perPage' => $perPage,
+            'totalPages' => $totalPages,
         );
     }
 
