@@ -16,8 +16,8 @@ class Xhgui_Profile
     protected $_indexed;
     protected $_visited;
 
-    protected $_keys = array('ct', 'wt', 'cpu', 'mu', 'pmu');
-    protected $_exclusiveKeys = array('ewt', 'ecpu', 'emu', 'epmu');
+    protected $_keys = ['ct', 'wt', 'cpu', 'mu', 'pmu'];
+    protected $_exclusiveKeys = ['ewt', 'ecpu', 'emu', 'epmu'];
     protected $_functionCount;
 
     public function __construct(array $profile, $convert = true)
@@ -45,7 +45,7 @@ class Xhgui_Profile
      */
     protected function _process()
     {
-        $result = array();
+        $result = [];
         foreach ($this->_data['profile'] as $name => $values) {
             list($parent, $func) = $this->splitName($name);
 
@@ -55,7 +55,7 @@ class Xhgui_Profile
                 $result[$func]['parents'][] = $parent;
             } else {
                 $result[$func] = $values;
-                $result[$func]['parents'] = array($parent);
+                $result[$func]['parents'] = [$parent];
             }
 
             // Build the indexed data.
@@ -63,7 +63,7 @@ class Xhgui_Profile
                 $parent = self::NO_PARENT;
             }
             if (!isset($this->_indexed[$parent])) {
-                $this->_indexed[$parent] = array();
+                $this->_indexed[$parent] = [];
             }
             $this->_indexed[$parent][$func] = $values;
         }
@@ -102,7 +102,7 @@ class Xhgui_Profile
 
     protected function _diffPercentKeys($a, $b, $includeSelf = true)
     {
-        $out = array();
+        $out = [];
         $keys = $this->_keys;
         if ($includeSelf) {
             $keys = array_merge($keys, $this->_exclusiveKeys);
@@ -201,9 +201,9 @@ class Xhgui_Profile
         if (isset($this->_collapsed[$pattern])) {
             $data = $this->_collapsed[$pattern];
             $data['function'] = $pattern;
-            return array($data);
+            return [$data];
         }
-        $matches = array();
+        $matches = [];
         $keys = array_keys($this->_collapsed);
         foreach ($keys as $func) {
             if (preg_match('`^' . $pattern . '$`', $func)) {
@@ -233,22 +233,22 @@ class Xhgui_Profile
      */
     public function getRelatives($symbol, $metric = null, $threshold = 0)
     {
-        $parents = array();
+        $parents = [];
 
         // If the function doesn't exist, it won't have parents/children
         if (empty($this->_collapsed[$symbol])) {
-            return array(
-                array(),
-                array(),
-                array(),
-            );
+            return [
+                [],
+                [],
+                [],
+            ];
         }
         $current = $this->_collapsed[$symbol];
         $current['function'] = $symbol;
 
         $parents = $this->_getParents($symbol);
         $children = $this->_getChildren($symbol, $metric, $threshold);
-        return array($parents, $current, $children);
+        return [$parents, $current, $children];
     }
 
     /**
@@ -260,11 +260,11 @@ class Xhgui_Profile
      */
     protected function _getParents($symbol)
     {
-        $parents = array();
+        $parents = [];
         $current = $this->_collapsed[$symbol];
         foreach ($current['parents'] as $parent) {
             if (isset($this->_collapsed[$parent])) {
-                $parents[] = array('function' => $parent) + $this->_collapsed[$parent];
+                $parents[] = ['function' => $parent] + $this->_collapsed[$parent];
             }
         }
         return $parents;
@@ -281,7 +281,7 @@ class Xhgui_Profile
      */
     protected function _getChildren($symbol, $metric = null, $threshold = 0)
     {
-        $children = array();
+        $children = [];
         if (!isset($this->_indexed[$symbol])) {
             return $children;
         }
@@ -301,7 +301,7 @@ class Xhgui_Profile
             ) {
                 continue;
             }
-            $children[] = $data + array('function' => $name);
+            $children[] = $data + ['function' => $name];
         }
         return $children;
     }
@@ -323,12 +323,12 @@ class Xhgui_Profile
     {
         $profile = $this->sort($dimension, $this->_collapsed);
         $slice = array_slice($profile, 0, $limit);
-        $extract = array();
+        $extract = [];
         foreach ($slice as $func => $funcData) {
-            $extract[] = array(
+            $extract[] = [
                 'name' => $func,
                 'value' => $funcData[$dimension]
-            );
+            ];
         }
         return $extract;
     }
@@ -437,7 +437,7 @@ class Xhgui_Profile
         if (isset($a[1])) {
             return $a;
         }
-        return array(null, $a[0]);
+        return [null, $a[0]];
     }
 
     /**
@@ -472,8 +472,8 @@ class Xhgui_Profile
         $keys = array_merge($this->_keys, $this->_exclusiveKeys);
         $emptyData = array_fill_keys($keys, 0);
 
-        $diffPercent = array();
-        $diff = array();
+        $diffPercent = [];
+        $diff = [];
         foreach ($this->_collapsed as $key => $baseData) {
             $headData = $head->get($key);
             if (!$headData) {
@@ -490,12 +490,12 @@ class Xhgui_Profile
         $diff['functionCount'] = $head->getFunctionCount() - $this->getFunctionCount();
         $diffPercent['functionCount'] = $head->getFunctionCount() / $this->getFunctionCount();
 
-        return array(
+        return [
             'base' => $this,
             'head' => $head,
             'diff' => $diff,
             'diffPercent' => $diffPercent,
-        );
+        ];
     }
 
     /**
@@ -540,14 +540,14 @@ class Xhgui_Profile
             $main = $this->_collapsed['main()'][$metric];
         }
 
-        $this->_visited = $this->_nodes = $this->_links = array();
+        $this->_visited = $this->_nodes = $this->_links = [];
         $this->_callgraphData(self::NO_PARENT, $main, $metric, $threshold);
-        $out = array(
+        $out = [
             'metric' => $metric,
             'total' => $main,
             'nodes' => $this->_nodes,
             'links' => $this->_links
-        );
+        ];
         unset($this->_visited, $this->_nodes, $this->_links);
         return $out;
     }
@@ -573,22 +573,22 @@ class Xhgui_Profile
                 $index = count($this->_nodes);
                 $this->_visited[$childName] = $index;
 
-                $this->_nodes[] = array(
+                $this->_nodes[] = [
                     'name' => $childName,
                     'callCount' => $metrics['ct'],
                     'value' => $metrics[$metric],
-                );
+                ];
             } else {
                 $revisit = true;
                 $index = $this->_visited[$childName];
             }
 
             if ($parentIndex !== null) {
-                $this->_links[] = array(
+                $this->_links[] = [
                     'source' => $parentName,
                     'target' => $childName,
                     'callCount' => $metrics['ct'],
-                );
+                ];
             }
 
             // If the current function has more children,

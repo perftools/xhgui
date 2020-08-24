@@ -18,15 +18,15 @@ class ImportTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/'
-        ));
+        ]);
 
         $di = Xhgui_ServiceContainer::instance();
         $mock = $this->getMockBuilder(Slim::class)
-            ->setMethods(array('redirect', 'render', 'urlFor'))
-            ->setConstructorArgs(array($di['config']))
+            ->setMethods(['redirect', 'render', 'urlFor'])
+            ->setConstructorArgs([$di['config']])
             ->getMock();
 
         $di['app'] = $di->share(static function ($c) use ($mock) {
@@ -62,11 +62,11 @@ class ImportTest extends TestCase
                 ]
             ]
         ];
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'slim.input' => json_encode($data)
-        ));
+        ]);
 
         $before = $this->profiles->getForUrl('/things', []);
         $this->assertEmpty($before['results']);

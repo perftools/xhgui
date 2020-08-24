@@ -11,12 +11,12 @@ class Xhgui_Db_Mapper
      */
     public function convert($options)
     {
-        $result = array(
-            'conditions' => array(),
+        $result = [
+            'conditions' => [],
             'sort' => null,
             'direction' => null,
             'perPage' => 25
-        );
+        ];
         if (isset($options['conditions'])) {
             $result['conditions'] = $this->_conditions($options['conditions']);
         }
@@ -46,7 +46,7 @@ class Xhgui_Db_Mapper
         }
         $hasLimit = (!empty($search['limit']) && $search['limit'] != -1);
 
-        $conditions = array();
+        $conditions = [];
         if (!empty($search['date_start']) && !$hasLimit) {
             $conditions['meta.request_date']['$gte'] = (string)$search['date_start'];
         }
@@ -84,10 +84,10 @@ class Xhgui_Db_Mapper
         if (isset($search['url'])) {
             // Not sure if letting people use regex here
             // is a good idea. Only one way to find out.
-            $conditions['meta.url'] = array(
+            $conditions['meta.url'] = [
                 '$regex' => (string)$search['url'],
                 '$options' => 'i',
-            );
+            ];
         }
 
         return $conditions;
@@ -110,7 +110,7 @@ class Xhgui_Db_Mapper
         if (empty($options['direction'])) {
             return 'desc';
         }
-        $valid = array('desc', 'asc');
+        $valid = ['desc', 'asc'];
         if (in_array($options['direction'], $valid, true)) {
             return $options['direction'];
         }
@@ -131,21 +131,21 @@ class Xhgui_Db_Mapper
             $direction = 1;
         }
 
-        $valid = array('time', 'wt', 'mu', 'cpu');
+        $valid = ['time', 'wt', 'mu', 'cpu'];
         if (
             empty($options['sort']) ||
             (isset($options['sort']) && !in_array($options['sort'], $valid))
         ) {
-            return array('meta.SERVER.REQUEST_TIME' => $direction);
+            return ['meta.SERVER.REQUEST_TIME' => $direction];
         }
         if ($options['sort'] == 'time') {
-            return array('meta.SERVER.REQUEST_TIME' => $direction);
+            return ['meta.SERVER.REQUEST_TIME' => $direction];
         } elseif ($options['sort'] == 'wt') {
-            return array('profile.main().wt' => $direction);
+            return ['profile.main().wt' => $direction];
         } elseif ($options['sort'] == 'mu') {
-            return array('profile.main().mu' => $direction);
+            return ['profile.main().mu' => $direction];
         } elseif ($options['sort'] == 'cpu') {
-           return array('profile.main().cpu' => $direction);
+           return ['profile.main().cpu' => $direction];
         }
     }
 

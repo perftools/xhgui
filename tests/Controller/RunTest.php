@@ -27,15 +27,15 @@ class RunTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/'
-        ));
+        ]);
 
         $di = Xhgui_ServiceContainer::instance();
         $mock = $this->getMockBuilder(Slim::class)
-            ->setMethods(array('redirect', 'render', 'urlFor'))
-            ->setConstructorArgs(array($di['config']))
+            ->setMethods(['redirect', 'render', 'urlFor'])
+            ->setConstructorArgs([$di['config']])
             ->getMock();
 
         $di['app'] = $di->share(function ($c) use ($mock) {
@@ -56,22 +56,22 @@ class RunTest extends TestCase
 
         $this->assertEquals('Recent runs', $result['title']);
         $this->assertFalse($result['has_search'], 'No search being done.');
-        $expected = array(
+        $expected = [
             'total_pages' => 1,
             'page' => 1,
             'sort' => null,
             'direction' => 'desc',
-        );
+        ];
         $this->assertEquals($expected, $result['paging']);
     }
 
     public function testIndexSortedWallTime()
     {
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=wt',
-        ));
+        ]);
 
         $this->runs->index();
         $result = $this->runs->templateVars();
@@ -81,11 +81,11 @@ class RunTest extends TestCase
 
     public function testIndexSortedCpu()
     {
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=cpu&direction=desc',
-        ));
+        ]);
 
         $this->runs->index();
         $result = $this->runs->templateVars();
@@ -96,28 +96,28 @@ class RunTest extends TestCase
 
     public function testIndexWithSearch()
     {
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=mu&direction=asc&url=index.php',
-        ));
+        ]);
 
         $this->runs->index();
         $result = $this->runs->templateVars();
         $this->assertEquals('Highest memory use', $result['title']);
         $this->assertEquals('mu', $result['paging']['sort']);
         $this->assertEquals('asc', $result['paging']['direction']);
-        $this->assertEquals(array('url' => 'index.php'), $result['search']);
+        $this->assertEquals(['url' => 'index.php'], $result['search']);
         $this->assertTrue($result['has_search']);
     }
 
     public function testUrl()
     {
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/url/view',
             'QUERY_STRING' => 'url=%2Ftasks',
-        ));
+        ]);
 
         $this->runs->url();
 
@@ -161,11 +161,11 @@ class RunTest extends TestCase
     public function testCallgraph()
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
-        ));
+        ]);
 
         $this->runs->callgraph();
         $result = $this->runs->templateVars();
@@ -177,11 +177,11 @@ class RunTest extends TestCase
     public function testCallgraphData()
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
-        ));
+        ]);
 
         $this->runs->callgraphData();
         $response = $this->app->response();
@@ -194,14 +194,14 @@ class RunTest extends TestCase
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
 
-        Environment::mock(array(
+        Environment::mock([
             'REQUEST_METHOD' => 'POST',
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/delete',
             'slim.request.form_hash' => [
                 'id' => 'aaaaaaaaaaaaaaaaaaaaaaaa',
             ],
-        ));
+        ]);
 
         $this->app->expects($this->once())
             ->method('urlFor')
@@ -223,10 +223,10 @@ class RunTest extends TestCase
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
 
-        Environment::mock(array(
+        Environment::mock([
           'SCRIPT_NAME' => 'index.php',
           'PATH_INFO' => '/run/delete_all',
-        ));
+        ]);
 
         $this->app->expects($this->once())
           ->method('urlFor')
@@ -248,11 +248,11 @@ class RunTest extends TestCase
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
 
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*,strpos()',
-        ));
+        ]);
 
         $this->runs->view();
         $result = $this->runs->templateVars();
@@ -264,11 +264,11 @@ class RunTest extends TestCase
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
 
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*',
-        ));
+        ]);
 
         $this->runs->view();
         $result = $this->runs->templateVars();
@@ -280,11 +280,11 @@ class RunTest extends TestCase
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
 
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=true',
-        ));
+        ]);
 
         $this->runs->view();
         $result = $this->runs->templateVars();

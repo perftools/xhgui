@@ -40,23 +40,23 @@ class ExtensionTest extends TestCase
      */
     public function makePercentProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 10,
                 100,
                 '10 <span class="units">%</span>'
-            ),
-            array(
+            ],
+            [
                 0.5,
                 100,
                 '1 <span class="units">%</span>'
-            ),
-            array(
+            ],
+            [
                 100,
                 0,
                 '0 <span class="units">%</span>'
-            )
-        );
+            ]
+        ];
     }
 
     /**
@@ -70,20 +70,20 @@ class ExtensionTest extends TestCase
 
     public static function urlProvider()
     {
-        return array(
+        return [
             // simple no query string
-            array(
+            [
                 'test',
                 null,
                 '/test'
-            ),
+            ],
             // simple with query string
-            array(
+            [
                 'test',
-                array('test' => 'value'),
+                ['test' => 'value'],
                 '/test?test=value'
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -104,22 +104,22 @@ class ExtensionTest extends TestCase
 
     public function testStaticUrlNoIndexPhp()
     {
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => '/index.php',
             'PHP_SELF' => '/index.php',
             'REQUEST_URI' => '/',
-        ));
+        ]);
         $result = $this->ext->staticUrl('css/bootstrap.css');
         $this->assertEquals('/css/bootstrap.css', $result);
     }
 
     public function testStaticUrlWithIndexPhp()
     {
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => '/xhgui/webroot/index.php',
             'PHP_SELF' => '/xhgui/webroot/index.php/',
             'REQUEST_URI' => '/xhgui/webroot/index.php/',
-        ));
+        ]);
         $result = $this->ext->staticUrl('css/bootstrap.css');
         $this->assertEquals('/xhgui/webroot/css/bootstrap.css', $result);
     }

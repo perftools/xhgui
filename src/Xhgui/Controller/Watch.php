@@ -20,7 +20,7 @@ class Xhgui_Controller_Watch extends Xhgui_Controller
         $watched = $this->searcher->getAllWatches();
 
         $this->_template = 'watch/list.twig';
-        $this->set(array('watched' => $watched));
+        $this->set(['watched' => $watched]);
     }
 
     public function post()

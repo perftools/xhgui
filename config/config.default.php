@@ -6,7 +6,7 @@
  * and return an array from there with your overriding settings.
  */
 
-return array(
+return [
     // Which backend to use for Xhgui_Saver.
     // Must be one of 'mongodb', or 'file'.
     //
@@ -19,12 +19,12 @@ return array(
     //
     'save.handler' => getenv('XHGUI_SAVE_HANDLER') ?: 'mongodb',
 
-    'pdo' => array(
+    'pdo' => [
         'dsn' => getenv('XHGUI_PDO_DSN') ?: null,
         'user' => getenv('XHGUI_PDO_USER') ?: null,
         'pass' => getenv('XHGUI_PDO_PASS') ?: null,
         'table' => getenv('XHGUI_PDO_TABLE') ?: 'results'
-    ),
+    ],
 
     // If defined, add imports via upload (/run/import) must pass token parameter with this value
     'upload.token' => getenv('XHGUI_UPLOAD_TOKEN') ?: '',
@@ -45,12 +45,12 @@ return array(
     //
     'db.host' => getenv('XHGUI_MONGO_HOST') ?: 'mongodb://127.0.0.1:27017',
     'db.db' => getenv('XHGUI_MONGO_DATABASE') ?: 'xhprof',
-    'db.options' => array(),
-    'db.driverOptions' => array(),
-    'run.view.filter.names' => array(
+    'db.options' => [],
+    'db.driverOptions' => [],
+    'run.view.filter.names' => [
         'Zend*',
         'Composer*',
-    ),
+    ],
 
     // Whether to instrument a user request.
     //
@@ -92,7 +92,7 @@ return array(
     // of the profiler extension (xhprof, tideways, etc.).
     //
     // NOTE: Only applies to using the external/header.php include.
-    'profiler.options' => array(),
+    'profiler.options' => [],
 
     // Whether to profile PHP built-in functions
     //
@@ -117,4 +117,4 @@ return array(
     // The number of items to show per page, on XHGui list pages.
     'page.limit' => 25,
 
-);
+];

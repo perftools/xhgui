@@ -19,11 +19,11 @@ function out($out) {
 }
 
 function runProcess($cmd, $input = null) {
-    $descriptorSpec = array(
-        0 => array('pipe', 'r'),
-        1 => array('pipe', 'w'),
-        2 => array('pipe', 'w')
-    );
+    $descriptorSpec = [
+        0 => ['pipe', 'r'],
+        1 => ['pipe', 'w'],
+        2 => ['pipe', 'w']
+    ];
     $process = proc_open(
         $cmd,
         $descriptorSpec,

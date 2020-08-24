@@ -21,16 +21,16 @@ class WatchTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Environment::mock(array(
+        Environment::mock([
            'SCRIPT_NAME' => 'index.php',
            'PATH_INFO' => '/watch'
-        ));
+        ]);
         $di = Xhgui_ServiceContainer::instance();
         unset($di['app']);
 
         $mock = $this->getMockBuilder(Slim::class)
-            ->setMethods(array('redirect', 'render', 'urlFor'))
-            ->setConstructorArgs(array($di['config']))
+            ->setMethods(['redirect', 'render', 'urlFor'])
+            ->setConstructorArgs([$di['config']])
             ->getMock();
         $di['app'] = $di->share(function ($c) use ($mock) {
             return $mock;
@@ -45,17 +45,17 @@ class WatchTest extends TestCase
     {
         $this->watches->get();
         $result = $this->watches->templateVars();
-        $this->assertEquals(array(), $result['watched']);
+        $this->assertEquals([], $result['watched']);
     }
 
     public function testPostAdd()
     {
-        $_POST = array(
-            'watch' => array(
-                array('name' => 'strlen'),
-                array('name' => 'strpos')
-            )
-        );
+        $_POST = [
+            'watch' => [
+                ['name' => 'strlen'],
+                ['name' => 'strpos']
+            ]
+        ];
         $this->app->expects($this->once())
             ->method('urlFor')
             ->with('watch.list');
@@ -73,14 +73,14 @@ class WatchTest extends TestCase
 
     public function testPostModify()
     {
-        $this->searcher->saveWatch(array('name' => 'strlen'));
+        $this->searcher->saveWatch(['name' => 'strlen']);
         $saved = $this->searcher->getAllWatches();
 
-        $_POST = array(
-            'watch' => array(
-                array('name' => 'strpos', '_id' => $saved[0]['_id'])
-            )
-        );
+        $_POST = [
+            'watch' => [
+                ['name' => 'strpos', '_id' => $saved[0]['_id']]
+            ]
+        ];
         $this->watches->post();
         $result = $this->searcher->getAllWatches();
 
@@ -90,14 +90,14 @@ class WatchTest extends TestCase
 
     public function testPostDelete()
     {
-        $this->searcher->saveWatch(array('name' => 'strlen'));
+        $this->searcher->saveWatch(['name' => 'strlen']);
         $saved = $this->searcher->getAllWatches();
 
-        $_POST = array(
-            'watch' => array(
-                array('removed' => 1, 'name' => 'strpos', '_id' => $saved[0]['_id'])
-            )
-        );
+        $_POST = [
+            'watch' => [
+                ['removed' => 1, 'name' => 'strpos', '_id' => $saved[0]['_id']]
+            ]
+        ];
         $this->watches->post();
         $result = $this->searcher->getAllWatches();
 
