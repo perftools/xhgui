@@ -16,7 +16,8 @@ class ExtensionTest extends TestCase
     {
         parent::setUp();
         $app = new Slim();
-        $app->get('/test', static function () {})->name('test');
+        $app->get('/test', static function () {
+        })->name('test');
         $this->ext = new Xhgui_Twig_Extension($app);
     }
 
