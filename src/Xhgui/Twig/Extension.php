@@ -26,25 +26,25 @@ class Xhgui_Twig_Extension extends Twig_Extension
 
     public function getFunctions()
     {
-        return array(
+        return [
             'url' => new Twig_Function_Method($this, 'url'),
             'static' => new Twig_Function_Method($this, 'staticUrl'),
-            'percent' => new Twig_Function_Method($this, 'makePercent', array(
-                'is_safe' => array('html')
-            )),
-        );
+            'percent' => new Twig_Function_Method($this, 'makePercent', [
+                'is_safe' => ['html']
+            ]),
+        ];
     }
 
     public function getFilters()
     {
-        return array(
+        return [
             'simple_url' => new Twig_Filter_Function('Xhgui_Util::simpleUrl'),
-            'as_bytes' => new Twig_Filter_Method($this, 'formatBytes', array('is_safe' => array('html'))),
-            'as_time' => new Twig_Filter_Method($this, 'formatTime', array('is_safe' => array('html'))),
-            'as_diff' => new Twig_Filter_Method($this, 'formatDiff', array('is_safe' => array('html'))),
-            'as_percent' => new Twig_Filter_Method($this, 'formatPercent', array('is_safe' => array('html'))),
+            'as_bytes' => new Twig_Filter_Method($this, 'formatBytes', ['is_safe' => ['html']]),
+            'as_time' => new Twig_Filter_Method($this, 'formatTime', ['is_safe' => ['html']]),
+            'as_diff' => new Twig_Filter_Method($this, 'formatDiff', ['is_safe' => ['html']]),
+            'as_percent' => new Twig_Filter_Method($this, 'formatPercent', ['is_safe' => ['html']]),
             'truncate' => new Twig_Filter_Method($this, 'truncate'),
-        );
+        ];
     }
 
     public function truncate($input, $length = 50)
@@ -62,7 +62,7 @@ class Xhgui_Twig_Extension extends Twig_Extension
      * @param array $queryargs Additional querystring arguments.
      * @return string url.
      */
-    public function url($name, $queryargs = array())
+    public function url($name, $queryargs = [])
     {
         $query = '';
         if (!empty($queryargs)) {

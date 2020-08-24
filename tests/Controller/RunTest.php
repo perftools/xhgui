@@ -1,20 +1,41 @@
 <?php
-use Slim\Environment;
 
-class Controller_RunTest extends PHPUnit\Framework\TestCase
+namespace XHGui\Test\Controller;
+
+use Slim\Slim;
+use Slim\Environment;
+use XHGui\Test\TestCase;
+use Xhgui_Controller_Import;
+use Xhgui_Controller_Run;
+use Xhgui_Saver_Mongo;
+use Xhgui_Searcher_Mongo;
+use Xhgui_ServiceContainer;
+
+class RunTest extends TestCase
 {
+    /** @var Xhgui_Controller_Run */
+    private $runs;
+    /** @var Xhgui_Saver_Mongo */
+    private $saver;
+    /** @var Slim */
+    private $app;
+    /** @var Xhgui_Searcher_Mongo */
+    private $profiles;
+    /** @var Xhgui_Controller_Import */
+    private $import;
+
     public function setUp()
     {
         parent::setUp();
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/'
-        ));
+        ]);
 
         $di = Xhgui_ServiceContainer::instance();
-        $mock = $this->getMockBuilder('Slim\Slim')
-            ->setMethods(array('redirect', 'render', 'urlFor'))
-            ->setConstructorArgs(array($di['config']))
+        $mock = $this->getMockBuilder(Slim::class)
+            ->setMethods(['redirect', 'render', 'urlFor'])
+            ->setConstructorArgs([$di['config']])
             ->getMock();
 
         $di['app'] = $di->share(function ($c) use ($mock) {
@@ -35,22 +56,22 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
 
         $this->assertEquals('Recent runs', $result['title']);
         $this->assertFalse($result['has_search'], 'No search being done.');
-        $expected = array(
+        $expected = [
             'total_pages' => 1,
             'page' => 1,
             'sort' => null,
             'direction' => 'desc',
-        );
+        ];
         $this->assertEquals($expected, $result['paging']);
     }
 
     public function testIndexSortedWallTime()
     {
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=wt',
-        ));
+        ]);
 
         $this->runs->index();
         $result = $this->runs->templateVars();
@@ -60,11 +81,11 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
 
     public function testIndexSortedCpu()
     {
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=cpu&direction=desc',
-        ));
+        ]);
 
         $this->runs->index();
         $result = $this->runs->templateVars();
@@ -75,28 +96,28 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
 
     public function testIndexWithSearch()
     {
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=mu&direction=asc&url=index.php',
-        ));
+        ]);
 
         $this->runs->index();
         $result = $this->runs->templateVars();
         $this->assertEquals('Highest memory use', $result['title']);
         $this->assertEquals('mu', $result['paging']['sort']);
         $this->assertEquals('asc', $result['paging']['direction']);
-        $this->assertEquals(array('url' => 'index.php'), $result['search']);
+        $this->assertEquals(['url' => 'index.php'], $result['search']);
         $this->assertTrue($result['has_search']);
     }
 
     public function testUrl()
     {
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/url/view',
             'QUERY_STRING' => 'url=%2Ftasks',
-        ));
+        ]);
 
         $this->runs->url();
 
@@ -140,11 +161,11 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
     public function testCallgraph()
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
-        ));
+        ]);
 
         $this->runs->callgraph();
         $result = $this->runs->templateVars();
@@ -156,11 +177,11 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
     public function testCallgraphData()
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
-        ));
+        ]);
 
         $this->runs->callgraphData();
         $response = $this->app->response();
@@ -173,14 +194,14 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
 
-        Environment::mock(array(
+        Environment::mock([
             'REQUEST_METHOD' => 'POST',
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/delete',
             'slim.request.form_hash' => [
                 'id' => 'aaaaaaaaaaaaaaaaaaaaaaaa',
             ],
-        ));
+        ]);
 
         $this->app->expects($this->once())
             ->method('urlFor')
@@ -202,10 +223,10 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
 
-        Environment::mock(array(
+        Environment::mock([
           'SCRIPT_NAME' => 'index.php',
           'PATH_INFO' => '/run/delete_all',
-        ));
+        ]);
 
         $this->app->expects($this->once())
           ->method('urlFor')
@@ -227,11 +248,11 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
 
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*,strpos()',
-        ));
+        ]);
 
         $this->runs->view();
         $result = $this->runs->templateVars();
@@ -243,11 +264,11 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
 
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*',
-        ));
+        ]);
 
         $this->runs->view();
         $result = $this->runs->templateVars();
@@ -259,11 +280,11 @@ class Controller_RunTest extends PHPUnit\Framework\TestCase
     {
         loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
 
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=true',
-        ));
+        ]);
 
         $this->runs->view();
         $result = $this->runs->templateVars();

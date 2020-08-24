@@ -1,6 +1,12 @@
 <?php
 
-class MongoTest extends PHPUnit\Framework\TestCase
+namespace XHGui\Test\Searcher;
+
+use XHGui\Test\TestCase;
+use Xhgui_Searcher_Mongo;
+use Xhgui_ServiceContainer;
+
+class MongoTest extends TestCase
 {
     /**
      * @var Xhgui_Searcher_Mongo
@@ -29,9 +35,9 @@ class MongoTest extends PHPUnit\Framework\TestCase
 
     public function testGetForUrl()
     {
-        $options = array(
+        $options = [
             'perPage' => 1
-        );
+        ];
         $result = $this->mongo->getForUrl('/', $options);
         $this->assertEquals(1, $result['page']);
         $this->assertEquals(2, $result['totalPages']);
@@ -46,23 +52,23 @@ class MongoTest extends PHPUnit\Framework\TestCase
 
     public function testGetForUrlWithSearch()
     {
-        $options = array(
+        $options = [
             'perPage' => 2
-        );
-        $search = array(
+        ];
+        $search = [
             'date_start' => '2013-01-17',
             'date_end' => '2013-01-18',
-        );
+        ];
         $result = $this->mongo->getForUrl('/', $options, $search);
         $this->assertEquals(1, $result['page']);
         $this->assertEquals(1, $result['totalPages']);
         $this->assertEquals(2, $result['perPage']);
         $this->assertCount(1, $result['results']);
 
-        $search = array(
+        $search = [
             'date_start' => '2013-01-01',
             'date_end' => '2013-01-02',
-        );
+        ];
         $result = $this->mongo->getForUrl('/', $options, $search);
         $this->assertCount(0, $result['results']);
     }
@@ -83,7 +89,7 @@ class MongoTest extends PHPUnit\Framework\TestCase
 
     public function testGetAvgsForUrlWithSearch()
     {
-        $search = array('date_start' => '2013-01-18', 'date_end' => '2013-01-18');
+        $search = ['date_start' => '2013-01-18', 'date_end' => '2013-01-18'];
         $result = $this->mongo->getAvgsForUrl('/', $search);
         $this->assertCount(1, $result);
 
@@ -97,7 +103,7 @@ class MongoTest extends PHPUnit\Framework\TestCase
 
     public function testGetPercentileForUrlWithSearch()
     {
-        $search = array('date_start' => '2013-01-18', 'date_end' => '2013-01-18');
+        $search = ['date_start' => '2013-01-18', 'date_end' => '2013-01-18'];
         $result = $this->mongo->getPercentileForUrl(20, '/', $search);
         $this->assertCount(1, $result);
 
@@ -109,20 +115,20 @@ class MongoTest extends PHPUnit\Framework\TestCase
 
     public function testGetPercentileForUrlWithLimit()
     {
-        $search = array('limit' => 'P1D');
+        $search = ['limit' => 'P1D'];
         $result = $this->mongo->getPercentileForUrl(20, '/', $search);
         $this->assertCount(0, $result);
     }
 
     public function testGetAllConditions()
     {
-        $result = $this->mongo->getAll(array(
-            'conditions' => array(
+        $result = $this->mongo->getAll([
+            'conditions' => [
                 'date_start' => '2013-01-20',
                 'date_end' => '2013-01-21',
                 'url' => 'tasks',
-            )
-        ));
+            ]
+        ]);
         $this->assertEquals(1, $result['page']);
         $this->assertEquals(25, $result['perPage']);
         $this->assertEquals(1, $result['totalPages']);
@@ -138,24 +144,24 @@ class MongoTest extends PHPUnit\Framework\TestCase
 
     public function testSaveInsert()
     {
-        $data = array(
+        $data = [
             'name' => 'strlen',
-        );
+        ];
         $this->assertTrue($this->mongo->saveWatch($data));
         $this->assertCount(1, $this->mongo->getAllWatches());
 
-        $data = array(
+        $data = [
             'name' => 'empty',
-        );
+        ];
         $this->assertTrue($this->mongo->saveWatch($data));
         $this->assertCount(2, $this->mongo->getAllWatches());
     }
 
     public function testSaveUpdate()
     {
-        $data = array(
+        $data = [
             'name' => 'strlen',
-        );
+        ];
         $this->mongo->saveWatch($data);
         $result = $this->mongo->getAllWatches();
 
@@ -168,9 +174,9 @@ class MongoTest extends PHPUnit\Framework\TestCase
 
     public function testSaveRemove()
     {
-        $data = array(
+        $data = [
             'name' => 'strlen',
-        );
+        ];
         $this->mongo->saveWatch($data);
         $result = $this->mongo->getAllWatches();
 

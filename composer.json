@@ -7,6 +7,11 @@
             "Xhgui_": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "XHGui\\Test\\": "tests/"
+        }
+    },
     "require": {
         "php": "^7.0",
         "ext-json": "*",

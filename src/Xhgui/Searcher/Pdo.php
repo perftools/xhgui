@@ -118,7 +118,7 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
     /**
      * {@inheritdoc}
      */
-    public function getForUrl($url, $options, $conditions = array())
+    public function getForUrl($url, $options, $conditions = [])
     {
         // TODO: Implement getForUrl() method.
     }
@@ -126,7 +126,7 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
     /**
      * {@inheritdoc}
      */
-    public function getPercentileForUrl($percentile, $url, $search = array())
+    public function getPercentileForUrl($percentile, $url, $search = [])
     {
         // TODO: Implement getPercentileForUrl() method.
     }
@@ -134,7 +134,7 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
     /**
      * {@inheritdoc}
      */
-    public function getAvgsForUrl($url, $search = array())
+    public function getAvgsForUrl($url, $search = [])
     {
         // TODO: Implement getAvgsForUrl() method.
     }
@@ -142,7 +142,7 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
     /**
      * {@inheritdoc}
      */
-    public function getAll($options = array())
+    public function getAll($options = [])
     {
         $sort = $options['sort'];
         $direction = $options['direction'];
@@ -216,14 +216,14 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
             ]);
         }
 
-        return array(
+        return [
             'results' => $results,
             'sort' => 'meta.request_ts',
             'direction' => 'desc',
             'page' => $page,
             'perPage' => $perPage,
             'totalPages' => $totalPages,
-        );
+        ];
     }
 
     /**

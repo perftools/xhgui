@@ -31,14 +31,14 @@ class Xhgui_ServiceContainer extends Pimple
             // Configure Twig view for slim
             $view = new Twig();
 
-            $view->twigTemplateDirs = array(dirname(__DIR__) . '/templates');
-            $view->parserOptions = array(
+            $view->twigTemplateDirs = [dirname(__DIR__) . '/templates'];
+            $view->parserOptions = [
                 'charset' => 'utf-8',
                 'cache' => $cacheDir,
                 'auto_reload' => true,
                 'strict_variables' => false,
                 'autoescape' => true
-            );
+            ];
 
             return $view;
         };
@@ -51,17 +51,17 @@ class Xhgui_ServiceContainer extends Pimple
             $app = new Slim($c['config']);
 
             // Enable cookie based sessions
-            $app->add(new SessionCookie(array(
+            $app->add(new SessionCookie([
                 'httponly' => true,
-            )));
+            ]));
 
             // Add renderer.
             $app->add(new Xhgui_Middleware_Render());
 
             $view = $c['view'];
-            $view->parserExtensions = array(
+            $view->parserExtensions = [
                 new Xhgui_Twig_Extension($app)
-            );
+            ];
             $app->view($view);
 
             return $app;
@@ -78,10 +78,10 @@ class Xhgui_ServiceContainer extends Pimple
         $this['db'] = $this->share(function ($c) {
             $config = $c['config'];
             if (empty($config['db.options'])) {
-                $config['db.options'] = array();
+                $config['db.options'] = [];
             }
             if (empty($config['db.driverOptions'])) {
-                $config['db.driverOptions'] = array();
+                $config['db.driverOptions'] = [];
             }
             $mongo = new MongoClient($config['db.host'], $config['db.options'], $config['db.driverOptions']);
             $mongo->{$config['db.db']}->results->findOne();

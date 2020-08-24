@@ -1,6 +1,10 @@
 <?php
 
-class ConfigTest extends PHPUnit\Framework\TestCase
+namespace XHGui\Test;
+
+use Xhgui_Config;
+
+class ConfigTest extends TestCase
 {
     public function setUp()
     {
@@ -33,5 +37,4 @@ class ConfigTest extends PHPUnit\Framework\TestCase
         $this->assertNull(Xhgui_Config::clear());
         $this->assertNull(Xhgui_Config::read('test'));
     }
-
 }

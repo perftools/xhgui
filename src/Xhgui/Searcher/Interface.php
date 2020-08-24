@@ -43,7 +43,7 @@ interface Xhgui_Searcher_Interface
      * @param array $conditions The search options.
      * @return MongoCursor
      */
-    public function getForUrl($url, $options, $conditions = array());
+    public function getForUrl($url, $options, $conditions = []);
 
     /**
      * Get the Percentile metrics for a URL
@@ -56,7 +56,7 @@ interface Xhgui_Searcher_Interface
      * @param array $search Search options containing date_start and or date_end
      * @return array Array of metrics grouped by date
      */
-    public function getPercentileForUrl($percentile, $url, $search = array());
+    public function getPercentileForUrl($percentile, $url, $search = []);
 
     /**
      * Get the Average metrics for a URL
@@ -68,7 +68,7 @@ interface Xhgui_Searcher_Interface
      * @param array $search Search options containing date_start and or date_end
      * @return array Array of metrics grouped by date
      */
-    public function getAvgsForUrl($url, $search = array());
+    public function getAvgsForUrl($url, $search = []);
 
     /**
      * Get a paginated set of results.
@@ -82,7 +82,7 @@ interface Xhgui_Searcher_Interface
      *  - perPage:    an integer, how many profiles to display per page (e.g. 25)
      *  - totalPages: an integer, total number of pages (e.g. 10)
      */
-    public function getAll($options = array());
+    public function getAll($options = []);
 
     /**
      * Delete a profile run.

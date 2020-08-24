@@ -1,6 +1,11 @@
 <?php
 
-class Saver_FileTest extends PHPUnit\Framework\TestCase
+namespace XHGui\Test\Saver;
+
+use XHGui\Test\TestCase;
+use Xhgui_Saver_File;
+
+class FileTest extends TestCase
 {
     public function testSave()
     {
@@ -11,7 +16,6 @@ class Saver_FileTest extends PHPUnit\Framework\TestCase
         $saver = new Xhgui_Saver_File($file);
         $saver->save($data);
 
-        $this->assertEquals(json_encode($data).PHP_EOL, file_get_contents($file));
+        $this->assertEquals(json_encode($data) . PHP_EOL, file_get_contents($file));
     }
-
 }

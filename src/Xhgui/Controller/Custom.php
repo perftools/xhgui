@@ -29,9 +29,9 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
             $res = $this->searcher->latest();
         }
         $this->_template = 'custom/help.twig';
-        $this->set(array(
+        $this->set([
             'data' => print_r($res->toArray(), 1)
-        ));
+        ]);
     }
 
     public function query()
@@ -41,7 +41,7 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
         $response['Content-Type'] = 'application/json';
 
         $query = json_decode($request->post('query'), true);
-        $error = array();
+        $error = [];
         if (null === $query) {
             $error['query'] = json_last_error();
         }
@@ -52,7 +52,7 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
         }
 
         if (count($error) > 0) {
-            $json = json_encode(array('error' => $error));
+            $json = json_encode(['error' => $error]);
             return $response->body($json);
         }
 

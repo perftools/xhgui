@@ -7,7 +7,7 @@ abstract class Xhgui_Controller
     /**
      * @var array
      */
-    protected $_templateVars = array();
+    protected $_templateVars = [];
 
     /**
      * @var string|null

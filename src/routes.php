@@ -5,18 +5,18 @@
 $app->error(function (Exception $e) use ($di, $app) {
     $view = $di['view'];
     $view->parserOptions['cache'] = false;
-    $view->parserExtensions = array(
+    $view->parserExtensions = [
         new Xhgui_Twig_Extension($app)
-    );
+    ];
 
     // Remove the controller so we don't render it.
     unset($app->controller);
 
     $app->view($view);
-    $app->render('error/view.twig', array(
+    $app->render('error/view.twig', [
         'message' => $e->getMessage(),
         'stack_trace' => $e->getTraceAsString(),
-    ));
+    ]);
 });
 
 // Profile Runs routes

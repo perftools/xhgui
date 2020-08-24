@@ -1,14 +1,23 @@
 <?php
-use Slim\Slim;
-use Slim\Environment;
 
-class Xhgui_Twig_ExtensionTest extends PHPUnit\Framework\TestCase
+namespace XHGui\Test\Twig;
+
+use Slim\Environment;
+use Slim\Slim;
+use XHGui\Test\TestCase;
+use Xhgui_Twig_Extension;
+
+class ExtensionTest extends TestCase
 {
+    /** @var Xhgui_Twig_Extension */
+    private $ext;
+
     public function setUp()
     {
         parent::setUp();
         $app = new Slim();
-        $app->get('/test', function () {})->name('test');
+        $app->get('/test', static function () {
+        })->name('test');
         $this->ext = new Xhgui_Twig_Extension($app);
     }
 
@@ -29,24 +38,25 @@ class Xhgui_Twig_ExtensionTest extends PHPUnit\Framework\TestCase
     /**
      * @return array
      */
-    public function makePercentProvider() {
-        return array(
-            array(
+    public function makePercentProvider()
+    {
+        return [
+            [
                 10,
                 100,
                 '10 <span class="units">%</span>'
-            ),
-            array(
+            ],
+            [
                 0.5,
                 100,
                 '1 <span class="units">%</span>'
-            ),
-            array(
+            ],
+            [
                 100,
                 0,
                 '0 <span class="units">%</span>'
-            )
-        );
+            ]
+        ];
     }
 
     /**
@@ -60,20 +70,20 @@ class Xhgui_Twig_ExtensionTest extends PHPUnit\Framework\TestCase
 
     public static function urlProvider()
     {
-        return array(
+        return [
             // simple no query string
-            array(
+            [
                 'test',
                 null,
                 '/test'
-            ),
+            ],
             // simple with query string
-            array(
+            [
                 'test',
-                array('test' => 'value'),
+                ['test' => 'value'],
                 '/test?test=value'
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -94,22 +104,22 @@ class Xhgui_Twig_ExtensionTest extends PHPUnit\Framework\TestCase
 
     public function testStaticUrlNoIndexPhp()
     {
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => '/index.php',
             'PHP_SELF' => '/index.php',
             'REQUEST_URI' => '/',
-        ));
+        ]);
         $result = $this->ext->staticUrl('css/bootstrap.css');
         $this->assertEquals('/css/bootstrap.css', $result);
     }
 
     public function testStaticUrlWithIndexPhp()
     {
-        Environment::mock(array(
+        Environment::mock([
             'SCRIPT_NAME' => '/xhgui/webroot/index.php',
             'PHP_SELF' => '/xhgui/webroot/index.php/',
             'REQUEST_URI' => '/xhgui/webroot/index.php/',
-        ));
+        ]);
         $result = $this->ext->staticUrl('css/bootstrap.css');
         $this->assertEquals('/xhgui/webroot/css/bootstrap.css', $result);
     }
