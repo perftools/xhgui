@@ -7,10 +7,12 @@ use Slim\Environment;
 use XHGui\Test\TestCase;
 use Xhgui_Controller_Import;
 use Xhgui_Profile;
+use Xhgui_Searcher_Interface;
 use Xhgui_ServiceContainer;
 
 class ImportTest extends TestCase
 {
+    /** @var Xhgui_Searcher_Interface */
     private $profiles;
     /** @var Xhgui_Controller_Import */
     private $import;
@@ -33,9 +35,8 @@ class ImportTest extends TestCase
             return $mock;
         });
         $this->import = $di['importController'];
-        $this->app = $di['app'];
 
-        $this->profiles = $di['searcher.mongo'];
+        $this->profiles = $di['searcher'];
         $this->profiles->truncate();
     }
 
