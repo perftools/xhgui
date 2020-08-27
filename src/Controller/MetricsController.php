@@ -2,8 +2,8 @@
 
 namespace XHGui\Controller;
 
+use Slim\App;
 use Slim\Http\Response;
-use Slim\Slim as App;
 use XHGui\AbstractController;
 use XHGui\Searcher\SearcherInterface;
 

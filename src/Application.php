@@ -3,7 +3,7 @@
 namespace XHGui;
 
 use Pimple\Container;
-use Slim\Slim as App;
+use Slim\App;
 use XHGui\Saver\SaverInterface;
 
 class Application extends Container

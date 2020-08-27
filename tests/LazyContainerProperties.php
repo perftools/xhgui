@@ -4,7 +4,7 @@ namespace XHGui\Test;
 
 use LazyProperty\LazyPropertiesTrait;
 use MongoDB;
-use Slim\Slim as App;
+use Slim\App;
 use Slim\View;
 use XHGui\Application;
 use XHGui\Controller;

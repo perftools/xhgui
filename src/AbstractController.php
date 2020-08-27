@@ -2,8 +2,8 @@
 
 namespace XHGui;
 
+use Slim\App;
 use Slim\Http\Response;
-use Slim\Slim as App;
 use Slim\Views\Twig;
 
 abstract class AbstractController

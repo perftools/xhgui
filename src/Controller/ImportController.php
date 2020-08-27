@@ -4,9 +4,9 @@ namespace XHGui\Controller;
 
 use Exception;
 use InvalidArgumentException;
+use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Slim as App;
 use XHGui\AbstractController;
 use XHGui\Saver\SaverInterface;
 

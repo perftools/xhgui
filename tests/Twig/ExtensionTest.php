@@ -2,8 +2,8 @@
 
 namespace XHGui\Test\Twig;
 
+use Slim\App;
 use Slim\Environment;
-use Slim\Slim as App;
 use XHGui\Test\TestCase;
 use XHGui\Twig\TwigExtension;
 
