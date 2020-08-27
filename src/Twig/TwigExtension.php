@@ -2,8 +2,8 @@
 
 namespace XHGui\Twig;
 
+use Slim\App;
 use Slim\Router;
-use Slim\Slim as App;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;

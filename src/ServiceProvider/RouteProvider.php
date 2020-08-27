@@ -5,7 +5,7 @@ namespace XHGui\ServiceProvider;
 use Exception;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use Slim\Slim as App;
+use Slim\App;
 use Slim\Views\Twig;
 use XHGui\Controller;
 use XHGui\Twig\TwigExtension;

@@ -4,8 +4,8 @@ namespace XHGui\ServiceProvider;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Slim\App;
 use Slim\Middleware\SessionCookie;
-use Slim\Slim as App;
 use Slim\Views\Twig;
 use XHGui\Twig\TwigExtension;
 

@@ -2,7 +2,7 @@
 
 namespace XHGui\Controller;
 
-use Slim\Slim as App;
+use Slim\App;
 use XHGui\AbstractController;
 use XHGui\Searcher\SearcherInterface;
 
