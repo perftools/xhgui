@@ -1,4 +1,6 @@
 linters:
+  # To run phpcs locally:
+  # $ phpcs.phar --standard=PSR2 -sw -v file/or/directory
   phpcs:
     standard: PSR2
     exclude: 'Squiz.Classes.ValidClassName,PSR1.Classes.ClassDeclaration'
