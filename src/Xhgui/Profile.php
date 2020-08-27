@@ -395,7 +395,7 @@ class Xhgui_Profile
      */
     public function sort($dimension, $data)
     {
-        $sorter = function ($a, $b) use ($dimension) {
+        $sorter = static function ($a, $b) use ($dimension) {
             if ($a[$dimension] == $b[$dimension]) {
                 return 0;
             }
@@ -507,7 +507,7 @@ class Xhgui_Profile
     {
         return array_reduce(
             $this->_collapsed,
-            function ($result, $item) use ($metric) {
+            static function ($result, $item) use ($metric) {
                 if ($item[$metric] > $result) {
                     return $item[$metric];
                 }

@@ -38,7 +38,7 @@ class RunTest extends TestCase
             ->setConstructorArgs([$di['config']])
             ->getMock();
 
-        $di['app'] = $di->share(function ($c) use ($mock) {
+        $di['app'] = $di->share(static function ($c) use ($mock) {
             return $mock;
         });
         $this->import = $di['importController'];
