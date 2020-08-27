@@ -25,16 +25,13 @@ class WatchTest extends TestCase
            'SCRIPT_NAME' => 'index.php',
            'PATH_INFO' => '/watch'
         ]);
-        $di = Xhgui_ServiceContainer::instance();
-        unset($di['app']);
 
-        $mock = $this->getMockBuilder(Slim::class)
+        $di = Xhgui_ServiceContainer::instance();
+        $di['app'] = $this->getMockBuilder(Slim::class)
             ->setMethods(['redirect', 'render', 'urlFor'])
             ->setConstructorArgs([$di['config']])
             ->getMock();
-        $di['app'] = $di->share(static function ($c) use ($mock) {
-            return $mock;
-        });
+
         $this->watches = $di['watchController'];
         $this->app = $di['app'];
         $this->searcher = $di['searcher'];
