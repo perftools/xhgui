@@ -67,7 +67,7 @@ return [
     //         return true;
     //     },
     //
-    'profiler.enable' => function() {
+    'profiler.enable' => static function() {
         return rand(1, 100) === 42;
     },
 
