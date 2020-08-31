@@ -26,16 +26,12 @@ class ImportTest extends TestCase
         ]);
 
         $di = Xhgui_ServiceContainer::instance();
-        $mock = $this->getMockBuilder(Slim::class)
+        $di['app'] = $this->getMockBuilder(Slim::class)
             ->setMethods(['redirect', 'render', 'urlFor'])
             ->setConstructorArgs([$di['config']])
             ->getMock();
 
-        $di['app'] = $di->share(static function ($c) use ($mock) {
-            return $mock;
-        });
         $this->import = $di['importController'];
-
         $this->profiles = $di['searcher'];
         $this->profiles->truncate();
     }

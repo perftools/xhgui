@@ -1,12 +1,18 @@
 <?php
+
+use Pimple\Container;
 use Slim\Slim;
 use Slim\Views\Twig;
 use Slim\Middleware\SessionCookie;
 
-class Xhgui_ServiceContainer extends Pimple
+class Xhgui_ServiceContainer extends Container
 {
+    /** @var self */
     protected static $_instance;
 
+    /**
+     * @return self
+     */
     public static function instance()
     {
         if (empty(static::$_instance)) {
@@ -43,7 +49,7 @@ class Xhgui_ServiceContainer extends Pimple
             return $view;
         };
 
-        $this['app'] = $this->share(static function ($c) {
+        $this['app'] = static function ($c) {
             if ($c['config']['timezone']) {
                 date_default_timezone_set($c['config']['timezone']);
             }
@@ -65,7 +71,7 @@ class Xhgui_ServiceContainer extends Pimple
             $app->view($view);
 
             return $app;
-        });
+        };
     }
 
     /**
@@ -75,7 +81,7 @@ class Xhgui_ServiceContainer extends Pimple
     {
         $this['config'] = Xhgui_Config::all();
 
-        $this['db'] = $this->share(static function ($c) {
+        $this['db'] = static function ($c) {
             $config = $c['config'];
             if (empty($config['db.options'])) {
                 $config['db.options'] = [];
@@ -87,15 +93,15 @@ class Xhgui_ServiceContainer extends Pimple
             $mongo->{$config['db.db']}->results->findOne();
 
             return $mongo->{$config['db.db']};
-        });
+        };
 
-        $this['pdo'] = $this->share(static function ($c) {
+        $this['pdo'] = static function ($c) {
             return new PDO(
                 $c['config']['pdo']['dsn'],
                 $c['config']['pdo']['user'],
                 $c['config']['pdo']['pass']
             );
-        });
+        };
 
         $this['searcher.mongo'] = static function ($c) {
             return new Xhgui_Searcher_Mongo($c['db']);
@@ -159,5 +165,4 @@ class Xhgui_ServiceContainer extends Pimple
             return new Xhgui_Controller_Metrics($c['app'], $c['searcher']);
         };
     }
-
 }

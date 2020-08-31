@@ -18,7 +18,7 @@
         "slim/slim": "^2.6.3",
         "slim/views": "^0.1.0",
         "twig/twig": "~1.17",
-        "pimple/pimple": "^1.0.2",
+        "pimple/pimple": "^3.3",
         "perftools/xhgui-collector": "^1.7.0"
     },
     "require-dev": {
