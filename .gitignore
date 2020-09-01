@@ -1,6 +1,9 @@
 /composer.lock
 /composer.phar
 /tags
-/vendor/
+/vendor
 /config/config.php
 /docker-compose.override.yml
+
+# phpstorm files
+/.idea/
