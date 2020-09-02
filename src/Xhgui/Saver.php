@@ -1,4 +1,7 @@
 <?php
+
+use MongoDB\Driver\Manager;
+
 /**
  * A small factory to handle creation of the profile saver instance.
  *
@@ -17,6 +20,9 @@ class Xhgui_Saver
     {
         switch ($config['save.handler']) {
             case 'pdo':
+                if (!class_exists(PDO::class)) {
+                    throw new RuntimeException("Required extension ext-pdo missing");
+                }
                 return new Xhgui_Saver_Pdo(
                     new PDO(
                         $config['pdo']['dsn'],
@@ -27,6 +33,9 @@ class Xhgui_Saver
                 );
 
             case 'mongodb':
+                if (!class_exists(Manager::class)) {
+                    throw new RuntimeException("Required extension ext-mongodb missing");
+                }
                 $mongo = new MongoClient($config['db.host'], $config['db.options'], $config['db.driverOptions']);
                 $collection = $mongo->{$config['db.db']}->results;
                 $collection->findOne();
