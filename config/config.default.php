@@ -71,19 +71,6 @@ return [
         return rand(1, 100) === 42;
     },
 
-    // Transformation for the "simple" variant of the URL.
-    // This is stored as `meta.simple_url` and used for
-    // aggregate data.
-    //
-    // NOTE: Only applies to using the external/header.php include.
-    //
-    // Must be a function that returns a string, or any
-    // non-callable value for the default behaviour.
-    //
-    // Default: Remove numeric values after `=`. For example,
-    // it turns "/foo?page=2" into "/foo?page".
-    'profiler.simple_url' => null,
-
     // Enable to clean up the url saved to the DB
     // in this way is possible to remove sensitive data or other kind of data
     'profiler.replace_url' => null,
