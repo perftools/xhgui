@@ -16,19 +16,6 @@ class Xhgui_Saver
     public static function factory($config)
     {
         switch ($config['save.handler']) {
-            case 'file':
-                return new Xhgui_Saver_File($config['save.handler.filename']);
-
-            case 'upload':
-                $timeout = 3;
-                if (isset($config['save.handler.upload.timeout'])) {
-                    $timeout = $config['save.handler.upload.timeout'];
-                }
-                return new Xhgui_Saver_Upload(
-                    $config['save.handler.upload.uri'],
-                    $timeout
-                );
-
             case 'pdo':
                 return new Xhgui_Saver_Pdo(
                     new PDO(
@@ -40,11 +27,13 @@ class Xhgui_Saver
                 );
 
             case 'mongodb':
-            default:
                 $mongo = new MongoClient($config['db.host'], $config['db.options'], $config['db.driverOptions']);
                 $collection = $mongo->{$config['db.db']}->results;
                 $collection->findOne();
                 return new Xhgui_Saver_Mongo($collection);
+
+            default:
+                throw new RuntimeException("Unsupported save handler: {$config['save.handler']}");
         }
     }
 }
