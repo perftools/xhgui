@@ -10,7 +10,6 @@ class Xhgui_Config
      * Load a config file, it will replace
      * all the currently loaded configuration.
      *
-     * @param string $file
      * @return void
      */
     public static function load($file)
@@ -23,7 +22,7 @@ class Xhgui_Config
      * Read a config value.
      *
      * @param string $name The name of the config variable
-     * @return The value or null.
+     * @return mixed The value or null.
      */
     public static function read($name)
     {
@@ -64,22 +63,4 @@ class Xhgui_Config
     {
         self::$_config = array();
     }
-
-    /**
-     * Called during profiler initialization
-     *
-     * Allows arbitrary conditions to be added configuring how
-     * Xhgui profiles runs.
-     *
-     * @return boolean
-     */
-    public static function shouldRun()
-    {
-        $callback = self::read('profiler.enable');
-        if (!is_callable($callback)) {
-            return false;
-        }
-        return (bool)$callback();
-    }
-
 }
