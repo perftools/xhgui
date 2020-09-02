@@ -23,6 +23,7 @@ class Xhgui_ServiceContainer extends Container
 
     public function __construct()
     {
+        parent::__construct();
         $this->_slimApp();
         $this->_services();
         $this->_controllers();
