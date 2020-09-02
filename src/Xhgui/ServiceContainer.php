@@ -142,28 +142,28 @@ class Xhgui_ServiceContainer extends Container
      */
     protected function _controllers()
     {
-        $this['watchController'] = static function ($c) {
+        $this['watchController'] = $this->factory(static function ($c) {
             return new Xhgui_Controller_Watch($c['app'], $c['searcher']);
-        };
+        });
 
-        $this['runController'] = static function ($c) {
+        $this['runController'] = $this->factory(static function ($c) {
             return new Xhgui_Controller_Run($c['app'], $c['searcher']);
-        };
+        });
 
-        $this['customController'] = static function ($c) {
+        $this['customController'] = $this->factory(static function ($c) {
             return new Xhgui_Controller_Custom($c['app'], $c['searcher']);
-        };
+        });
 
-        $this['waterfallController'] = static function ($c) {
+        $this['waterfallController'] = $this->factory(static function ($c) {
             return new Xhgui_Controller_Waterfall($c['app'], $c['searcher']);
-        };
+        });
 
-        $this['importController'] = static function ($c) {
+        $this['importController'] = $this->factory(static function ($c) {
             return new Xhgui_Controller_Import($c['app'], $c['saver'], $c['config']['upload.token']);
-        };
+        });
 
-        $this['metricsController'] = static function ($c) {
+        $this['metricsController'] = $this->factory(static function ($c) {
             return new Xhgui_Controller_Metrics($c['app'], $c['searcher']);
-        };
+        });
     }
 }
