@@ -8,15 +8,7 @@
 
 return [
     // Which backend to use for Xhgui_Saver.
-    // Must be one of 'mongodb', or 'file'.
-    //
-    // Example (save to a temporary file):
-    //
-    //     'save.handler' => 'file',
-    //     # Beware of file locking. You can adujst this file path
-    //     # to reduce locking problems (eg uniqid, time ...)
-    //     'save.handler.filename' => __DIR__.'/../data/xhgui_'.date('Ymd').'.dat',
-    //
+    // Must be one of 'mongodb', or 'pdo'.
     'save.handler' => getenv('XHGUI_SAVE_HANDLER') ?: 'mongodb',
 
     'pdo' => [
@@ -47,57 +39,11 @@ return [
     'db.db' => getenv('XHGUI_MONGO_DATABASE') ?: 'xhprof',
     'db.options' => [],
     'db.driverOptions' => [],
+
     'run.view.filter.names' => [
         'Zend*',
         'Composer*',
     ],
-
-    // Whether to instrument a user request.
-    //
-    // NOTE: Only applies to using the external/header.php include.
-    //
-    // Must be a function that returns a boolean,
-    // or any non-function value to disable the profiler.
-    //
-    // Default: Profile 1 in 100 requests.
-    //
-    // Example (profile all requests):
-    //
-    //     'profiler.enable' => function() {
-    //         return true;
-    //     },
-    //
-    'profiler.enable' => static function () {
-        return rand(1, 100) === 42;
-    },
-
-    // Transformation for the "simple" variant of the URL.
-    // This is stored as `meta.simple_url` and used for
-    // aggregate data.
-    //
-    // NOTE: Only applies to using the external/header.php include.
-    //
-    // Must be a function that returns a string, or any
-    // non-callable value for the default behaviour.
-    //
-    // Default: Remove numeric values after `=`. For example,
-    // it turns "/foo?page=2" into "/foo?page".
-    'profiler.simple_url' => null,
-
-    // Enable to clean up the url saved to the DB
-    // in this way is possible to remove sensitive data or other kind of data
-    'profiler.replace_url' => null,
-
-    // Additional options to be passed to the `_enable()` function
-    // of the profiler extension (xhprof, tideways, etc.).
-    //
-    // NOTE: Only applies to using the external/header.php include.
-    'profiler.options' => [],
-
-    // Whether to profile PHP built-in functions
-    //
-    // NOTE: Only applies to using the external/header.php include.
-    'profiler.skip_built_in' => false,
 
     // Setup timezone for date formatting
     // Example: 'UTC', 'Europe/Tallinn'
@@ -116,5 +62,4 @@ return [
 
     // The number of items to show per page, on XHGui list pages.
     'page.limit' => 25,
-
 ];

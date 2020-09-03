@@ -33,7 +33,7 @@ class Xhgui_ServiceContainer extends Container
     protected function _slimApp()
     {
         $this['view'] = static function ($c) {
-            $cacheDir = isset($c['config']['cache']) ? $c['config']['cache'] : XHGUI_ROOT_DIR . '/cache';
+            $cacheDir = $c['config']['cache'] ?? XHGUI_ROOT_DIR . '/cache';
 
             // Configure Twig view for slim
             $view = new Twig();

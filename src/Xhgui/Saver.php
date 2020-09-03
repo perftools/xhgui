@@ -1,4 +1,7 @@
 <?php
+
+use MongoDB\Driver\Manager;
+
 /**
  * A small factory to handle creation of the profile saver instance.
  *
@@ -16,20 +19,10 @@ class Xhgui_Saver
     public static function factory($config)
     {
         switch ($config['save.handler']) {
-            case 'file':
-                return new Xhgui_Saver_File($config['save.handler.filename']);
-
-            case 'upload':
-                $timeout = 3;
-                if (isset($config['save.handler.upload.timeout'])) {
-                    $timeout = $config['save.handler.upload.timeout'];
-                }
-                return new Xhgui_Saver_Upload(
-                    $config['save.handler.upload.uri'],
-                    $timeout
-                );
-
             case 'pdo':
+                if (!class_exists(PDO::class)) {
+                    throw new RuntimeException("Required extension ext-pdo missing");
+                }
                 return new Xhgui_Saver_Pdo(
                     new PDO(
                         $config['pdo']['dsn'],
@@ -40,11 +33,16 @@ class Xhgui_Saver
                 );
 
             case 'mongodb':
-            default:
+                if (!class_exists(Manager::class)) {
+                    throw new RuntimeException("Required extension ext-mongodb missing");
+                }
                 $mongo = new MongoClient($config['db.host'], $config['db.options'], $config['db.driverOptions']);
                 $collection = $mongo->{$config['db.db']}->results;
                 $collection->findOne();
                 return new Xhgui_Saver_Mongo($collection);
+
+            default:
+                throw new RuntimeException("Unsupported save handler: {$config['save.handler']}");
         }
     }
 }

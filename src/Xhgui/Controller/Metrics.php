@@ -17,7 +17,6 @@ class Xhgui_Controller_Metrics extends Xhgui_Controller
 
     public function metrics()
     {
-        $request = $this->app->request();
         $response = $this->app->response();
 
         $stats = $this->searcher->stats();
