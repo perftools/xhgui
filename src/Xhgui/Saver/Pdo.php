@@ -82,6 +82,11 @@ SQL;
     {
         $main = $data['profile']['main()'];
 
+        // build 'request_ts' and 'request_date' from 'request_ts_micro'
+        $ts = $data['meta']['request_ts_micro'];
+        $sec = $ts['sec'];
+        $usec = $ts['usec'];
+
         $this->stmt->execute(array(
             'id'               => Xhgui_Util::generateId(),
             'profile'          => json_encode($data['profile']),
@@ -90,9 +95,9 @@ SQL;
             'GET'              => json_encode($data['meta']['get']),
             'ENV'              => json_encode($data['meta']['env']),
             'simple_url'       => $data['meta']['simple_url'],
-            'request_ts'       => $data['meta']['request_ts']['sec'],
-            'request_ts_micro' => "{$data['meta']['request_ts_micro']['sec']}.{$data['meta']['request_ts_micro']['usec']}",
-            'request_date'     => $data['meta']['request_date'],
+            'request_ts'       => $sec,
+            'request_ts_micro' => "$sec.$usec",
+            'request_date'     => date('Y-m-d', $sec),
             'main_wt'          => $main['wt'],
             'main_ct'          => $main['ct'],
             'main_cpu'         => $main['cpu'],
