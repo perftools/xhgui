@@ -7,6 +7,8 @@
             "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358787612},
+            "request_ts": {"sec": 1358787612, "usec": 0},
+            "request_ts_micro": {"sec": 1358787612, "usec": 123456},
             "request_date": "2013-01-21"
         },
         "profile": {
@@ -34,6 +36,8 @@
             "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358701212},
+            "request_ts": {"sec": 1358701212, "usec": 0},
+            "request_ts_micro": {"sec": 1358701212, "usec": 123456},
             "request_date": "2013-01-20"
         },
         "profile": {
@@ -96,6 +100,8 @@
             "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358614812},
+            "request_ts": {"sec": 1358614812, "usec": 0},
+            "request_ts_micro": {"sec": 1358614812, "usec": 123456},
             "request_date": "2013-01-19"
         },
         "profile": {
@@ -151,6 +157,8 @@
             "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358528412},
+            "request_ts": {"sec": 1358528412, "usec": 0},
+            "request_ts_micro": {"sec": 1358528412, "usec": 123456},
             "request_date": "2013-01-18"
         },
         "profile": {
@@ -185,6 +193,8 @@
             "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358614812},
+            "request_ts": {"sec": 1358614812, "usec": 0},
+            "request_ts_micro": {"sec": 1358614812, "usec": 123456},
             "request_date": "2013-01-19"
         },
         "profile": {
