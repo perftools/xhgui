@@ -28,10 +28,18 @@ The default installation uses MongoDB database. Most of the documentation speaks
 
 - [MongoDB Extension][ext-mongodb] MongoDB PHP driver.
   XHGui requires verison 1.3.0 or later.
+- [alcaeus/mongo-php-adapter] package
 - [MongoDB][mongodb] MongoDB Itself. XHGui requires version 2.2.0 or later.
+
+Installing PHP dependencies is typically running these commands:
+```
+pecl install mongodb
+composer require alcaeus/mongo-php-adapter
+```
 
 [ext-mongodb]: https://pecl.php.net/package/mongodb
 [mongodb]: https://www.mongodb.com/
+[alcaeus/mongo-php-adapter]: https://github.com/alcaeus/mongo-php-adapter
 
 ## PDO
 
