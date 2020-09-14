@@ -5,7 +5,7 @@ class Xhgui_Saver_Pdo implements Xhgui_Saver_Interface
     const TABLE_DDL = <<<SQL
 
 CREATE TABLE IF NOT EXISTS "%s" (
-  id               TEXT PRIMARY KEY,
+  id               CHAR(24) PRIMARY KEY,
   profile          TEXT           NOT NULL,
   url              TEXT           NULL,
   SERVER           TEXT           NULL,
