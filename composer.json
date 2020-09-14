@@ -12,6 +12,12 @@
             "XHGui\\Test\\": "tests/"
         }
     },
+    "config": {
+        "platform": {
+            "php": "7.0.0"
+        },
+        "sort-packages": true
+    },
     "require": {
         "php": "^7.0",
         "ext-json": "*",
