@@ -6,8 +6,9 @@
 FROM php:7.3-fpm-alpine AS base
 
 RUN set -x \
-    && apk add --no-cache --virtual .build-deps ${PHPIZE_DEPS} \
+	&& apk add --no-cache --virtual .build-deps ${PHPIZE_DEPS} postgresql-dev \
 	&& pecl install mongodb && docker-php-ext-enable mongodb \
+	&& docker-php-ext-install pdo pdo_mysql pdo_pgsql \
     && apk del .build-deps
 
 # prepare sources
