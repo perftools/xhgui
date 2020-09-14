@@ -21,7 +21,7 @@ WORKDIR /app/vendor
 FROM base AS build
 WORKDIR /app
 ARG COMPOSER_FLAGS="--no-interaction --no-suggest --ansi --no-dev"
-COPY --from=composer:1.8 /usr/bin/composer /usr/bin/
+COPY --from=composer:1.10 /usr/bin/composer /usr/bin/
 
 COPY --from=source /app/composer.* ./
 COPY --from=source /app/vendor ./vendor
