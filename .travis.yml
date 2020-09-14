@@ -9,7 +9,7 @@ php:
 
 env:
   - XHGUI_SAVE_HANDLER=mongodb
-  - XHGUI_SAVE_HANDLER=pdo
+  - XHGUI_SAVE_HANDLER=pdo XHGUI_PDO_DSN="mysql:host=localhost;dbname=xhgui" XHGUI_PDO_USER=root
 
 jobs:
   allow_failures:
