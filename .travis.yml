@@ -14,6 +14,11 @@ env:
 jobs:
   allow_failures:
     - php: 7.4
+    # Allow pdo jobs to fail. Env match must be exact
+    # https://docs.travis-ci.com/user/build-matrix/#excluding-jobs-with-env-value
+    - env: XHGUI_SAVE_HANDLER=pdo XHGUI_PDO_DSN="mysql:host=localhost;dbname=xhgui" XHGUI_PDO_USER=root
+    - env: XHGUI_SAVE_HANDLER=pdo XHGUI_PDO_DSN="sqlite:/tmp/xhgui.sqlite3"
+    - env: XHGUI_SAVE_HANDLER=pdo XHGUI_PDO_DSN="pgsql:dbname=xhgui user=postgres password="
   include:
     - php: 7.2
       env: COVERAGE=1
