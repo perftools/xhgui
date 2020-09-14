@@ -15,11 +15,14 @@ class MongoTest extends TestCase
         $collection = $this->getMockBuilder(MongoCollection::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $collection->expects($this->once())
+        $collection->expects($this->exactly(5))
             ->method('insert')
-            ->with($this->equalTo($data + ['_id' => Xhgui_Saver_Mongo::getLastProfilingId()]));
+            ->withConsecutive($this->equalTo($data));
 
         $saver = new Xhgui_Saver_Mongo($collection);
-        $saver->save($data);
+
+        foreach ($data as $profile) {
+            $saver->save($profile);
+        }
     }
 }
