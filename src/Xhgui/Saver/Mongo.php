@@ -19,10 +19,6 @@ class Xhgui_Saver_Mongo implements Xhgui_Saver_Interface
 
     public function save(array $data)
     {
-        if (!isset($data['_id'])) {
-            $data['_id'] = self::getLastProfilingId();
-        }
-
         if (isset($data['meta']['request_ts'])) {
             $data['meta']['request_ts'] = new MongoDate($data['meta']['request_ts']['sec']);
         }
@@ -34,8 +30,23 @@ class Xhgui_Saver_Mongo implements Xhgui_Saver_Interface
             );
         }
 
+        $meta = [
+            'url' => $data['meta']['url'],
+            'get' => $data['meta']['get'],
+            'env' => $data['meta']['env'],
+            'SERVER' => $data['meta']['SERVER'],
+            'simple_url' => $data['meta']['simple_url'],
+            'request_ts' => $data['meta']['request_ts'],
+            'request_ts_micro' => $data['meta']['request_ts_micro'],
+            'request_date' => $data['meta']['request_date'],
+        ];
 
-        return $this->_collection->insert($data, array('w' => 0));
+        $a = [
+            '_id' => $data['_id'] ?? self::getLastProfilingId(),
+            'meta' => $meta,
+            'profile' => $data['profile'],
+        ];
+        return $this->_collection->insert($a, ['w' => 0]);
     }
 
     /**
