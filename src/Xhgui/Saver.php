@@ -23,11 +23,15 @@ class Xhgui_Saver
                 if (!class_exists(PDO::class)) {
                     throw new RuntimeException("Required extension ext-pdo missing");
                 }
+                $options = [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                ];
                 return new Xhgui_Saver_Pdo(
                     new PDO(
                         $config['pdo']['dsn'],
                         $config['pdo']['user'],
-                        $config['pdo']['pass']
+                        $config['pdo']['pass'],
+                        $options
                     ),
                     $config['pdo']['table']
                 );

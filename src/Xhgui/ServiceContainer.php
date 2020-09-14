@@ -97,10 +97,14 @@ class Xhgui_ServiceContainer extends Container
         };
 
         $this['pdo'] = static function ($c) {
+            $options = [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            ];
             return new PDO(
                 $c['config']['pdo']['dsn'],
                 $c['config']['pdo']['user'],
-                $c['config']['pdo']['pass']
+                $c['config']['pdo']['pass'],
+                $options
             );
         };
 
