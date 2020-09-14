@@ -7,6 +7,10 @@ php:
   - 7.1
   - 7.0
 
+env:
+  - XHGUI_SAVE_HANDLER=mongodb
+  - XHGUI_SAVE_HANDLER=pdo
+
 jobs:
   allow_failures:
     - php: 7.4
