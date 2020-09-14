@@ -16,6 +16,7 @@ jobs:
 
 services:
   - mongodb
+  - mysql
 
 install:
   - .travis/install.sh
