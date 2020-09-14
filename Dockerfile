@@ -6,9 +6,18 @@
 FROM php:7.3-fpm-alpine AS base
 
 RUN set -x \
-    && apk add --no-cache --virtual .build-deps ${PHPIZE_DEPS} \
+	&& apk add --no-cache --virtual .build-deps ${PHPIZE_DEPS} postgresql-dev \
 	&& pecl install mongodb && docker-php-ext-enable mongodb \
-    && apk del .build-deps
+	&& docker-php-ext-install pdo pdo_mysql pdo_pgsql \
+	# https://github.com/docker-library/php/blob/c8c4d223a052220527c6d6f152b89587be0f5a7c/7.3/alpine3.12/fpm/Dockerfile#L166-L172
+	&& runDeps="$( \
+		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
+			| tr ',' '\n' \
+			| sort -u \
+			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+	)" \
+	&& apk add --no-cache $runDeps \
+	&& apk del .build-deps
 
 # prepare sources
 FROM scratch AS source
@@ -21,7 +30,7 @@ WORKDIR /app/vendor
 FROM base AS build
 WORKDIR /app
 ARG COMPOSER_FLAGS="--no-interaction --no-suggest --ansi --no-dev"
-COPY --from=composer:1.8 /usr/bin/composer /usr/bin/
+COPY --from=composer:1.10 /usr/bin/composer /usr/bin/
 
 COPY --from=source /app/composer.* ./
 COPY --from=source /app/vendor ./vendor
