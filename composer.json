@@ -12,24 +12,27 @@
             "XHGui\\Test\\": "tests/"
         }
     },
+    "config": {
+        "platform": {
+            "php": "7.0.0",
+            "ext-mongodb": "1.3.0"
+        },
+        "sort-packages": true
+    },
     "require": {
         "php": "^7.0",
         "ext-json": "*",
+        "alcaeus/mongo-php-adapter": "^1.1",
+        "pimple/pimple": "^3.0",
         "slim/slim": "^2.6.3",
         "slim/views": "^0.1.0",
-        "twig/twig": "~1.17",
-        "pimple/pimple": "^3.0"
+        "twig/twig": "~1.17"
     },
     "require-dev": {
-        "alcaeus/mongo-php-adapter": "^1.1",
         "phpunit/phpunit": "^5.7.27 | ^6.5.13"
     },
     "scripts": {
         "test": "phpunit",
         "cover": "phpunit --coverage-clover=unittest-coverage.clover"
-    },
-    "suggest": {
-        "ext-mongodb": "Requried to store profiler results in MongoDB",
-        "alcaeus/mongo-php-adapter": "Required for storing profiler results in MongoDB"
     }
 }
