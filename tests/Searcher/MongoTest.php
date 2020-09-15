@@ -16,11 +16,11 @@ class MongoTest extends TestCase
     public function setUp()
     {
         $di = Xhgui_ServiceContainer::instance();
-        $this->mongo = $di['searcher.mongo'];
+        $this->mongo = $di['searcher.mongodb'];
 
         $di['db']->watches->drop();
 
-        loadFixture($di['saver.mongo'], XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        loadFixture($di['saver.mongodb'], XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
     }
 
     public function testCustomQuery()
