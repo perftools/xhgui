@@ -99,7 +99,10 @@ SQL;
             'main_mu'          => $main['mu'],
             'main_pmu'         => $main['pmu'],
         ));
+    }
 
+    public function __destruct()
+    {
         $this->stmt->closeCursor();
     }
 }
