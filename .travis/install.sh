@@ -15,6 +15,9 @@ case "$XHGUI_SAVE_HANDLER:$XHGUI_PDO_DSN" in
 pdo:mysql:*)
     mysql -uroot -e "create database xhgui"
     ;;
+pdo:pgsql:*)
+    psql -c 'create database xhgui;' -U postgres
+    ;;
 esac
 
 composer install --prefer-dist

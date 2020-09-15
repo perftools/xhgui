@@ -11,6 +11,7 @@ env:
   - XHGUI_SAVE_HANDLER=mongodb
   - XHGUI_SAVE_HANDLER=pdo XHGUI_PDO_DSN="mysql:host=localhost;dbname=xhgui" XHGUI_PDO_USER=root
   - XHGUI_SAVE_HANDLER=pdo XHGUI_PDO_DSN="sqlite:/tmp/xhgui.sqlite3"
+  - XHGUI_SAVE_HANDLER=pdo XHGUI_PDO_DSN="pgsql:dbname=xhgui user=postgres password="
 
 jobs:
   allow_failures:
@@ -27,6 +28,7 @@ jobs:
 services:
   - mongodb
   - mysql
+  - postgresql
 
 install:
   - .travis/install.sh
