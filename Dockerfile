@@ -10,12 +10,12 @@ RUN set -x \
 	&& pecl install mongodb && docker-php-ext-enable mongodb \
 	&& docker-php-ext-install pdo pdo_mysql pdo_pgsql \
 	# https://github.com/docker-library/php/blob/c8c4d223a052220527c6d6f152b89587be0f5a7c/7.3/alpine3.12/fpm/Dockerfile#L166-L172
-	&& runDeps="$( \
+	&& runDeps=$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
 			| tr ',' '\n' \
 			| sort -u \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
-	)" \
+	) \
 	&& apk add --no-cache $runDeps \
 	&& apk del .build-deps
 
