@@ -36,7 +36,6 @@ COPY --from=source /app/composer.* ./
 COPY --from=source /app/vendor ./vendor
 
 # install in two steps to cache composer run based on composer.* files
-RUN composer require --update-no-dev --no-scripts alcaeus/mongo-php-adapter ^1.1
 RUN composer install $COMPOSER_FLAGS --no-scripts --no-autoloader
 
 # copy rest of the project. copy in order that is least to most changed
