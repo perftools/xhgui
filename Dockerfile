@@ -23,7 +23,7 @@ RUN set -x \
 FROM scratch AS source
 WORKDIR /app
 COPY . .
-# mkdir "vendor" dir, so the next stage can use external vendor optionally
+# mkdir "vendor" dir, so the next stage can optionally use external vendor dir contents
 WORKDIR /app/vendor
 
 # install composer vendor
@@ -48,12 +48,15 @@ RUN composer install $COMPOSER_FLAGS --classmap-authoritative
 # not needed runtime, cleanup
 RUN rm -vf composer.* vendor/composer/*.json
 
+# add vendor as separate docker layer
+RUN mv vendor /
+
 # build runtime image
 FROM base
-#ARG APPDIR=/app
 ARG APPDIR=/var/www/xhgui
 ARG WEBROOT=$APPDIR/webroot
 WORKDIR $APPDIR
 
 RUN mkdir -p cache && chmod -R 777 cache
+COPY --from=build /vendor ./vendor/
 COPY --from=build /app $APPDIR/
