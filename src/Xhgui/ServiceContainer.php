@@ -1,5 +1,6 @@
 <?php
 
+use MongoDB\Driver\Manager;
 use Pimple\Container;
 use Slim\Slim;
 use Slim\Views\Twig;
@@ -108,7 +109,7 @@ class Xhgui_ServiceContainer extends Container
             );
         };
 
-        $this['searcher.mongo'] = static function ($c) {
+        $this['searcher.mongodb'] = static function ($c) {
             return new Xhgui_Searcher_Mongo($c['db']);
         };
 
@@ -117,27 +118,50 @@ class Xhgui_ServiceContainer extends Container
         };
 
         $this['searcher'] = static function ($c) {
-            $config = $c['config'];
+            $saver = $c['config']['save.handler'];
 
-            switch ($config['save.handler']) {
-                case 'pdo':
-                    return $c['searcher.pdo'];
-
-                case 'mongodb':
-                default:
-                    return $c['searcher.mongo'];
-            }
+            return $c["searcher.$saver"];
         };
 
-        $this['saver.mongo'] = static function ($c) {
+        $this['saver.mongodb'] = static function ($c) {
             $config = $c['config'];
-            $config['save.handler'] = 'mongodb';
 
-            return Xhgui_Saver::factory($config);
+            if (!class_exists(Manager::class)) {
+                throw new RuntimeException("Required extension ext-mongodb missing");
+            }
+            $mongo = new MongoClient($config['db.host'], $config['db.options'], $config['db.driverOptions']);
+            $collection = $mongo->{$config['db.db']}->results;
+            $collection->findOne();
+
+            return new Xhgui_Saver_Mongo($collection);
+        };
+
+        $this['saver.pdo'] = static function ($c) {
+            $config = $c['config'];
+
+            if (!class_exists(PDO::class)) {
+                throw new RuntimeException("Required extension ext-pdo is missing");
+            }
+
+            $options = [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            ];
+
+            return new Xhgui_Saver_Pdo(
+                new PDO(
+                    $config['pdo']['dsn'],
+                    $config['pdo']['user'],
+                    $config['pdo']['pass'],
+                    $options
+                ),
+                $config['pdo']['table']
+            );
         };
 
         $this['saver'] = static function ($c) {
-            return Xhgui_Saver::factory($c['config']);
+            $saver = $c['config']['save.handler'];
+
+            return $c["saver.$saver"];
         };
     }
 
