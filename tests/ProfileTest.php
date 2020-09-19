@@ -2,6 +2,7 @@
 
 namespace XHGui\Test;
 
+use DateTime;
 use Xhgui_Profile;
 
 class ProfileTest extends TestCase
@@ -493,6 +494,6 @@ class ProfileTest extends TestCase
         ];
         $profile = new Xhgui_Profile($data);
         $result = $profile->getDate();
-        $this->assertInstanceOf('DateTime', $result);
+        $this->assertInstanceOf(DateTime::class, $result);
     }
 }

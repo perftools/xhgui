@@ -3,6 +3,7 @@
 namespace XHGui\Test\Searcher;
 
 use XHGui\Test\TestCase;
+use Xhgui_Profile;
 use Xhgui_Searcher_Mongo;
 use Xhgui_ServiceContainer;
 
@@ -44,7 +45,7 @@ class MongoTest extends TestCase
         $this->assertEquals(1, $result['perPage']);
 
         $this->assertCount(1, $result['results']);
-        $this->assertInstanceOf('Xhgui_Profile', $result['results'][0]);
+        $this->assertInstanceOf(Xhgui_Profile::class, $result['results'][0]);
 
         $result = $this->mongo->getForUrl('/not-there', $options);
         $this->assertCount(0, $result['results']);
@@ -138,7 +139,7 @@ class MongoTest extends TestCase
     public function testLatest()
     {
         $result = $this->mongo->latest();
-        $this->assertInstanceOf('Xhgui_Profile', $result);
+        $this->assertInstanceOf(Xhgui_Profile::class, $result);
         $this->assertEquals('2013-01-21', $result->getDate()->format('Y-m-d'));
     }
 
