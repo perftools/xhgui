@@ -3,7 +3,6 @@
 /*
 !/composer.*
 !/config/
-!/docker/
 !/src/
 !/vendor/
 !/webroot/
