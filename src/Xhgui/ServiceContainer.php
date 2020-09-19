@@ -14,6 +14,7 @@ use XHGui\Middleware\RenderMiddleware;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\PdoSearcher;
 use XHGui\Twig\TwigExtension;
+use Xhgui\Db\PdoWrapper;
 
 class ServiceContainer extends Container
 {
@@ -112,16 +113,7 @@ class ServiceContainer extends Container
                 throw new RuntimeException("Required extension ext-pdo is missing");
             }
 
-            $options = [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ];
-
-            return new PDO(
-                $c['config']['pdo']['dsn'],
-                $c['config']['pdo']['user'],
-                $c['config']['pdo']['pass'],
-                $options
-            );
+            return PdoWrapper::create($c['config']['pdo']);
         };
 
         $this['searcher.mongodb'] = static function ($c) {
