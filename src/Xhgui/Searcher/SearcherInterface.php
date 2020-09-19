@@ -1,14 +1,20 @@
 <?php
 
+namespace XHGui\Searcher;
+
+use Exception;
+use MongoCursor;
+use XHGui\Profile;
+
 /**
  * Contract for classes that search and retrieve XHProf profiles.
  */
-interface Xhgui_Searcher_Interface
+interface SearcherInterface
 {
     /**
      * Get the latest profile data.
      *
-     * @return Xhgui_Profile
+     * @return Profile
      *
      * @throws Exception When there is not even a single profile available.
      */
@@ -29,7 +35,7 @@ interface Xhgui_Searcher_Interface
      * Get a single profile run by id.
      *
      * @param string $id The id of the profile to get.
-     * @return Xhgui_Profile
+     * @return Profile
      *
      * @throws Exception When a profile with the given $id is not found.
      */
@@ -75,7 +81,7 @@ interface Xhgui_Searcher_Interface
      *
      * @param array $options The find options to use.
      * @return array An array of result data with the following keys:
-     *  - results:    an array of Xhgui_Profile objects
+     *  - results:    an array of Profile objects
      *  - sort:       an array of search criteria (TODO meta.SERVER.REQUEST_TIME => -1 ????)
      *  - direction:  an string, either 'desc' or 'asc'
      *  - page:       an integer, the page to display (e.g. 3)

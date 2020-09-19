@@ -1,7 +1,10 @@
 <?php
+
+use XHGui\ServiceContainer;
+
 require dirname(__DIR__) . '/src/bootstrap.php';
 
-$di = new Xhgui_ServiceContainer();
+$di = new ServiceContainer();
 
 $app = $di['app'];
 

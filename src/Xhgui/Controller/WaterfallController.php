@@ -1,15 +1,20 @@
 <?php
 
-use Slim\Slim;
+namespace XHGui\Controller;
 
-class Xhgui_Controller_Waterfall extends Xhgui_Controller
+use Slim\Slim;
+use XHGui\Searcher\SearcherInterface;
+use XHGui\AbstractController;
+use XHGui\Profile;
+
+class WaterfallController extends AbstractController
 {
     /**
-     * @var Xhgui_Searcher_Interface
+     * @var SearcherInterface
      */
     protected $searcher;
 
-    public function __construct(Slim $app, Xhgui_Searcher_Interface $searcher)
+    public function __construct(Slim $app, SearcherInterface $searcher)
     {
         parent::__construct($app);
         $this->searcher = $searcher;
@@ -64,7 +69,7 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
             'projection' => true,
         ]);
         $datas = [];
-        /** @var Xhgui_Profile $r */
+        /** @var Profile $r */
         foreach ($result['results'] as $r) {
             $duration = $r->get('main()', 'wt');
             $start = $r->getMeta('SERVER.REQUEST_TIME_FLOAT');

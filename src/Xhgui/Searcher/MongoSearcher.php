@@ -1,9 +1,19 @@
 <?php
 
+namespace XHGui\Searcher;
+
+use Exception;
+use MongoCursor;
+use MongoDate;
+use MongoDb;
+use MongoId;
+use XHGui\Db\Mapper;
+use XHGui\Profile;
+
 /**
  * A Searcher for a MongoDB backend.
  */
-class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
+class MongoSearcher implements SearcherInterface
 {
     protected $_collection;
 
@@ -15,7 +25,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
     {
         $this->_collection = $db->results;
         $this->_watches = $db->watches;
-        $this->_mapper = new Xhgui_Db_Mapper();
+        $this->_mapper = new Mapper();
     }
 
     /**
@@ -322,10 +332,10 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
     }
 
     /**
-     * Converts arrays + MongoCursors into Xhgui_Profile instances.
+     * Converts arrays + MongoCursors into Profile instances.
      *
      * @param array|MongoCursor $data The data to transform.
-     * @return Xhgui_Profile|Xhgui_Profile[] The transformed/wrapped results.
+     * @return Profile|Profile[] The transformed/wrapped results.
      */
     private function _wrap($data)
     {
@@ -334,11 +344,11 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
         }
 
         if (is_array($data)) {
-            return new Xhgui_Profile($data);
+            return new Profile($data);
         }
         $results = [];
         foreach ($data as $row) {
-            $results[] = new Xhgui_Profile($row);
+            $results[] = new Profile($row);
         }
 
         return $results;

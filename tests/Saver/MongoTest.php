@@ -3,8 +3,8 @@
 namespace XHGui\Test\Saver;
 
 use MongoCollection;
+use XHGui\Saver\MongoSaver;
 use XHGui\Test\TestCase;
-use Xhgui_Saver_Mongo;
 
 class MongoTest extends TestCase
 {
@@ -19,7 +19,7 @@ class MongoTest extends TestCase
             ->method('insert')
             ->withConsecutive($this->equalTo($data));
 
-        $saver = new Xhgui_Saver_Mongo($collection);
+        $saver = new MongoSaver($collection);
 
         foreach ($data as $profile) {
             $saver->save($profile);

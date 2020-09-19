@@ -1,8 +1,13 @@
 <?php
 
-use Slim\Slim;
+namespace XHGui\Controller;
 
-class Xhgui_Controller_Run extends Xhgui_Controller
+use Exception;
+use Slim\Slim;
+use XHGui\Searcher\SearcherInterface;
+use XHGui\AbstractController;
+
+class RunController extends AbstractController
 {
     /**
      * HTTP GET attribute name for comma separated filters
@@ -10,11 +15,11 @@ class Xhgui_Controller_Run extends Xhgui_Controller
     const FILTER_ARGUMENT_NAME = 'filter';
 
     /**
-     * @var Xhgui_Searcher_Interface
+     * @var SearcherInterface
      */
     private $searcher;
 
-    public function __construct(Slim $app, Xhgui_Searcher_Interface $searcher)
+    public function __construct(Slim $app, SearcherInterface $searcher)
     {
         parent::__construct($app);
         $this->searcher = $searcher;

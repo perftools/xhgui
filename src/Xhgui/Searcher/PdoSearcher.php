@@ -1,6 +1,12 @@
 <?php
 
-class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
+namespace XHGui\Searcher;
+
+use Exception;
+use PDO;
+use XHGui\Profile;
+
+class PdoSearcher implements SearcherInterface
 {
     /**
      * @var PDO
@@ -49,7 +55,7 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
             throw new Exception('No profile available yet.');
         }
 
-        return new Xhgui_Profile([
+        return new Profile([
             '_id' => $row['id'],
             'meta' => [
                 'url' => $row['url'],
@@ -99,7 +105,7 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
             throw new Exception('No profile data found.');
         }
 
-        return new Xhgui_Profile([
+        return new Profile([
             '_id' => $id,
             'meta' => [
                 'url' => $row['url'],
@@ -192,7 +198,7 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
 
         $results = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $results[] = new Xhgui_Profile([
+            $results[] = new Profile([
                 '_id' => $row['id'],
                 'meta' => [
                     'url' => $row['url'],

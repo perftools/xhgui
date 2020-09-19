@@ -1,15 +1,19 @@
 <?php
 
-use Slim\Slim;
+namespace XHGui\Controller;
 
-class Xhgui_Controller_Custom extends Xhgui_Controller
+use Slim\Slim;
+use XHGui\Searcher\SearcherInterface;
+use XHGui\AbstractController;
+
+class CustomController extends AbstractController
 {
     /**
-     * @var Xhgui_Searcher_Interface
+     * @var SearcherInterface
      */
     protected $searcher;
 
-    public function __construct(Slim $app, Xhgui_Searcher_Interface $searcher)
+    public function __construct(Slim $app, SearcherInterface $searcher)
     {
         parent::__construct($app);
         $this->searcher = $searcher;

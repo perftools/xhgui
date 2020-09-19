@@ -1,8 +1,11 @@
 <?php
+
+namespace XHGui;
+
 /**
  * Loads and reads config file.
  */
-class Xhgui_Config
+class Config
 {
     private static $config = [];
 

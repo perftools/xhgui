@@ -2,9 +2,13 @@
 /**
  * Bootstrap for xhgui test suite.
  */
+
+use XHGui\Saver\SaverInterface;
+use XHGui\ServiceContainer;
+
 require dirname(__DIR__) . '/src/bootstrap.php';
 
-$di = Xhgui_ServiceContainer::instance();
+$di = ServiceContainer::instance();
 
 // Use a test database.
 $config = $di['config'];
@@ -17,7 +21,7 @@ unset($di, $config);
 /**
  * Load a fixture into the database.
  */
-function loadFixture(Xhgui_Saver_Interface $saver, $file)
+function loadFixture(SaverInterface $saver, $file)
 {
     $data = json_decode(file_get_contents($file), true);
     foreach ($data as $record) {

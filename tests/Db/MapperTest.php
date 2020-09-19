@@ -5,18 +5,18 @@ namespace XHGui\Test\Db;
 use DateInterval;
 use DateTime;
 use MongoDate;
+use XHGui\Db\Mapper;
 use XHGui\Test\TestCase;
-use Xhgui_Db_Mapper;
 
 class MapperTest extends TestCase
 {
-    /** @var Xhgui_Db_Mapper */
+    /** @var Mapper */
     private $mapper;
 
     public function setUp()
     {
         parent::setUp();
-        $this->mapper = new Xhgui_Db_Mapper();
+        $this->mapper = new Mapper();
     }
 
     public function testConvertConditions()

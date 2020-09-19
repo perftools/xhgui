@@ -1,9 +1,14 @@
 <?php
 
+namespace XHGui\Twig;
+
 use Slim\Router;
 use Slim\Slim;
+use Twig_Extension;
+use Twig_Filter_Method;
+use Twig_Function_Method;
 
-class Xhgui_Twig_Extension extends Twig_Extension
+class TwigExtension extends Twig_Extension
 {
     /** @var Slim */
     protected $_app;

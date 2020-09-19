@@ -3,19 +3,19 @@
 namespace XHGui\Test\Controller;
 
 use Slim\Environment;
-use XHGui\Test\TestCase;
-use Xhgui_Controller_Watch;
-use Xhgui_Searcher_Interface;
-use Xhgui_ServiceContainer;
 use Slim\Slim;
+use XHGui\Controller\WatchController;
+use XHGui\Searcher\SearcherInterface;
+use XHGui\Test\TestCase;
+use XHGui\ServiceContainer;
 
 class WatchTest extends TestCase
 {
-    /** @var Xhgui_Controller_Watch */
+    /** @var WatchController */
     private $watches;
     /** @var Slim */
     private $app;
-    /** @var Xhgui_Searcher_Interface */
+    /** @var SearcherInterface */
     private $searcher;
 
     public function setUp()
@@ -26,7 +26,7 @@ class WatchTest extends TestCase
            'PATH_INFO' => '/watch',
         ]);
 
-        $di = Xhgui_ServiceContainer::instance();
+        $di = ServiceContainer::instance();
         $di['app'] = $this->getMockBuilder(Slim::class)
             ->setMethods(['redirect', 'render', 'urlFor'])
             ->setConstructorArgs([$di['config']])
