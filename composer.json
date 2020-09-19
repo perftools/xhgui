@@ -3,6 +3,9 @@
     "description": "A web based interface for viewing profile data collected by XHProf",
     "license": "MIT",
     "autoload": {
+        "psr-4": {
+            "XHGui\\": "src/Xhgui/"
+        },
         "psr-0": {
             "Xhgui_": "src/"
         }
