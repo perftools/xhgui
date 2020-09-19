@@ -14,7 +14,7 @@ class Xhgui_Config
      */
     public static function load($file)
     {
-        $config = include($file);
+        $config = include $file;
         self::$_config = array_merge(self::$_config, $config);
     }
 
