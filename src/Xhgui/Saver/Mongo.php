@@ -40,6 +40,7 @@ class Xhgui_Saver_Mongo implements Xhgui_Saver_Interface
             'meta' => $meta,
             'profile' => $data['profile'],
         ];
+
         return $this->_collection->insert($a, ['w' => 0]);
     }
 
@@ -52,6 +53,7 @@ class Xhgui_Saver_Mongo implements Xhgui_Saver_Interface
         if (!self::$lastProfilingId) {
             self::$lastProfilingId = new MongoId();
         }
+
         return self::$lastProfilingId;
     }
 }

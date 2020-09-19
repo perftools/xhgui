@@ -85,6 +85,7 @@ class Xhgui_Profile
             }
             $a[$key] += $b[$key] ?? 0;
         }
+
         return $a;
     }
 
@@ -97,6 +98,7 @@ class Xhgui_Profile
         foreach ($keys as $key) {
             $a[$key] -= $b[$key];
         }
+
         return $a;
     }
 
@@ -114,6 +116,7 @@ class Xhgui_Profile
                 $out[$key] = -1;
             }
         }
+
         return $out;
     }
 
@@ -141,6 +144,7 @@ class Xhgui_Profile
         if ($date) {
             return new DateTime('@' . $date);
         }
+
         return new DateTime('now');
     }
 
@@ -165,6 +169,7 @@ class Xhgui_Profile
                 return null;
             }
         }
+
         return $data;
     }
 
@@ -186,6 +191,7 @@ class Xhgui_Profile
         if (!isset($this->_collapsed[$key][$metric])) {
             return null;
         }
+
         return $this->_collapsed[$key][$metric];
     }
 
@@ -201,6 +207,7 @@ class Xhgui_Profile
         if (isset($this->_collapsed[$pattern])) {
             $data = $this->_collapsed[$pattern];
             $data['function'] = $pattern;
+
             return [$data];
         }
         $matches = [];
@@ -212,6 +219,7 @@ class Xhgui_Profile
                 $matches[] = $data;
             }
         }
+
         return $matches;
     }
 
@@ -248,6 +256,7 @@ class Xhgui_Profile
 
         $parents = $this->_getParents($symbol);
         $children = $this->_getChildren($symbol, $metric, $threshold);
+
         return [$parents, $current, $children];
     }
 
@@ -267,6 +276,7 @@ class Xhgui_Profile
                 $parents[] = ['function' => $parent] + $this->_collapsed[$parent];
             }
         }
+
         return $parents;
     }
 
@@ -303,6 +313,7 @@ class Xhgui_Profile
             }
             $children[] = $data + ['function' => $name];
         }
+
         return $children;
     }
 
@@ -330,6 +341,7 @@ class Xhgui_Profile
                 'value' => $funcData[$dimension],
             ];
         }
+
         return $extract;
     }
 
@@ -383,6 +395,7 @@ class Xhgui_Profile
                 $this->_collapsed[$name]['epmu'] -= $child['pmu'];
             }
         }
+
         return $this;
     }
 
@@ -399,9 +412,11 @@ class Xhgui_Profile
             if ($a[$dimension] == $b[$dimension]) {
                 return 0;
             }
+
             return $a[$dimension] > $b[$dimension] ? -1 : 1;
         };
         uasort($data, $sorter);
+
         return $data;
     }
 
@@ -437,6 +452,7 @@ class Xhgui_Profile
         if (isset($a[1])) {
             return $a;
         }
+
         return [null, $a[0]];
     }
 
@@ -455,6 +471,7 @@ class Xhgui_Profile
             $total += $data['ct'];
         }
         $this->_functionCount = $total;
+
         return $this->_functionCount;
     }
 
@@ -511,6 +528,7 @@ class Xhgui_Profile
                 if ($item[$metric] > $result) {
                     return $item[$metric];
                 }
+
                 return $result;
             },
             0
@@ -549,6 +567,7 @@ class Xhgui_Profile
             'links' => $this->_links,
         ];
         unset($this->_visited, $this->_nodes, $this->_links);
+
         return $out;
     }
 

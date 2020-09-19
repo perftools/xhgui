@@ -2,7 +2,6 @@
 
 class Xhgui_Db_Mapper
 {
-
     /**
      * Convert request data keys into mongo values.
      *
@@ -102,6 +101,7 @@ class Xhgui_Db_Mapper
         if (!$date) {
             return $date;
         }
+
         return $date->getTimestamp();
     }
 
@@ -114,6 +114,7 @@ class Xhgui_Db_Mapper
         if (in_array($options['direction'], $valid, true)) {
             return $options['direction'];
         }
+
         return 'desc';
     }
     /**

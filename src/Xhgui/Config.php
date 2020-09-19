@@ -29,6 +29,7 @@ class Xhgui_Config
         if (isset(self::$_config[$name])) {
             return self::$_config[$name];
         }
+
         return null;
     }
 

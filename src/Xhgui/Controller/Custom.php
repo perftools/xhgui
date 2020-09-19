@@ -53,6 +53,7 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
 
         if (count($error) > 0) {
             $json = json_encode(['error' => $error]);
+
             return $response->body($json);
         }
 

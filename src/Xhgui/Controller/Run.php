@@ -373,6 +373,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $callgraph = $profile->getCallgraph($metric, $threshold);
 
         $response['Content-Type'] = 'application/json';
+
         return $response->body(json_encode($callgraph));
     }
 
@@ -386,6 +387,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $callgraph = $profile->getCallgraphNodes($metric, $threshold);
 
         $response['Content-Type'] = 'application/json';
+
         return $response->body(json_encode($callgraph));
     }
 }

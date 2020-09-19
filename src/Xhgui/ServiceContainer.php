@@ -19,6 +19,7 @@ class Xhgui_ServiceContainer extends Container
         if (empty(static::$_instance)) {
             static::$_instance = new self();
         }
+
         return static::$_instance;
     }
 
@@ -101,6 +102,7 @@ class Xhgui_ServiceContainer extends Container
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ];
+
             return new PDO(
                 $c['config']['pdo']['dsn'],
                 $c['config']['pdo']['user'],

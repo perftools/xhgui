@@ -47,6 +47,7 @@ function runProcess($cmd, $input = null)
     if (strlen($error)) {
         return 'ERROR - ' . $error;
     }
+
     return $output;
 }
 
@@ -77,7 +78,6 @@ out("Installing dependencies.");
 $cmd = 'php ' . __DIR__ . '/composer.phar install --prefer-dist';
 $output = runProcess($cmd);
 out($output);
-
 
 /**
  * File permissions.

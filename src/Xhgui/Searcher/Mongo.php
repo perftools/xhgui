@@ -27,6 +27,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
             ->sort(['meta.request_date' => -1])
             ->limit(1);
         $result = $cursor->getNext();
+
         return $this->_wrap($result);
     }
 
@@ -63,6 +64,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
         $options = array_merge($options, [
             'conditions' => $conditions,
         ]);
+
         return $this->paginate($options);
     }
 
@@ -140,6 +142,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
                 unset($result[$key]);
             }
         }
+
         return $results['result'];
     }
 
@@ -184,6 +187,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
             $results['result'][$i]['date'] = $result['_id'];
             unset($results['result'][$i]['_id']);
         }
+
         return $results['result'];
     }
 
@@ -225,6 +229,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
                 ['_id' => new MongoId($data['_id'])],
                 ['w' => 1]
             );
+
             return true;
         }
 
@@ -233,6 +238,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
                 $data,
                 ['w' => 1]
             );
+
             return true;
         }
 
@@ -242,6 +248,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
             $data,
             ['w' => 1]
         );
+
         return true;
     }
 
@@ -251,6 +258,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
     public function getAllWatches()
     {
         $cursor = $this->_watches->find();
+
         return array_values(iterator_to_array($cursor));
     }
 
@@ -330,6 +338,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
         foreach ($data as $row) {
             $results[] = new Xhgui_Profile($row);
         }
+
         return $results;
     }
 
