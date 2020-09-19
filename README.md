@@ -110,7 +110,7 @@ This setup uses [docker-compose] to orchestrate docker containers.
 
 2. Startup the containers: `docker-compose up -d`
 
-3. Open your browser at http://xhgui.127.0.0.1.xip.io:8142 or just http://localhost:8142
+3. Open your browser at http://xhgui.127.0.0.1.xip.io:8142 or just http://localhost:8142 or type at terminal `composer open`
 
 4. To customize xhgui, copy `config/config.default.php` to `config/config.php` and edit that file.
 

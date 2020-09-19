@@ -32,6 +32,7 @@
         "phpunit/phpunit": "^5.7.27 | ^6.5.13"
     },
     "scripts": {
+        "openurl": "open http://xhgui.127.0.0.1.xip.io:8142",
         "test": "phpunit",
         "cover": "phpunit --coverage-clover=unittest-coverage.clover"
     }
