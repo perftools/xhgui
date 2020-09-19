@@ -77,7 +77,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
         $match = $result['conditions'];
 
         $col = '$meta.request_date';
-        if (!empty($search['limit']) && $search['limit'][0] == "P") {
+        if (!empty($search['limit']) && $search['limit'][0] === "P") {
             $col = '$meta.request_ts';
         }
 

@@ -41,7 +41,7 @@ class Xhgui_Db_Mapper
      */
     protected function _conditions($search)
     {
-        if (!empty($search['limit_custom']) && $search['limit_custom'][0] == "P") {
+        if (!empty($search['limit_custom']) && $search['limit_custom'][0] === "P") {
             $search['limit'] = $search['limit_custom'];
         }
         $hasLimit = (!empty($search['limit']) && $search['limit'] != -1);
@@ -70,7 +70,7 @@ class Xhgui_Db_Mapper
             $conditions['meta.SERVER.HTTP_COOKIE'] = (string)$search['cookie'];
         }
 
-        if ($hasLimit && $search['limit'][0] == "P") {
+        if ($hasLimit && $search['limit'][0] === "P") {
             $date = new DateTime();
             try {
                 $date->sub(new DateInterval($search['limit']));
@@ -138,13 +138,13 @@ class Xhgui_Db_Mapper
         ) {
             return ['meta.SERVER.REQUEST_TIME' => $direction];
         }
-        if ($options['sort'] == 'time') {
+        if ($options['sort'] === 'time') {
             return ['meta.SERVER.REQUEST_TIME' => $direction];
-        } elseif ($options['sort'] == 'wt') {
+        } elseif ($options['sort'] === 'wt') {
             return ['profile.main().wt' => $direction];
-        } elseif ($options['sort'] == 'mu') {
+        } elseif ($options['sort'] === 'mu') {
             return ['profile.main().mu' => $direction];
-        } elseif ($options['sort'] == 'cpu') {
+        } elseif ($options['sort'] === 'cpu') {
             return ['profile.main().cpu' => $direction];
         }
     }
