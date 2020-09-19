@@ -136,7 +136,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
             $index = max(round($result['raw_index']) - 1, 0);
             foreach ($keys as $key => $out) {
                 sort($result[$key]);
-                $result[$out] = isset($result[$key][$index]) ? $result[$key][$index] : null;
+                $result[$out] = $result[$key][$index] ?? null;
                 unset($result[$key]);
             }
         }
