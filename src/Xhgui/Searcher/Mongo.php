@@ -83,8 +83,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
             $col = '$meta.request_ts';
         }
 
-        $results = $this->_collection->aggregate(
-            [
+        $pipeline = [
             ['$match' => $match],
             [
                 '$project' => [
@@ -119,7 +118,10 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
                 ],
             ],
             ['$sort' => ['_id' => 1]],
-        ],
+        ];
+
+        $results = $this->_collection->aggregate(
+            $pipeline,
             ['cursor' => ['batchSize' => 0]]
         );
 
