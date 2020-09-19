@@ -2,7 +2,15 @@
 /**
  * Routes for Xhgui
  */
+
+use Slim\Slim;
+use Slim\Views\Twig;
+
+/** @var Slim $app */
+/** @var Xhgui_ServiceContainer $di */
+
 $app->error(static function (Exception $e) use ($di, $app) {
+    /** @var Twig $view */
     $view = $di['view'];
     $view->parserOptions['cache'] = false;
     $view->parserExtensions = [
