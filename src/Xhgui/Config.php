@@ -4,7 +4,7 @@
  */
 class Xhgui_Config
 {
-    private static $_config = array();
+    private static $_config = [];
 
     /**
      * Load a config file, it will replace
@@ -61,6 +61,6 @@ class Xhgui_Config
      */
     public static function clear()
     {
-        self::$_config = array();
+        self::$_config = [];
     }
 }
