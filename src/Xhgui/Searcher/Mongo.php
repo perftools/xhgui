@@ -27,6 +27,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
             ->sort(['meta.request_date' => -1])
             ->limit(1);
         $result = $cursor->getNext();
+
         return $this->_wrap($result);
     }
 
@@ -47,7 +48,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
     public function get($id)
     {
         return $this->_wrap($this->_collection->findOne([
-            '_id' => new MongoId($id)
+            '_id' => new MongoId($id),
         ]));
     }
 
@@ -63,6 +64,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
         $options = array_merge($options, [
             'conditions' => $conditions,
         ]);
+
         return $this->paginate($options);
     }
 
@@ -72,22 +74,22 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
     public function getPercentileForUrl($percentile, $url, $search = [])
     {
         $result = $this->_mapper->convert([
-            'conditions' => $search + ['simple_url' => $url]
+            'conditions' => $search + ['simple_url' => $url],
         ]);
         $match = $result['conditions'];
 
         $col = '$meta.request_date';
-        if (!empty($search['limit']) && $search['limit'][0] == "P") {
+        if (!empty($search['limit']) && $search['limit'][0] === "P") {
             $col = '$meta.request_ts';
         }
 
-        $results = $this->_collection->aggregate([
+        $pipeline = [
             ['$match' => $match],
             [
                 '$project' => [
                     'date' => $col,
-                    'profile.main()' => 1
-                ]
+                    'profile.main()' => 1,
+                ],
             ],
             [
                 '$group' => [
@@ -97,7 +99,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
                     'cpu_times' => ['$push' => '$profile.main().cpu'],
                     'mu_times' => ['$push' => '$profile.main().mu'],
                     'pmu_times' => ['$push' => '$profile.main().pmu'],
-                ]
+                ],
             ],
             [
                 '$project' => [
@@ -106,17 +108,20 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
                     'raw_index' => [
                         '$multiply' => [
                             '$row_count',
-                            $percentile / 100
-                        ]
+                            $percentile / 100,
+                        ],
                     ],
                     'wall_times' => '$wall_times',
                     'cpu_times' => '$cpu_times',
                     'mu_times' => '$mu_times',
                     'pmu_times' => '$pmu_times',
-                ]
+                ],
             ],
             ['$sort' => ['_id' => 1]],
-            ],
+        ];
+
+        $results = $this->_collection->aggregate(
+            $pipeline,
             ['cursor' => ['batchSize' => 0]]
         );
 
@@ -127,7 +132,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
             'wall_times' => 'wt',
             'cpu_times' => 'cpu',
             'mu_times' => 'mu',
-            'pmu_times' => 'pmu'
+            'pmu_times' => 'pmu',
         ];
         foreach ($results['result'] as &$result) {
             $result['date'] = ($result['_id'] instanceof MongoDate) ? date('Y-m-d H:i:s', $result['_id']->sec) : $result['_id'];
@@ -135,10 +140,11 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
             $index = max(round($result['raw_index']) - 1, 0);
             foreach ($keys as $key => $out) {
                 sort($result[$key]);
-                $result[$out] = isset($result[$key][$index]) ? $result[$key][$index] : null;
+                $result[$out] = $result[$key][$index] ?? null;
                 unset($result[$key]);
             }
         }
+
         return $results['result'];
     }
 
@@ -154,13 +160,14 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
         if (isset($search['date_end'])) {
             $match['meta.request_date']['$lte'] = (string)$search['date_end'];
         }
-        $results = $this->_collection->aggregate([
+        $results = $this->_collection->aggregate(
+            [
             ['$match' => $match],
             [
                 '$project' => [
                     'date' => '$meta.request_date',
                     'profile.main()' => 1,
-                ]
+                ],
             ],
             [
                 '$group' => [
@@ -169,9 +176,9 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
                     'avg_cpu' => ['$avg' => '$profile.main().cpu'],
                     'avg_mu' => ['$avg' => '$profile.main().mu'],
                     'avg_pmu' => ['$avg' => '$profile.main().pmu'],
-                ]
+                ],
             ],
-            ['$sort' => ['_id' => 1]]
+            ['$sort' => ['_id' => 1]],
         ],
             ['cursor' => ['batchSize' => 0]]
         );
@@ -182,6 +189,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
             $results['result'][$i]['date'] = $result['_id'];
             unset($results['result'][$i]['_id']);
         }
+
         return $results['result'];
     }
 
@@ -223,6 +231,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
                 ['_id' => new MongoId($data['_id'])],
                 ['w' => 1]
             );
+
             return true;
         }
 
@@ -231,6 +240,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
                 $data,
                 ['w' => 1]
             );
+
             return true;
         }
 
@@ -240,6 +250,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
             $data,
             ['w' => 1]
         );
+
         return true;
     }
 
@@ -249,6 +260,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
     public function getAllWatches()
     {
         $cursor = $this->_watches->find();
+
         return array_values(iterator_to_array($cursor));
     }
 
@@ -269,7 +281,8 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
 
         $totalRows = $this->_collection->find(
             $opts['conditions'],
-            ['_id' => 1])->count();
+            ['_id' => 1]
+        )->count();
 
         $totalPages = max(ceil($totalRows / $opts['perPage']), 1);
         $page = 1;
@@ -304,7 +317,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
             'direction' => $opts['direction'],
             'page' => $page,
             'perPage' => $opts['perPage'],
-            'totalPages' => $totalPages
+            'totalPages' => $totalPages,
         ];
     }
 
@@ -327,6 +340,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
         foreach ($data as $row) {
             $results[] = new Xhgui_Profile($row);
         }
+
         return $results;
     }
 

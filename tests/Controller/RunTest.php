@@ -29,7 +29,7 @@ class RunTest extends TestCase
         parent::setUp();
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
-            'PATH_INFO' => '/'
+            'PATH_INFO' => '/',
         ]);
 
         $di = Xhgui_ServiceContainer::instance();

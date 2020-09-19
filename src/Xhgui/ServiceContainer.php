@@ -19,6 +19,7 @@ class Xhgui_ServiceContainer extends Container
         if (empty(static::$_instance)) {
             static::$_instance = new self();
         }
+
         return static::$_instance;
     }
 
@@ -45,7 +46,7 @@ class Xhgui_ServiceContainer extends Container
                 'cache' => $cacheDir,
                 'auto_reload' => true,
                 'strict_variables' => false,
-                'autoescape' => true
+                'autoescape' => true,
             ];
 
             return $view;
@@ -68,7 +69,7 @@ class Xhgui_ServiceContainer extends Container
 
             $view = $c['view'];
             $view->parserExtensions = [
-                new Xhgui_Twig_Extension($app)
+                new Xhgui_Twig_Extension($app),
             ];
             $app->view($view);
 
@@ -101,6 +102,7 @@ class Xhgui_ServiceContainer extends Container
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ];
+
             return new PDO(
                 $c['config']['pdo']['dsn'],
                 $c['config']['pdo']['user'],

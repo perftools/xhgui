@@ -4,7 +4,7 @@
  */
 class Xhgui_Config
 {
-    private static $_config = array();
+    private static $config = [];
 
     /**
      * Load a config file, it will replace
@@ -14,8 +14,8 @@ class Xhgui_Config
      */
     public static function load($file)
     {
-        $config = include($file);
-        self::$_config = array_merge(self::$_config, $config);
+        $config = include $file;
+        self::$config = array_merge(self::$config, $config);
     }
 
     /**
@@ -26,9 +26,10 @@ class Xhgui_Config
      */
     public static function read($name)
     {
-        if (isset(self::$_config[$name])) {
-            return self::$_config[$name];
+        if (isset(self::$config[$name])) {
+            return self::$config[$name];
         }
+
         return null;
     }
 
@@ -39,7 +40,7 @@ class Xhgui_Config
      */
     public static function all()
     {
-        return self::$_config;
+        return self::$config;
     }
 
     /**
@@ -51,7 +52,7 @@ class Xhgui_Config
      */
     public static function write($name, $value)
     {
-        self::$_config[$name] = $value;
+        self::$config[$name] = $value;
     }
 
     /**
@@ -61,6 +62,6 @@ class Xhgui_Config
      */
     public static function clear()
     {
-        self::$_config = array();
+        self::$config = [];
     }
 }

@@ -61,7 +61,7 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
                 'request_ts_micro' => $row['request_ts_micro'],
                 'request_date' => $row['request_date'],
             ],
-            'profile' => json_decode($row['profile'], true)
+            'profile' => json_decode($row['profile'], true),
         ]);
     }
 
@@ -111,7 +111,7 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
                 'request_ts_micro' => $row['request_ts_micro'],
                 'request_date' => $row['request_date'],
             ],
-            'profile' => json_decode($row['profile'], true)
+            'profile' => json_decode($row['profile'], true),
         ]);
     }
 
@@ -211,8 +211,8 @@ class Xhgui_Searcher_Pdo implements Xhgui_Searcher_Interface
                         'cpu' => (int) $row['main_cpu'],
                         'mu' => (int) $row['main_mu'],
                         'pmu' => (int) $row['main_pmu'],
-                    ]
-                ]
+                    ],
+                ],
             ]);
         }
 

@@ -217,7 +217,7 @@ class ProfileTest extends TestCase
         $this->assertCount(1, $result);
         $expected = [
             'name' => 'main()',
-            'value' => 3449360
+            'value' => 3449360,
         ];
         $this->assertEquals($expected, $result[0]);
     }
@@ -243,10 +243,10 @@ class ProfileTest extends TestCase
     {
         $data = [
             'main()' => [
-                'mu' => 12345
+                'mu' => 12345,
             ],
             'main()==>class_exists()' => [
-                'mu' => 34567
+                'mu' => 34567,
             ],
         ];
         $profile = new Xhgui_Profile([]);
@@ -254,10 +254,10 @@ class ProfileTest extends TestCase
 
         $expected = [
             'main()==>class_exists()' => [
-                'mu' => 34567
+                'mu' => 34567,
             ],
             'main()' => [
-                'mu' => 12345
+                'mu' => 12345,
             ],
         ];
         $this->assertSame($expected, $result);
@@ -412,7 +412,7 @@ class ProfileTest extends TestCase
                     'target' => 'strlen()',
                     'callCount' => 2,
                 ],
-            ]
+            ],
         ];
         $result = $profile->getCallgraph();
         $this->assertEquals($expected, $result);
@@ -450,7 +450,7 @@ class ProfileTest extends TestCase
                     'name' => 'parse_string()',
                     'value' => 10000,
                     'callCount' => 1,
-                ]
+                ],
             ],
             'links' => [
                 [
@@ -478,7 +478,7 @@ class ProfileTest extends TestCase
                     'target' => 'open()',
                     'callCount' => 2,
                 ],
-            ]
+            ],
         ];
         $result = $profile->getCallgraph();
         $this->assertEquals($expected, $result);
@@ -488,8 +488,8 @@ class ProfileTest extends TestCase
     {
         $data = [
             'meta' => [
-                'SERVER' => []
-            ]
+                'SERVER' => [],
+            ],
         ];
         $profile = new Xhgui_Profile($data);
         $result = $profile->getDate();

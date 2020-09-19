@@ -30,7 +30,7 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
         }
         $this->_template = 'custom/help.twig';
         $this->set([
-            'data' => print_r($res->toArray(), 1)
+            'data' => print_r($res->toArray(), 1),
         ]);
     }
 
@@ -53,6 +53,7 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
 
         if (count($error) > 0) {
             $json = json_encode(['error' => $error]);
+
             return $response->body($json);
         }
 

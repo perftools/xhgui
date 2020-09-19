@@ -6,7 +6,7 @@ $app->error(static function (Exception $e) use ($di, $app) {
     $view = $di['view'];
     $view->parserOptions['cache'] = false;
     $view->parserExtensions = [
-        new Xhgui_Twig_Extension($app)
+        new Xhgui_Twig_Extension($app),
     ];
 
     // Remove the controller so we don't render it.
@@ -98,7 +98,6 @@ $app->post('/watch', static function () use ($di) {
     $di['watchController']->post();
 })->name('watch.save');
 
-
 // Custom report routes.
 $app->get('/custom', static function () use ($di, $app) {
     $app->controller = $di['customController'];
@@ -113,7 +112,6 @@ $app->get('/custom/help', static function () use ($di, $app) {
 $app->post('/custom/query', static function () use ($di) {
     $di['customController']->query();
 })->name('custom.query');
-
 
 // Waterfall routes
 $app->get('/waterfall', static function () use ($di, $app) {

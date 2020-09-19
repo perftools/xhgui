@@ -30,7 +30,7 @@ class Xhgui_Twig_Extension extends Twig_Extension
             'url' => new Twig_Function_Method($this, 'url'),
             'static' => new Twig_Function_Method($this, 'staticUrl'),
             'percent' => new Twig_Function_Method($this, 'makePercent', [
-                'is_safe' => ['html']
+                'is_safe' => ['html'],
             ]),
         ];
     }
@@ -51,6 +51,7 @@ class Xhgui_Twig_Extension extends Twig_Extension
         if (strlen($input) < $length) {
             return $input;
         }
+
         return substr($input, 0, $length) . "\xe2\x80\xa6";
     }
 
@@ -103,6 +104,7 @@ class Xhgui_Twig_Extension extends Twig_Extension
         if ($value == 0) {
             $class = 'diff-same';
         }
+
         return sprintf(
             '<span class="%s">%s</span>',
             $class,
@@ -113,6 +115,7 @@ class Xhgui_Twig_Extension extends Twig_Extension
     public function makePercent($value, $total)
     {
         $value = (false === empty($total)) ? $value / $total : 0;
+
         return $this->formatPercent($value);
     }
 

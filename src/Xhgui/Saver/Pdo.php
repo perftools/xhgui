@@ -87,7 +87,7 @@ SQL;
         $sec = $ts['sec'];
         $usec = $ts['usec'];
 
-        $this->stmt->execute(array(
+        $this->stmt->execute([
             'id'               => Xhgui_Util::generateId(),
             'profile'          => json_encode($data['profile']),
             'url'              => $data['meta']['url'],
@@ -103,7 +103,7 @@ SQL;
             'main_cpu'         => $main['cpu'],
             'main_mu'          => $main['mu'],
             'main_pmu'         => $main['pmu'],
-        ));
+        ]);
     }
 
     public function __destruct()

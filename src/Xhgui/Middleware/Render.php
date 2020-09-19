@@ -15,5 +15,4 @@ class Xhgui_Middleware_Render extends Middleware
             $app->controller->render();
         }
     }
-
 }

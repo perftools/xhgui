@@ -44,18 +44,18 @@ class ExtensionTest extends TestCase
             [
                 10,
                 100,
-                '10 <span class="units">%</span>'
+                '10 <span class="units">%</span>',
             ],
             [
                 0.5,
                 100,
-                '1 <span class="units">%</span>'
+                '1 <span class="units">%</span>',
             ],
             [
                 100,
                 0,
-                '0 <span class="units">%</span>'
-            ]
+                '0 <span class="units">%</span>',
+            ],
         ];
     }
 
@@ -75,13 +75,13 @@ class ExtensionTest extends TestCase
             [
                 'test',
                 null,
-                '/test'
+                '/test',
             ],
             // simple with query string
             [
                 'test',
                 ['test' => 'value'],
-                '/test?test=value'
+                '/test?test=value',
             ],
         ];
     }
