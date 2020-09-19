@@ -30,7 +30,7 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
         }
         $this->_template = 'custom/help.twig';
         $this->set([
-            'data' => print_r($res->toArray(), 1)
+            'data' => print_r($res->toArray(), 1),
         ]);
     }
 

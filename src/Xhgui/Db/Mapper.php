@@ -15,7 +15,7 @@ class Xhgui_Db_Mapper
             'conditions' => [],
             'sort' => null,
             'direction' => null,
-            'perPage' => 25
+            'perPage' => 25,
         ];
         if (isset($options['conditions'])) {
             $result['conditions'] = $this->_conditions($options['conditions']);

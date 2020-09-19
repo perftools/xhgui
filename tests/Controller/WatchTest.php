@@ -23,7 +23,7 @@ class WatchTest extends TestCase
         parent::setUp();
         Environment::mock([
            'SCRIPT_NAME' => 'index.php',
-           'PATH_INFO' => '/watch'
+           'PATH_INFO' => '/watch',
         ]);
 
         $di = Xhgui_ServiceContainer::instance();
@@ -50,8 +50,8 @@ class WatchTest extends TestCase
         $_POST = [
             'watch' => [
                 ['name' => 'strlen'],
-                ['name' => 'strpos']
-            ]
+                ['name' => 'strpos'],
+            ],
         ];
         $this->app->expects($this->once())
             ->method('urlFor')
@@ -75,8 +75,8 @@ class WatchTest extends TestCase
 
         $_POST = [
             'watch' => [
-                ['name' => 'strpos', '_id' => $saved[0]['_id']]
-            ]
+                ['name' => 'strpos', '_id' => $saved[0]['_id']],
+            ],
         ];
         $this->watches->post();
         $result = $this->searcher->getAllWatches();
@@ -92,8 +92,8 @@ class WatchTest extends TestCase
 
         $_POST = [
             'watch' => [
-                ['removed' => 1, 'name' => 'strpos', '_id' => $saved[0]['_id']]
-            ]
+                ['removed' => 1, 'name' => 'strpos', '_id' => $saved[0]['_id']],
+            ],
         ];
         $this->watches->post();
         $result = $this->searcher->getAllWatches();

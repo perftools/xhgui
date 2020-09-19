@@ -30,7 +30,7 @@ class Xhgui_Twig_Extension extends Twig_Extension
             'url' => new Twig_Function_Method($this, 'url'),
             'static' => new Twig_Function_Method($this, 'staticUrl'),
             'percent' => new Twig_Function_Method($this, 'makePercent', [
-                'is_safe' => ['html']
+                'is_safe' => ['html'],
             ]),
         ];
     }

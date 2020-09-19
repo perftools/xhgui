@@ -327,7 +327,7 @@ class Xhgui_Profile
         foreach ($slice as $func => $funcData) {
             $extract[] = [
                 'name' => $func,
-                'value' => $funcData[$dimension]
+                'value' => $funcData[$dimension],
             ];
         }
         return $extract;
@@ -546,7 +546,7 @@ class Xhgui_Profile
             'metric' => $metric,
             'total' => $main,
             'nodes' => $this->_nodes,
-            'links' => $this->_links
+            'links' => $this->_links,
         ];
         unset($this->_visited, $this->_nodes, $this->_links);
         return $out;

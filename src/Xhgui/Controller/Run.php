@@ -63,7 +63,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'total_pages' => $result['totalPages'],
             'page' => $result['page'],
             'sort' => $sort,
-            'direction' => $result['direction']
+            'direction' => $result['direction'],
         ];
 
         $this->_template = 'runs/list.twig';
@@ -74,7 +74,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'date_format' => $this->app->config('date.format'),
             'search' => $search,
             'has_search' => strlen(implode('', $search)) > 0,
-            'title' => $title
+            'title' => $title,
         ]);
     }
 
@@ -236,7 +236,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'total_pages' => $runs['totalPages'],
             'sort' => $pagination['sort'],
             'page' => $runs['page'],
-            'direction' => $runs['direction']
+            'direction' => $runs['direction'],
         ];
 
         $this->_template = 'runs/url.twig';
@@ -278,7 +278,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
                 'total_pages' => $candidates['totalPages'],
                 'sort' => $pagination['sort'],
                 'page' => $candidates['page'],
-                'direction' => $candidates['direction']
+                'direction' => $candidates['direction'],
             ];
         }
 
@@ -303,7 +303,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'search' => [
                 'base' => $request->get('base'),
                 'head' => $request->get('head'),
-            ]
+            ],
         ]);
     }
 

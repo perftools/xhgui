@@ -36,7 +36,7 @@ class MongoTest extends TestCase
     public function testGetForUrl()
     {
         $options = [
-            'perPage' => 1
+            'perPage' => 1,
         ];
         $result = $this->mongo->getForUrl('/', $options);
         $this->assertEquals(1, $result['page']);
@@ -53,7 +53,7 @@ class MongoTest extends TestCase
     public function testGetForUrlWithSearch()
     {
         $options = [
-            'perPage' => 2
+            'perPage' => 2,
         ];
         $search = [
             'date_start' => '2013-01-17',
@@ -127,7 +127,7 @@ class MongoTest extends TestCase
                 'date_start' => '2013-01-20',
                 'date_end' => '2013-01-21',
                 'url' => 'tasks',
-            ]
+            ],
         ]);
         $this->assertEquals(1, $result['page']);
         $this->assertEquals(25, $result['perPage']);

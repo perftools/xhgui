@@ -15,7 +15,7 @@ return [
         'dsn' => getenv('XHGUI_PDO_DSN') ?: null,
         'user' => getenv('XHGUI_PDO_USER') ?: null,
         'pass' => getenv('XHGUI_PDO_PASS') ?: null,
-        'table' => getenv('XHGUI_PDO_TABLE') ?: 'results'
+        'table' => getenv('XHGUI_PDO_TABLE') ?: 'results',
     ],
 
     // If defined, add imports via upload (/run/import) must pass token parameter with this value

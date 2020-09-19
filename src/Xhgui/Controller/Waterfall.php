@@ -29,14 +29,14 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
             'sort' => 'time',
             'direction' => 'asc',
             'conditions' => $search,
-            'projection' => true
+            'projection' => true,
         ]);
 
         $paging = [
             'total_pages' => $result['totalPages'],
             'page' => $result['page'],
             'sort' => 'asc',
-            'direction' => $result['direction']
+            'direction' => $result['direction'],
         ];
 
         $this->_template = 'waterfall/list.twig';
@@ -61,7 +61,7 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
             'sort' => 'time',
             'direction' => 'asc',
             'conditions' => $search,
-            'projection' => true
+            'projection' => true,
         ]);
         $datas = [];
         /** @var Xhgui_Profile $r */
@@ -73,7 +73,7 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
                 'id' => $r->getId(),
                 'title' => $title,
                 'start' => $start * 1000,
-                'duration' => $duration / 1000 // Convert to correct scale
+                'duration' => $duration / 1000, // Convert to correct scale
             ];
         }
         $response->body(json_encode($datas));

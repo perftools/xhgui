@@ -6,7 +6,7 @@ $app->error(static function (Exception $e) use ($di, $app) {
     $view = $di['view'];
     $view->parserOptions['cache'] = false;
     $view->parserExtensions = [
-        new Xhgui_Twig_Extension($app)
+        new Xhgui_Twig_Extension($app),
     ];
 
     // Remove the controller so we don't render it.

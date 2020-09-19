@@ -45,7 +45,7 @@ class Xhgui_ServiceContainer extends Container
                 'cache' => $cacheDir,
                 'auto_reload' => true,
                 'strict_variables' => false,
-                'autoescape' => true
+                'autoescape' => true,
             ];
 
             return $view;
@@ -68,7 +68,7 @@ class Xhgui_ServiceContainer extends Container
 
             $view = $c['view'];
             $view->parserExtensions = [
-                new Xhgui_Twig_Extension($app)
+                new Xhgui_Twig_Extension($app),
             ];
             $app->view($view);
 

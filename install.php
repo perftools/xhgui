@@ -24,7 +24,7 @@ function runProcess($cmd, $input = null)
     $descriptorSpec = [
         0 => ['pipe', 'r'],
         1 => ['pipe', 'w'],
-        2 => ['pipe', 'w']
+        2 => ['pipe', 'w'],
     ];
     $process = proc_open(
         $cmd,
