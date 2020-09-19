@@ -50,5 +50,4 @@ abstract class Xhgui_Controller
         $body = $this->app->view->fetch($this->_template);
         $this->app->response->write($body);
     }
-
 }

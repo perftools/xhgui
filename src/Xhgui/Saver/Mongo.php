@@ -47,7 +47,8 @@ class Xhgui_Saver_Mongo implements Xhgui_Saver_Interface
      * Return profiling ID
      * @return MongoId lastProfilingId
      */
-    public static function getLastProfilingId() {
+    public static function getLastProfilingId()
+    {
         if (!self::$lastProfilingId) {
             self::$lastProfilingId = new MongoId();
         }

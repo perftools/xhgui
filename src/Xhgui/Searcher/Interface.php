@@ -131,5 +131,4 @@ interface Xhgui_Searcher_Interface
      * @return array Array of stats.
      */
     public function stats();
-
 }

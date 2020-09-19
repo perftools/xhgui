@@ -145,8 +145,7 @@ class Xhgui_Db_Mapper
         } elseif ($options['sort'] == 'mu') {
             return ['profile.main().mu' => $direction];
         } elseif ($options['sort'] == 'cpu') {
-           return ['profile.main().cpu' => $direction];
+            return ['profile.main().cpu' => $direction];
         }
     }
-
 }

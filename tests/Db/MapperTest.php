@@ -216,5 +216,4 @@ class MapperTest extends TestCase
         $result = $this->mapper->convert($options);
         $this->assertEquals(1, $result['perPage']);
     }
-
 }

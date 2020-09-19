@@ -100,5 +100,4 @@ class WatchTest extends TestCase
 
         $this->assertCount(0, $result);
     }
-
 }

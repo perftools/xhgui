@@ -7,7 +7,8 @@
  * - Downloads composer.
  * - Installs dependencies.
  */
-function out($out) {
+function out($out)
+{
     if (is_string($out)) {
         echo $out . "\n";
     }
@@ -18,7 +19,8 @@ function out($out) {
     }
 }
 
-function runProcess($cmd, $input = null) {
+function runProcess($cmd, $input = null)
+{
     $descriptorSpec = [
         0 => ['pipe', 'r'],
         1 => ['pipe', 'w'],
@@ -87,13 +89,13 @@ $worldWritable = bindec('0000000111');
 $currentPerms = octdec(substr(sprintf('%o', fileperms('./cache')), -4));
 
 if (($currentPerms & $worldWritable) != $worldWritable) {
-	out('Attempting to set permissions on cache/');
-	$result = chmod(__DIR__ . '/cache', $currentPerms | $worldWritable);
-	if ($result) {
-		out('Permissions set on cache/');
-	} else {
-		out('Failed to set permissions on cache/ you must do it yourself.');
-	}
+    out('Attempting to set permissions on cache/');
+    $result = chmod(__DIR__ . '/cache', $currentPerms | $worldWritable);
+    if ($result) {
+        out('Permissions set on cache/');
+    } else {
+        out('Failed to set permissions on cache/ you must do it yourself.');
+    }
 } else {
-	out('Permissions on cache/ are ok.');
+    out('Permissions on cache/ are ok.');
 }

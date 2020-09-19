@@ -81,7 +81,8 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
             $col = '$meta.request_ts';
         }
 
-        $results = $this->_collection->aggregate([
+        $results = $this->_collection->aggregate(
+            [
             ['$match' => $match],
             [
                 '$project' => [
@@ -116,7 +117,7 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
                 ]
             ],
             ['$sort' => ['_id' => 1]],
-            ],
+        ],
             ['cursor' => ['batchSize' => 0]]
         );
 
@@ -154,7 +155,8 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
         if (isset($search['date_end'])) {
             $match['meta.request_date']['$lte'] = (string)$search['date_end'];
         }
-        $results = $this->_collection->aggregate([
+        $results = $this->_collection->aggregate(
+            [
             ['$match' => $match],
             [
                 '$project' => [
@@ -269,7 +271,8 @@ class Xhgui_Searcher_Mongo implements Xhgui_Searcher_Interface
 
         $totalRows = $this->_collection->find(
             $opts['conditions'],
-            ['_id' => 1])->count();
+            ['_id' => 1]
+        )->count();
 
         $totalPages = max(ceil($totalRows / $opts['perPage']), 1);
         $page = 1;
