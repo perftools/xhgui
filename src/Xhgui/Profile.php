@@ -1,10 +1,16 @@
 <?php
+
+namespace XHGui;
+
+use DateTime;
+use Exception;
+
 /**
  * Domain object for handling profile runs.
  *
  * Provides method to manipulate the data from a single profile run.
  */
-class Xhgui_Profile
+class Profile
 {
     /**
      * @const Key used for methods with no parent
@@ -369,7 +375,7 @@ class Xhgui_Profile
      * Notes:
      *  Function names are not unique, but we're merging them
      *
-     * @return Xhgui_Profile A new instance with exclusive data set.
+     * @return Profile A new instance with exclusive data set.
      */
     public function calculateSelf()
     {
@@ -431,7 +437,7 @@ class Xhgui_Profile
         foreach ($filters as $key => $item) {
             foreach ($profileData as $keyItem => $method) {
                 if (fnmatch($item, $keyItem)) {
-                    unset($profileData[ $keyItem ]);
+                    unset($profileData[$keyItem]);
                 }
             }
         }
@@ -478,10 +484,10 @@ class Xhgui_Profile
     /**
      * Compare this run to another run.
      *
-     * @param Xhgui_Profile $head The other run to compare with
+     * @param Profile $head The other run to compare with
      * @return array An array of comparison data.
      */
-    public function compare(Xhgui_Profile $head)
+    public function compare(Profile $head)
     {
         $this->calculateSelf();
         $head->calculateSelf();

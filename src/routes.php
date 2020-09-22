@@ -5,16 +5,19 @@
 
 use Slim\Slim;
 use Slim\Views\Twig;
+use XHGui\Controller\ImportController;
+use XHGui\ServiceContainer;
+use XHGui\Twig\TwigExtension;
 
 /** @var Slim $app */
-/** @var Xhgui_ServiceContainer $di */
+/** @var ServiceContainer $di */
 
 $app->error(static function (Exception $e) use ($di, $app) {
     /** @var Twig $view */
     $view = $di['view'];
     $view->parserOptions['cache'] = false;
     $view->parserExtensions = [
-        new Xhgui_Twig_Extension($app),
+        new TwigExtension($app),
     ];
 
     // Remove the controller so we don't render it.
@@ -91,7 +94,7 @@ $app->get('/run/callgraph/dot', static function () use ($di, $app) {
 
 // Import route
 $app->post('/run/import', static function () use ($di, $app) {
-    /** @var Xhgui_Controller_Import $controller */
+    /** @var ImportController $controller */
     $controller = $di['importController'];
     $controller->import();
 })->name('run.import');

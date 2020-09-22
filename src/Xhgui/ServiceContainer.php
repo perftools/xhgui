@@ -1,12 +1,21 @@
 <?php
 
+namespace XHGui;
+
+use MongoClient;
 use MongoDB\Driver\Manager;
+use PDO;
 use Pimple\Container;
+use RuntimeException;
+use Slim\Middleware\SessionCookie;
 use Slim\Slim;
 use Slim\Views\Twig;
-use Slim\Middleware\SessionCookie;
+use XHGui\Middleware\RenderMiddleware;
+use XHGui\Searcher\MongoSearcher;
+use XHGui\Searcher\PdoSearcher;
+use XHGui\Twig\TwigExtension;
 
-class Xhgui_ServiceContainer extends Container
+class ServiceContainer extends Container
 {
     /** @var self */
     protected static $_instance;
@@ -65,11 +74,11 @@ class Xhgui_ServiceContainer extends Container
             ]));
 
             // Add renderer.
-            $app->add(new Xhgui_Middleware_Render());
+            $app->add(new RenderMiddleware());
 
             $view = $c['view'];
             $view->parserExtensions = [
-                new Xhgui_Twig_Extension($app),
+                new TwigExtension($app),
             ];
             $app->view($view);
 
@@ -82,7 +91,7 @@ class Xhgui_ServiceContainer extends Container
      */
     protected function _services()
     {
-        $this['config'] = Xhgui_Config::all();
+        $this['config'] = Config::all();
 
         $this['db'] = static function ($c) {
             $config = $c['config'];
@@ -112,11 +121,11 @@ class Xhgui_ServiceContainer extends Container
         };
 
         $this['searcher.mongodb'] = static function ($c) {
-            return new Xhgui_Searcher_Mongo($c['db']);
+            return new MongoSearcher($c['db']);
         };
 
         $this['searcher.pdo'] = static function ($c) {
-            return new Xhgui_Searcher_Pdo($c['pdo'], $c['config']['pdo']['table']);
+            return new PdoSearcher($c['pdo'], $c['config']['pdo']['table']);
         };
 
         $this['searcher'] = static function ($c) {
@@ -135,7 +144,7 @@ class Xhgui_ServiceContainer extends Container
             $collection = $mongo->{$config['db.db']}->results;
             $collection->findOne();
 
-            return new Xhgui_Saver_Mongo($collection);
+            return new Saver\MongoSaver($collection);
         };
 
         $this['saver.pdo'] = static function ($c) {
@@ -149,7 +158,7 @@ class Xhgui_ServiceContainer extends Container
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ];
 
-            return new Xhgui_Saver_Pdo(
+            return new Saver\PdoSaver(
                 new PDO(
                     $config['pdo']['dsn'],
                     $config['pdo']['user'],
@@ -173,27 +182,27 @@ class Xhgui_ServiceContainer extends Container
     protected function _controllers()
     {
         $this['watchController'] = $this->factory(static function ($c) {
-            return new Xhgui_Controller_Watch($c['app'], $c['searcher']);
+            return new Controller\WatchController($c['app'], $c['searcher']);
         });
 
         $this['runController'] = $this->factory(static function ($c) {
-            return new Xhgui_Controller_Run($c['app'], $c['searcher']);
+            return new Controller\RunController($c['app'], $c['searcher']);
         });
 
         $this['customController'] = $this->factory(static function ($c) {
-            return new Xhgui_Controller_Custom($c['app'], $c['searcher']);
+            return new Controller\CustomController($c['app'], $c['searcher']);
         });
 
         $this['waterfallController'] = $this->factory(static function ($c) {
-            return new Xhgui_Controller_Waterfall($c['app'], $c['searcher']);
+            return new Controller\WaterfallController($c['app'], $c['searcher']);
         });
 
         $this['importController'] = $this->factory(static function ($c) {
-            return new Xhgui_Controller_Import($c['app'], $c['saver'], $c['config']['upload.token']);
+            return new Controller\ImportController($c['app'], $c['saver'], $c['config']['upload.token']);
         });
 
         $this['metricsController'] = $this->factory(static function ($c) {
-            return new Xhgui_Controller_Metrics($c['app'], $c['searcher']);
+            return new Controller\MetricsController($c['app'], $c['searcher']);
         });
     }
 }

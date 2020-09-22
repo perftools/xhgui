@@ -1,8 +1,10 @@
 <?php
 
+namespace XHGui;
+
 use Slim\Slim;
 
-abstract class Xhgui_Controller
+abstract class AbstractController
 {
     /**
      * @var array

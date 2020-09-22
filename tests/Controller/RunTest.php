@@ -2,26 +2,26 @@
 
 namespace XHGui\Test\Controller;
 
-use Slim\Slim;
 use Slim\Environment;
+use Slim\Slim;
+use XHGui\Controller\ImportController;
+use XHGui\Controller\RunController;
+use XHGui\Saver\MongoSaver;
+use XHGui\Searcher\MongoSearcher;
 use XHGui\Test\TestCase;
-use Xhgui_Controller_Import;
-use Xhgui_Controller_Run;
-use Xhgui_Saver_Mongo;
-use Xhgui_Searcher_Mongo;
-use Xhgui_ServiceContainer;
+use XHGui\ServiceContainer;
 
 class RunTest extends TestCase
 {
-    /** @var Xhgui_Controller_Run */
+    /** @var RunController */
     private $runs;
-    /** @var Xhgui_Saver_Mongo */
+    /** @var MongoSaver */
     private $saver;
     /** @var Slim */
     private $app;
-    /** @var Xhgui_Searcher_Mongo */
+    /** @var MongoSearcher */
     private $profiles;
-    /** @var Xhgui_Controller_Import */
+    /** @var ImportController */
     private $import;
 
     public function setUp()
@@ -32,7 +32,7 @@ class RunTest extends TestCase
             'PATH_INFO' => '/',
         ]);
 
-        $di = Xhgui_ServiceContainer::instance();
+        $di = ServiceContainer::instance();
         $di['app'] = $this->getMockBuilder(Slim::class)
             ->setMethods(['redirect', 'render', 'urlFor'])
             ->setConstructorArgs([$di['config']])

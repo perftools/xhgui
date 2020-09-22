@@ -3,7 +3,7 @@
 namespace XHGui\Test;
 
 use DateTime;
-use Xhgui_Profile;
+use XHGui\Profile;
 
 class ProfileTest extends TestCase
 {
@@ -26,7 +26,7 @@ class ProfileTest extends TestCase
                 'cpu' => 1,
             ],
         ];
-        $profile = new Xhgui_Profile(['profile' => $data]);
+        $profile = new Profile(['profile' => $data]);
         $this->assertNotEmpty($profile->get('do_thing()'));
     }
 
@@ -84,7 +84,7 @@ class ProfileTest extends TestCase
                 'pmu' => 1,
             ],
         ];
-        $profile = new Xhgui_Profile(['profile' => $data]);
+        $profile = new Profile(['profile' => $data]);
 
         $result = $profile->getRelatives('not there at all');
         $this->assertCount(3, $result);
@@ -168,7 +168,7 @@ class ProfileTest extends TestCase
                 'pmu' => 1,
             ],
         ];
-        $profile = new Xhgui_Profile(['profile' => $data]);
+        $profile = new Profile(['profile' => $data]);
 
         $result = $profile->getRelatives('other_func', 'wt', 0.1);
         $this->assertCount(3, $result);
@@ -184,7 +184,7 @@ class ProfileTest extends TestCase
     public function testGet()
     {
         $fixture = $this->fixture[0];
-        $profile = new Xhgui_Profile($fixture);
+        $profile = new Profile($fixture);
         $this->assertEquals($fixture['profile']['main()']['wt'], $profile->get('main()', 'wt'));
 
         $expected = $fixture['profile']['main()'];
@@ -199,7 +199,7 @@ class ProfileTest extends TestCase
     public function testGetMeta()
     {
         $fixture = $this->fixture[0];
-        $profile = new Xhgui_Profile($fixture);
+        $profile = new Profile($fixture);
 
         $this->assertEquals($fixture['meta'], $profile->getMeta());
 
@@ -212,7 +212,7 @@ class ProfileTest extends TestCase
 
     public function testExtractDimension()
     {
-        $profile = new Xhgui_Profile($this->fixture[0]);
+        $profile = new Profile($this->fixture[0]);
         $result = $profile->extractDimension('mu', 1);
 
         $this->assertCount(1, $result);
@@ -225,7 +225,7 @@ class ProfileTest extends TestCase
 
     public function testCalculateSelf()
     {
-        $profile = new Xhgui_Profile($this->fixture[1]);
+        $profile = new Profile($this->fixture[1]);
         $result = $profile->calculateSelf()->getProfile();
 
         $main = $result['main()'];
@@ -250,7 +250,7 @@ class ProfileTest extends TestCase
                 'mu' => 34567,
             ],
         ];
-        $profile = new Xhgui_Profile([]);
+        $profile = new Profile([]);
         $result = $profile->sort('mu', $data);
 
         $expected = [
@@ -267,7 +267,7 @@ class ProfileTest extends TestCase
     public function testGetWatched()
     {
         $fixture = $this->fixture[0];
-        $profile = new Xhgui_Profile($fixture);
+        $profile = new Profile($fixture);
         $data = $profile->getProfile();
 
         $this->assertEmpty($profile->getWatched('not there'));
@@ -294,7 +294,7 @@ class ProfileTest extends TestCase
     public function testGetFunctionCount()
     {
         $fixture = $this->fixture[0];
-        $profile = new Xhgui_Profile($fixture);
+        $profile = new Profile($fixture);
 
         $this->assertEquals(11, $profile->getFunctionCount());
     }
@@ -302,8 +302,8 @@ class ProfileTest extends TestCase
     public function testCompareAllTheSame()
     {
         $fixture = $this->fixture[0];
-        $base = new Xhgui_Profile($fixture);
-        $head = new Xhgui_Profile($fixture);
+        $base = new Profile($fixture);
+        $head = new Profile($fixture);
 
         $result = $base->compare($head);
 
@@ -323,8 +323,8 @@ class ProfileTest extends TestCase
     public function testCompareWithDifferences()
     {
         $fixture = $this->fixture[0];
-        $base = new Xhgui_Profile($this->fixture[3]);
-        $head = new Xhgui_Profile($this->fixture[4]);
+        $base = new Profile($this->fixture[3]);
+        $head = new Profile($this->fixture[4]);
         $result = $base->compare($head);
 
         $this->assertEquals(0, $result['diff']['main()']['ct']);
@@ -345,7 +345,7 @@ class ProfileTest extends TestCase
 
     public function testGetCallgraph()
     {
-        $profile = new Xhgui_Profile($this->fixture[1]);
+        $profile = new Profile($this->fixture[1]);
 
         $expected = [
             'metric' => 'wt',
@@ -421,7 +421,7 @@ class ProfileTest extends TestCase
 
     public function testGetCallgraphNoDuplicates()
     {
-        $profile = new Xhgui_Profile($this->fixture[2]);
+        $profile = new Profile($this->fixture[2]);
 
         $expected = [
             'metric' => 'wt',
@@ -492,7 +492,7 @@ class ProfileTest extends TestCase
                 'SERVER' => [],
             ],
         ];
-        $profile = new Xhgui_Profile($data);
+        $profile = new Profile($data);
         $result = $profile->getDate();
         $this->assertInstanceOf(DateTime::class, $result);
     }

@@ -1,6 +1,8 @@
 <?php
 
-class Xhgui_Util
+namespace XHGui;
+
+class Util
 {
     /**
      * Returns an new ObjectId-like string, where its first 8

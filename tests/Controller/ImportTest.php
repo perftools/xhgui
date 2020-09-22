@@ -2,19 +2,19 @@
 
 namespace XHGui\Test\Controller;
 
-use Slim\Slim;
 use Slim\Environment;
+use Slim\Slim;
+use XHGui\Controller\ImportController;
+use XHGui\Searcher\SearcherInterface;
 use XHGui\Test\TestCase;
-use Xhgui_Controller_Import;
-use Xhgui_Profile;
-use Xhgui_Searcher_Interface;
-use Xhgui_ServiceContainer;
+use XHGui\Profile;
+use XHGui\ServiceContainer;
 
 class ImportTest extends TestCase
 {
-    /** @var Xhgui_Searcher_Interface */
+    /** @var SearcherInterface */
     private $profiles;
-    /** @var Xhgui_Controller_Import */
+    /** @var ImportController */
     private $import;
 
     public function setUp()
@@ -25,7 +25,7 @@ class ImportTest extends TestCase
             'PATH_INFO' => '/',
         ]);
 
-        $di = Xhgui_ServiceContainer::instance();
+        $di = ServiceContainer::instance();
         $di['app'] = $this->getMockBuilder(Slim::class)
             ->setMethods(['redirect', 'render', 'urlFor'])
             ->setConstructorArgs([$di['config']])
@@ -70,6 +70,6 @@ class ImportTest extends TestCase
 
         $after = $this->profiles->getForUrl('/things', []);
         $this->assertNotEmpty($after['results']);
-        $this->assertInstanceOf(Xhgui_Profile::class, $after['results'][0]);
+        $this->assertInstanceOf(Profile::class, $after['results'][0]);
     }
 }

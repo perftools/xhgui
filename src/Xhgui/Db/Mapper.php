@@ -1,6 +1,12 @@
 <?php
 
-class Xhgui_Db_Mapper
+namespace XHGui\Db;
+
+use DateInterval;
+use DateTime;
+use MongoDate;
+
+class Mapper
 {
     /**
      * Convert request data keys into mongo values.
@@ -117,6 +123,7 @@ class Xhgui_Db_Mapper
 
         return 'desc';
     }
+
     /**
      * Get sort options for a paginated set.
      *

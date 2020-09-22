@@ -1,6 +1,12 @@
 <?php
 
-class Xhgui_Saver_Pdo implements Xhgui_Saver_Interface
+namespace XHGui\Saver;
+
+use PDO;
+use PDOStatement;
+use XHGui\Util;
+
+class PdoSaver implements SaverInterface
 {
     const TABLE_DDL = <<<SQL
 
@@ -68,7 +74,7 @@ SQL;
     private $stmt;
 
     /**
-     * @param PDO    $pdo
+     * @param PDO $pdo
      * @param string $table
      */
     public function __construct(PDO $pdo, $table)
@@ -88,7 +94,7 @@ SQL;
         $usec = $ts['usec'];
 
         $this->stmt->execute([
-            'id'               => Xhgui_Util::generateId(),
+            'id'               => Util::generateId(),
             'profile'          => json_encode($data['profile']),
             'url'              => $data['meta']['url'],
             'SERVER'           => json_encode($data['meta']['SERVER']),

@@ -1,4 +1,8 @@
 <?php
+
+use XHGui\Saver\SaverInterface;
+use XHGui\ServiceContainer;
+
 if (!defined('XHGUI_ROOT_DIR')) {
     require dirname(__DIR__) . '/src/bootstrap.php';
 }
@@ -20,8 +24,8 @@ if (!$fp) {
     throw new RuntimeException('Can\'t open '.$file);
 }
 
-$container = Xhgui_ServiceContainer::instance();
-/** @var Xhgui_Saver_Interface $saver */
+$container = ServiceContainer::instance();
+/** @var SaverInterface $saver */
 $saver = $container['saver'];
 
 while (!feof($fp)) {

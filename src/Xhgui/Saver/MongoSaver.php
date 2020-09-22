@@ -1,6 +1,12 @@
 <?php
 
-class Xhgui_Saver_Mongo implements Xhgui_Saver_Interface
+namespace XHGui\Saver;
+
+use MongoCollection;
+use MongoDate;
+use MongoId;
+
+class MongoSaver implements SaverInterface
 {
     /**
      * @var MongoCollection
