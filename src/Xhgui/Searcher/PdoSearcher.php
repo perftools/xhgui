@@ -192,7 +192,7 @@ class PdoSearcher implements SearcherInterface
           FROM {$this->table}
           WHERE simple_url LIKE :url
           ORDER BY request_ts DESC
-          LIMIT $skip, $perPage
+          LIMIT $skip OFFSET $perPage
         ");
         $stmt->execute(['url' => '%'.$url.'%']);
 
