@@ -5,9 +5,6 @@
     "autoload": {
         "psr-4": {
             "XHGui\\": "src/Xhgui/"
-        },
-        "psr-0": {
-            "Xhgui_": "src/"
         }
     },
     "autoload-dev": {
