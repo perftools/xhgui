@@ -108,6 +108,10 @@ class ServiceContainer extends Container
         };
 
         $this['pdo'] = static function ($c) {
+            if (!class_exists(PDO::class)) {
+                throw new RuntimeException("Required extension ext-pdo is missing");
+            }
+
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ];
@@ -150,21 +154,8 @@ class ServiceContainer extends Container
         $this['saver.pdo'] = static function ($c) {
             $config = $c['config'];
 
-            if (!class_exists(PDO::class)) {
-                throw new RuntimeException("Required extension ext-pdo is missing");
-            }
-
-            $options = [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ];
-
             return new Saver\PdoSaver(
-                new PDO(
-                    $config['pdo']['dsn'],
-                    $config['pdo']['user'],
-                    $config['pdo']['pass'],
-                    $options
-                ),
+                $c['pdo'],
                 $config['pdo']['table']
             );
         };
