@@ -4,6 +4,7 @@ namespace Xhgui\Db;
 
 use PDO;
 use PDOException;
+use PDOStatement;
 
 class PdoWrapper extends PDO
 {
@@ -25,6 +26,19 @@ class PdoWrapper extends PDO
         $pdo->quoteIdentifier = self::getQuoteIdentifier($options['dsn']);
 
         return $pdo;
+    }
+
+    /**
+     * Replace placeholders surrounded by {} with values from $params.
+     */
+    public function prepareTemplate(string $template, array $params): ?PDOStatement
+    {
+        $keys = array_map(static function ($value) {
+            return sprintf("{%s}", $value);
+        }, array_keys($params));
+        $query = str_replace($keys, array_values($params), $template);
+
+        return $this->prepare($query) ?: null;
     }
 
     public function quoteIdentifier(string $identifier)
