@@ -4,12 +4,13 @@ namespace XHGui\Searcher;
 
 use Exception;
 use PDO;
+use Xhgui\Db\PdoWrapper;
 use XHGui\Profile;
 
 class PdoSearcher implements SearcherInterface
 {
     /**
-     * @var PDO
+     * @var PDOWrapper
      */
     private $pdo;
 
@@ -173,27 +174,35 @@ class PdoSearcher implements SearcherInterface
         }
         $skip = ($page-1) * $perPage;
 
-        $stmt = $this->pdo->prepare("
-          SELECT
-            id,
-            url,
-            SERVER,
-            GET,
-            ENV,
-            simple_url,
-            request_ts,
-            request_ts_micro,
-            request_date,
-            main_wt,
-            main_ct,
-            main_cpu,
-            main_mu,
-            main_pmu
-          FROM {$this->table}
-          WHERE simple_url LIKE :url
-          ORDER BY request_ts DESC
-          LIMIT $skip OFFSET $perPage
-        ");
+        $stmt = $this->pdo->prepareTemplate("
+          SELECT {columns}
+          FROM {table}
+          WHERE {simple_url} LIKE :url
+          ORDER BY {request_ts} DESC
+          LIMIT {limit} OFFSET {offset}
+        ", [
+            'columns' => $this->pdo->quoteIdentifiers([
+                'id',
+                'url',
+                'SERVER',
+                'GET',
+                'ENV',
+                'simple_url',
+                'request_ts',
+                'request_ts_micro',
+                'request_date',
+                'main_wt',
+                'main_ct',
+                'main_cpu',
+                'main_mu',
+                'main_pmu',
+            ]),
+            'table' => $this->pdo->quoteIdentifier($this->table),
+            'simple_url' => $this->pdo->quoteIdentifier('simple_url'),
+            'request_ts' => $this->pdo->quoteIdentifier('request_ts'),
+            'limit' => $skip,
+            'offset' => $perPage,
+        ]);
         $stmt->execute(['url' => '%'.$url.'%']);
 
         $results = [];
