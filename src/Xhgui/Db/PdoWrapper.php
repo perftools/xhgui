@@ -46,6 +46,16 @@ class PdoWrapper extends PDO
         return sprintf('%c%s%c', $this->quoteIdentifier, $identifier, $this->quoteIdentifier);
     }
 
+    public function quoteIdentifiers(array $identifiers)
+    {
+        $result = [];
+        foreach ($identifiers as $identifier) {
+            $result[] = $this->quoteIdentifier($identifier);
+        }
+
+        return implode(",", $result);
+    }
+
     private static function getQuoteIdentifier(string $dsn): string
     {
         $adapter = explode(':', $dsn, 2)[0];
