@@ -94,7 +94,7 @@ SQL;
         $usec = $ts['usec'];
 
         $this->stmt->execute([
-            'id'               => Util::generateId(),
+            'id'               => $data['_id'] ?? Util::generateId(),
             'profile'          => json_encode($data['profile']),
             'url'              => $data['meta']['url'],
             'SERVER'           => json_encode($data['meta']['SERVER']),
