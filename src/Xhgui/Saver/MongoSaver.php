@@ -42,24 +42,11 @@ class MongoSaver implements SaverInterface
         ];
 
         $a = [
-            '_id' => $data['_id'] ?? self::getLastProfilingId(),
+            '_id' => $data['_id'] ?? new MongoId(),
             'meta' => $meta,
             'profile' => $data['profile'],
         ];
 
         return $this->_collection->insert($a, ['w' => 0]);
-    }
-
-    /**
-     * Return profiling ID
-     * @return MongoId lastProfilingId
-     */
-    public static function getLastProfilingId()
-    {
-        if (!self::$lastProfilingId) {
-            self::$lastProfilingId = new MongoId();
-        }
-
-        return self::$lastProfilingId;
     }
 }
