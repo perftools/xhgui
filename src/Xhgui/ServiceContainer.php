@@ -162,12 +162,7 @@ class ServiceContainer extends Container
         };
 
         $this['saver.pdo'] = static function ($c) {
-            $config = $c['config'];
-
-            return new Saver\PdoSaver(
-                $c['pdo'],
-                $config['pdo']['table']
-            );
+            return new Saver\PdoSaver($c[PdoRepository::class]);
         };
 
         $this['saver'] = static function ($c) {

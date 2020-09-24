@@ -2,86 +2,18 @@
 
 namespace XHGui\Saver;
 
-use PDO;
-use PDOStatement;
+use XHGui\Db\PdoRepository;
 use XHGui\Util;
 
 class PdoSaver implements SaverInterface
 {
-    const TABLE_DDL = <<<SQL
+    /** @var PdoRepository */
+    private $db;
 
-CREATE TABLE IF NOT EXISTS "%s" (
-  "id"               CHAR(24) PRIMARY KEY,
-  "profile"          TEXT           NOT NULL,
-  "url"              TEXT           NULL,
-  "SERVER"           TEXT           NULL,
-  "GET"              TEXT           NULL,
-  "ENV"              TEXT           NULL,
-  "simple_url"       TEXT           NULL,
-  "request_ts"       INTEGER        NOT NULL,
-  "request_ts_micro" NUMERIC(15, 4) NOT NULL,
-  "request_date"     DATE           NOT NULL,
-  "main_wt"          INTEGER        NOT NULL,
-  "main_ct"          INTEGER        NOT NULL,
-  "main_cpu"         INTEGER        NOT NULL,
-  "main_mu"          INTEGER        NOT NULL,
-  "main_pmu"         INTEGER        NOT NULL
-);
-
-SQL;
-
-    const INSERT_DML = <<<SQL
-
-INSERT INTO "%s" (
-  "id",
-  "profile",
-  "url",
-  "SERVER",
-  "GET",
-  "ENV",
-  "simple_url",
-  "request_ts",
-  "request_ts_micro",
-  "request_date",
-  "main_wt",
-  "main_ct",
-  "main_cpu",
-  "main_mu",
-  "main_pmu"
-) VALUES (
-  :id,
-  :profile,
-  :url,
-  :SERVER,
-  :GET,
-  :ENV,
-  :simple_url,
-  :request_ts,
-  :request_ts_micro,
-  :request_date,
-  :main_wt,
-  :main_ct,
-  :main_cpu,
-  :main_mu,
-  :main_pmu
-);
-
-SQL;
-
-    /**
-     * @var PDOStatement
-     */
-    private $stmt;
-
-    /**
-     * @param PDO $pdo
-     * @param string $table
-     */
-    public function __construct(PDO $pdo, $table)
+    public function __construct(PdoRepository $db)
     {
-        $pdo->exec(sprintf(self::TABLE_DDL, $table));
-
-        $this->stmt = $pdo->prepare(sprintf(self::INSERT_DML, $table));
+        $db->initSchema();
+        $this->db = $db;
     }
 
     public function save(array $data)
@@ -93,7 +25,7 @@ SQL;
         $sec = $ts['sec'];
         $usec = $ts['usec'];
 
-        $this->stmt->execute([
+        $this->db->saveProfile([
             'id'               => $data['_id'] ?? Util::generateId(),
             'profile'          => json_encode($data['profile']),
             'url'              => $data['meta']['url'],
@@ -110,10 +42,5 @@ SQL;
             'main_mu'          => $main['mu'],
             'main_pmu'         => $main['pmu'],
         ]);
-    }
-
-    public function __destruct()
-    {
-        $this->stmt->closeCursor();
     }
 }
