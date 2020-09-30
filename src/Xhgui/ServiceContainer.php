@@ -112,9 +112,14 @@ class ServiceContainer extends Container
                 throw new RuntimeException("Required extension ext-pdo is missing");
             }
 
+            $adapter = explode(':', $c['config']['pdo']['dsn'], 2)[0];
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ];
+
+            if ($adapter === 'mysql') {
+                $options[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET SQL_MODE=ANSI_QUOTES;';
+            }
 
             return new PDO(
                 $c['config']['pdo']['dsn'],

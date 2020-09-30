@@ -33,22 +33,22 @@ class PdoSearcher implements SearcherInterface
      */
     public function latest()
     {
-        $stmt = $this->pdo->query("
+        $stmt = $this->pdo->query('
           SELECT
-            id,
-            profile,
-            url,
-            SERVER,
-            GET,
-            ENV,
-            simple_url,
-            request_ts,
-            request_ts_micro,
-            request_date
-          FROM {$this->table}
-          ORDER BY request_date ASC
+            "id",
+            "profile",
+            "url",
+            "SERVER",
+            "GET",
+            "ENV",
+            "simple_url",
+            "request_ts",
+            "request_ts_micro,"
+            "request_date"
+          FROM "' . $this->table . '"
+          ORDER BY "request_date" ASC
           LIMIT 1
-        ");
+        ');
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if (false === $row) {
@@ -84,20 +84,20 @@ class PdoSearcher implements SearcherInterface
      */
     public function get($id)
     {
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->pdo->prepare('
           SELECT
-            profile,
-            url,
-            SERVER,
-            GET,
-            ENV,
-            simple_url,
-            request_ts,
-            request_ts_micro,
-            request_date
-          FROM {$this->table}
+            "profile",
+            "url",
+            "SERVER",
+            "GET",
+            "ENV",
+            "simple_url",
+            "request_ts",
+            "request_ts_micro",
+            "request_date"
+          FROM "' . $this->table . '"
           WHERE id = :id
-        ");
+        ');
 
         $stmt->execute(['id' => $id]);
 
@@ -159,11 +159,11 @@ class PdoSearcher implements SearcherInterface
         $perPage = (int)$options['perPage'];
         $url = $options['conditions']['url'] ?? "";
 
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->pdo->prepare('
           SELECT COUNT(*) AS count
-          FROM {$this->table}
-          WHERE simple_url LIKE :url
-        ");
+          FROM "' . $this->table . '"
+          WHERE "simple_url" LIKE :url
+        ');
         $stmt->execute(['url' => '%'.$url.'%']);
         $totalRows = (int)$stmt->fetchColumn();
 
@@ -173,27 +173,26 @@ class PdoSearcher implements SearcherInterface
         }
         $skip = ($page-1) * $perPage;
 
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->pdo->prepare('
           SELECT
-            id,
-            url,
-            SERVER,
-            GET,
-            ENV,
-            simple_url,
-            request_ts,
-            request_ts_micro,
-            request_date,
-            main_wt,
-            main_ct,
-            main_cpu,
-            main_mu,
-            main_pmu
-          FROM {$this->table}
-          WHERE simple_url LIKE :url
-          ORDER BY request_ts DESC
-          LIMIT $skip OFFSET $perPage
-        ");
+            "id",
+            "url",
+            "SERVER",
+            "GET",
+            "ENV",
+            "simple_url",
+            "request_ts",
+            "request_ts_micro",
+            "request_date",
+            "main_wt",
+            "main_ct",
+            "main_cpu",
+            "main_mu",
+            "main_pmu"
+          FROM "' . $this->table . '"
+          WHERE "simple_url" LIKE :url
+          ORDER BY "request_ts" DESC
+          LIMIT ' . $skip . ' OFFSET ' . $perPage);
         $stmt->execute(['url' => '%'.$url.'%']);
 
         $results = [];
@@ -237,10 +236,10 @@ class PdoSearcher implements SearcherInterface
      */
     public function delete($id)
     {
-        $stmt = $this->pdo->prepare("
-          DELETE FROM {$this->table}
+        $stmt = $this->pdo->prepare('
+          DELETE FROM "' . $this->table . '"
           WHERE id = :id
-        ");
+        ');
 
         $stmt->execute(['id' => $id]);
     }
@@ -251,7 +250,7 @@ class PdoSearcher implements SearcherInterface
     public function truncate()
     {
         return is_int(
-            $this->pdo->exec("DELETE FROM {$this->table}")
+            $this->pdo->exec('DELETE FROM "' . $this->table . '"')
         );
     }
 
@@ -283,13 +282,13 @@ class PdoSearcher implements SearcherInterface
      */
     public function stats()
     {
-        $stmt = $this->pdo->query("
+        $stmt = $this->pdo->query('
           SELECT
             COUNT(*) AS profiles,
-            MAX(request_ts) AS latest,
-            SUM(LENGTH(profile)) AS bytes
-          FROM {$this->table}
-        ", PDO::FETCH_ASSOC);
+            MAX("request_ts") AS latest,
+            SUM(LENGTH("profile")) AS bytes
+          FROM "' . $this->table . '"
+        ', PDO::FETCH_ASSOC);
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 

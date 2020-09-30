@@ -11,21 +11,21 @@ class PdoSaver implements SaverInterface
     const TABLE_DDL = <<<SQL
 
 CREATE TABLE IF NOT EXISTS "%s" (
-  id               CHAR(24) PRIMARY KEY,
-  profile          TEXT           NOT NULL,
-  url              TEXT           NULL,
-  SERVER           TEXT           NULL,
-  GET              TEXT           NULL,
-  ENV              TEXT           NULL,
-  simple_url       TEXT           NULL,
-  request_ts       INTEGER        NOT NULL,
-  request_ts_micro NUMERIC(15, 4) NOT NULL,
-  request_date     DATE           NOT NULL,
-  main_wt          INTEGER        NOT NULL,
-  main_ct          INTEGER        NOT NULL,
-  main_cpu         INTEGER        NOT NULL,
-  main_mu          INTEGER        NOT NULL,
-  main_pmu         INTEGER        NOT NULL
+  "id"               CHAR(24) PRIMARY KEY,
+  "profile"          TEXT           NOT NULL,
+  "url"              TEXT           NULL,
+  "SERVER"           TEXT           NULL,
+  "GET"              TEXT           NULL,
+  "ENV"              TEXT           NULL,
+  "simple_url"       TEXT           NULL,
+  "request_ts"       INTEGER        NOT NULL,
+  "request_ts_micro" NUMERIC(15, 4) NOT NULL,
+  "request_date"     DATE           NOT NULL,
+  "main_wt"          INTEGER        NOT NULL,
+  "main_ct"          INTEGER        NOT NULL,
+  "main_cpu"         INTEGER        NOT NULL,
+  "main_mu"          INTEGER        NOT NULL,
+  "main_pmu"         INTEGER        NOT NULL
 );
 
 SQL;
@@ -33,21 +33,21 @@ SQL;
     const INSERT_DML = <<<SQL
 
 INSERT INTO "%s" (
-  id,
-  profile,
-  url,
-  SERVER,
-  GET,
-  ENV,
-  simple_url,
-  request_ts,
-  request_ts_micro,
-  request_date,
-  main_wt,
-  main_ct,
-  main_cpu,
-  main_mu,
-  main_pmu
+  "id",
+  "profile",
+  "url",
+  "SERVER",
+  "GET",
+  "ENV",
+  "simple_url",
+  "request_ts",
+  "request_ts_micro",
+  "request_date",
+  "main_wt",
+  "main_ct",
+  "main_cpu",
+  "main_mu",
+  "main_pmu"
 ) VALUES (
   :id,
   :profile,
