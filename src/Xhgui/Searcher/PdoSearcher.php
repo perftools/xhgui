@@ -191,7 +191,7 @@ class PdoSearcher implements SearcherInterface
             "main_pmu"
           FROM "' . $this->table . '"
           WHERE "simple_url" LIKE :url
-          ORDER BY "request_ts" DESC
+          ORDER BY "request_ts" ' . $direction. '
           LIMIT ' . $skip . ' OFFSET ' . $perPage);
         $stmt->execute(['url' => '%'.$url.'%']);
 
@@ -224,7 +224,7 @@ class PdoSearcher implements SearcherInterface
         return [
             'results' => $results,
             'sort' => 'meta.request_ts',
-            'direction' => 'desc',
+            'direction' => $direction,
             'page' => $page,
             'perPage' => $perPage,
             'totalPages' => $totalPages,
