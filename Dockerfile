@@ -16,6 +16,7 @@ RUN set -x \
 			| sort -u \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 	) \
+	&& rm -rf /usr/local/lib/php/test/mongodb \
 	&& apk add --no-cache $runDeps \
 	&& apk del .build-deps
 
