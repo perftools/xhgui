@@ -185,7 +185,7 @@ application.
 It offers submitting data directly to XHGui instance once the profiling is
 complete at the end of the request.
 
-If the site cannot directly connect to XGHui instance, the package offers
+If the site cannot directly connect to XHGui instance, the package offers
 solution to capture profiling data to file which you can import using
 `external/import.php` script:
 
