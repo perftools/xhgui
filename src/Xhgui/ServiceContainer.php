@@ -10,6 +10,7 @@ use RuntimeException;
 use Slim\Middleware\SessionCookie;
 use Slim\Slim;
 use Slim\Views\Twig;
+use XHGui\Db\PdoRepository;
 use XHGui\Middleware\RenderMiddleware;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\PdoSearcher;
@@ -129,12 +130,16 @@ class ServiceContainer extends Container
             );
         };
 
+        $this[PdoRepository::class] = static function ($c) {
+            return new PdoRepository($c['pdo'], $c['config']['pdo']['table']);
+        };
+
         $this['searcher.mongodb'] = static function ($c) {
             return new MongoSearcher($c['db']);
         };
 
         $this['searcher.pdo'] = static function ($c) {
-            return new PdoSearcher($c['pdo'], $c['config']['pdo']['table']);
+            return new PdoSearcher($c[PdoRepository::class]);
         };
 
         $this['searcher'] = static function ($c) {
@@ -157,12 +162,7 @@ class ServiceContainer extends Container
         };
 
         $this['saver.pdo'] = static function ($c) {
-            $config = $c['config'];
-
-            return new Saver\PdoSaver(
-                $c['pdo'],
-                $config['pdo']['table']
-            );
+            return new Saver\PdoSaver($c[PdoRepository::class]);
         };
 
         $this['saver'] = static function ($c) {

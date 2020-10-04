@@ -2,58 +2,25 @@
 
 namespace XHGui\Searcher;
 
-use Exception;
-use PDO;
+use XHGui\Db\PdoRepository;
 use XHGui\Profile;
 
 class PdoSearcher implements SearcherInterface
 {
-    /**
-     * @var PDO
-     */
-    private $pdo;
+    /** @var PdoRepository */
+    private $db;
 
-    /**
-     * @var string
-     */
-    private $table;
-
-    /**
-     * @param PDO    $pdo   An open database connection
-     * @param string $table Table name where Xhgui profiles are stored
-     */
-    public function __construct(PDO $pdo, $table)
+    public function __construct(PdoRepository $db)
     {
-        $this->pdo = $pdo;
-        $this->table = $table;
+        $this->db = $db;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function latest()
+    public function latest(): Profile
     {
-        $stmt = $this->pdo->query('
-          SELECT
-            "id",
-            "profile",
-            "url",
-            "SERVER",
-            "GET",
-            "ENV",
-            "simple_url",
-            "request_ts",
-            "request_ts_micro,"
-            "request_date"
-          FROM "' . $this->table . '"
-          ORDER BY "request_date" ASC
-          LIMIT 1
-        ');
-
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (false === $row) {
-            throw new Exception('No profile available yet.');
-        }
+        $row = $this->db->getLatest();
 
         return new Profile([
             '_id' => $row['id'],
@@ -82,28 +49,9 @@ class PdoSearcher implements SearcherInterface
     /**
      * {@inheritdoc}
      */
-    public function get($id)
+    public function get($id): Profile
     {
-        $stmt = $this->pdo->prepare('
-          SELECT
-            "profile",
-            "url",
-            "SERVER",
-            "GET",
-            "ENV",
-            "simple_url",
-            "request_ts",
-            "request_ts_micro",
-            "request_date"
-          FROM "' . $this->table . '"
-          WHERE id = :id
-        ');
-
-        $stmt->execute(['id' => $id]);
-
-        if (false === $row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            throw new Exception('No profile data found.');
-        }
+        $row = $this->db->getById($id);
 
         return new Profile([
             '_id' => $id,
@@ -150,8 +98,6 @@ class PdoSearcher implements SearcherInterface
      */
     public function getAll($options = [])
     {
-        $sort = $options['sort'];
-        $direction = $options['direction'];
         $page = (int)$options['page'];
         if ($page < 1) {
             $page = 1;
@@ -159,44 +105,15 @@ class PdoSearcher implements SearcherInterface
         $perPage = (int)$options['perPage'];
         $url = $options['conditions']['url'] ?? "";
 
-        $stmt = $this->pdo->prepare('
-          SELECT COUNT(*) AS count
-          FROM "' . $this->table . '"
-          WHERE "simple_url" LIKE :url
-        ');
-        $stmt->execute(['url' => '%'.$url.'%']);
-        $totalRows = (int)$stmt->fetchColumn();
-
+        $totalRows = $this->db->countByUrl($url);
         $totalPages = max(ceil($totalRows/$perPage), 1);
         if ($page > $totalPages) {
             $page = $totalPages;
         }
         $skip = ($page-1) * $perPage;
 
-        $stmt = $this->pdo->prepare('
-          SELECT
-            "id",
-            "url",
-            "SERVER",
-            "GET",
-            "ENV",
-            "simple_url",
-            "request_ts",
-            "request_ts_micro",
-            "request_date",
-            "main_wt",
-            "main_ct",
-            "main_cpu",
-            "main_mu",
-            "main_pmu"
-          FROM "' . $this->table . '"
-          WHERE "simple_url" LIKE :url
-          ORDER BY "request_ts" ' . $direction. '
-          LIMIT ' . $skip . ' OFFSET ' . $perPage);
-        $stmt->execute(['url' => '%'.$url.'%']);
-
         $results = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        foreach ($this->db->findByUrl($url, $direction, $skip, $perPage) as $row) {
             $results[] = new Profile([
                 '_id' => $row['id'],
                 'meta' => [
@@ -236,12 +153,7 @@ class PdoSearcher implements SearcherInterface
      */
     public function delete($id)
     {
-        $stmt = $this->pdo->prepare('
-          DELETE FROM "' . $this->table . '"
-          WHERE id = :id
-        ');
-
-        $stmt->execute(['id' => $id]);
+        $this->db->deleteById($id);
     }
 
     /**
@@ -249,9 +161,7 @@ class PdoSearcher implements SearcherInterface
      */
     public function truncate()
     {
-        return is_int(
-            $this->pdo->exec('DELETE FROM "' . $this->table . '"')
-        );
+        return $this->db->deleteAll();
     }
 
     /**
@@ -282,17 +192,9 @@ class PdoSearcher implements SearcherInterface
      */
     public function stats()
     {
-        $stmt = $this->pdo->query('
-          SELECT
-            COUNT(*) AS profiles,
-            MAX("request_ts") AS latest,
-            SUM(LENGTH("profile")) AS bytes
-          FROM "' . $this->table . '"
-        ', PDO::FETCH_ASSOC);
+        $row = $this->db->getStatistics();
 
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (false === $row) {
+        if (!$row) {
             $row = [
                 'profiles' => 0,
                 'latest'   => 0,
