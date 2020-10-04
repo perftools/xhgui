@@ -26,7 +26,7 @@ XHGui has the following requirements:
 
 The default installation uses MongoDB database. Most of the documentation speaks about MongoDB.
 
-- [MongoDB Extension][ext-mongodb] MongoDB PHP driver.
+- [MongoDB Extension][ext-mongodb] MongoDB PHP driver: `pecl install mongodb`
   XHGui requires verison 1.3.0 or later.
 - [MongoDB][mongodb] MongoDB Itself. XHGui requires version 2.2.0 or later.
 
