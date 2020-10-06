@@ -381,11 +381,11 @@ class Profile
     {
         // Init exclusive values
         foreach ($this->_collapsed as &$data) {
-            $data['ewt'] = $data['wt'];
-            $data['emu'] = $data['mu'];
-            $data['ecpu'] = $data['cpu'];
-            $data['ect'] = $data['ct'];
-            $data['epmu'] = $data['pmu'];
+            $data['ewt'] = $data['wt'] ?? 0;
+            $data['emu'] = $data['mu'] ?? 0;
+            $data['ecpu'] = $data['cpu'] ?? 0;
+            $data['ect'] = $data['ct'] ?? 0;
+            $data['epmu'] = $data['pmu'] ?? 0;
         }
         unset($data);
 
@@ -394,11 +394,11 @@ class Profile
         foreach ($this->_collapsed as $name => $data) {
             $children = $this->_getChildren($name);
             foreach ($children as $child) {
-                $this->_collapsed[$name]['ewt'] -= $child['wt'];
-                $this->_collapsed[$name]['emu'] -= $child['mu'];
-                $this->_collapsed[$name]['ecpu'] -= $child['cpu'];
-                $this->_collapsed[$name]['ect'] -= $child['ct'];
-                $this->_collapsed[$name]['epmu'] -= $child['pmu'];
+                $this->_collapsed[$name]['ewt'] -= $child['wt'] ?? 0;
+                $this->_collapsed[$name]['emu'] -= $child['mu'] ?? 0;
+                $this->_collapsed[$name]['ecpu'] -= $child['cpu'] ?? 0;
+                $this->_collapsed[$name]['ect'] -= $child['ct'] ?? 0;
+                $this->_collapsed[$name]['epmu'] -= $child['pmu'] ?? 0;
             }
         }
 
