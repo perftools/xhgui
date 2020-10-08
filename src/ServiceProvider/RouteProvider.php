@@ -6,6 +6,8 @@ use Exception;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Slim\App;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Slim\Views\Twig;
 use XHGui\Controller;
 use XHGui\Twig\TwigExtension;
@@ -36,37 +38,27 @@ class RouteProvider implements ServiceProviderInterface
         });
 
         // Profile Runs routes
-        $app->get('/', static function () use ($di, $app): void {
+        $app->get('/', static function (Request $request, Response $response) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-            $response = $app->response();
-
             $controller->index($request, $response);
         })->setName('home');
 
-        $app->get('/run/view', static function () use ($di, $app): void {
+        $app->get('/run/view', static function (Request $request, Response $response) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-            $response = $app->response();
-
             $controller->view($request, $response);
         })->setName('run.view');
 
-        $app->get('/run/delete', static function () use ($di, $app): void {
+        $app->get('/run/delete', static function (Request $request) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->deleteForm($request);
         })->setName('run.delete.form');
 
-        $app->post('/run/delete', static function () use ($di, $app): void {
+        $app->post('/run/delete', static function (Request $request) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->deleteSubmit($request);
         })->setName('run.delete.submit');
 
@@ -82,71 +74,52 @@ class RouteProvider implements ServiceProviderInterface
             $controller->deleteAllSubmit();
         })->setName('run.deleteAll.submit');
 
-        $app->get('/url/view', static function () use ($di, $app): void {
+        $app->get('/url/view', static function (Request $request) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->url($request);
         })->setName('url.view');
 
-        $app->get('/run/compare', static function () use ($di, $app): void {
+        $app->get('/run/compare', static function (Request $request) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->compare($request);
         })->setName('run.compare');
 
-        $app->get('/run/symbol', static function () use ($di, $app): void {
+        $app->get('/run/symbol', static function (Request $request) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->symbol($request);
         })->setName('run.symbol');
 
-        $app->get('/run/symbol/short', static function () use ($di, $app): void {
+        $app->get('/run/symbol/short', static function (Request $request) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->symbolShort($request);
         })->setName('run.symbol-short');
 
-        $app->get('/run/callgraph', static function () use ($di, $app): void {
+        $app->get('/run/callgraph', static function (Request $request) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->callgraph($request);
         })->setName('run.callgraph');
 
-        $app->get('/run/callgraph/data', static function () use ($di, $app): void {
+        $app->get('/run/callgraph/data', static function (Request $request, Response $response) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-            $response = $app->response();
-
             $controller->callgraphData($request, $response);
         })->setName('run.callgraph.data');
 
-        $app->get('/run/callgraph/dot', static function () use ($di, $app): void {
+        $app->get('/run/callgraph/dot', static function (Request $request, Response $response) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-            $response = $app->response();
-
             $controller->callgraphDataDot($request, $response);
         })->setName('run.callgraph.dot');
 
         // Import route
-        $app->post('/run/import', static function () use ($di, $app): void {
+        $app->post('/run/import', static function (Request $request, Response $response) use ($di): void {
             /** @var Controller\ImportController $controller */
             $controller = $di[Controller\ImportController::class];
-            $request = $app->request();
-            $response = $app->response();
-
             $controller->import($request, $response);
         })->setName('run.import');
 
@@ -157,11 +130,9 @@ class RouteProvider implements ServiceProviderInterface
             $controller->get();
         })->setName('watch.list');
 
-        $app->post('/watch', static function () use ($di, $app): void {
+        $app->post('/watch', static function (Request $request) use ($di): void {
             /** @var Controller\WatchController $controller */
             $controller = $di[Controller\WatchController::class];
-            $request = $app->request();
-
             $controller->post($request);
         })->setName('watch.save');
 
@@ -172,20 +143,15 @@ class RouteProvider implements ServiceProviderInterface
             $controller->get();
         })->setName('custom.view');
 
-        $app->get('/custom/help', static function () use ($di, $app): void {
+        $app->get('/custom/help', static function (Request $request) use ($di): void {
             /** @var Controller\CustomController $controller */
             $controller = $di[Controller\CustomController::class];
-            $request = $app->request();
-
             $controller->help($request);
         })->setName('custom.help');
 
-        $app->post('/custom/query', static function () use ($di, $app): void {
+        $app->post('/custom/query', static function (Request $request, Response $response) use ($di): void {
             /** @var Controller\CustomController $controller */
             $controller = $di[Controller\CustomController::class];
-            $request = $app->request();
-            $response = $app->response();
-
             $controller->query($request, $response);
         })->setName('custom.query');
 
@@ -196,21 +162,16 @@ class RouteProvider implements ServiceProviderInterface
             $controller->index();
         })->setName('waterfall.list');
 
-        $app->get('/waterfall/data', static function () use ($di, $app): void {
+        $app->get('/waterfall/data', static function (Request $request, Response $response) use ($di): void {
             /** @var Controller\WaterfallController $controller */
             $controller = $di[Controller\WaterfallController::class];
-            $request = $app->request();
-            $response = $app->response();
-
             $controller->query($request, $response);
         })->setName('waterfall.data');
 
         // Metrics
-        $app->get('/metrics', static function () use ($di, $app): void {
+        $app->get('/metrics', static function (Request $request, Response $response) use ($di): void {
             /** @var Controller\MetricsController $controller */
             $controller = $di[Controller\MetricsController::class];
-            $response = $app->response();
-
             $controller->metrics($response);
         })->setName('metrics');
     }
