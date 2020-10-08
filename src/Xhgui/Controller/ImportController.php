@@ -32,8 +32,8 @@ class ImportController extends AbstractController
         $response = $this->app->response();
 
         try {
-            $this->runImport($request);
-            $result = ['ok' => true, 'size' => $request->getContentLength()];
+            $id = $this->runImport($request);
+            $result = ['ok' => true, 'id' => $id, 'size' => $request->getContentLength()];
         } catch (InvalidArgumentException $e) {
             $result = ['error' => true, 'message' => $e->getMessage()];
             $response->setStatus(401);
@@ -46,7 +46,7 @@ class ImportController extends AbstractController
         $response->body(json_encode($result));
     }
 
-    private function runImport(Request $request)
+    private function runImport(Request $request): string
     {
         if ($this->token) {
             if ($this->token !== $request->get('token')) {
@@ -55,6 +55,6 @@ class ImportController extends AbstractController
         }
 
         $data = json_decode($request->getBody(), true);
-        $this->saver->save($data);
+        return $this->saver->save($data);
     }
 }
