@@ -17,7 +17,7 @@ class ExtensionTest extends TestCase
         parent::setUp();
         $app = new Slim();
         $app->get('/test', static function () {
-        })->name('test');
+        })->setName('test');
         $this->ext = new TwigExtension($app);
     }
 

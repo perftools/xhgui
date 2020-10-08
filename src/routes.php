@@ -43,7 +43,7 @@ $app->get('/', static function () use ($di, $app) {
     $response = $app->response();
 
     $controller->index($request, $response);
-})->name('home');
+})->setName('home');
 
 $app->get('/run/view', static function () use ($di, $app) {
     /** @var RunController $controller */
@@ -52,7 +52,7 @@ $app->get('/run/view', static function () use ($di, $app) {
     $response = $app->response();
 
     $controller->view($request, $response);
-})->name('run.view');
+})->setName('run.view');
 
 $app->get('/run/delete', static function () use ($di, $app) {
     /** @var RunController $controller */
@@ -60,7 +60,7 @@ $app->get('/run/delete', static function () use ($di, $app) {
     $request = $app->request();
 
     $controller->deleteForm($request);
-})->name('run.delete.form');
+})->setName('run.delete.form');
 
 $app->post('/run/delete', static function () use ($di, $app) {
     /** @var RunController $controller */
@@ -68,19 +68,19 @@ $app->post('/run/delete', static function () use ($di, $app) {
     $request = $app->request();
 
     $controller->deleteSubmit($request);
-})->name('run.delete.submit');
+})->setName('run.delete.submit');
 
 $app->get('/run/delete_all', static function () use ($di, $app) {
     /** @var RunController $controller */
     $controller = $app->controller = $di['runController'];
     $controller->deleteAllForm();
-})->name('run.deleteAll.form');
+})->setName('run.deleteAll.form');
 
 $app->post('/run/delete_all', static function () use ($di, $app) {
     /** @var RunController $controller */
     $controller = $di['runController'];
     $controller->deleteAllSubmit();
-})->name('run.deleteAll.submit');
+})->setName('run.deleteAll.submit');
 
 $app->get('/url/view', static function () use ($di, $app) {
     /** @var RunController $controller */
@@ -88,7 +88,7 @@ $app->get('/url/view', static function () use ($di, $app) {
     $request = $app->request();
 
     $controller->url($request);
-})->name('url.view');
+})->setName('url.view');
 
 $app->get('/run/compare', static function () use ($di, $app) {
     /** @var RunController $controller */
@@ -96,7 +96,7 @@ $app->get('/run/compare', static function () use ($di, $app) {
     $request = $app->request();
 
     $controller->compare($request);
-})->name('run.compare');
+})->setName('run.compare');
 
 $app->get('/run/symbol', static function () use ($di, $app) {
     /** @var RunController $controller */
@@ -104,7 +104,7 @@ $app->get('/run/symbol', static function () use ($di, $app) {
     $request = $app->request();
 
     $controller->symbol($request);
-})->name('run.symbol');
+})->setName('run.symbol');
 
 $app->get('/run/symbol/short', static function () use ($di, $app) {
     /** @var RunController $controller */
@@ -112,7 +112,7 @@ $app->get('/run/symbol/short', static function () use ($di, $app) {
     $request = $app->request();
 
     $controller->symbolShort($request);
-})->name('run.symbol-short');
+})->setName('run.symbol-short');
 
 $app->get('/run/callgraph', static function () use ($di, $app) {
     /** @var RunController $controller */
@@ -120,7 +120,7 @@ $app->get('/run/callgraph', static function () use ($di, $app) {
     $request = $app->request();
 
     $controller->callgraph($request);
-})->name('run.callgraph');
+})->setName('run.callgraph');
 
 $app->get('/run/callgraph/data', static function () use ($di, $app) {
     /** @var RunController $controller */
@@ -129,7 +129,7 @@ $app->get('/run/callgraph/data', static function () use ($di, $app) {
     $response = $app->response();
 
     $controller->callgraphData($request, $response);
-})->name('run.callgraph.data');
+})->setName('run.callgraph.data');
 
 $app->get('/run/callgraph/dot', static function () use ($di, $app) {
     /** @var RunController $controller */
@@ -138,7 +138,7 @@ $app->get('/run/callgraph/dot', static function () use ($di, $app) {
     $response = $app->response();
 
     $controller->callgraphDataDot($request, $response);
-})->name('run.callgraph.dot');
+})->setName('run.callgraph.dot');
 
 // Import route
 $app->post('/run/import', static function () use ($di, $app) {
@@ -148,14 +148,14 @@ $app->post('/run/import', static function () use ($di, $app) {
     $response = $app->response();
 
     $controller->import($request, $response);
-})->name('run.import');
+})->setName('run.import');
 
 // Watch function routes.
 $app->get('/watch', static function () use ($di, $app) {
     /** @var WatchController $controller */
     $controller = $app->controller = $di['watchController'];
     $controller->get();
-})->name('watch.list');
+})->setName('watch.list');
 
 $app->post('/watch', static function () use ($di, $app) {
     /** @var WatchController $controller */
@@ -163,14 +163,14 @@ $app->post('/watch', static function () use ($di, $app) {
     $request = $app->request();
 
     $controller->post($request);
-})->name('watch.save');
+})->setName('watch.save');
 
 // Custom report routes.
 $app->get('/custom', static function () use ($di, $app) {
     /** @var CustomController $controller */
     $controller = $app->controller = $di['customController'];
     $controller->get();
-})->name('custom.view');
+})->setName('custom.view');
 
 $app->get('/custom/help', static function () use ($di, $app) {
     /** @var CustomController $controller */
@@ -178,7 +178,7 @@ $app->get('/custom/help', static function () use ($di, $app) {
     $request = $app->request();
 
     $controller->help($request);
-})->name('custom.help');
+})->setName('custom.help');
 
 $app->post('/custom/query', static function () use ($di, $app) {
     /** @var CustomController $controller */
@@ -187,14 +187,14 @@ $app->post('/custom/query', static function () use ($di, $app) {
     $response = $app->response();
 
     $controller->query($request, $response);
-})->name('custom.query');
+})->setName('custom.query');
 
 // Waterfall routes
 $app->get('/waterfall', static function () use ($di, $app) {
     /** @var WaterfallController $controller */
     $controller = $app->controller = $di['waterfallController'];
     $controller->index();
-})->name('waterfall.list');
+})->setName('waterfall.list');
 
 $app->get('/waterfall/data', static function () use ($di, $app) {
     /** @var WaterfallController $controller */
@@ -203,7 +203,7 @@ $app->get('/waterfall/data', static function () use ($di, $app) {
     $response = $app->response();
 
     $controller->query($request, $response);
-})->name('waterfall.data');
+})->setName('waterfall.data');
 
 // Metrics
 $app->get('/metrics', static function () use ($di, $app) {
@@ -212,4 +212,4 @@ $app->get('/metrics', static function () use ($di, $app) {
     $response = $app->response();
 
     $controller->metrics($response);
-})->name('metrics');
+})->setName('metrics');
