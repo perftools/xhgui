@@ -4,5 +4,8 @@ namespace XHGui\Saver;
 
 interface SaverInterface
 {
-    public function save(array $data);
+    /**
+     * Returns id of the saved profile
+     */
+    public function save(array $data): string;
 }
