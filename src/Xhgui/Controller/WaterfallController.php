@@ -2,6 +2,8 @@
 
 namespace XHGui\Controller;
 
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Slim\Slim;
 use XHGui\Searcher\SearcherInterface;
 use XHGui\AbstractController;
@@ -53,10 +55,8 @@ class WaterfallController extends AbstractController
         ]);
     }
 
-    public function query()
+    public function query(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $response = $this->app->response();
         $search = [];
         $keys = ['remote_addr', 'request_start', 'request_end'];
         foreach ($keys as $key) {

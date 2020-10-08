@@ -5,6 +5,7 @@ namespace XHGui\Controller;
 use Exception;
 use InvalidArgumentException;
 use Slim\Http\Request;
+use Slim\Http\Response;
 use Slim\Slim;
 use XHGui\Saver\SaverInterface;
 use XHGui\AbstractController;
@@ -26,11 +27,8 @@ class ImportController extends AbstractController
         $this->token = $token;
     }
 
-    public function import()
+    public function import(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $response = $this->app->response();
-
         try {
             $this->runImport($request);
             $result = ['ok' => true, 'size' => $request->getContentLength()];

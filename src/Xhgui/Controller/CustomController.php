@@ -2,6 +2,8 @@
 
 namespace XHGui\Controller;
 
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Slim\Slim;
 use XHGui\Searcher\SearcherInterface;
 use XHGui\AbstractController;
@@ -24,9 +26,8 @@ class CustomController extends AbstractController
         $this->_template = 'custom/create.twig';
     }
 
-    public function help()
+    public function help(Request $request)
     {
-        $request = $this->app->request();
         if ($request->get('id')) {
             $res = $this->searcher->get($request->get('id'));
         } else {
@@ -38,10 +39,8 @@ class CustomController extends AbstractController
         ]);
     }
 
-    public function query()
+    public function query(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $response = $this->app->response();
         $response['Content-Type'] = 'application/json';
 
         $query = json_decode($request->post('query'), true);
