@@ -16,6 +16,8 @@ class ImportTest extends TestCase
     private $profiles;
     /** @var ImportController */
     private $import;
+    /** @var Slim */
+    private $app;
 
     public function setUp()
     {
@@ -26,7 +28,7 @@ class ImportTest extends TestCase
         ]);
 
         $di = ServiceContainer::instance();
-        $di['app'] = $this->getMockBuilder(Slim::class)
+        $this->app = $di['app'] = $this->getMockBuilder(Slim::class)
             ->setMethods(['redirect', 'render', 'urlFor'])
             ->setConstructorArgs([$di['config']])
             ->getMock();
@@ -66,7 +68,7 @@ class ImportTest extends TestCase
         $before = $this->profiles->getForUrl('/things', []);
         $this->assertEmpty($before['results']);
 
-        $this->import->import();
+        $this->import->import($this->app->request(), $this->app->response());
 
         $after = $this->profiles->getForUrl('/things', []);
         $this->assertNotEmpty($after['results']);

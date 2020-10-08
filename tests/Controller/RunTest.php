@@ -48,7 +48,7 @@ class RunTest extends TestCase
 
     public function testIndexEmpty()
     {
-        $this->runs->index();
+        $this->runs->index($this->app->request(), $this->app->response());
         $result = $this->runs->templateVars();
 
         $this->assertEquals('Recent runs', $result['title']);
@@ -70,7 +70,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'sort=wt',
         ]);
 
-        $this->runs->index();
+        $this->runs->index($this->app->request(), $this->app->response());
         $result = $this->runs->templateVars();
         $this->assertEquals('Longest wall time', $result['title']);
         $this->assertEquals('wt', $result['paging']['sort']);
@@ -84,7 +84,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'sort=cpu&direction=desc',
         ]);
 
-        $this->runs->index();
+        $this->runs->index($this->app->request(), $this->app->response());
         $result = $this->runs->templateVars();
         $this->assertEquals('Most CPU time', $result['title']);
         $this->assertEquals('cpu', $result['paging']['sort']);
@@ -99,7 +99,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'sort=mu&direction=asc&url=index.php',
         ]);
 
-        $this->runs->index();
+        $this->runs->index($this->app->request(), $this->app->response());
         $result = $this->runs->templateVars();
         $this->assertEquals('Highest memory use', $result['title']);
         $this->assertEquals('mu', $result['paging']['sort']);
@@ -116,7 +116,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'url=%2Ftasks',
         ]);
 
-        $this->runs->url();
+        $this->runs->url($this->app->request(), $this->app->response());
 
         $result = $this->runs->templateVars();
         $this->assertEquals('url.view', $result['base_url']);
@@ -164,7 +164,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
         ]);
 
-        $this->runs->callgraph();
+        $this->runs->callgraph($this->app->request());
         $result = $this->runs->templateVars();
         $this->assertArrayHasKey('profile', $result);
         $this->assertArrayHasKey('date_format', $result);
@@ -180,7 +180,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
         ]);
 
-        $this->runs->callgraphData();
+        $this->runs->callgraphData($this->app->request(), $this->app->response());
         $response = $this->app->response();
 
         $this->assertEquals('application/json', $response['Content-Type']);
@@ -210,7 +210,7 @@ class RunTest extends TestCase
         $result = $this->profiles->getAll();
         $this->assertCount(5, $result['results']);
 
-        $this->runs->deleteSubmit();
+        $this->runs->deleteSubmit($this->app->request());
 
         $result = $this->profiles->getAll();
         $this->assertCount(4, $result['results']);
@@ -251,7 +251,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*,strpos()',
         ]);
 
-        $this->runs->view();
+        $this->runs->view($this->app->request(), $this->app->response());
         $result = $this->runs->templateVars();
 
         $this->assertCount(1, $result['profile']);
@@ -267,7 +267,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*',
         ]);
 
-        $this->runs->view();
+        $this->runs->view($this->app->request(), $this->app->response());
         $result = $this->runs->templateVars();
 
         $this->assertCount(2, $result['profile']);
@@ -283,7 +283,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=true',
         ]);
 
-        $this->runs->view();
+        $this->runs->view($this->app->request(), $this->app->response());
         $result = $this->runs->templateVars();
 
         $this->assertCount(2, $result['profile']);

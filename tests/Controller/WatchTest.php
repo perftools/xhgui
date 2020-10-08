@@ -60,7 +60,7 @@ class WatchTest extends TestCase
         $this->app->expects($this->once())
             ->method('redirect');
 
-        $this->watches->post();
+        $this->watches->post($this->app->request());
         $result = $this->searcher->getAllWatches();
 
         $this->assertCount(2, $result);
@@ -78,7 +78,7 @@ class WatchTest extends TestCase
                 ['name' => 'strpos', '_id' => $saved[0]['_id']],
             ],
         ];
-        $this->watches->post();
+        $this->watches->post($this->app->request());
         $result = $this->searcher->getAllWatches();
 
         $this->assertCount(1, $result);
@@ -95,7 +95,7 @@ class WatchTest extends TestCase
                 ['removed' => 1, 'name' => 'strpos', '_id' => $saved[0]['_id']],
             ],
         ];
-        $this->watches->post();
+        $this->watches->post($this->app->request());
         $result = $this->searcher->getAllWatches();
 
         $this->assertCount(0, $result);
