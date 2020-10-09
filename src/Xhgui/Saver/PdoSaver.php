@@ -16,7 +16,7 @@ class PdoSaver implements SaverInterface
         $this->db = $db;
     }
 
-    public function save(array $data)
+    public function save(array $data): string
     {
         $main = $data['profile']['main()'];
 
@@ -25,8 +25,9 @@ class PdoSaver implements SaverInterface
         $sec = $ts['sec'];
         $usec = $ts['usec'];
 
+        $id = $data['_id'] ?? Util::generateId();
         $this->db->saveProfile([
-            'id'               => $data['_id'] ?? Util::generateId(),
+            'id'               => $id,
             'profile'          => json_encode($data['profile']),
             'url'              => $data['meta']['url'],
             'SERVER'           => json_encode($data['meta']['SERVER']),
@@ -42,5 +43,7 @@ class PdoSaver implements SaverInterface
             'main_mu'          => $main['mu'],
             'main_pmu'         => $main['pmu'],
         ]);
+
+        return $id;
     }
 }
