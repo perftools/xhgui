@@ -3,7 +3,7 @@
 namespace XHGui\Test\Twig;
 
 use Slim\App;
-use Slim\Environment;
+use Slim\Http\Environment;
 use XHGui\Test\TestCase;
 use XHGui\Twig\TwigExtension;
 
