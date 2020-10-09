@@ -5,9 +5,10 @@ namespace XHGui\Controller;
 use Exception;
 use InvalidArgumentException;
 use Slim\Http\Request;
-use Slim\Slim;
+use Slim\Http\Response;
 use XHGui\Saver\SaverInterface;
 use XHGui\AbstractController;
+use Slim\Slim as App;
 
 class ImportController extends AbstractController
 {
@@ -19,18 +20,15 @@ class ImportController extends AbstractController
     /** @var string */
     private $token;
 
-    public function __construct(Slim $app, SaverInterface $saver, $token)
+    public function __construct(App $app, SaverInterface $saver, $token)
     {
         parent::__construct($app);
         $this->saver = $saver;
         $this->token = $token;
     }
 
-    public function import()
+    public function import(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $response = $this->app->response();
-
         try {
             $this->runImport($request);
             $result = ['ok' => true, 'size' => $request->getContentLength()];

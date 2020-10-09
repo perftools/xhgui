@@ -3,13 +3,18 @@
  * Routes for Xhgui
  */
 
-use Slim\Slim;
+use Slim\Slim as App;
 use Slim\Views\Twig;
+use XHGui\Controller\CustomController;
 use XHGui\Controller\ImportController;
+use XHGui\Controller\MetricsController;
+use XHGui\Controller\RunController;
+use XHGui\Controller\WatchController;
+use XHGui\Controller\WaterfallController;
 use XHGui\ServiceContainer;
 use XHGui\Twig\TwigExtension;
 
-/** @var Slim $app */
+/** @var App $app */
 /** @var ServiceContainer $di */
 
 $app->error(static function (Exception $e) use ($di, $app) {
@@ -32,109 +37,179 @@ $app->error(static function (Exception $e) use ($di, $app) {
 
 // Profile Runs routes
 $app->get('/', static function () use ($di, $app) {
-    $app->controller = $di['runController'];
-    $app->controller->index();
-})->name('home');
+    /** @var RunController $controller */
+    $controller = $app->controller = $di['runController'];
+    $request = $app->request();
+    $response = $app->response();
+
+    $controller->index($request, $response);
+})->setName('home');
 
 $app->get('/run/view', static function () use ($di, $app) {
-    $app->controller = $di['runController'];
-    $app->controller->view();
-})->name('run.view');
+    /** @var RunController $controller */
+    $controller = $app->controller = $di['runController'];
+    $request = $app->request();
+    $response = $app->response();
+
+    $controller->view($request, $response);
+})->setName('run.view');
 
 $app->get('/run/delete', static function () use ($di, $app) {
-    $app->controller = $di['runController'];
-    $app->controller->deleteForm();
-})->name('run.delete.form');
+    /** @var RunController $controller */
+    $controller = $app->controller = $di['runController'];
+    $request = $app->request();
+
+    $controller->deleteForm($request);
+})->setName('run.delete.form');
 
 $app->post('/run/delete', static function () use ($di, $app) {
-    $di['runController']->deleteSubmit();
-})->name('run.delete.submit');
+    /** @var RunController $controller */
+    $controller = $di['runController'];
+    $request = $app->request();
+
+    $controller->deleteSubmit($request);
+})->setName('run.delete.submit');
 
 $app->get('/run/delete_all', static function () use ($di, $app) {
-    $app->controller = $di['runController'];
-    $app->controller->deleteAllForm();
-})->name('run.deleteAll.form');
+    /** @var RunController $controller */
+    $controller = $app->controller = $di['runController'];
+    $controller->deleteAllForm();
+})->setName('run.deleteAll.form');
 
 $app->post('/run/delete_all', static function () use ($di, $app) {
-    $di['runController']->deleteAllSubmit();
-})->name('run.deleteAll.submit');
+    /** @var RunController $controller */
+    $controller = $di['runController'];
+    $controller->deleteAllSubmit();
+})->setName('run.deleteAll.submit');
 
 $app->get('/url/view', static function () use ($di, $app) {
-    $app->controller = $di['runController'];
-    $app->controller->url();
-})->name('url.view');
+    /** @var RunController $controller */
+    $controller = $app->controller = $di['runController'];
+    $request = $app->request();
+
+    $controller->url($request);
+})->setName('url.view');
 
 $app->get('/run/compare', static function () use ($di, $app) {
-    $app->controller = $di['runController'];
-    $app->controller->compare();
-})->name('run.compare');
+    /** @var RunController $controller */
+    $controller = $app->controller = $di['runController'];
+    $request = $app->request();
+
+    $controller->compare($request);
+})->setName('run.compare');
 
 $app->get('/run/symbol', static function () use ($di, $app) {
-    $app->controller = $di['runController'];
-    $app->controller->symbol();
-})->name('run.symbol');
+    /** @var RunController $controller */
+    $controller = $app->controller = $di['runController'];
+    $request = $app->request();
+
+    $controller->symbol($request);
+})->setName('run.symbol');
 
 $app->get('/run/symbol/short', static function () use ($di, $app) {
-    $app->controller = $di['runController'];
-    $app->controller->symbolShort();
-})->name('run.symbol-short');
+    /** @var RunController $controller */
+    $controller = $app->controller = $di['runController'];
+    $request = $app->request();
+
+    $controller->symbolShort($request);
+})->setName('run.symbol-short');
 
 $app->get('/run/callgraph', static function () use ($di, $app) {
-    $app->controller = $di['runController'];
-    $app->controller->callgraph();
-})->name('run.callgraph');
+    /** @var RunController $controller */
+    $controller = $app->controller = $di['runController'];
+    $request = $app->request();
+
+    $controller->callgraph($request);
+})->setName('run.callgraph');
 
 $app->get('/run/callgraph/data', static function () use ($di, $app) {
-    $di['runController']->callgraphData();
-})->name('run.callgraph.data');
+    /** @var RunController $controller */
+    $controller = $di['runController'];
+    $request = $app->request();
+    $response = $app->response();
+
+    $controller->callgraphData($request, $response);
+})->setName('run.callgraph.data');
 
 $app->get('/run/callgraph/dot', static function () use ($di, $app) {
-    $di['runController']->callgraphDataDot();
-})->name('run.callgraph.dot');
+    /** @var RunController $controller */
+    $controller = $di['runController'];
+    $request = $app->request();
+    $response = $app->response();
+
+    $controller->callgraphDataDot($request, $response);
+})->setName('run.callgraph.dot');
 
 // Import route
 $app->post('/run/import', static function () use ($di, $app) {
     /** @var ImportController $controller */
     $controller = $di['importController'];
-    $controller->import();
-})->name('run.import');
+    $request = $app->request();
+    $response = $app->response();
+
+    $controller->import($request, $response);
+})->setName('run.import');
 
 // Watch function routes.
 $app->get('/watch', static function () use ($di, $app) {
-    $app->controller = $di['watchController'];
-    $app->controller->get();
-})->name('watch.list');
+    /** @var WatchController $controller */
+    $controller = $app->controller = $di['watchController'];
+    $controller->get();
+})->setName('watch.list');
 
-$app->post('/watch', static function () use ($di) {
-    $di['watchController']->post();
-})->name('watch.save');
+$app->post('/watch', static function () use ($di, $app) {
+    /** @var WatchController $controller */
+    $controller = $di['watchController'];
+    $request = $app->request();
+
+    $controller->post($request);
+})->setName('watch.save');
 
 // Custom report routes.
 $app->get('/custom', static function () use ($di, $app) {
-    $app->controller = $di['customController'];
-    $app->controller->get();
-})->name('custom.view');
+    /** @var CustomController $controller */
+    $controller = $app->controller = $di['customController'];
+    $controller->get();
+})->setName('custom.view');
 
 $app->get('/custom/help', static function () use ($di, $app) {
-    $app->controller = $di['customController'];
-    $app->controller->help();
-})->name('custom.help');
+    /** @var CustomController $controller */
+    $controller = $app->controller = $di['customController'];
+    $request = $app->request();
 
-$app->post('/custom/query', static function () use ($di) {
-    $di['customController']->query();
-})->name('custom.query');
+    $controller->help($request);
+})->setName('custom.help');
+
+$app->post('/custom/query', static function () use ($di, $app) {
+    /** @var CustomController $controller */
+    $controller = $di['customController'];
+    $request = $app->request();
+    $response = $app->response();
+
+    $controller->query($request, $response);
+})->setName('custom.query');
 
 // Waterfall routes
 $app->get('/waterfall', static function () use ($di, $app) {
-    $app->controller = $di['waterfallController'];
-    $app->controller->index();
-})->name('waterfall.list');
+    /** @var WaterfallController $controller */
+    $controller = $app->controller = $di['waterfallController'];
+    $controller->index();
+})->setName('waterfall.list');
 
-$app->get('/waterfall/data', static function () use ($di) {
-    $di['waterfallController']->query();
-})->name('waterfall.data');
+$app->get('/waterfall/data', static function () use ($di, $app) {
+    /** @var WaterfallController $controller */
+    $controller = $di['waterfallController'];
+    $request = $app->request();
+    $response = $app->response();
+
+    $controller->query($request, $response);
+})->setName('waterfall.data');
 
 // Metrics
 $app->get('/metrics', static function () use ($di, $app) {
-    $di['metricsController']->metrics();
-})->name('metrics');
+    /** @var MetricsController $controller */
+    $controller = $di['metricsController'];
+    $response = $app->response();
+
+    $controller->metrics($response);
+})->setName('metrics');

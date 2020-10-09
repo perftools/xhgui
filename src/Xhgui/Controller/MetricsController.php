@@ -2,9 +2,10 @@
 
 namespace XHGui\Controller;
 
-use Slim\Slim;
+use Slim\Http\Response;
 use XHGui\Searcher\SearcherInterface;
 use XHGui\AbstractController;
+use Slim\Slim as App;
 
 class MetricsController extends AbstractController
 {
@@ -13,16 +14,14 @@ class MetricsController extends AbstractController
      */
     protected $searcher;
 
-    public function __construct(Slim $app, SearcherInterface $searcher)
+    public function __construct(App $app, SearcherInterface $searcher)
     {
         parent::__construct($app);
         $this->searcher = $searcher;
     }
 
-    public function metrics()
+    public function metrics(Response $response)
     {
-        $response = $this->app->response();
-
         $stats = $this->searcher->stats();
 
         $body = "# HELP xhgui_profiles_total Number of profiles collected.\n";

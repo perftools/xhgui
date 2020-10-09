@@ -3,21 +3,21 @@
 namespace XHGui\Twig;
 
 use Slim\Router;
-use Slim\Slim;
+use Slim\Slim as App;
 use Twig_Extension;
 use Twig_Filter_Method;
 use Twig_Function_Method;
 
 class TwigExtension extends Twig_Extension
 {
-    /** @var Slim */
+    /** @var App */
     protected $_app;
     /** @var Router */
     private $router;
     /** @var string */
     private $pathPrefix;
 
-    public function __construct(Slim $app)
+    public function __construct(App $app)
     {
         $this->_app = $app;
         $this->router = $app->router();

@@ -3,9 +3,11 @@
 namespace XHGui\Controller;
 
 use Exception;
-use Slim\Slim;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use XHGui\Searcher\SearcherInterface;
 use XHGui\AbstractController;
+use Slim\Slim as App;
 
 class RunController extends AbstractController
 {
@@ -19,22 +21,19 @@ class RunController extends AbstractController
      */
     private $searcher;
 
-    public function __construct(Slim $app, SearcherInterface $searcher)
+    public function __construct(App $app, SearcherInterface $searcher)
     {
         parent::__construct($app);
         $this->searcher = $searcher;
     }
 
-    public function index()
+    public function index(Request $request, Response $response)
     {
-        $response = $this->app->response();
         // The list changes whenever new profiles are recorded.
         // Generally avoid caching, but allow re-use in browser's bfcache
         // and by cache proxies for concurrent requests.
         // https://github.com/perftools/xhgui/issues/261
         $response->headers->set('Cache-Control', 'public, max-age=0');
-
-        $request = $this->app->request();
 
         $search = [];
         $keys = ['date_start', 'date_end', 'url'];
@@ -83,9 +82,8 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function view()
+    public function view(Request $request, Response $response)
     {
-        $response = $this->app->response();
         // Permalink views to a specific run are meant to be public and immutable.
         // But limit the cache to only a short period of time (enough to allow
         // handling of abuse or other stampedes). This way we don't have to
@@ -95,7 +93,6 @@ class RunController extends AbstractController
         // https://github.com/perftools/xhgui/issues/261
         $response->headers->set('Cache-Control', 'public, max-age=60, must-revalidate');
 
-        $request = $this->app->request();
         $detailCount = $this->app->config('detail.count');
         $result = $this->searcher->get($request->get('id'));
 
@@ -149,9 +146,8 @@ class RunController extends AbstractController
         return $filters;
     }
 
-    public function deleteForm()
+    public function deleteForm(Request $request)
     {
-        $request = $this->app->request();
         $id = $request->get('id');
         if (!is_string($id) || !strlen($id)) {
             throw new Exception('The "id" parameter is required.');
@@ -167,9 +163,8 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function deleteSubmit()
+    public function deleteSubmit(Request $request)
     {
-        $request = $this->app->request();
         $id = $request->post('id');
         // Don't call profilers->delete() unless $id is set,
         // otherwise it will turn the null into a MongoId and return "Sucessful".
@@ -202,9 +197,8 @@ class RunController extends AbstractController
         $this->app->redirect($this->app->urlFor('home'));
     }
 
-    public function url()
+    public function url(Request $request)
     {
-        $request = $this->app->request();
         $pagination = [
             'sort' => $request->get('sort'),
             'direction' => $request->get('direction'),
@@ -256,10 +250,8 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function compare()
+    public function compare(Request $request)
     {
-        $request = $this->app->request();
-
         $baseRun = $headRun = $candidates = $comparison = null;
         $paging = [];
 
@@ -312,9 +304,8 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function symbol()
+    public function symbol(Request $request)
     {
-        $request = $this->app->request();
         $id = $request->get('id');
         $symbol = $request->get('symbol');
 
@@ -333,9 +324,8 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function symbolShort()
+    public function symbolShort(Request $request)
     {
-        $request = $this->app->request();
         $id = $request->get('id');
         $threshold = $request->get('threshold');
         $symbol = $request->get('symbol');
@@ -356,9 +346,8 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function callgraph()
+    public function callgraph(Request $request)
     {
-        $request = $this->app->request();
         $profile = $this->searcher->get($request->get('id'));
 
         $this->_template = 'runs/callgraph.twig';
@@ -368,10 +357,8 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function callgraphData()
+    public function callgraphData(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $response = $this->app->response();
         $profile = $this->searcher->get($request->get('id'));
         $metric = $request->get('metric') ?: 'wt';
         $threshold = (float)$request->get('threshold') ?: 0.01;
@@ -382,10 +369,8 @@ class RunController extends AbstractController
         return $response->body(json_encode($callgraph));
     }
 
-    public function callgraphDataDot()
+    public function callgraphDataDot(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $response = $this->app->response();
         $profile = $this->searcher->get($request->get('id'));
         $metric = $request->get('metric') ?: 'wt';
         $threshold = (float)$request->get('threshold') ?: 0.01;

@@ -2,9 +2,10 @@
 
 namespace XHGui\Controller;
 
-use Slim\Slim;
+use Slim\Http\Request;
 use XHGui\Searcher\SearcherInterface;
 use XHGui\AbstractController;
+use Slim\Slim as App;
 
 class WatchController extends AbstractController
 {
@@ -13,7 +14,7 @@ class WatchController extends AbstractController
      */
     protected $searcher;
 
-    public function __construct(Slim $app, SearcherInterface $searcher)
+    public function __construct(App $app, SearcherInterface $searcher)
     {
         parent::__construct($app);
         $this->searcher = $searcher;
@@ -27,10 +28,9 @@ class WatchController extends AbstractController
         $this->set(['watched' => $watched]);
     }
 
-    public function post()
+    public function post(Request $request)
     {
         $saved = false;
-        $request = $this->app->request();
         foreach ((array)$request->post('watch') as $data) {
             $saved = true;
             $this->searcher->saveWatch($data);

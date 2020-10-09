@@ -3,7 +3,7 @@
 namespace XHGui\Test\Twig;
 
 use Slim\Environment;
-use Slim\Slim;
+use Slim\Slim as App;
 use XHGui\Test\TestCase;
 use XHGui\Twig\TwigExtension;
 
@@ -15,9 +15,9 @@ class ExtensionTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $app = new Slim();
+        $app = new App();
         $app->get('/test', static function () {
-        })->name('test');
+        })->setName('test');
         $this->ext = new TwigExtension($app);
     }
 
