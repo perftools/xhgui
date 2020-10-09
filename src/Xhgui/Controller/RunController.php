@@ -5,9 +5,9 @@ namespace XHGui\Controller;
 use Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Slim;
 use XHGui\Searcher\SearcherInterface;
 use XHGui\AbstractController;
+use Slim\Slim as App;
 
 class RunController extends AbstractController
 {
@@ -21,7 +21,7 @@ class RunController extends AbstractController
      */
     private $searcher;
 
-    public function __construct(Slim $app, SearcherInterface $searcher)
+    public function __construct(App $app, SearcherInterface $searcher)
     {
         parent::__construct($app);
         $this->searcher = $searcher;

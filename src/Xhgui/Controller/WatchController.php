@@ -3,9 +3,9 @@
 namespace XHGui\Controller;
 
 use Slim\Http\Request;
-use Slim\Slim;
 use XHGui\Searcher\SearcherInterface;
 use XHGui\AbstractController;
+use Slim\Slim as App;
 
 class WatchController extends AbstractController
 {
@@ -14,7 +14,7 @@ class WatchController extends AbstractController
      */
     protected $searcher;
 
-    public function __construct(Slim $app, SearcherInterface $searcher)
+    public function __construct(App $app, SearcherInterface $searcher)
     {
         parent::__construct($app);
         $this->searcher = $searcher;

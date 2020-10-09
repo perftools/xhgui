@@ -2,7 +2,7 @@
 
 namespace XHGui;
 
-use Slim\Slim;
+use Slim\Slim as App;
 
 abstract class AbstractController
 {
@@ -17,11 +17,11 @@ abstract class AbstractController
     protected $_template = null;
 
     /**
-     * @var Slim
+     * @var App
      */
     protected $app;
 
-    public function __construct(Slim $app)
+    public function __construct(App $app)
     {
         $this->app = $app;
     }

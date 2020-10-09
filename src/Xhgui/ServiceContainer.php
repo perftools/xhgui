@@ -8,7 +8,7 @@ use PDO;
 use Pimple\Container;
 use RuntimeException;
 use Slim\Middleware\SessionCookie;
-use Slim\Slim;
+use Slim\Slim as App;
 use Slim\Views\Twig;
 use XHGui\Db\PdoRepository;
 use XHGui\Middleware\RenderMiddleware;
@@ -67,7 +67,7 @@ class ServiceContainer extends Container
                 date_default_timezone_set($c['config']['timezone']);
             }
 
-            $app = new Slim($c['config']);
+            $app = new App($c['config']);
 
             // Enable cookie based sessions
             $app->add(new SessionCookie([

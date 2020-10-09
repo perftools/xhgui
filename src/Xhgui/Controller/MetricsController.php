@@ -3,9 +3,9 @@
 namespace XHGui\Controller;
 
 use Slim\Http\Response;
-use Slim\Slim;
 use XHGui\Searcher\SearcherInterface;
 use XHGui\AbstractController;
+use Slim\Slim as App;
 
 class MetricsController extends AbstractController
 {
@@ -14,7 +14,7 @@ class MetricsController extends AbstractController
      */
     protected $searcher;
 
-    public function __construct(Slim $app, SearcherInterface $searcher)
+    public function __construct(App $app, SearcherInterface $searcher)
     {
         parent::__construct($app);
         $this->searcher = $searcher;

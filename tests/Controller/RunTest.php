@@ -3,13 +3,13 @@
 namespace XHGui\Test\Controller;
 
 use Slim\Environment;
-use Slim\Slim;
+use Slim\Slim as App;
 use XHGui\Controller\ImportController;
 use XHGui\Controller\RunController;
 use XHGui\Saver\MongoSaver;
 use XHGui\Searcher\MongoSearcher;
-use XHGui\Test\TestCase;
 use XHGui\ServiceContainer;
+use XHGui\Test\TestCase;
 
 class RunTest extends TestCase
 {
@@ -17,7 +17,7 @@ class RunTest extends TestCase
     private $runs;
     /** @var MongoSaver */
     private $saver;
-    /** @var Slim */
+    /** @var App */
     private $app;
     /** @var MongoSearcher */
     private $profiles;
@@ -33,7 +33,7 @@ class RunTest extends TestCase
         ]);
 
         $di = ServiceContainer::instance();
-        $di['app'] = $this->getMockBuilder(Slim::class)
+        $di['app'] = $this->getMockBuilder(App::class)
             ->setMethods(['redirect', 'render', 'urlFor'])
             ->setConstructorArgs([$di['config']])
             ->getMock();

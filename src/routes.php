@@ -3,7 +3,7 @@
  * Routes for Xhgui
  */
 
-use Slim\Slim;
+use Slim\Slim as App;
 use Slim\Views\Twig;
 use XHGui\Controller\CustomController;
 use XHGui\Controller\ImportController;
@@ -14,7 +14,7 @@ use XHGui\Controller\WaterfallController;
 use XHGui\ServiceContainer;
 use XHGui\Twig\TwigExtension;
 
-/** @var Slim $app */
+/** @var App $app */
 /** @var ServiceContainer $di */
 
 $app->error(static function (Exception $e) use ($di, $app) {
