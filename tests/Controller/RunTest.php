@@ -2,7 +2,7 @@
 
 namespace XHGui\Test\Controller;
 
-use Slim\Environment;
+use Slim\Http\Environment;
 use XHGui\Options\SearchOptions;
 use XHGui\Test\TestCase;
 
