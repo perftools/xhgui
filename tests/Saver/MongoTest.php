@@ -22,7 +22,7 @@ class MongoTest extends TestCase
         $saver = new MongoSaver($collection);
 
         foreach ($data as $profile) {
-            $saver->save($profile);
+            $saver->save($profile, $profile['_id'] ?? null);
         }
     }
 }

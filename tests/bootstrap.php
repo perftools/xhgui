@@ -32,6 +32,6 @@ function loadFixture(SaverInterface $saver, $file)
         if (isset($record['_id'])) {
             $record['_id'] = new MongoId($record['_id']);
         }
-        $saver->save($record);
+        $saver->save($record, $record['_id'] ?? null);
     }
 }

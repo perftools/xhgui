@@ -18,7 +18,7 @@ class MongoSaver implements SaverInterface
         $this->_collection = $collection;
     }
 
-    public function save(array $data): string
+    public function save(array $data, string $id = null): string
     {
         // build 'request_ts' and 'request_date' from 'request_ts_micro'
         $ts = $data['meta']['request_ts_micro'];
@@ -36,7 +36,7 @@ class MongoSaver implements SaverInterface
             'request_date' => date('Y-m-d', $sec),
         ];
 
-        $id = $data['_id'] ?? new MongoId();
+        $id = $id ?? new MongoId();
         $a = [
             '_id' => $id,
             'meta' => $meta,
