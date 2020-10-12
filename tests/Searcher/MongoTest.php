@@ -21,7 +21,7 @@ class MongoTest extends TestCase
 
         $di['db']->watches->drop();
 
-        loadFixture($di['saver.mongodb'], XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        $this->loadFixture($di['saver.mongodb'], XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
     }
 
     public function testCustomQuery()
