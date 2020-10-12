@@ -13,11 +13,6 @@ class MongoSaver implements SaverInterface
      */
     private $_collection;
 
-    /**
-     * @var MongoId lastProfilingId
-     */
-    private static $lastProfilingId;
-
     public function __construct(MongoCollection $collection)
     {
         $this->_collection = $collection;
