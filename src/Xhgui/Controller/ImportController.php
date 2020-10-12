@@ -6,9 +6,9 @@ use Exception;
 use InvalidArgumentException;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use XHGui\Saver\SaverInterface;
-use XHGui\AbstractController;
 use Slim\Slim as App;
+use XHGui\AbstractController;
+use XHGui\Saver\SaverInterface;
 
 class ImportController extends AbstractController
 {
@@ -53,6 +53,7 @@ class ImportController extends AbstractController
         }
 
         $data = json_decode($request->getBody(), true);
+
         return $this->saver->save($data);
     }
 }

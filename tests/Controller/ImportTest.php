@@ -50,12 +50,12 @@ class ImportTest extends TestCase
                 'request_ts_micro' => ['sec' => 1358787612, 'usec' => 123456],
             ],
             'profile' => [
-                "main()" => [
-                    "ct" => 1,
-                    "wt" => 50139,
-                    "cpu" => 49513,
-                    "mu" => 3449360,
-                    "pmu" => 3535120,
+                'main()' => [
+                    'ct' => 1,
+                    'wt' => 50139,
+                    'cpu' => 49513,
+                    'mu' => 3449360,
+                    'pmu' => 3535120,
                 ],
             ],
         ];

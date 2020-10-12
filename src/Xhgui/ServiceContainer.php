@@ -110,7 +110,7 @@ class ServiceContainer extends Container
 
         $this['pdo'] = static function ($c) {
             if (!class_exists(PDO::class)) {
-                throw new RuntimeException("Required extension ext-pdo is missing");
+                throw new RuntimeException('Required extension ext-pdo is missing');
             }
 
             $adapter = explode(':', $c['config']['pdo']['dsn'], 2)[0];
@@ -152,7 +152,7 @@ class ServiceContainer extends Container
             $config = $c['config'];
 
             if (!class_exists(Manager::class)) {
-                throw new RuntimeException("Required extension ext-mongodb missing");
+                throw new RuntimeException('Required extension ext-mongodb missing');
             }
             $mongo = new MongoClient($config['db.host'], $config['db.options'], $config['db.driverOptions']);
             $collection = $mongo->{$config['db.db']}->results;

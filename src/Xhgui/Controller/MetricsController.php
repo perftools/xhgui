@@ -3,9 +3,9 @@
 namespace XHGui\Controller;
 
 use Slim\Http\Response;
-use XHGui\Searcher\SearcherInterface;
-use XHGui\AbstractController;
 use Slim\Slim as App;
+use XHGui\AbstractController;
+use XHGui\Searcher\SearcherInterface;
 
 class MetricsController extends AbstractController
 {

@@ -46,8 +46,6 @@ class Profile
      * This removes some of the parentage detail as all calls of a given
      * method are aggregated. We are not able to maintain a full tree structure
      * in any case, as xhprof only keeps one level of detail.
-     *
-     * @return void
      */
     protected function _process()
     {
@@ -80,8 +78,8 @@ class Profile
      * Sum up the values in $this->_keys;
      *
      * @param array $a The first set of profile data
-     * @param array $b The second set of profile data.
-     * @return array Merged profile data.
+     * @param array $b the second set of profile data
+     * @return array merged profile data
      */
     protected function _sumKeys($a, $b)
     {
@@ -158,8 +156,8 @@ class Profile
      * Get meta data about the profile. Read's a . split path
      * out of the meta data in a profile. For example `SERVER.REQUEST_TIME`
      *
-     * @param string $key The dotted key to read.
-     * @return null|mixed Null on failure, otherwise the stored value.
+     * @param string $key the dotted key to read
+     * @return mixed|null null on failure, otherwise the stored value
      */
     public function getMeta($key = null)
     {
@@ -170,7 +168,7 @@ class Profile
         $parts = explode('.', $key);
         foreach ($parts as $key) {
             if (is_array($data) && isset($data[$key])) {
-                $data =& $data[$key];
+                $data = &$data[$key];
             } else {
                 return null;
             }
@@ -182,9 +180,9 @@ class Profile
     /**
      * Read data from the profile run.
      *
-     * @param string $key The function key name to read.
-     * @param string $metric The metric to read.
-     * @return null|float
+     * @param string $key the function key name to read
+     * @param string $metric the metric to read
+     * @return float|null
      */
     public function get($key, $metric = null)
     {
@@ -204,9 +202,9 @@ class Profile
     /**
      * Find a function matching a watched function.
      *
-     * @param string $pattern The pattern to look for.
-     * @return null|array An list of matching functions
-     *    or null.
+     * @param string $pattern the pattern to look for
+     * @return array|null an list of matching functions
+     *    or null
      */
     public function getWatched($pattern)
     {
@@ -237,9 +235,9 @@ class Profile
      * of the symbol given. The current index will give the total
      * inclusive values for all properties.
      *
-     * @param string $symbol The name of the function/method to find
-     *    relatives for.
-     * @param string $metric The metric to compare $threshold with.
+     * @param string $symbol the name of the function/method to find
+     *    relatives for
+     * @param string $metric the metric to compare $threshold with
      * @param float $threshold The threshold to exclude child functions at. Any
      *   function that represents less than this percentage of the current metric
      *   will be filtered out.
@@ -269,8 +267,8 @@ class Profile
     /**
      * Get the parent methods for a given symbol.
      *
-     * @param string $symbol The name of the function/method to find
-     *    parents for.
+     * @param string $symbol the name of the function/method to find
+     *    parents for
      * @return array List of parents
      */
     protected function _getParents($symbol)
@@ -289,11 +287,11 @@ class Profile
     /**
      * Find symbols that are the children of the given name.
      *
-     * @param string $symbol The name of the function to find children of.
-     * @param string $metric The metric to compare $threshold with.
+     * @param string $symbol the name of the function to find children of
+     * @param string $metric the metric to compare $threshold with
      * @param float $threshold The threshold to exclude functions at. Any
      *   function that represents less than
-     * @return array An array of child methods.
+     * @return array an array of child methods
      */
     protected function _getChildren($symbol, $metric = null, $threshold = 0)
     {
@@ -333,8 +331,8 @@ class Profile
      *
      * @param string $dimension The dimension to extract
      * @param int $limit Number of elements to pull
-     * @return array Array of data with name = function name and
-     *   value = the dimension.
+     * @return array array of data with name = function name and
+     *   value = the dimension
      */
     public function extractDimension($dimension, $limit)
     {
@@ -375,7 +373,7 @@ class Profile
      * Notes:
      *  Function names are not unique, but we're merging them
      *
-     * @return Profile A new instance with exclusive data set.
+     * @return Profile a new instance with exclusive data set
      */
     public function calculateSelf()
     {
@@ -408,9 +406,9 @@ class Profile
     /**
      * Sort data by a dimension.
      *
-     * @param string $dimension The dimension to sort by.
-     * @param array $data The data to sort.
-     * @return array The sorted data.
+     * @param string $dimension the dimension to sort by
+     * @param array $data the data to sort
+     * @return array the sorted data
      */
     public function sort($dimension, $data)
     {
@@ -448,13 +446,13 @@ class Profile
     /**
      * Split a key name into the parent==>child format.
      *
-     * @param string $name The name to split.
+     * @param string $name the name to split
      * @return array An array of parent, child. parent will be null if there
      *    is no parent.
      */
     public function splitName($name)
     {
-        $a = explode("==>", $name);
+        $a = explode('==>', $name);
         if (isset($a[1])) {
             return $a;
         }
@@ -485,9 +483,9 @@ class Profile
      * Compare this run to another run.
      *
      * @param Profile $head The other run to compare with
-     * @return array An array of comparison data.
+     * @return array an array of comparison data
      */
-    public function compare(Profile $head)
+    public function compare(self $head)
     {
         $this->calculateSelf();
         $head->calculateSelf();
@@ -524,7 +522,7 @@ class Profile
     /**
      * Get the max value for any give metric.
      *
-     * @param string $metric The metric to get a max value for.
+     * @param string $metric the metric to get a max value for
      */
     protected function _maxValue($metric)
     {
