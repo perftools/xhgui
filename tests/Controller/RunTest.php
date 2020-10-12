@@ -157,7 +157,7 @@ class RunTest extends TestCase
 
     public function testCallgraph()
     {
-        $this->loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        $this->loadFixture($this->saver);
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
@@ -173,7 +173,7 @@ class RunTest extends TestCase
 
     public function testCallgraphData()
     {
-        $this->loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        $this->loadFixture($this->saver);
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
@@ -189,7 +189,7 @@ class RunTest extends TestCase
 
     public function testDeleteSubmit()
     {
-        $this->loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        $this->loadFixture($this->saver);
 
         Environment::mock([
             'REQUEST_METHOD' => 'POST',
@@ -218,7 +218,7 @@ class RunTest extends TestCase
 
     public function testDeleteAllSubmit()
     {
-        $this->loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        $this->loadFixture($this->saver);
 
         Environment::mock([
           'SCRIPT_NAME' => 'index.php',
@@ -243,7 +243,7 @@ class RunTest extends TestCase
 
     public function testFilterCustomMethods()
     {
-        $this->loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        $this->loadFixture($this->saver);
 
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
@@ -259,7 +259,7 @@ class RunTest extends TestCase
 
     public function testFilterCustomMethod()
     {
-        $this->loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        $this->loadFixture($this->saver);
 
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
@@ -275,7 +275,7 @@ class RunTest extends TestCase
 
     public function testFilterMethods()
     {
-        $this->loadFixture($this->saver, XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        $this->loadFixture($this->saver);
 
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
