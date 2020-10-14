@@ -46,7 +46,7 @@ class Mapper
      */
     protected function _conditions($search)
     {
-        if (!empty($search['limit_custom']) && $search['limit_custom'][0] === "P") {
+        if (!empty($search['limit_custom']) && $search['limit_custom'][0] === 'P') {
             $search['limit'] = $search['limit_custom'];
         }
         $hasLimit = (!empty($search['limit']) && $search['limit'] != -1);
@@ -75,7 +75,7 @@ class Mapper
             $conditions['meta.SERVER.HTTP_COOKIE'] = (string)$search['cookie'];
         }
 
-        if ($hasLimit && $search['limit'][0] === "P") {
+        if ($hasLimit && $search['limit'][0] === 'P') {
             $date = new DateTime();
             try {
                 $date->sub(new DateInterval($search['limit']));
@@ -129,8 +129,8 @@ class Mapper
      *
      * Whitelists to valid known keys.
      *
-     * @param array $options Pagination options including the sort key.
-     * @return array Sort field & direction.
+     * @param array $options pagination options including the sort key
+     * @return array sort field & direction
      */
     protected function _sort($options)
     {

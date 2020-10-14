@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a0e50021764a80354249925fc1af83c",
+    "content-hash": "a5ff8076c131ae96fee3c6b23eaadcc2",
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -526,6 +526,49 @@
                 "instantiate"
             ],
             "time": "2015-06-14T21:17:01+00:00"
+        },
+        {
+            "name": "glen/php-cs-fixer-config",
+            "version": "0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/glensc/php-cs-fixer-config.git",
+                "reference": "caccabb2f371903876dee38d952fa91dada57f57"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/glensc/php-cs-fixer-config/zipball/caccabb2f371903876dee38d952fa91dada57f57",
+                "reference": "caccabb2f371903876dee38d952fa91dada57f57",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^5.3 || ^7.0"
+            },
+            "require-dev": {
+                "composer/semver": "^1.0",
+                "friendsofphp/php-cs-fixer": "^2.0",
+                "phpunit/phpunit": "^4.8.36",
+                "symfony/process": "^2.7 || ^3.0 || ^4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "glen\\PhpCsFixerConfig\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Elan Ruusamäe",
+                    "email": "glen@pld-linux.org"
+                }
+            ],
+            "description": "Provides a configuration for php-cs-fixer",
+            "time": "2020-04-26T08:36:26+00:00"
         },
         {
             "name": "myclabs/deep-copy",

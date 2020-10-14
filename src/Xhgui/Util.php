@@ -15,8 +15,6 @@ class Util
      * systems
      *
      * @see https://php.net/manual/en/mongodb-bson-objectid.construct.php
-     *
-     * @return string
      */
     public static function generateId(): string
     {

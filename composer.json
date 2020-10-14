@@ -29,6 +29,7 @@
         "twig/twig": "~1.17"
     },
     "require-dev": {
+        "glen/php-cs-fixer-config": "^0.3.0",
         "phpunit/phpunit": "^5.7.27 | ^6.5.13"
     },
     "scripts": {

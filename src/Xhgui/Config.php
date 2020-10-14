@@ -12,8 +12,6 @@ class Config
     /**
      * Load a config file, it will replace
      * all the currently loaded configuration.
-     *
-     * @return void
      */
     public static function load($file)
     {
@@ -25,7 +23,7 @@ class Config
      * Read a config value.
      *
      * @param string $name The name of the config variable
-     * @return mixed The value or null.
+     * @return mixed the value or null
      */
     public static function read($name)
     {
@@ -51,7 +49,6 @@ class Config
      *
      * @param string $name The name of the config variable
      * @param mixed $value The value of the config variable
-     * @return void
      */
     public static function write($name, $value)
     {
@@ -60,8 +57,6 @@ class Config
 
     /**
      * Clear out the data stored in the config class.
-     *
-     * @return void
      */
     public static function clear()
     {

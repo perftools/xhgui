@@ -103,14 +103,14 @@ class PdoSearcher implements SearcherInterface
             $page = 1;
         }
         $perPage = (int)$options['perPage'];
-        $url = $options['conditions']['url'] ?? "";
+        $url = $options['conditions']['url'] ?? '';
 
         $totalRows = $this->db->countByUrl($url);
-        $totalPages = max(ceil($totalRows/$perPage), 1);
+        $totalPages = max(ceil($totalRows / $perPage), 1);
         if ($page > $totalPages) {
             $page = $totalPages;
         }
-        $skip = ($page-1) * $perPage;
+        $skip = ($page - 1) * $perPage;
 
         $results = [];
         foreach ($this->db->findByUrl($url, $direction, $skip, $perPage) as $row) {
@@ -197,8 +197,8 @@ class PdoSearcher implements SearcherInterface
         if (!$row) {
             $row = [
                 'profiles' => 0,
-                'latest'   => 0,
-                'bytes'    => 0,
+                'latest' => 0,
+                'bytes' => 0,
             ];
         }
 

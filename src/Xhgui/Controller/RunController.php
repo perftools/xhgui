@@ -5,9 +5,9 @@ namespace XHGui\Controller;
 use Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use XHGui\Searcher\SearcherInterface;
-use XHGui\AbstractController;
 use Slim\Slim as App;
+use XHGui\AbstractController;
+use XHGui\Searcher\SearcherInterface;
 
 class RunController extends AbstractController
 {

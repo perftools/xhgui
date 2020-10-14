@@ -27,21 +27,21 @@ class PdoSaver implements SaverInterface
 
         $id = $data['_id'] ?? Util::generateId();
         $this->db->saveProfile([
-            'id'               => $id,
-            'profile'          => json_encode($data['profile']),
-            'url'              => $data['meta']['url'],
-            'SERVER'           => json_encode($data['meta']['SERVER']),
-            'GET'              => json_encode($data['meta']['get']),
-            'ENV'              => json_encode($data['meta']['env']),
-            'simple_url'       => $data['meta']['simple_url'],
-            'request_ts'       => $sec,
+            'id' => $id,
+            'profile' => json_encode($data['profile']),
+            'url' => $data['meta']['url'],
+            'SERVER' => json_encode($data['meta']['SERVER']),
+            'GET' => json_encode($data['meta']['get']),
+            'ENV' => json_encode($data['meta']['env']),
+            'simple_url' => $data['meta']['simple_url'],
+            'request_ts' => $sec,
             'request_ts_micro' => "$sec.$usec",
-            'request_date'     => date('Y-m-d', $sec),
-            'main_wt'          => $main['wt'],
-            'main_ct'          => $main['ct'],
-            'main_cpu'         => $main['cpu'],
-            'main_mu'          => $main['mu'],
-            'main_pmu'         => $main['pmu'],
+            'request_date' => date('Y-m-d', $sec),
+            'main_wt' => $main['wt'],
+            'main_ct' => $main['ct'],
+            'main_cpu' => $main['cpu'],
+            'main_mu' => $main['mu'],
+            'main_pmu' => $main['pmu'],
         ]);
 
         return $id;

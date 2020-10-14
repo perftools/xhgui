@@ -89,7 +89,7 @@ class MongoSearcher implements SearcherInterface
         $match = $result['conditions'];
 
         $col = '$meta.request_date';
-        if (!empty($search['limit']) && $search['limit'][0] === "P") {
+        if (!empty($search['limit']) && $search['limit'][0] === 'P') {
             $col = '$meta.request_ts';
         }
 
@@ -334,8 +334,8 @@ class MongoSearcher implements SearcherInterface
     /**
      * Converts arrays + MongoCursors into Profile instances.
      *
-     * @param array|MongoCursor $data The data to transform.
-     * @return Profile|Profile[] The transformed/wrapped results.
+     * @param array|MongoCursor $data the data to transform
+     * @return Profile|Profile[] the transformed/wrapped results
      */
     private function _wrap($data)
     {
@@ -361,8 +361,8 @@ class MongoSearcher implements SearcherInterface
     {
         return [
             'profiles' => 0,
-            'latest'   => 0,
-            'bytes'    => 0,
+            'latest' => 0,
+            'bytes' => 0,
         ];
     }
 }

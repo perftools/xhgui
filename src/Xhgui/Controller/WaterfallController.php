@@ -4,10 +4,10 @@ namespace XHGui\Controller;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use XHGui\Searcher\SearcherInterface;
+use Slim\Slim as App;
 use XHGui\AbstractController;
 use XHGui\Profile;
-use Slim\Slim as App;
+use XHGui\Searcher\SearcherInterface;
 
 class WaterfallController extends AbstractController
 {

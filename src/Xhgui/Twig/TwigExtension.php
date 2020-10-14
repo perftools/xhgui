@@ -64,8 +64,8 @@ class TwigExtension extends Twig_Extension
      * Get a URL for xhgui.
      *
      * @param string $name The file/path you want a link to
-     * @param array $queryargs Additional querystring arguments.
-     * @return string url.
+     * @param array $queryargs additional querystring arguments
+     * @return string url
      */
     public function url($name, $queryargs = [])
     {
@@ -84,7 +84,7 @@ class TwigExtension extends Twig_Extension
      * Get the URL for static content relative to webroot
      *
      * @param string $path The file/path you want a link to
-     * @return string url.
+     * @return string url
      */
     public function staticUrl($path)
     {
