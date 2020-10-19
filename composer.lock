@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
-            "version": "1.1.11",
+            "version": "1.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alcaeus/mongo-php-adapter.git",
-                "reference": "43b6add94c8b4cb9890d662cba4c0defde733dcf"
+                "reference": "17f31fffdf3641a4905bca224bc7662c3032fd50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alcaeus/mongo-php-adapter/zipball/43b6add94c8b4cb9890d662cba4c0defde733dcf",
-                "reference": "43b6add94c8b4cb9890d662cba4c0defde733dcf",
+                "url": "https://api.github.com/repos/alcaeus/mongo-php-adapter/zipball/17f31fffdf3641a4905bca224bc7662c3032fd50",
+                "reference": "17f31fffdf3641a4905bca224bc7662c3032fd50",
                 "shasum": ""
             },
             "require": {
@@ -65,12 +65,12 @@
                     "email": "olivier.lechevalier@gmail.com"
                 }
             ],
-            "description": "Adapter to provide ext-mongo interface on top of mongo-php-libary",
+            "description": "Adapter to provide ext-mongo interface on top of mongo-php-library",
             "keywords": [
                 "database",
                 "mongodb"
             ],
-            "time": "2019-11-11T20:47:32+00:00"
+            "time": "2020-10-16T07:47:11+00:00"
         },
         {
             "name": "mongodb/mongodb",
