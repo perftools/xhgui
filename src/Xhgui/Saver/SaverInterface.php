@@ -7,5 +7,5 @@ interface SaverInterface
     /**
      * Returns id of the saved profile
      */
-    public function save(array $data): string;
+    public function save(array $data, string $id = null): string;
 }
