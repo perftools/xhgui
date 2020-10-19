@@ -36,15 +36,14 @@ class MongoSaver implements SaverInterface
             'request_date' => date('Y-m-d', $sec),
         ];
 
-        $id = $id ?? new MongoId();
         $a = [
-            '_id' => $id,
+            '_id' => new MongoId($id),
             'meta' => $meta,
             'profile' => $data['profile'],
         ];
 
         $this->_collection->insert($a, ['w' => 0]);
 
-        return (string)$id;
+        return (string)$a['_id'];
     }
 }
