@@ -167,7 +167,7 @@ class RunController extends AbstractController
     {
         $id = $request->post('id');
         // Don't call profilers->delete() unless $id is set,
-        // otherwise it will turn the null into a MongoId and return "Sucessful".
+        // otherwise it will turn the null into a MongoId and return "Successful".
         if (!is_string($id) || !strlen($id)) {
             // Form checks this already,
             // only reachable by handcrafted or malformed requests.
