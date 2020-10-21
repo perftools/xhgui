@@ -3,6 +3,7 @@
 /*
 !/composer.*
 !/config/
+!/external/
 !/src/
 !/vendor/
 !/webroot/
