@@ -39,11 +39,34 @@ class MongoSaver implements SaverInterface
         $a = [
             '_id' => new MongoId($id),
             'meta' => $meta,
-            'profile' => $data['profile'],
+            'profile' => $this->encodeProfile($data['profile']),
         ];
 
         $this->_collection->insert($a, ['w' => 0]);
 
         return (string)$a['_id'];
+    }
+
+    /**
+     * MongoDB can't save keys with values containing a dot:
+     *
+     *   InvalidArgumentException: invalid document for insert: keys cannot contain ".":
+     *   "Zend_Controller_Dispatcher_Standard::loadClass==>load::controllers/ArticleController.php"
+     *
+     * Replace the dots with underscrore in keys.
+     *
+     * @link https://github.com/perftools/xhgui/issues/209
+     */
+    private function encodeProfile(array $profile): array
+    {
+        $results = [];
+        foreach ($profile as $k => $v) {
+            if (strpos($k, '.') !== false) {
+                $k = str_replace('.', '_', $k);
+            }
+            $results[$k] = $v;
+        }
+
+        return $results;
     }
 }
