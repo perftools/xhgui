@@ -40,6 +40,7 @@ RUN composer install $COMPOSER_FLAGS --no-scripts --no-autoloader
 
 # copy rest of the project. copy in order that is least to most changed
 COPY --from=source /app/webroot ./webroot
+COPY --from=source /app/external ./external
 COPY --from=source /app/src ./src
 COPY --from=source /app/config ./config
 
