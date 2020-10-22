@@ -99,7 +99,7 @@ class PdoSearcher implements SearcherInterface
     public function getAll($options = [])
     {
         $page = (int)$options['page'];
-        $direction = $options['direction'];
+        $direction = $options['direction'] ?? 'asc';
         if ($page < 1) {
             $page = 1;
         }
