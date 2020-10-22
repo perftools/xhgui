@@ -12,7 +12,6 @@ class PdoSaver implements SaverInterface
 
     public function __construct(PdoRepository $db)
     {
-        $db->initSchema();
         $this->db = $db;
     }
 

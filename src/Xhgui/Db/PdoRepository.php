@@ -22,6 +22,7 @@ class PdoRepository
     {
         $this->pdo = $pdo;
         $this->table = sprintf('"%s"', $table);
+        $this->initSchema();
     }
 
     public function getLatest(): array
