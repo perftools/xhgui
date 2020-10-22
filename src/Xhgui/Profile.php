@@ -9,6 +9,8 @@ use Exception;
  * Domain object for handling profile runs.
  *
  * Provides method to manipulate the data from a single profile run.
+ *
+ * https://github.com/tideways/php-xhprof-extension#data-format
  */
 class Profile
 {
