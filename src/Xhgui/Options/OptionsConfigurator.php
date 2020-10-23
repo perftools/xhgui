@@ -53,4 +53,9 @@ abstract class OptionsConfigurator implements ArrayAccess, IteratorAggregate
     {
         return new ArrayIterator($this->options);
     }
+
+    public function toArray(): array
+    {
+        return $this->options;
+    }
 }
