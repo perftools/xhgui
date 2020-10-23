@@ -6,7 +6,7 @@
 FROM php:7.3-fpm-alpine AS base
 
 RUN set -x \
-	&& apk add --no-cache --virtual .build-deps ${PHPIZE_DEPS} postgresql-dev \
+	&& apk add --no-cache --virtual .build-deps ${PHPIZE_DEPS} postgresql-dev openssl-dev \
 	&& pecl install mongodb && docker-php-ext-enable mongodb \
 	&& docker-php-ext-install pdo pdo_mysql pdo_pgsql \
 	# https://github.com/docker-library/php/blob/c8c4d223a052220527c6d6f152b89587be0f5a7c/7.3/alpine3.12/fpm/Dockerfile#L166-L172
