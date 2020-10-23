@@ -55,7 +55,7 @@ class MongoSaver implements SaverInterface
      *
      * Replace the dots with underscrore in keys.
      *
-     * @link https://github.com/perftools/xhgui/issues/209
+     * @see https://github.com/perftools/xhgui/issues/209
      */
     private function encodeProfile(array $profile): array
     {
