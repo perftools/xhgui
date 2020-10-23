@@ -11,6 +11,8 @@ use XHGui\Profile;
  */
 interface SearcherInterface
 {
+    const DEFAULT_DIRECTION = 'desc';
+
     /**
      * Get the latest profile data.
      *

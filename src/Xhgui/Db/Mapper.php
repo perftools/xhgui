@@ -5,6 +5,7 @@ namespace XHGui\Db;
 use DateInterval;
 use DateTime;
 use MongoDate;
+use XHGui\Searcher\SearcherInterface;
 
 class Mapper
 {
@@ -114,7 +115,7 @@ class Mapper
     protected function _direction($options)
     {
         if (empty($options['direction'])) {
-            return 'desc';
+            return SearcherInterface::DEFAULT_DIRECTION;
         }
         $valid = ['desc', 'asc'];
         if (in_array($options['direction'], $valid, true)) {
