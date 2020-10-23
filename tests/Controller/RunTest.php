@@ -6,6 +6,7 @@ use Slim\Environment;
 use Slim\Slim as App;
 use XHGui\Controller\ImportController;
 use XHGui\Controller\RunController;
+use XHGui\Options\SearchOptions;
 use XHGui\Saver\MongoSaver;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\ServiceContainer;
@@ -210,12 +211,12 @@ class RunTest extends TestCase
         $this->app->expects($this->once())
             ->method('redirect');
 
-        $result = $this->profiles->getAll();
+        $result = $this->profiles->getAll(new SearchOptions());
         $this->assertCount(5, $result['results']);
 
         $this->runs->deleteSubmit($this->app->request());
 
-        $result = $this->profiles->getAll();
+        $result = $this->profiles->getAll(new SearchOptions());
         $this->assertCount(4, $result['results']);
     }
 
@@ -236,12 +237,12 @@ class RunTest extends TestCase
         $this->app->expects($this->once())
           ->method('redirect');
 
-        $result = $this->profiles->getAll();
+        $result = $this->profiles->getAll(new SearchOptions());
         $this->assertCount(5, $result['results']);
 
         $this->runs->deleteAllSubmit();
 
-        $result = $this->profiles->getAll();
+        $result = $this->profiles->getAll(new SearchOptions());
         $this->assertCount(0, $result['results']);
     }
 

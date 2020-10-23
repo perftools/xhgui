@@ -8,6 +8,7 @@ use MongoDate;
 use MongoDb;
 use MongoId;
 use XHGui\Db\Mapper;
+use XHGui\Options\SearchOptions;
 use XHGui\Profile;
 
 /**
@@ -206,9 +207,9 @@ class MongoSearcher implements SearcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getAll($options = [])
+    public function getAll(SearchOptions $options): array
     {
-        return $this->paginate($options);
+        return $this->paginate($options->toArray());
     }
 
     /**

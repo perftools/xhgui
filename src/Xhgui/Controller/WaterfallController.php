@@ -6,6 +6,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Slim as App;
 use XHGui\AbstractController;
+use XHGui\Options\SearchOptions;
 use XHGui\Profile;
 use XHGui\Searcher\SearcherInterface;
 
@@ -32,12 +33,12 @@ class WaterfallController extends AbstractController
                 $search[$key] = trim($request->get($key));
             }
         }
-        $result = $this->searcher->getAll([
+        $result = $this->searcher->getAll(new SearchOptions([
             'sort' => 'time',
             'direction' => 'asc',
             'conditions' => $search,
             'projection' => true,
-        ]);
+        ]));
 
         $paging = [
             'total_pages' => $result['totalPages'],
@@ -62,12 +63,12 @@ class WaterfallController extends AbstractController
         foreach ($keys as $key) {
             $search[$key] = $request->get($key);
         }
-        $result = $this->searcher->getAll([
+        $result = $this->searcher->getAll(new SearchOptions([
             'sort' => 'time',
             'direction' => 'asc',
             'conditions' => $search,
             'projection' => true,
-        ]);
+        ]));
         $datas = [];
         /** @var Profile $r */
         foreach ($result['results'] as $r) {
