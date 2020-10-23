@@ -42,7 +42,7 @@ class MongoSaver implements SaverInterface
             'profile' => $this->encodeProfile($data['profile']),
         ];
 
-        $this->_collection->insert($a, ['w' => 0]);
+        $this->_collection->insert($a, ['w' => 1]);
 
         return (string)$a['_id'];
     }
