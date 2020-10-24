@@ -12,6 +12,7 @@ use Slim\Slim as App;
 use Slim\Views\Twig;
 use XHGui\Db\PdoRepository;
 use XHGui\Middleware\RenderMiddleware;
+use XHGui\Saver\NormalizingSaver;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\PdoSearcher;
 use XHGui\Twig\TwigExtension;
@@ -168,7 +169,7 @@ class ServiceContainer extends Container
         $this['saver'] = static function ($c) {
             $saver = $c['config']['save.handler'];
 
-            return $c["saver.$saver"];
+            return new NormalizingSaver($c["saver.$saver"]);
         };
     }
 
