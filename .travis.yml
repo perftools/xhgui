@@ -24,6 +24,13 @@ jobs:
   include:
     - php: 7.2
       env: COVERAGE=1
+    - name: "PHP CS Fixer"
+      php: 7.0
+      install:
+        - composer require --dev friendsofphp/php-cs-fixer:2.16
+      script:
+        - PATH=vendor/bin:$PATH
+        - php-cs-fixer fix --verbose --diff --dry-run --ansi
 
 services:
   - mongodb
