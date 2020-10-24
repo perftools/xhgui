@@ -54,6 +54,14 @@ class Profile
         $result = [];
         foreach ($this->_data['profile'] as $name => $values) {
             list($parent, $func) = $this->splitName($name);
+            // normalize, fill all missing keys
+            $values += [
+                'ct' => 0,
+                'wt' => 0,
+                'cpu' => 0,
+                'mu' => 0,
+                'pmu' => 0,
+            ];
 
             // Generate collapsed data.
             if (isset($result[$func])) {
