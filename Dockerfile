@@ -60,4 +60,4 @@ WORKDIR $APPDIR
 
 RUN mkdir -p cache && chmod -R 777 cache
 COPY --from=build /vendor ./vendor/
-COPY --from=build /app $APPDIR/
+COPY --from=build /app ./
