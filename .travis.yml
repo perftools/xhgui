@@ -36,6 +36,10 @@ services:
   - mysql
   - postgresql
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 install:
   - .travis/install.sh
 
