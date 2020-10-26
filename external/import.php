@@ -31,7 +31,11 @@ while (!feof($fp)) {
     $line = fgets($fp);
     $data = json_decode($line, true);
     if ($data) {
-        $saver->save($data);
+        try {
+            $saver->save($data);
+        } catch (Throwable $e) {
+            error_log($e);
+        }
     }
 }
 fclose($fp);
