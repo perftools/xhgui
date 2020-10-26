@@ -29,7 +29,8 @@ jobs:
       install:
         - composer global require friendsofphp/php-cs-fixer:2.16
       script:
-        - PATH=vendor/bin:$HOME/.config/composer/vendor/bin:$HOME/.composer/vendor/bin:$PATH
+        # https://stackoverflow.com/questions/30664220/where-to-find-composers-global-packages/64545124#64545124
+        - PATH=$(composer global config bin-dir --absolute --quiet):$PATH
         - php-cs-fixer fix --verbose --diff --dry-run --ansi
 
 services:
