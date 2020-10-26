@@ -29,6 +29,7 @@ jobs:
       install:
         - composer global require friendsofphp/php-cs-fixer:2.16
       script:
+        - PATH=vendor/bin:$HOME/.composer/vendor/bin:$PATH
         - php-cs-fixer fix --verbose --diff --dry-run --ansi
 
 services:
