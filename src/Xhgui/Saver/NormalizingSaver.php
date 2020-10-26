@@ -34,7 +34,7 @@ class NormalizingSaver implements SaverInterface
         unset($profile);
 
         if (!$data['profile']) {
-            throw new RuntimeException("Skipping to save empty profiling");
+            throw new RuntimeException('Skipping to save empty profiling');
         }
 
         return $this->saver->save($data, $id);
