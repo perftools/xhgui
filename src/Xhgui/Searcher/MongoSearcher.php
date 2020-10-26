@@ -230,7 +230,7 @@ class MongoSearcher implements SearcherInterface
     /**
      * {@inheritdoc}
      */
-    public function saveWatch(array $data)
+    public function saveWatch(array $data): bool
     {
         if (empty($data['name'])) {
             return false;
@@ -267,7 +267,7 @@ class MongoSearcher implements SearcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getAllWatches()
+    public function getAllWatches(): array
     {
         $cursor = $this->_watches->find();
 
@@ -285,7 +285,7 @@ class MongoSearcher implements SearcherInterface
     /**
      * {@inheritdoc}
      */
-    private function paginate($options)
+    private function paginate(array $options): array
     {
         $opts = $this->_mapper->convert($options);
 
@@ -357,7 +357,7 @@ class MongoSearcher implements SearcherInterface
     /**
      * {@inheritdoc}
      */
-    public function stats()
+    public function stats(): array
     {
         return [
             'profiles' => 0,
