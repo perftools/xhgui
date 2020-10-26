@@ -18,17 +18,14 @@ class Mapper
             'conditions' => [],
             'sort' => null,
             'direction' => null,
-            'perPage' => 25,
+            'perPage' => $options['perPage'] ?? SearcherInterface::DEFAULT_PER_PAGE,
         ];
+
         if (isset($options['conditions'])) {
             $result['conditions'] = $this->buildConditions($options['conditions']);
         }
         $result['direction'] = $this->buildDirection($options);
         $result['sort'] = $this->buildSort($options);
-
-        if (isset($options['perPage'])) {
-            $result['perPage'] = $options['perPage'];
-        }
 
         return $result;
     }

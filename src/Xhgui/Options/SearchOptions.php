@@ -25,7 +25,7 @@ class SearchOptions extends OptionsConfigurator
             'sort' => null,
             'direction' => SearcherInterface::DEFAULT_DIRECTION,
             'page' => SearcherInterface::DEFAULT_PAGE,
-            'perPage' => null,
+            'perPage' => SearcherInterface::DEFAULT_PER_PAGE,
             'conditions' => [],
             'projection' => false,
         ];

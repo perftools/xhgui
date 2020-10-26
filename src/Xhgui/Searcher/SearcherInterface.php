@@ -13,6 +13,7 @@ use XHGui\Profile;
 interface SearcherInterface
 {
     const DEFAULT_DIRECTION = 'desc';
+    const DEFAULT_PER_PAGE = 25;
     const DEFAULT_PAGE = 1;
 
     /**
