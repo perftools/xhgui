@@ -27,7 +27,7 @@ jobs:
     - name: "PHP CS Fixer"
       php: 7.0
       install:
-        - composer global require friendsofphp/php-cs-fixer:2.16
+        - composer global require friendsofphp/php-cs-fixer:^2.16
       script:
         # https://stackoverflow.com/questions/30664220/where-to-find-composers-global-packages/64545124#64545124
         - PATH=$(composer global config bin-dir --absolute --quiet):$PATH
