@@ -19,6 +19,9 @@ jobs:
           tools: php-cs-fixer:2.16
           coverage: none
 
+      - name: Install dependencies with composer
+        run: composer install --no-interaction --no-progress --no-suggest
+
       - name: Run php-cs-fixer
         run: php-cs-fixer fix -vvv
 
