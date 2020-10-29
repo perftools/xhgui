@@ -1,0 +1,47 @@
+name: "Tests: MongoDB"
+
+on:
+  - pull_request
+
+jobs:
+  mongodb:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        php:
+          - "7.0"
+          - "7.1"
+          - "7.2"
+          - "7.3"
+          - "7.4"
+
+    services:
+      mongodb:
+        image: percona/percona-server-mongodb:3.6
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mongodb
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Run PHPUnit tests
+        run: composer test
+        env:
+          XHGUI_SAVE_HANDLER: "mongodb"
+
+      - name: MongoDB Service logs
+        run: docker logs ${{ job.services.mongodb.id }}
+        if: always()
+
+# vim:ft=yaml:et:ts=2:sw=2
