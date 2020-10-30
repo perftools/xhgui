@@ -110,6 +110,8 @@ class RunTest extends TestCase
 
     public function testUrl()
     {
+        $this->skipIfPdo('getForUrl is not implemented');
+
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/url/view',
