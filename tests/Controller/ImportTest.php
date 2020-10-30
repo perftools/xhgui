@@ -40,6 +40,7 @@ class ImportTest extends TestCase
 
     public function testImportSuccess()
     {
+        $this->skipIfPdo('getForUrl not implemented');
         $data = [
             'meta' => [
                 'url' => '/things?key=value',

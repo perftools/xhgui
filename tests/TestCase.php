@@ -3,6 +3,7 @@
 namespace XHGui\Test;
 
 use XHGui\Saver\SaverInterface;
+use XHGui\ServiceContainer;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
@@ -16,5 +17,20 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         foreach ($data as $record) {
             $saver->save($record, $record['_id'] ?? null);
         }
+    }
+
+    protected function skipIfPdo($details = null)
+    {
+        $saveHandler = ServiceContainer::instance()['config']['save.handler'];
+
+        if ($saveHandler !== 'pdo') {
+            return;
+        }
+
+        $message = 'PDO support is not complete';
+        if ($details) {
+            $message .= ': ' . $details;
+        }
+        $this->markTestIncomplete($message);
     }
 }

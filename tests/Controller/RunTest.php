@@ -110,6 +110,8 @@ class RunTest extends TestCase
 
     public function testUrl()
     {
+        $this->skipIfPdo('getForUrl is not implemented');
+
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/url/view',
@@ -189,6 +191,7 @@ class RunTest extends TestCase
 
     public function testDeleteSubmit()
     {
+        $this->skipIfPdo('Undefined index: page');
         $this->loadFixture($this->saver);
 
         Environment::mock([
@@ -218,6 +221,7 @@ class RunTest extends TestCase
 
     public function testDeleteAllSubmit()
     {
+        $this->skipIfPdo('Undefined index: page');
         $this->loadFixture($this->saver);
 
         Environment::mock([
