@@ -11,11 +11,8 @@ class Mapper
 {
     /**
      * Convert request data keys into mongo values.
-     *
-     * @param array $options
-     * @return array
      */
-    public function convert($options)
+    public function convert(array $options): array
     {
         $result = [
             'conditions' => [],
@@ -24,10 +21,10 @@ class Mapper
             'perPage' => 25,
         ];
         if (isset($options['conditions'])) {
-            $result['conditions'] = $this->_conditions($options['conditions']);
+            $result['conditions'] = $this->buildConditions($options['conditions']);
         }
-        $result['direction'] = $this->_direction($options);
-        $result['sort'] = $this->_sort($options);
+        $result['direction'] = $this->buildDirection($options);
+        $result['sort'] = $this->buildSort($options);
 
         if (isset($options['perPage'])) {
             $result['perPage'] = $options['perPage'];
@@ -41,11 +38,8 @@ class Mapper
      *
      * Keeps the schema details out of the GET parameters.
      * String casts are uses to prevent mongo operator injection.
-     *
-     * @param array $search
-     * @return array
      */
-    protected function _conditions($search)
+    private function buildConditions(array $search): array
     {
         if (!empty($search['limit_custom']) && $search['limit_custom'][0] === 'P') {
             $search['limit'] = $search['limit_custom'];
@@ -63,10 +57,10 @@ class Mapper
             $conditions['meta.simple_url'] = (string)$search['simple_url'];
         }
         if (!empty($search['request_start'])) {
-            $conditions['meta.SERVER.REQUEST_TIME']['$gte'] = $this->_convertDate($search['request_start']);
+            $conditions['meta.SERVER.REQUEST_TIME']['$gte'] = $this->convertDate($search['request_start']);
         }
         if (!empty($search['request_end'])) {
-            $conditions['meta.SERVER.REQUEST_TIME']['$lte'] = $this->_convertDate($search['request_end']);
+            $conditions['meta.SERVER.REQUEST_TIME']['$lte'] = $this->convertDate($search['request_end']);
         }
 
         if (!empty($search['remote_addr'])) {
@@ -99,7 +93,7 @@ class Mapper
         return $conditions;
     }
 
-    protected function _convertDate($dateString)
+    private function convertDate($dateString)
     {
         if (is_numeric($dateString)) {
             return (float) $dateString;
@@ -112,7 +106,7 @@ class Mapper
         return $date->getTimestamp();
     }
 
-    protected function _direction($options)
+    private function buildDirection(array $options): string
     {
         if (empty($options['direction'])) {
             return SearcherInterface::DEFAULT_DIRECTION;
@@ -133,7 +127,7 @@ class Mapper
      * @param array $options pagination options including the sort key
      * @return array sort field & direction
      */
-    protected function _sort($options)
+    private function buildSort(array $options): array
     {
         $direction = -1;
         if (isset($options['direction']) && $options['direction'] === 'asc') {
