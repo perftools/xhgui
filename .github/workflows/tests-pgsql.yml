@@ -1,0 +1,53 @@
+name: "Tests: PostgreSQL"
+
+on:
+  - pull_request
+
+jobs:
+  pgsql:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        php:
+          - "7.0"
+          - "7.1"
+          - "7.2"
+          - "7.3"
+          - "7.4"
+
+    services:
+      # https://docs.github.com/en/free-pro-team@latest/actions/guides/creating-postgresql-service-containers
+      pgsql:
+        image: postgres:9.2
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: "postgres"
+          POSTGRES_PASSWORD: "password"
+          POSTGRES_DB: "xhgui"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: pdo, pdo_pgsql
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Run PHPUnit tests
+        run: composer test
+        env:
+          XHGUI_SAVE_HANDLER: "pdo"
+          XHGUI_PDO_DSN: "pgsql:host=127.0.0.1;dbname=xhgui user=postgres password=password"
+
+      - name: PostgreSQL service logs
+        run: docker logs ${{ job.services.pgsql.id }}
+        if: always()
+
+# vim:ft=yaml:et:ts=2:sw=2

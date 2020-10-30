@@ -1,0 +1,38 @@
+name: "Tests: Sqlite"
+
+on:
+  - pull_request
+
+jobs:
+  sqlite:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        php:
+          - "7.0"
+          - "7.1"
+          - "7.2"
+          - "7.3"
+          - "7.4"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: pdo, pdo_sqlite
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Run PHPUnit tests
+        run: composer test
+        env:
+          XHGUI_SAVE_HANDLER: "pdo"
+          XHGUI_PDO_DSN: "sqlite:/tmp/xhgui.sqlite3"
+
+# vim:ft=yaml:et:ts=2:sw=2
