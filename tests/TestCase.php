@@ -17,4 +17,18 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $saver->save($record, $record['_id'] ?? null);
         }
     }
+
+    protected function skipIfPdo($details = null)
+    {
+        $saveHandler = getenv('XHGUI_SAVE_HANDLER');
+        if ($saveHandler !== 'pdo') {
+            return;
+        }
+
+        $message = 'PDO support is not complete';
+        if ($details) {
+            $message .= ': ' . $details;
+        }
+        $this->markTestIncomplete($message);
+    }
 }
