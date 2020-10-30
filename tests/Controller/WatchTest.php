@@ -20,6 +20,8 @@ class WatchTest extends TestCase
 
     public function setUp()
     {
+        $this->skipIfPdo('Watchers not implemented');
+
         parent::setUp();
         Environment::mock([
            'SCRIPT_NAME' => 'index.php',

@@ -189,6 +189,7 @@ class RunTest extends TestCase
 
     public function testDeleteSubmit()
     {
+        $this->skipIfPdo('Undefined index: page');
         $this->loadFixture($this->saver);
 
         Environment::mock([
@@ -218,6 +219,7 @@ class RunTest extends TestCase
 
     public function testDeleteAllSubmit()
     {
+        $this->skipIfPdo('Undefined index: page');
         $this->loadFixture($this->saver);
 
         Environment::mock([
