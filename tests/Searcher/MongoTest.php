@@ -16,6 +16,8 @@ class MongoTest extends TestCase
 
     public function setUp()
     {
+        $this->skipIfPdo('This is MongoDB test');
+
         $di = ServiceContainer::instance();
         $this->mongo = $di['searcher.mongodb'];
 
