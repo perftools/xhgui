@@ -114,12 +114,19 @@ class ServiceContainer extends Container
                 throw new RuntimeException('Required extension ext-pdo is missing');
             }
 
-            $adapter = explode(':', $c['config']['pdo']['dsn'], 2)[0];
+            $driver = explode(':', $c['config']['pdo']['dsn'], 2)[0];
+
+            // check the PDO driver is available
+            if (!in_array($driver, PDO::getAvailableDrivers(), true)) {
+                $drivers = implode(',', PDO::getAvailableDrivers()) ?: '(none)';
+                throw new RuntimeException("Required PDO driver $driver is missing, Available drivers: $drivers");
+            }
+
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ];
 
-            if ($adapter === 'mysql') {
+            if ($driver === 'mysql') {
                 $options[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET SQL_MODE=ANSI_QUOTES;';
             }
 
