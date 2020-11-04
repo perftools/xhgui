@@ -1,4 +1,4 @@
-# xhgui
+# XHGui
 
 A graphical interface for XHProf profiling data that can store the results in MongoDB or PDO database.
 
@@ -16,8 +16,10 @@ it.
 XHGui has the following requirements:
 
 - PHP version 7.0 up to 7.3
-- If using MongoDB storage, see [MongoDB](#MongoDB) requirements
-- If using PDO storage, see [PDO](#PDO) requirements
+- [MongoDB Extension][ext-mongodb] MongoDB PHP driver: `pecl install mongodb`
+  XHGui requires verison 1.3.0 or later.
+  - If using MongoDB storage, see [MongoDB](#MongoDB) requirements
+  - If using PDO storage, see [PDO](#PDO) requirements
 - To profile an application, one of the profiling PHP extensions is required.
   See [Profiling a Web Request or CLI script](#profiling-a-web-request-or-cli-script).
   The extension is not needed to run XHGui itself.
@@ -37,11 +39,13 @@ The default installation uses MongoDB database. Most of the documentation speaks
 
 - [PDO][ext-pdo] PHP extension
 
-Any of the drivers and accompanying database:
+Any of the drivers and an accompanying database:
 
 - [SQLite (PDO)][ext-pdo_sqlite]
 - [MySQL (PDO)][ext-pdo_mysql]
 - [PostgreSQL (PDO)][ext-pdo_pgsql]
+
+Additionally, to use PDO with XHGui, you must either install the MongoDB PHP extension, or skip platfform requirements checks via composer. PDO may not support all the features of XHGui.
 
 [ext-pdo]: https://www.php.net/manual/en/book.pdo.php
 [ext-pdo_sqlite]: https://www.php.net/manual/en/ref.pdo-sqlite.php
