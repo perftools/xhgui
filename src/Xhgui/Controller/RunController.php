@@ -7,6 +7,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Slim as App;
 use XHGui\AbstractController;
+use XHGui\Options\SearchOptions;
 use XHGui\Searcher\SearcherInterface;
 
 class RunController extends AbstractController
@@ -44,14 +45,14 @@ class RunController extends AbstractController
         }
         $sort = $request->get('sort');
 
-        $result = $this->searcher->getAll([
+        $result = $this->searcher->getAll(new SearchOptions([
             'sort' => $sort,
             'page' => (int)$request->get('page', SearcherInterface::DEFAULT_PAGE),
             'direction' => $request->get('direction'),
             'perPage' => (int)$this->app->config('page.limit'),
             'conditions' => $search,
             'projection' => true,
-        ]);
+        ]));
 
         $title = 'Recent runs';
         $titleMap = [

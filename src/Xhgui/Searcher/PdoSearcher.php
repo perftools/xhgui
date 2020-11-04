@@ -3,6 +3,7 @@
 namespace XHGui\Searcher;
 
 use XHGui\Db\PdoRepository;
+use XHGui\Options\SearchOptions;
 use XHGui\Profile;
 
 class PdoSearcher implements SearcherInterface
@@ -96,7 +97,7 @@ class PdoSearcher implements SearcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getAll($options = [])
+    public function getAll(SearchOptions $options): array
     {
         $page = (int)$options['page'];
         $direction = $options['direction'] ?? SearcherInterface::DEFAULT_DIRECTION;

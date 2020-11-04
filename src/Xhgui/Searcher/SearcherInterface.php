@@ -4,6 +4,7 @@ namespace XHGui\Searcher;
 
 use Exception;
 use MongoCursor;
+use XHGui\Options\SearchOptions;
 use XHGui\Profile;
 
 /**
@@ -12,6 +13,7 @@ use XHGui\Profile;
 interface SearcherInterface
 {
     const DEFAULT_DIRECTION = 'desc';
+    const DEFAULT_PER_PAGE = 25;
     const DEFAULT_PAGE = 1;
 
     /**
@@ -80,7 +82,7 @@ interface SearcherInterface
     /**
      * Get a paginated set of results.
      *
-     * @param array $options the find options to use
+     * @param SearchOptions $options the find options to use
      * @return array An array of result data with the following keys:
      *  - results:    an array of Profile objects
      *  - sort:       an array of search criteria (TODO meta.SERVER.REQUEST_TIME => -1 ????)
@@ -89,7 +91,7 @@ interface SearcherInterface
      *  - perPage:    an integer, how many profiles to display per page (e.g. 25)
      *  - totalPages: an integer, total number of pages (e.g. 10)
      */
-    public function getAll($options = []);
+    public function getAll(SearchOptions $options): array;
 
     /**
      * Delete a profile run.

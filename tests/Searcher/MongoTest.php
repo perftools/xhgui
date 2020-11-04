@@ -2,6 +2,7 @@
 
 namespace XHGui\Test\Searcher;
 
+use XHGui\Options\SearchOptions;
 use XHGui\Profile;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\ServiceContainer;
@@ -125,13 +126,13 @@ class MongoTest extends TestCase
 
     public function testGetAllConditions()
     {
-        $result = $this->mongo->getAll([
+        $result = $this->mongo->getAll(new SearchOptions([
             'conditions' => [
                 'date_start' => '2013-01-20',
                 'date_end' => '2013-01-21',
                 'url' => 'tasks',
             ],
-        ]);
+        ]));
         $this->assertEquals(1, $result['page']);
         $this->assertEquals(25, $result['perPage']);
         $this->assertEquals(1, $result['totalPages']);

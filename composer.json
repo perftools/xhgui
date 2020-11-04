@@ -26,6 +26,7 @@
         "pimple/pimple": "^3.0",
         "slim/slim": "^2.6.3",
         "slim/views": "^0.1.0",
+        "symfony/options-resolver": "^3.3",
         "twig/twig": "~1.17"
     },
     "require-dev": {
