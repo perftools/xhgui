@@ -1,4 +1,4 @@
-# xhgui
+# XHGui
 
 A graphical interface for XHProf profiling data that can store the results in MongoDB or PDO database.
 
@@ -37,11 +37,13 @@ The default installation uses MongoDB database. Most of the documentation speaks
 
 - [PDO][ext-pdo] PHP extension
 
-Any of the drivers and accompanying database:
+Any of the drivers and an accompanying database:
 
 - [SQLite (PDO)][ext-pdo_sqlite]
 - [MySQL (PDO)][ext-pdo_mysql]
 - [PostgreSQL (PDO)][ext-pdo_pgsql]
+
+Additionally, to use PDO with XHGui, you must either install the MongoDB PHP extension or skip platform requirements checks via `composer`. PDO may not support all the features of XHGui.
 
 [ext-pdo]: https://www.php.net/manual/en/book.pdo.php
 [ext-pdo_sqlite]: https://www.php.net/manual/en/ref.pdo-sqlite.php
