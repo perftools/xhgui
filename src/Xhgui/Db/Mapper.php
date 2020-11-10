@@ -14,20 +14,12 @@ class Mapper
      */
     public function convert(array $options): array
     {
-        $result = [
-            'conditions' => [],
-            'sort' => null,
-            'direction' => null,
+        return [
+            'conditions' => $this->buildConditions($options['conditions'] ?? []),
+            'sort' => $this->buildSort($options),
+            'direction' => $this->buildDirection($options),
             'perPage' => $options['perPage'] ?? SearcherInterface::DEFAULT_PER_PAGE,
         ];
-
-        if (isset($options['conditions'])) {
-            $result['conditions'] = $this->buildConditions($options['conditions']);
-        }
-        $result['direction'] = $this->buildDirection($options);
-        $result['sort'] = $this->buildSort($options);
-
-        return $result;
     }
 
     /**
@@ -38,6 +30,10 @@ class Mapper
      */
     private function buildConditions(array $search): array
     {
+        if (!$search) {
+            return [];
+        }
+
         if (!empty($search['limit_custom']) && $search['limit_custom'][0] === 'P') {
             $search['limit'] = $search['limit_custom'];
         }
