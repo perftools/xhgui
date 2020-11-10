@@ -22,9 +22,9 @@ class Profile
     protected $_data;
     protected $_collapsed;
     protected $_indexed;
-    private $_visited;
-    private $_links;
-    private $_nodes;
+    private $visited;
+    private $links;
+    private $nodes;
 
     protected $_keys = ['ct', 'wt', 'cpu', 'mu', 'pmu'];
     protected $_exclusiveKeys = ['ewt', 'ecpu', 'emu', 'epmu'];
@@ -574,15 +574,15 @@ class Profile
             $main = $this->_collapsed['main()'][$metric];
         }
 
-        $this->_visited = $this->_nodes = $this->_links = [];
+        $this->visited = $this->nodes = $this->links = [];
         $this->_callgraphData(self::NO_PARENT, $main, $metric, $threshold);
         $out = [
             'metric' => $metric,
             'total' => $main,
-            'nodes' => $this->_nodes,
-            'links' => $this->_links,
+            'nodes' => $this->nodes,
+            'links' => $this->links,
         ];
-        unset($this->_visited, $this->_nodes, $this->_links);
+        unset($this->visited, $this->nodes, $this->links);
 
         return $out;
     }
@@ -604,22 +604,22 @@ class Profile
 
             // Keep track of which nodes we've visited and their position
             // in the node list.
-            if (!isset($this->_visited[$childName])) {
-                $index = count($this->_nodes);
-                $this->_visited[$childName] = $index;
+            if (!isset($this->visited[$childName])) {
+                $index = count($this->nodes);
+                $this->visited[$childName] = $index;
 
-                $this->_nodes[] = [
+                $this->nodes[] = [
                     'name' => $childName,
                     'callCount' => $metrics['ct'],
                     'value' => $metrics[$metric],
                 ];
             } else {
                 $revisit = true;
-                $index = $this->_visited[$childName];
+                $index = $this->visited[$childName];
             }
 
             if ($parentIndex !== null) {
-                $this->_links[] = [
+                $this->links[] = [
                     'source' => $parentName,
                     'target' => $childName,
                     'callCount' => $metrics['ct'],
