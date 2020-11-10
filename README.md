@@ -94,12 +94,10 @@ NOTE: PDO may not support all the features of XHGui, see [#320].
    > db.results.ensureIndex( { 'meta.simple_url' : 1 } )
    ```
 
-7. Run XHGui's install script. The install script downloads composer and
-   uses it to install the XHGui's dependencies.
+7. Install dependencies with composer
 
    ```bash
-   cd path/to/xhgui
-   php install.php
+   composer install --no-dev
    ```
 
 8. Set up your webserver. The Configuration section below describes how
