@@ -22,7 +22,9 @@ class Profile
     protected $_data;
     protected $_collapsed;
     protected $_indexed;
-    protected $_visited;
+    private $_visited;
+    private $_links;
+    private $_nodes;
 
     protected $_keys = ['ct', 'wt', 'cpu', 'mu', 'pmu'];
     protected $_exclusiveKeys = ['ewt', 'ecpu', 'emu', 'epmu'];
