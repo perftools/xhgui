@@ -49,12 +49,19 @@ class SearchOptions extends OptionsConfigurator
 
             return $value;
         });
+        $resolver->setNormalizer('perPage', function (Options $options, $value) use ($defaults) {
+            if (!$value) {
+                return $defaults['perPage'];
+            }
+
+            return (int)$value;
+        });
         $resolver->setNormalizer('page', function (Options $options, $value) use ($defaults) {
             if (!$value || $value < 1) {
                 return $defaults['page'];
             }
 
-            return $value;
+            return (int)$value;
         });
     }
 }

@@ -93,7 +93,7 @@ class PdoSearcher implements SearcherInterface
     {
         $page = $options['page'];
         $direction = $options['direction'];
-        $perPage = (int)$options['perPage'];
+        $perPage = $options['perPage'];
         $url = $options['conditions']['url'] ?? '';
 
         $totalRows = $this->db->countByUrl($url);
