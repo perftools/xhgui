@@ -50,7 +50,7 @@ class SearchOptions extends OptionsConfigurator
             return $value;
         });
         $resolver->setNormalizer('page', function (Options $options, $value) use ($defaults) {
-            if (!$value) {
+            if (!$value || $value < 1) {
                 return $defaults['page'];
             }
 

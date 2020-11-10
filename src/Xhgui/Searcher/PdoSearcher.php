@@ -91,11 +91,8 @@ class PdoSearcher implements SearcherInterface
      */
     public function getAll(SearchOptions $options): array
     {
-        $page = (int)$options['page'];
-        $direction = $options['direction'] ?? SearcherInterface::DEFAULT_DIRECTION;
-        if ($page < 1) {
-            $page = 1;
-        }
+        $page = $options['page'];
+        $direction = $options['direction'];
         $perPage = (int)$options['perPage'];
         $url = $options['conditions']['url'] ?? '';
 
