@@ -118,8 +118,8 @@ class PdoRepository
           LIMIT %d OFFSET %d',
             $this->table,
             $direction,
-            $skip,
-            $perPage
+            $perPage,
+            $skip
         );
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['url' => '%' . $url . '%']);
