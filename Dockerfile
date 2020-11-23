@@ -3,24 +3,24 @@
 # also modifying source, would not need to rebuild extensions layer.
 # Author: Elan Ruusamäe <glen@pld-linux.org>
 
-FROM php:7.3-fpm-alpine AS base
+# Use alpine:edge for ext-mongodb:
+# - https://gitlab.alpinelinux.org/alpine/aports/-/issues/12102
+FROM alpine:edge AS base
 
 RUN set -x \
-	&& apk add --no-cache --virtual .build-deps ${PHPIZE_DEPS} postgresql-dev openssl-dev \
-	&& pecl install mongodb && docker-php-ext-enable mongodb \
-	&& docker-php-ext-install pdo pdo_mysql pdo_pgsql \
-	# https://github.com/docker-library/php/blob/c8c4d223a052220527c6d6f152b89587be0f5a7c/7.3/alpine3.12/fpm/Dockerfile#L166-L172
-	&& runDeps=$( \
-		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
-			| tr ',' '\n' \
-			| sort -u \
-			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
-	) \
-	&& rm -rf /usr/local/lib/php/test/mongodb \
-	&& extDir=$(php-config --extension-dir) \
-	&& strip $extDir/pdo*.so $extDir/mongodb.so \
-	&& apk add --no-cache $runDeps \
-	&& apk del .build-deps
+	&& apk add --no-cache \
+		php-cli \
+		php-ctype \
+		php-fpm \
+		php-json \
+		php-pdo \
+		php-session \
+		php-pdo_mysql \
+		php-pdo_pgsql \
+		php-pdo_sqlite \
+		php7-pecl-mongodb \
+	&& ln -s /usr/sbin/php-fpm7 /usr/sbin/php-fpm \
+	&& php -m
 
 # prepare sources
 FROM scratch AS source
@@ -31,6 +31,10 @@ WORKDIR /app/vendor
 
 # install composer vendor
 FROM base AS build
+# extra deps for composer
+RUN apk add --no-cache \
+		php-phar \
+	&& php -m
 WORKDIR /app
 ARG COMPOSER_FLAGS="--no-interaction --no-suggest --ansi --no-dev"
 COPY --from=composer:1.10 /usr/bin/composer /usr/bin/
@@ -60,6 +64,9 @@ FROM base
 ARG APPDIR=/var/www/xhgui
 ARG WEBROOT=$APPDIR/webroot
 WORKDIR $APPDIR
+
+EXPOSE 9000
+CMD ["php-fpm", "-F"]
 
 RUN mkdir -p cache && chmod -R 777 cache
 COPY --from=build /vendor ./vendor/
