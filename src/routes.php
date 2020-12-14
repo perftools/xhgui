@@ -76,7 +76,7 @@ $app->get('/run/delete_all', static function () use ($di, $app) {
     $controller->deleteAllForm();
 })->setName('run.deleteAll.form');
 
-$app->post('/run/delete_all', static function () use ($di, $app) {
+$app->post('/run/delete_all', static function () use ($di) {
     /** @var RunController $controller */
     $controller = $di['runController'];
     $controller->deleteAllSubmit();
