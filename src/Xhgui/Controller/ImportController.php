@@ -53,6 +53,9 @@ class ImportController extends AbstractController
         }
 
         $data = json_decode($request->getBody(), true);
+        if (!is_array($data)) {
+            throw new InvalidArgumentException('Failed do decode payload');
+        }
 
         return $this->saver->save($data);
     }
