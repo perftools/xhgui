@@ -159,9 +159,14 @@ class ServiceContainer extends Container
     private function storageDriverMongoDb(Container $app)
     {
         // NOTE: db.host, db.options, db.driverOptions, db.db are @deprecated and will be removed in the future
-        $app[MongoDB::class] = static function ($app) {
+        $app['mongodb.database'] = static function ($app) {
             $config = $app['config'];
-            $database = $config['db.db'] ?? $mongodb['database'] ?? 'xhgui';
+
+            return $config['db.db'] ?? $mongodb['database'] ?? 'xhgui';
+        };
+
+        $app[MongoDB::class] = static function ($app) {
+            $database = $app['mongodb.database'];
             /** @var MongoClient $client */
             $client = $app[MongoClient::class];
             $mongoDB = $client->selectDb($database);

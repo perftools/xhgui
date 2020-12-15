@@ -9,10 +9,9 @@ require dirname(__DIR__) . '/src/bootstrap.php';
 
 $di = ServiceContainer::instance();
 
-// Use a test database.
-$config = $di['config'];
-$config['db.db'] = 'test_' . $config['db.db'];
-$di['config'] = $config;
+// Use a test databases
+$di['mongodb.database'] = 'test_xhgui';
+// TODO: do the same for PDO. currently PDO uses DSN syntax and has too many variations
 
 // Clean up globals.
 unset($di, $config);
