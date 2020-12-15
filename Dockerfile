@@ -7,6 +7,8 @@
 # - https://gitlab.alpinelinux.org/alpine/aports/-/issues/12102
 FROM alpine:edge AS base
 
+ENV PHP_INI_DIR /etc/php7
+
 RUN set -x \
 	&& apk add --no-cache \
 		php-cli \
