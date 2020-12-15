@@ -104,10 +104,12 @@ class ServiceContainer extends Container
 
         $this['db'] = static function ($c) {
             $database = $c['mongo.database'];
+            /** @var MongoClient $client */
             $client = $c[MongoClient::class];
-            $client->{$database}->results->findOne();
+            $mongoDB = $client->selectDb($database);
+            $mongoDB->results->findOne();
 
-            return $client->{$database};
+            return $mongoDB;
         };
 
         $this[MongoClient::class] = static function ($c) {
@@ -172,10 +174,10 @@ class ServiceContainer extends Container
         };
 
         $this['saver.mongodb'] = static function ($c) {
-            $mongo = $c[MongoClient::class];
+            /** @var MongoClient $client */
+            $client = $c[MongoClient::class];
             $database = $c['mongo.database'];
-
-            $collection = $mongo->{$database}->results;
+            $collection = $client->selectDb($database)->results;
             $collection->findOne();
 
             return new Saver\MongoSaver($collection);
