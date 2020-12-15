@@ -25,6 +25,24 @@ RUN set -x \
 	# Use www-data uid/gid from alpine also present in docker php images
 	&& addgroup -g 82 -S www-data \
 	&& adduser -u 82 -D -S -G www-data www-data \
+	# Tweak php-fpm config
+	&& sed -i \
+		-e "s#^;daemonize\s*=\s*yes#daemonize = no#" \
+		-e "s#^error_log\s*=.*#error_log = /var/log/php/fpm.error.log#" \
+		$PHP_INI_DIR/php-fpm.conf \
+	&& POOL_CONFIG=$PHP_INI_DIR/php-fpm.d/www.conf \
+	&& sed -i \
+		-e "s#^listen\s*=.*#listen = [::]:9000#" \
+		-e "s#^listen\.allowed_clients\s*=.*#;&#" \
+		-e "s#^;access\.log\s*=.*#access.log = /var/log/php/fpm.access.log#" \
+		-e "s#^;clear_env\s*=.*#clear_env = no#" \
+		-e "s#^user = nobody\s*=.*#user = www-data#" \
+		-e "s#^group = nobody\s*=.*#group = www-data#" \
+		-e "s#^;catch_workers_output\s*=.*#catch_workers_output = yes#" \
+		$POOL_CONFIG \
+	&& install -d -o www-data -g www-data /var/log/php \
+	&& ln -sf /proc/self/fd/2 /var/log/php/fpm.access.log \
+	&& ln -sf /proc/self/fd/2 /var/log/php/fpm.error.log \
 	&& php -m
 
 # prepare sources
