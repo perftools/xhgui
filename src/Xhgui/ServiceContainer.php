@@ -3,6 +3,8 @@
 namespace XHGui;
 
 use MongoClient;
+use MongoCollection;
+use MongoDB;
 use MongoDB\Driver\Manager;
 use PDO;
 use Pimple\Container;
@@ -96,14 +98,9 @@ class ServiceContainer extends Container
         $this['config'] = Config::all();
 
         // NOTE: db.host, db.options, db.driverOptions, db.db are @deprecated and will be removed in the future
-        $this['mongo.database'] = static function ($c) {
+        $this[MongoDB::class] = static function ($c) {
             $config = $c['config'];
-
-            return $config['db.db'] ?? $mongodb['database'] ?? 'xhgui';
-        };
-
-        $this['db'] = static function ($c) {
-            $database = $c['mongo.database'];
+            $database = $config['db.db'] ?? $mongodb['database'] ?? 'xhgui';
             /** @var MongoClient $client */
             $client = $c[MongoClient::class];
             $mongoDB = $client->selectDb($database);
@@ -160,7 +157,7 @@ class ServiceContainer extends Container
         };
 
         $this['searcher.mongodb'] = static function ($c) {
-            return new MongoSearcher($c['db']);
+            return new MongoSearcher($c[MongoDB::class]);
         };
 
         $this['searcher.pdo'] = static function ($c) {
@@ -174,11 +171,10 @@ class ServiceContainer extends Container
         };
 
         $this['saver.mongodb'] = static function ($c) {
-            /** @var MongoClient $client */
-            $client = $c[MongoClient::class];
-            $database = $c['mongo.database'];
-            $collection = $client->selectDb($database)->results;
-            $collection->findOne();
+            /** @var MongoDB $mongoDB */
+            $mongoDB = $c[MongoDB::class];
+            /** @var MongoCollection $collection */
+            $collection = $mongoDB->results;
 
             return new Saver\MongoSaver($collection);
         };
