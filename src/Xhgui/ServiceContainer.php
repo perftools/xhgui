@@ -97,16 +97,17 @@ class ServiceContainer extends Container
 
         $this['db'] = static function ($c) {
             $config = $c['config'];
-            if (empty($config['db.options'])) {
-                $config['db.options'] = [];
-            }
-            if (empty($config['db.driverOptions'])) {
-                $config['db.driverOptions'] = [];
-            }
-            $mongo = new MongoClient($config['db.host'], $config['db.options'], $config['db.driverOptions']);
-            $mongo->{$config['db.db']}->results->findOne();
+            // NOTE: db.host, db.options, db.driverOptions, db.db are @deprecated and will be removed in the future
+            $mongodb = $config['mongodb'] ?? [];
+            $options = $config['db.options'] ?? $mongodb['options'] ?? [];
+            $driverOptions = $config['db.driverOptions'] ?? $mongodb['driverOptions'] ?? [];
+            $database = $config['db.db'] ?? $mongodb['database'] ?? 'xhgui';
+            $server = $config['db.host'] ?? sprintf('mongodb://%s:%s', $mongodb['hostname'], $mongodb['port']);
 
-            return $mongo->{$config['db.db']};
+            $client = new MongoClient($server, $options, $driverOptions);
+            $client->{$database}->results->findOne();
+
+            return $client->{$database};
         };
 
         $this['pdo'] = static function ($c) {
