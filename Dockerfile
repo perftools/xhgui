@@ -62,6 +62,8 @@ RUN rm -vf composer.* vendor/composer/*.json
 # add vendor as separate docker layer
 RUN mv vendor /
 
+RUN install -d /cache -m 700
+
 # build runtime image
 FROM base
 ARG APPDIR=/var/www/xhgui
@@ -71,6 +73,6 @@ WORKDIR $APPDIR
 EXPOSE 9000
 CMD ["php-fpm", "-F"]
 
-RUN mkdir -p cache && chmod -R 777 cache
+COPY --from=build --chown=www-data /cache ./cache/
 COPY --from=build /vendor ./vendor/
 COPY --from=build /app ./
