@@ -95,19 +95,33 @@ class ServiceContainer extends Container
     {
         $this['config'] = Config::all();
 
-        $this['db'] = static function ($c) {
+        // NOTE: db.host, db.options, db.driverOptions, db.db are @deprecated and will be removed in the future
+        $this['mongo.database'] = static function ($c) {
             $config = $c['config'];
-            // NOTE: db.host, db.options, db.driverOptions, db.db are @deprecated and will be removed in the future
-            $mongodb = $config['mongodb'] ?? [];
-            $options = $config['db.options'] ?? $mongodb['options'] ?? [];
-            $driverOptions = $config['db.driverOptions'] ?? $mongodb['driverOptions'] ?? [];
-            $database = $config['db.db'] ?? $mongodb['database'] ?? 'xhgui';
-            $server = $config['db.host'] ?? sprintf('mongodb://%s:%s', $mongodb['hostname'], $mongodb['port']);
 
-            $client = new MongoClient($server, $options, $driverOptions);
+            return $config['db.db'] ?? $mongodb['database'] ?? 'xhgui';
+        };
+
+        $this['db'] = static function ($c) {
+            $database = $c['mongo.database'];
+            $client = $c[MongoClient::class];
             $client->{$database}->results->findOne();
 
             return $client->{$database};
+        };
+
+        $this[MongoClient::class] = static function ($c) {
+            if (!class_exists(Manager::class)) {
+                throw new RuntimeException('Required extension ext-mongodb missing');
+            }
+
+            $config = $c['config'];
+            $mongodb = $config['mongodb'] ?? [];
+            $options = $config['db.options'] ?? $mongodb['options'] ?? [];
+            $driverOptions = $config['db.driverOptions'] ?? $mongodb['driverOptions'] ?? [];
+            $server = $config['db.host'] ?? sprintf('mongodb://%s:%s', $mongodb['hostname'], $mongodb['port']);
+
+            return new MongoClient($server, $options, $driverOptions);
         };
 
         $this['pdo'] = static function ($c) {
@@ -158,13 +172,10 @@ class ServiceContainer extends Container
         };
 
         $this['saver.mongodb'] = static function ($c) {
-            $config = $c['config'];
+            $mongo = $c[MongoClient::class];
+            $database = $c['mongo.database'];
 
-            if (!class_exists(Manager::class)) {
-                throw new RuntimeException('Required extension ext-mongodb missing');
-            }
-            $mongo = new MongoClient($config['db.host'], $config['db.options'], $config['db.driverOptions']);
-            $collection = $mongo->{$config['db.db']}->results;
+            $collection = $mongo->{$database}->results;
             $collection->findOne();
 
             return new Saver\MongoSaver($collection);
