@@ -20,6 +20,9 @@ RUN set -x \
 		php-pdo_sqlite \
 		php7-pecl-mongodb \
 	&& ln -s /usr/sbin/php-fpm7 /usr/sbin/php-fpm \
+	# Use www-data uid/gid from alpine also present in docker php images
+	&& addgroup -g 82 -S www-data \
+	&& adduser -u 82 -D -S -G www-data www-data \
 	&& php -m
 
 # prepare sources
