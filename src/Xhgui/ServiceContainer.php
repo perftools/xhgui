@@ -3,6 +3,8 @@
 namespace XHGui;
 
 use MongoClient;
+use MongoCollection;
+use MongoDB;
 use MongoDB\Driver\Manager;
 use PDO;
 use Pimple\Container;
@@ -39,6 +41,8 @@ class ServiceContainer extends Container
         parent::__construct();
         $this->_slimApp();
         $this->_services();
+        $this->storageDriverPdo($this);
+        $this->storageDriverMongoDb($this);
         $this->_controllers();
     }
 
@@ -95,26 +99,27 @@ class ServiceContainer extends Container
     {
         $this['config'] = Config::all();
 
-        $this['db'] = static function ($c) {
-            $config = $c['config'];
-            if (empty($config['db.options'])) {
-                $config['db.options'] = [];
-            }
-            if (empty($config['db.driverOptions'])) {
-                $config['db.driverOptions'] = [];
-            }
-            $mongo = new MongoClient($config['db.host'], $config['db.options'], $config['db.driverOptions']);
-            $mongo->{$config['db.db']}->results->findOne();
+        $this['searcher'] = static function ($c) {
+            $saver = $c['config']['save.handler'];
 
-            return $mongo->{$config['db.db']};
+            return $c["searcher.$saver"];
         };
 
-        $this['pdo'] = static function ($c) {
+        $this['saver'] = static function ($c) {
+            $saver = $c['config']['save.handler'];
+
+            return new NormalizingSaver($c["saver.$saver"]);
+        };
+    }
+
+    private function storageDriverPdo(Container $app)
+    {
+        $app['pdo'] = static function ($app) {
             if (!class_exists(PDO::class)) {
                 throw new RuntimeException('Required extension ext-pdo is missing');
             }
 
-            $driver = explode(':', $c['config']['pdo']['dsn'], 2)[0];
+            $driver = explode(':', $app['config']['pdo']['dsn'], 2)[0];
 
             // check the PDO driver is available
             if (!in_array($driver, PDO::getAvailableDrivers(), true)) {
@@ -131,52 +136,70 @@ class ServiceContainer extends Container
             }
 
             return new PDO(
-                $c['config']['pdo']['dsn'],
-                $c['config']['pdo']['user'],
-                $c['config']['pdo']['pass'],
+                $app['config']['pdo']['dsn'],
+                $app['config']['pdo']['user'],
+                $app['config']['pdo']['pass'],
                 $options
             );
         };
 
-        $this[PdoRepository::class] = static function ($c) {
-            return new PdoRepository($c['pdo'], $c['config']['pdo']['table']);
+        $app[PdoRepository::class] = static function ($app) {
+            return new PdoRepository($app['pdo'], $app['config']['pdo']['table']);
         };
 
-        $this['searcher.mongodb'] = static function ($c) {
-            return new MongoSearcher($c['db']);
+        $app['searcher.pdo'] = static function ($app) {
+            return new PdoSearcher($app[PdoRepository::class]);
         };
 
-        $this['searcher.pdo'] = static function ($c) {
-            return new PdoSearcher($c[PdoRepository::class]);
+        $app['saver.pdo'] = static function ($app) {
+            return new Saver\PdoSaver($app[PdoRepository::class]);
+        };
+    }
+
+    private function storageDriverMongoDb(Container $app)
+    {
+        // NOTE: db.host, db.options, db.driverOptions, db.db are @deprecated and will be removed in the future
+        $app['mongodb.database'] = static function ($app) {
+            $config = $app['config'];
+
+            return $config['db.db'] ?? $mongodb['database'] ?? 'xhgui';
         };
 
-        $this['searcher'] = static function ($c) {
-            $saver = $c['config']['save.handler'];
+        $app[MongoDB::class] = static function ($app) {
+            $database = $app['mongodb.database'];
+            /** @var MongoClient $client */
+            $client = $app[MongoClient::class];
+            $mongoDB = $client->selectDb($database);
+            $mongoDB->results->findOne();
 
-            return $c["searcher.$saver"];
+            return $mongoDB;
         };
 
-        $this['saver.mongodb'] = static function ($c) {
-            $config = $c['config'];
-
+        $app[MongoClient::class] = static function ($app) {
             if (!class_exists(Manager::class)) {
                 throw new RuntimeException('Required extension ext-mongodb missing');
             }
-            $mongo = new MongoClient($config['db.host'], $config['db.options'], $config['db.driverOptions']);
-            $collection = $mongo->{$config['db.db']}->results;
-            $collection->findOne();
+
+            $config = $app['config'];
+            $mongodb = $config['mongodb'] ?? [];
+            $options = $config['db.options'] ?? $mongodb['options'] ?? [];
+            $driverOptions = $config['db.driverOptions'] ?? $mongodb['driverOptions'] ?? [];
+            $server = $config['db.host'] ?? sprintf('mongodb://%s:%s', $mongodb['hostname'], $mongodb['port']);
+
+            return new MongoClient($server, $options, $driverOptions);
+        };
+
+        $app['searcher.mongodb'] = static function ($app) {
+            return new MongoSearcher($app[MongoDB::class]);
+        };
+
+        $app['saver.mongodb'] = static function ($app) {
+            /** @var MongoDB $mongoDB */
+            $mongoDB = $app[MongoDB::class];
+            /** @var MongoCollection $collection */
+            $collection = $mongoDB->results;
 
             return new Saver\MongoSaver($collection);
-        };
-
-        $this['saver.pdo'] = static function ($c) {
-            return new Saver\PdoSaver($c[PdoRepository::class]);
-        };
-
-        $this['saver'] = static function ($c) {
-            $saver = $c['config']['save.handler'];
-
-            return new NormalizingSaver($c["saver.$saver"]);
         };
     }
 

@@ -2,6 +2,7 @@
 
 namespace XHGui\Test\Searcher;
 
+use MongoDB;
 use XHGui\Options\SearchOptions;
 use XHGui\Profile;
 use XHGui\Searcher\MongoSearcher;
@@ -22,7 +23,7 @@ class MongoTest extends TestCase
         $di = ServiceContainer::instance();
         $this->mongo = $di['searcher.mongodb'];
 
-        $di['db']->watches->drop();
+        $di[MongoDB::class]->watches->drop();
 
         $this->loadFixture($di['saver.mongodb']);
     }
