@@ -7,6 +7,23 @@ FROM alpine:3.12 AS base
 
 ENV PHP_INI_DIR /etc/php7
 
+# ext-mongodb: build and stage
+FROM base AS build-ext-mongodb
+RUN apk add --no-cache alpine-sdk openssl-dev php7-dev php7-openssl php7-pear
+RUN pecl install mongodb
+
+FROM base AS stage-ext-mongodb
+RUN apk add binutils
+
+WORKDIR /build/etc/php7/conf.d
+RUN echo extension=mongodb.so > mongodb.ini
+
+WORKDIR /build/usr/lib/php7/modules
+COPY --from=build-ext-mongodb /usr/lib/php7/modules/mongodb.so .
+RUN strip *.so && chmod a+rx *.so
+
+# php-fpm runtime
+FROM base AS php
 RUN set -x \
 	&& apk add --no-cache \
 		php-cli \
@@ -50,7 +67,7 @@ COPY . .
 WORKDIR /app/vendor
 
 # install composer vendor
-FROM base AS build
+FROM php AS build
 # extra deps for composer
 RUN apk add --no-cache \
 		php-phar \
@@ -82,7 +99,7 @@ RUN mv vendor /
 RUN install -d /cache -m 700
 
 # build runtime image
-FROM base
+FROM php
 ARG APPDIR=/var/www/xhgui
 ARG WEBROOT=$APPDIR/webroot
 WORKDIR $APPDIR
@@ -90,6 +107,7 @@ WORKDIR $APPDIR
 EXPOSE 9000
 CMD ["php-fpm", "-F"]
 
+COPY --from=stage-ext-mongodb /build /
 COPY --from=build --chown=www-data /cache ./cache/
 COPY --from=build /vendor ./vendor/
 COPY --from=build /app ./
