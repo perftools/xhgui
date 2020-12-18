@@ -3,9 +3,7 @@
 # also modifying source, would not need to rebuild extensions layer.
 # Author: Elan Ruusamäe <glen@pld-linux.org>
 
-# Use alpine:edge for ext-mongodb:
-# - https://gitlab.alpinelinux.org/alpine/aports/-/issues/12102
-FROM alpine:edge AS base
+FROM alpine:3.12 AS base
 
 ENV PHP_INI_DIR /etc/php7
 
@@ -20,7 +18,6 @@ RUN set -x \
 		php-pdo_mysql \
 		php-pdo_pgsql \
 		php-pdo_sqlite \
-		php7-pecl-mongodb \
 	&& ln -s /usr/sbin/php-fpm7 /usr/sbin/php-fpm \
 	# Use www-data uid/gid from alpine also present in docker php images
 	&& addgroup -g 82 -S www-data \
