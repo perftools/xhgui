@@ -3,24 +3,61 @@
 # also modifying source, would not need to rebuild extensions layer.
 # Author: Elan Ruusamäe <glen@pld-linux.org>
 
-FROM php:7.3-fpm-alpine AS base
+FROM alpine:3.12 AS base
 
+ENV PHP_INI_DIR /etc/php7
+
+# ext-mongodb: build and stage
+FROM base AS build-ext-mongodb
+RUN apk add --no-cache alpine-sdk openssl-dev php7-dev php7-openssl php7-pear
+RUN pecl install mongodb
+
+FROM base AS stage-ext-mongodb
+RUN apk add binutils
+
+WORKDIR /build/etc/php7/conf.d
+RUN echo extension=mongodb.so > mongodb.ini
+
+WORKDIR /build/usr/lib/php7/modules
+COPY --from=build-ext-mongodb /usr/lib/php7/modules/mongodb.so .
+RUN strip *.so && chmod a+rx *.so
+
+# php-fpm runtime
+FROM base AS php
 RUN set -x \
-	&& apk add --no-cache --virtual .build-deps ${PHPIZE_DEPS} postgresql-dev openssl-dev \
-	&& pecl install mongodb && docker-php-ext-enable mongodb \
-	&& docker-php-ext-install pdo pdo_mysql pdo_pgsql \
-	# https://github.com/docker-library/php/blob/c8c4d223a052220527c6d6f152b89587be0f5a7c/7.3/alpine3.12/fpm/Dockerfile#L166-L172
-	&& runDeps=$( \
-		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
-			| tr ',' '\n' \
-			| sort -u \
-			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
-	) \
-	&& rm -rf /usr/local/lib/php/test/mongodb \
-	&& extDir=$(php-config --extension-dir) \
-	&& strip $extDir/pdo*.so $extDir/mongodb.so \
-	&& apk add --no-cache $runDeps \
-	&& apk del .build-deps
+	&& apk add --no-cache \
+		php-cli \
+		php-ctype \
+		php-fpm \
+		php-json \
+		php-pdo \
+		php-session \
+		php-pdo_mysql \
+		php-pdo_pgsql \
+		php-pdo_sqlite \
+	&& ln -s /usr/sbin/php-fpm7 /usr/sbin/php-fpm \
+	# Use www-data uid/gid from alpine also present in docker php images
+	&& addgroup -g 82 -S www-data \
+	&& adduser -u 82 -D -S -G www-data www-data \
+	# Tweak php-fpm config
+	&& sed -i \
+		-e "s#^;daemonize\s*=\s*yes#daemonize = no#" \
+		-e "s#^error_log\s*=.*#error_log = /var/log/php/fpm.error.log#" \
+		$PHP_INI_DIR/php-fpm.conf \
+	&& POOL_CONFIG=$PHP_INI_DIR/php-fpm.d/www.conf \
+	&& sed -i \
+		-e "s#^listen\s*=.*#listen = [::]:9000#" \
+		-e "s#^listen\.allowed_clients\s*=.*#;&#" \
+		-e "s#^;access\.log\s*=.*#access.log = /var/log/php/fpm.access.log#" \
+		-e "s#^;clear_env\s*=.*#clear_env = no#" \
+		-e "s#^user = nobody\s*=.*#user = www-data#" \
+		-e "s#^group = nobody\s*=.*#group = www-data#" \
+		-e "s#^;catch_workers_output\s*=.*#catch_workers_output = yes#" \
+		$POOL_CONFIG \
+	&& install -d -o www-data -g www-data /var/log/php \
+	&& ln -sf /proc/self/fd/2 /var/log/php/fpm.access.log \
+	&& ln -sf /proc/self/fd/2 /var/log/php/fpm.error.log \
+	&& php -m
 
 # prepare sources
 FROM scratch AS source
@@ -30,7 +67,11 @@ COPY . .
 WORKDIR /app/vendor
 
 # install composer vendor
-FROM base AS build
+FROM php AS build
+# extra deps for composer
+RUN apk add --no-cache \
+		php-phar \
+	&& php -m
 WORKDIR /app
 ARG COMPOSER_FLAGS="--no-interaction --no-suggest --ansi --no-dev"
 COPY --from=composer:1.10 /usr/bin/composer /usr/bin/
@@ -55,12 +96,18 @@ RUN rm -vf composer.* vendor/composer/*.json
 # add vendor as separate docker layer
 RUN mv vendor /
 
+RUN install -d /cache -m 700
+
 # build runtime image
-FROM base
+FROM php
 ARG APPDIR=/var/www/xhgui
 ARG WEBROOT=$APPDIR/webroot
 WORKDIR $APPDIR
 
-RUN mkdir -p cache && chmod -R 777 cache
+EXPOSE 9000
+CMD ["php-fpm", "-F"]
+
+COPY --from=stage-ext-mongodb /build /
+COPY --from=build --chown=www-data /cache ./cache/
 COPY --from=build /vendor ./vendor/
 COPY --from=build /app ./
