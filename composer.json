@@ -14,14 +14,14 @@
     },
     "config": {
         "platform": {
-            "php": "7.0.8",
+            "php": "7.2.5",
             "ext-mongodb": "1.3.0"
         },
         "sort-packages": true,
         "platform-check": "php-only"
     },
     "require": {
-        "php": "^7.0",
+        "php": "^7.2 || ^8.0",
         "ext-json": "*",
         "alcaeus/mongo-php-adapter": "^1.1",
         "pimple/pimple": "^3.0",
