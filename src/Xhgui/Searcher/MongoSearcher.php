@@ -220,12 +220,11 @@ class MongoSearcher implements SearcherInterface
         $this->_collection->remove(['_id' => new MongoId($id)], []);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function truncate()
     {
-        return $this->_collection->drop();
+        $this->_collection->drop();
+
+        return $this;
     }
 
     /**
@@ -275,12 +274,11 @@ class MongoSearcher implements SearcherInterface
         return array_values(iterator_to_array($cursor));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function truncateWatches()
     {
         $this->_watches->drop();
+
+        return $this;
     }
 
     /**
