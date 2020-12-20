@@ -20,12 +20,11 @@ class WatchTest extends TestCase
            'SCRIPT_NAME' => 'index.php',
            'PATH_INFO' => '/watch',
         ]);
-
-        $this->searcher->truncateWatches();
     }
 
     public function testGet()
     {
+        $this->searcher->truncateWatches();
         $this->watches->get();
         $result = $this->watches->templateVars();
         $this->assertEquals([], $result['watched']);
@@ -33,6 +32,7 @@ class WatchTest extends TestCase
 
     public function testPostAdd()
     {
+        $this->searcher->truncateWatches();
         $_POST = [
             'watch' => [
                 ['name' => 'strlen'],
@@ -56,8 +56,9 @@ class WatchTest extends TestCase
 
     public function testPostModify()
     {
-        $this->searcher->saveWatch(['name' => 'strlen']);
-        $saved = $this->searcher->getAllWatches();
+        $searcher = $this->searcher->truncateWatches();
+        $searcher->saveWatch(['name' => 'strlen']);
+        $saved = $searcher->getAllWatches();
 
         $_POST = [
             'watch' => [
@@ -65,7 +66,7 @@ class WatchTest extends TestCase
             ],
         ];
         $this->watches->post($this->app->request());
-        $result = $this->searcher->getAllWatches();
+        $result = $searcher->getAllWatches();
 
         $this->assertCount(1, $result);
         $this->assertEquals('strpos', $result[0]['name']);
@@ -73,6 +74,7 @@ class WatchTest extends TestCase
 
     public function testPostDelete()
     {
+        $this->searcher->truncateWatches();
         $this->searcher->saveWatch(['name' => 'strlen']);
         $saved = $this->searcher->getAllWatches();
 

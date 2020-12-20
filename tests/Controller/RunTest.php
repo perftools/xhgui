@@ -20,8 +20,6 @@ class RunTest extends TestCase
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
         ]);
-
-        $this->searcher->truncate();
     }
 
     public function testIndexEmpty()
@@ -137,6 +135,7 @@ class RunTest extends TestCase
 
     public function testCallgraph()
     {
+        $this->searcher->truncate();
         $this->loadFixture($this->saver);
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
@@ -153,6 +152,7 @@ class RunTest extends TestCase
 
     public function testCallgraphData()
     {
+        $this->searcher->truncate();
         $this->loadFixture($this->saver);
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
@@ -170,6 +170,7 @@ class RunTest extends TestCase
     public function testDeleteSubmit()
     {
         $this->skipIfPdo('Undefined index: page');
+        $searcher = $this->searcher->truncate();
         $this->loadFixture($this->saver);
 
         Environment::mock([
@@ -188,18 +189,19 @@ class RunTest extends TestCase
         $this->app->expects($this->once())
             ->method('redirect');
 
-        $result = $this->searcher->getAll(new SearchOptions());
+        $result = $searcher->getAll(new SearchOptions());
         $this->assertCount(5, $result['results']);
 
         $this->runs->deleteSubmit($this->app->request());
 
-        $result = $this->searcher->getAll(new SearchOptions());
+        $result = $searcher->getAll(new SearchOptions());
         $this->assertCount(4, $result['results']);
     }
 
     public function testDeleteAllSubmit()
     {
         $this->skipIfPdo('Undefined index: page');
+        $this->searcher->truncate();
         $this->loadFixture($this->saver);
 
         Environment::mock([
@@ -225,6 +227,7 @@ class RunTest extends TestCase
 
     public function testFilterCustomMethods()
     {
+        $this->searcher->truncate();
         $this->loadFixture($this->saver);
 
         Environment::mock([
@@ -241,6 +244,7 @@ class RunTest extends TestCase
 
     public function testFilterCustomMethod()
     {
+        $this->searcher->truncate();
         $this->loadFixture($this->saver);
 
         Environment::mock([
@@ -257,6 +261,7 @@ class RunTest extends TestCase
 
     public function testFilterMethods()
     {
+        $this->searcher->truncate();
         $this->loadFixture($this->saver);
 
         Environment::mock([
