@@ -3,6 +3,7 @@
 namespace XHGui\Searcher;
 
 use XHGui\Db\PdoRepository;
+use XHGui\Exception\NotImplementedException;
 use XHGui\Options\SearchOptions;
 use XHGui\Profile;
 
@@ -39,12 +40,9 @@ class PdoSearcher implements SearcherInterface
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function query($conditions, $limit, $fields = [])
     {
-        // TODO: Implement query() method.
+        throw NotImplementedException::notImplementedPdo(__METHOD__);
     }
 
     /**
@@ -70,20 +68,14 @@ class PdoSearcher implements SearcherInterface
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getForUrl($url, $options, $conditions = [])
     {
-        // TODO: Implement getForUrl() method.
+        throw NotImplementedException::notImplementedPdo(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPercentileForUrl($percentile, $url, $search = [])
     {
-        // TODO: Implement getPercentileForUrl() method.
+        throw NotImplementedException::notImplementedPdo(__METHOD__);
     }
 
     /**
@@ -91,7 +83,7 @@ class PdoSearcher implements SearcherInterface
      */
     public function getAvgsForUrl($url, $search = [])
     {
-        // TODO: Implement getAvgsForUrl() method.
+        throw NotImplementedException::notImplementedPdo(__METHOD__);
     }
 
     /**
