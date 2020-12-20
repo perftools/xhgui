@@ -36,8 +36,12 @@
         "symfony/phpunit-bridge": "^5.2"
     },
     "scripts": {
+        "post-install-cmd": [
+            "@phpunit-setup"
+        ],
+        "cover": "simple-phpunit --coverage-clover=unittest-coverage.clover",
         "openurl": "open http://xhgui.127.0.0.1.xip.io:8142",
-        "test": "simple-phpunit",
-        "cover": "simple-phpunit --coverage-clover=unittest-coverage.clover"
+        "phpunit-setup": "test $COMPOSER_DEV_MODE = 0 || simple-phpunit --version",
+        "test": "simple-phpunit"
     }
 }
