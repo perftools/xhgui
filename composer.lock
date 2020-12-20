@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "551d596307af7e264baf5b407fe9f1e8",
+    "content-hash": "c270a58bf3464f32cc1afbeffc2ad22a",
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -668,6 +668,59 @@
                 "object graph"
             ],
             "time": "2017-10-19T19:58:43+00:00"
+        },
+        {
+            "name": "ocramius/lazy-property",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Ocramius/LazyProperty.git",
+                "reference": "6ebe14852b08a89d28c064a75ea88dbe88dad07c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Ocramius/LazyProperty/zipball/6ebe14852b08a89d28c064a75ea88dbe88dad07c",
+                "reference": "6ebe14852b08a89d28c064a75ea88dbe88dad07c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~5.4|~7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0|~5.0",
+                "squizlabs/php_codesniffer": "~2.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "LazyProperty\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com",
+                    "homepage": "http://ocramius.github.io/"
+                }
+            ],
+            "description": "A library that provides lazy instantiation logic for object properties",
+            "homepage": "https://github.com/Ocramius/LazyProperty",
+            "keywords": [
+                "lazy",
+                "lazy instantiation",
+                "lazy loading",
+                "utility"
+            ],
+            "time": "2016-01-21T16:19:39+00:00"
         },
         {
             "name": "phar-io/manifest",
