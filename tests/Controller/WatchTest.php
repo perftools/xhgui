@@ -3,7 +3,6 @@
 namespace XHGui\Test\Controller;
 
 use Slim\Environment;
-use Slim\Slim as App;
 use XHGui\Test\LazyContainerProperties;
 use XHGui\Test\TestCase;
 
@@ -21,11 +20,6 @@ class WatchTest extends TestCase
            'SCRIPT_NAME' => 'index.php',
            'PATH_INFO' => '/watch',
         ]);
-
-        $this->di['app'] = $this->getMockBuilder(App::class)
-            ->setMethods(['redirect', 'render', 'urlFor'])
-            ->setConstructorArgs([$this->di['config']])
-            ->getMock();
 
         $this->searcher->truncateWatches();
     }

@@ -5,8 +5,6 @@ namespace XHGui\Test\Searcher;
 use MongoDB;
 use XHGui\Options\SearchOptions;
 use XHGui\Profile;
-use XHGui\Searcher\MongoSearcher;
-use XHGui\ServiceContainer;
 use XHGui\Test\LazyContainerProperties;
 use XHGui\Test\TestCase;
 
