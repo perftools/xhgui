@@ -26,8 +26,6 @@ trait LazyContainerProperties
     protected $runs;
     /** @var App */
     protected $app;
-    /** @var MongoSearcher */
-    protected $profiles;
     /** @var SearcherInterface */
     protected $searcher;
     /** @var MongoSaver */
@@ -42,7 +40,6 @@ trait LazyContainerProperties
             'app',
             'import',
             'mongo',
-            'profiles',
             'runs',
             'saver',
             'searcher',
@@ -74,12 +71,6 @@ trait LazyContainerProperties
     protected function getMongo()
     {
         return $this->di['searcher.mongodb'];
-    }
-
-    /** @deprecated */
-    protected function getProfiles()
-    {
-        return $this->searcher;
     }
 
     protected function getSearcher()

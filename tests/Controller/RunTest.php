@@ -21,7 +21,7 @@ class RunTest extends TestCase
             'PATH_INFO' => '/',
         ]);
 
-        $this->profiles->truncate();
+        $this->searcher->truncate();
     }
 
     public function testIndexEmpty()
@@ -188,12 +188,12 @@ class RunTest extends TestCase
         $this->app->expects($this->once())
             ->method('redirect');
 
-        $result = $this->profiles->getAll(new SearchOptions());
+        $result = $this->searcher->getAll(new SearchOptions());
         $this->assertCount(5, $result['results']);
 
         $this->runs->deleteSubmit($this->app->request());
 
-        $result = $this->profiles->getAll(new SearchOptions());
+        $result = $this->searcher->getAll(new SearchOptions());
         $this->assertCount(4, $result['results']);
     }
 
@@ -214,12 +214,12 @@ class RunTest extends TestCase
         $this->app->expects($this->once())
           ->method('redirect');
 
-        $result = $this->profiles->getAll(new SearchOptions());
+        $result = $this->searcher->getAll(new SearchOptions());
         $this->assertCount(5, $result['results']);
 
         $this->runs->deleteAllSubmit();
 
-        $result = $this->profiles->getAll(new SearchOptions());
+        $result = $this->searcher->getAll(new SearchOptions());
         $this->assertCount(0, $result['results']);
     }
 

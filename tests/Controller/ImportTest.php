@@ -21,7 +21,7 @@ class ImportTest extends TestCase
             'PATH_INFO' => '/',
         ]);
 
-        $this->profiles->truncate();
+        $this->searcher->truncate();
     }
 
     public function testImportSuccess()
@@ -52,12 +52,12 @@ class ImportTest extends TestCase
             'slim.input' => json_encode($data),
         ]);
 
-        $before = $this->profiles->getForUrl('/things', []);
+        $before = $this->searcher->getForUrl('/things', []);
         $this->assertEmpty($before['results']);
 
         $this->import->import($this->app->request(), $this->app->response());
 
-        $after = $this->profiles->getForUrl('/things', []);
+        $after = $this->searcher->getForUrl('/things', []);
         $this->assertNotEmpty($after['results']);
         $this->assertInstanceOf(Profile::class, $after['results'][0]);
     }
