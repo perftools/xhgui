@@ -4,47 +4,30 @@ namespace XHGui\Test\Controller;
 
 use Slim\Environment;
 use Slim\Slim as App;
-use XHGui\Controller\ImportController;
-use XHGui\Controller\RunController;
 use XHGui\Options\SearchOptions;
-use XHGui\Saver\MongoSaver;
-use XHGui\Searcher\MongoSearcher;
-use XHGui\ServiceContainer;
+use XHGui\Test\LazyContainerProperties;
 use XHGui\Test\TestCase;
 
 class RunTest extends TestCase
 {
-    /** @var RunController */
-    private $runs;
-    /** @var MongoSaver */
-    private $saver;
-    /** @var App */
-    private $app;
-    /** @var MongoSearcher */
-    private $profiles;
-    /** @var ImportController */
-    private $import;
+    use LazyContainerProperties;
 
     public function setUp()
     {
         parent::setUp();
+        $this->setupProperties();
+
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
         ]);
 
-        $di = ServiceContainer::instance();
-        $di['app'] = $this->getMockBuilder(App::class)
+        $this->di['app'] = $this->getMockBuilder(App::class)
             ->setMethods(['redirect', 'render', 'urlFor'])
-            ->setConstructorArgs([$di['config']])
+            ->setConstructorArgs([$this->di['config']])
             ->getMock();
 
-        $this->import = $di['importController'];
-        $this->runs = $di['runController'];
-        $this->app = $di['app'];
-        $this->profiles = $di['searcher'];
         $this->profiles->truncate();
-        $this->saver = $di['saver'];
     }
 
     public function testIndexEmpty()

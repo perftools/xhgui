@@ -4,37 +4,29 @@ namespace XHGui\Test\Controller;
 
 use Slim\Environment;
 use Slim\Slim as App;
-use XHGui\Controller\ImportController;
 use XHGui\Profile;
-use XHGui\Searcher\SearcherInterface;
-use XHGui\ServiceContainer;
+use XHGui\Test\LazyContainerProperties;
 use XHGui\Test\TestCase;
 
 class ImportTest extends TestCase
 {
-    /** @var SearcherInterface */
-    private $profiles;
-    /** @var ImportController */
-    private $import;
-    /** @var App */
-    private $app;
+    use LazyContainerProperties;
 
     public function setUp()
     {
         parent::setUp();
+        $this->setupProperties();
+
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
         ]);
 
-        $di = ServiceContainer::instance();
-        $this->app = $di['app'] = $this->getMockBuilder(App::class)
+        $this->app = $this->di['app'] = $this->getMockBuilder(App::class)
             ->setMethods(['redirect', 'render', 'urlFor'])
-            ->setConstructorArgs([$di['config']])
+            ->setConstructorArgs([$this->di['config']])
             ->getMock();
 
-        $this->import = $di['importController'];
-        $this->profiles = $di['searcher'];
         $this->profiles->truncate();
     }
 

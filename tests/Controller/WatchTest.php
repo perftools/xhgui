@@ -4,39 +4,29 @@ namespace XHGui\Test\Controller;
 
 use Slim\Environment;
 use Slim\Slim as App;
-use XHGui\Controller\WatchController;
-use XHGui\Searcher\SearcherInterface;
-use XHGui\ServiceContainer;
+use XHGui\Test\LazyContainerProperties;
 use XHGui\Test\TestCase;
 
 class WatchTest extends TestCase
 {
-    /** @var WatchController */
-    private $watches;
-    /** @var App */
-    private $app;
-    /** @var SearcherInterface */
-    private $searcher;
+    use LazyContainerProperties;
 
     public function setUp()
     {
         $this->skipIfPdo('Watchers not implemented');
-
         parent::setUp();
+        $this->setupProperties();
+
         Environment::mock([
            'SCRIPT_NAME' => 'index.php',
            'PATH_INFO' => '/watch',
         ]);
 
-        $di = ServiceContainer::instance();
-        $di['app'] = $this->getMockBuilder(App::class)
+        $this->di['app'] = $this->getMockBuilder(App::class)
             ->setMethods(['redirect', 'render', 'urlFor'])
-            ->setConstructorArgs([$di['config']])
+            ->setConstructorArgs([$this->di['config']])
             ->getMock();
 
-        $this->watches = $di['watchController'];
-        $this->app = $di['app'];
-        $this->searcher = $di['searcher'];
         $this->searcher->truncateWatches();
     }
 

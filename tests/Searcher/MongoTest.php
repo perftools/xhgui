@@ -7,25 +7,21 @@ use XHGui\Options\SearchOptions;
 use XHGui\Profile;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\ServiceContainer;
+use XHGui\Test\LazyContainerProperties;
 use XHGui\Test\TestCase;
 
 class MongoTest extends TestCase
 {
-    /**
-     * @var MongoSearcher
-     */
-    private $mongo;
+    use LazyContainerProperties;
 
     public function setUp()
     {
+        parent::setUp();
+        $this->setupProperties();
+
         $this->skipIfPdo('This is MongoDB test');
-
-        $di = ServiceContainer::instance();
-        $this->mongo = $di['searcher.mongodb'];
-
-        $di[MongoDB::class]->watches->drop();
-
-        $this->loadFixture($di['saver.mongodb']);
+        $this->di[MongoDB::class]->watches->drop();
+        $this->loadFixture($this->di['saver.mongodb']);
     }
 
     public function testCustomQuery()
