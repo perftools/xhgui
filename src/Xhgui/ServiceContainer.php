@@ -55,7 +55,7 @@ class ServiceContainer extends Container
             // Configure Twig view for slim
             $view = new Twig();
 
-            $view->twigTemplateDirs = [dirname(__DIR__) . '/templates'];
+            $view->twigTemplateDirs = [dirname(__DIR__, 2) . '/templates'];
             $view->parserOptions = [
                 'charset' => 'utf-8',
                 'cache' => $cacheDir,
