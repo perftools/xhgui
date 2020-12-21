@@ -8,6 +8,7 @@ use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\View;
+use Slim\Views\Twig;
 use XHGui\Application;
 use XHGui\Controller;
 use XHGui\Saver\SaverInterface;
@@ -41,7 +42,7 @@ trait LazyContainerProperties
     protected $searcher;
     /** @var SaverInterface */
     protected $saver;
-    /** @var View */
+    /** @var Twig */
     protected $view;
     /** @var Controller\WatchController */
     protected $watches;
