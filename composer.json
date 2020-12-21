@@ -26,6 +26,7 @@
         "alcaeus/mongo-php-adapter": "^1.1",
         "pimple/pimple": "^3.0",
         "slim/slim": "^3.12",
+        "slim/twig-view": "^2.5",
         "slim/views": "^0.1.0",
         "symfony/options-resolver": "^3.3",
         "twig/twig": "^1.26"
