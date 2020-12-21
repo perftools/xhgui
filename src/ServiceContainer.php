@@ -17,6 +17,7 @@ use XHGui\Middleware\RenderMiddleware;
 use XHGui\Saver\NormalizingSaver;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\PdoSearcher;
+use XHGui\ServiceProvider\ConfigProvider;
 use XHGui\Twig\TwigExtension;
 
 class ServiceContainer extends Container
@@ -39,6 +40,7 @@ class ServiceContainer extends Container
     public function __construct()
     {
         parent::__construct();
+        $this->register(new ConfigProvider());
         $this->_slimApp();
         $this->_services();
         $this->storageDriverPdo($this);
@@ -97,8 +99,6 @@ class ServiceContainer extends Container
      */
     protected function _services()
     {
-        $this['config'] = Config::all();
-
         $this['searcher'] = static function ($c) {
             $saver = $c['config']['save.handler'];
 
