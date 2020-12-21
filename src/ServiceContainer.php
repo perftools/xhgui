@@ -18,6 +18,7 @@ use XHGui\Saver\NormalizingSaver;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\PdoSearcher;
 use XHGui\ServiceProvider\ConfigProvider;
+use XHGui\ServiceProvider\RouteProvider;
 use XHGui\Twig\TwigExtension;
 
 class ServiceContainer extends Container
@@ -42,6 +43,7 @@ class ServiceContainer extends Container
         parent::__construct();
         $this->register(new ConfigProvider());
         $this->_slimApp();
+        $this->register(new RouteProvider());
         $this->_services();
         $this->storageDriverPdo($this);
         $this->storageDriverMongoDb($this);
