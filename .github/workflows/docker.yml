@@ -13,6 +13,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Docker build
-        run: docker build .
+        run: |
+          docker pull xhgui/xhgui:latest
+          docker build --cache-from=xhgui/xhgui:latest .
 
 # vim:ft=yaml:et:ts=2:sw=2
