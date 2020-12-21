@@ -33,6 +33,7 @@ class ServiceContainer extends Container
     {
         if (empty(static::$_instance)) {
             static::$_instance = new self();
+            static::$_instance->boot();
         }
 
         return static::$_instance;
@@ -43,11 +44,14 @@ class ServiceContainer extends Container
         parent::__construct();
         $this->register(new ConfigProvider());
         $this->_slimApp();
-        $this->register(new RouteProvider());
         $this->_services();
         $this->storageDriverPdo($this);
         $this->storageDriverMongoDb($this);
         $this->_controllers();
+    }
+
+    public function boot() {
+        $this->register(new RouteProvider());
     }
 
     // Create the Slim app.
