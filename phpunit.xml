@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit colors="true" bootstrap="./tests/bootstrap.php">
+    <php>
+        <server name="SYMFONY_PHPUNIT_VERSION" value="6.5" />
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0"/>
+    </php>
     <testsuites>
         <testsuite>
             <directory suffix="Test.php">./tests</directory>
