@@ -10,11 +10,11 @@ class ConfigProvider implements ServiceProviderInterface
 {
     public function register(Container $app)
     {
-        $app['config'] = static function () {
-            Config::load(XHGUI_ROOT_DIR . '/config/config.default.php');
+        $app['config'] = static function ($app) {
+            Config::load($app['app.config_dir'] . '/config.default.php');
 
-            if (file_exists(XHGUI_ROOT_DIR . '/config/config.php')) {
-                Config::load(XHGUI_ROOT_DIR . '/config/config.php');
+            if (file_exists($app['app.config_dir'] . '/config.php')) {
+                Config::load($app['app.config_dir'] . '/config.php');
             }
 
             return Config::all();
