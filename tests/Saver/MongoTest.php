@@ -10,7 +10,7 @@ class MongoTest extends TestCase
 {
     public function testSave()
     {
-        $data = json_decode(file_get_contents(XHGUI_ROOT_DIR . '/tests/fixtures/results.json'), true);
+        $data = json_decode(file_get_contents(__DIR__ . '/../../tests/fixtures/results.json'), true);
 
         $collection = $this->getMockBuilder(MongoCollection::class)
             ->disableOriginalConstructor()

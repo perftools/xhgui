@@ -12,7 +12,7 @@ class ProfileTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $contents = file_get_contents(XHGUI_ROOT_DIR . '/tests/fixtures/results.json');
+        $contents = file_get_contents(dirname(__DIR__) . '/tests/fixtures/results.json');
         $this->fixture = json_decode($contents, true);
     }
 
