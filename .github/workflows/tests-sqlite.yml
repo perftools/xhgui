@@ -24,7 +24,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: pdo, pdo_sqlite
+          extensions: xdebug-2.9.8, pdo, pdo_sqlite
 
       - name: Validate composer.json and composer.lock
         run: composer validate
