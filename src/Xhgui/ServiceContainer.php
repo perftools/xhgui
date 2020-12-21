@@ -161,6 +161,7 @@ class ServiceContainer extends Container
         // NOTE: db.host, db.options, db.driverOptions, db.db are @deprecated and will be removed in the future
         $app['mongodb.database'] = static function ($app) {
             $config = $app['config'];
+            $mongodb = $config['mongodb'] ?? [];
 
             return $config['db.db'] ?? $mongodb['database'] ?? 'xhgui';
         };
