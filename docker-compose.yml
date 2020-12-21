@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   xhgui:
-    image: xhgui/xhgui:0.16.4
+    image: xhgui/xhgui:0.17.0
     volumes:
       - webroot-share:/var/www/xhgui/webroot
       - ./config:/var/www/xhgui/config
