@@ -20,21 +20,6 @@ class Config
     }
 
     /**
-     * Read a config value.
-     *
-     * @param string $name The name of the config variable
-     * @return mixed the value or null
-     */
-    public static function read($name)
-    {
-        if (isset(self::$config[$name])) {
-            return self::$config[$name];
-        }
-
-        return null;
-    }
-
-    /**
      * Get all the configuration options.
      *
      * @return array
@@ -42,24 +27,5 @@ class Config
     public static function all()
     {
         return self::$config;
-    }
-
-    /**
-     * Write a config value.
-     *
-     * @param string $name The name of the config variable
-     * @param mixed $value The value of the config variable
-     */
-    public static function write($name, $value)
-    {
-        self::$config[$name] = $value;
-    }
-
-    /**
-     * Clear out the data stored in the config class.
-     */
-    public static function clear()
-    {
-        self::$config = [];
     }
 }
