@@ -49,7 +49,7 @@ class RunController extends AbstractController
             'sort' => $sort,
             'page' => (int)$request->get('page', SearcherInterface::DEFAULT_PAGE),
             'direction' => $request->get('direction'),
-            'perPage' => (int)$this->app->config('page.limit'),
+            'perPage' => (int)$this->config('page.limit'),
             'conditions' => $search,
             'projection' => true,
         ]));
@@ -76,7 +76,7 @@ class RunController extends AbstractController
             'paging' => $paging,
             'base_url' => 'home',
             'runs' => $result['results'],
-            'date_format' => $this->app->config('date.format'),
+            'date_format' => $this->config('date.format'),
             'search' => $search,
             'has_search' => strlen(implode('', $search)) > 0,
             'title' => $title,
@@ -94,7 +94,7 @@ class RunController extends AbstractController
         // https://github.com/perftools/xhgui/issues/261
         $response->headers->set('Cache-Control', 'public, max-age=60, must-revalidate');
 
-        $detailCount = $this->app->config('detail.count');
+        $detailCount = $this->config('detail.count');
         $result = $this->searcher->get($request->get('id'));
 
         $result->calculateSelf();
@@ -127,7 +127,7 @@ class RunController extends AbstractController
             'wall_time' => $timeChart,
             'memory' => $memoryChart,
             'watches' => $watchedFunctions,
-            'date_format' => $this->app->config('date.format'),
+            'date_format' => $this->config('date.format'),
         ]);
     }
 
@@ -141,7 +141,7 @@ class RunController extends AbstractController
         if (strlen($filterString) > 1 && $filterString !== 'true') {
             $filters = array_map('trim', explode(',', $filterString));
         } else {
-            $filters = $this->app->config('run.view.filter.names');
+            $filters = $this->config('run.view.filter.names');
         }
 
         return $filters;
@@ -204,7 +204,7 @@ class RunController extends AbstractController
             'sort' => $request->get('sort'),
             'direction' => $request->get('direction'),
             'page' => $request->get('page'),
-            'perPage' => $this->app->config('page.limit'),
+            'perPage' => $this->config('page.limit'),
         ];
 
         $search = [];
@@ -246,7 +246,7 @@ class RunController extends AbstractController
             'runs' => $runs['results'],
             'url' => $request->get('url'),
             'chart_data' => $chartData,
-            'date_format' => $this->app->config('date.format'),
+            'date_format' => $this->config('date.format'),
             'search' => array_merge($search, ['url' => $request->get('url')]),
         ]);
     }
@@ -265,7 +265,7 @@ class RunController extends AbstractController
                 'direction' => $request->get('direction'),
                 'sort' => $request->get('sort'),
                 'page' => $request->get('page'),
-                'perPage' => $this->app->config('page.limit'),
+                'perPage' => $this->config('page.limit'),
             ];
             $candidates = $this->searcher->getForUrl(
                 $baseRun->getMeta('simple_url'),
@@ -295,7 +295,7 @@ class RunController extends AbstractController
             'head_run' => $headRun,
             'candidates' => $candidates,
             'url_params' => $request->get(),
-            'date_format' => $this->app->config('date.format'),
+            'date_format' => $this->config('date.format'),
             'comparison' => $comparison,
             'paging' => $paging,
             'search' => [
@@ -354,7 +354,7 @@ class RunController extends AbstractController
         $this->_template = 'runs/callgraph.twig';
         $this->set([
             'profile' => $profile,
-            'date_format' => $this->app->config('date.format'),
+            'date_format' => $this->config('date.format'),
         ]);
     }
 
