@@ -4,17 +4,11 @@ services:
   xhgui:
     image: xhgui/xhgui:0.17.1
     volumes:
-      - webroot-share:/var/www/xhgui/webroot
       - ./config:/var/www/xhgui/config
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     environment:
       - XHGUI_MONGO_HOSTNAME=mongo
       - XHGUI_MONGO_DATABASE=xhprof
-
-  web:
-    image: nginx:1-alpine
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - webroot-share:/var/www/xhgui/webroot
     ports:
       - "8142:80"
 
