@@ -105,7 +105,7 @@ interface SearcherInterface
      *
      * Primarily used in test cases to reset the test db.
      *
-     * @return bool
+     * @return self
      */
     public function truncate();
 
@@ -129,6 +129,8 @@ interface SearcherInterface
 
     /**
      * Truncate the watch collection.
+     *
+     * @return self
      */
     public function truncateWatches();
 

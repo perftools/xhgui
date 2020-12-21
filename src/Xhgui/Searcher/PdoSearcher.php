@@ -147,12 +147,11 @@ class PdoSearcher implements SearcherInterface
         $this->db->deleteById($id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function truncate()
     {
-        return $this->db->deleteAll();
+        $this->db->deleteAll();
+
+        return $this;
     }
 
     /**
@@ -176,6 +175,7 @@ class PdoSearcher implements SearcherInterface
      */
     public function truncateWatches()
     {
+        return $this;
     }
 
     /**

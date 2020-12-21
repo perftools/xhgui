@@ -3,48 +3,23 @@
 namespace XHGui\Test\Controller;
 
 use Slim\Environment;
-use Slim\Slim as App;
-use XHGui\Controller\ImportController;
-use XHGui\Controller\RunController;
 use XHGui\Options\SearchOptions;
-use XHGui\Saver\MongoSaver;
-use XHGui\Searcher\MongoSearcher;
-use XHGui\ServiceContainer;
+use XHGui\Test\LazyContainerProperties;
 use XHGui\Test\TestCase;
 
 class RunTest extends TestCase
 {
-    /** @var RunController */
-    private $runs;
-    /** @var MongoSaver */
-    private $saver;
-    /** @var App */
-    private $app;
-    /** @var MongoSearcher */
-    private $profiles;
-    /** @var ImportController */
-    private $import;
+    use LazyContainerProperties;
 
     public function setUp()
     {
         parent::setUp();
+        $this->setupProperties();
+
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
         ]);
-
-        $di = ServiceContainer::instance();
-        $di['app'] = $this->getMockBuilder(App::class)
-            ->setMethods(['redirect', 'render', 'urlFor'])
-            ->setConstructorArgs([$di['config']])
-            ->getMock();
-
-        $this->import = $di['importController'];
-        $this->runs = $di['runController'];
-        $this->app = $di['app'];
-        $this->profiles = $di['searcher'];
-        $this->profiles->truncate();
-        $this->saver = $di['saver'];
     }
 
     public function testIndexEmpty()
@@ -160,6 +135,7 @@ class RunTest extends TestCase
 
     public function testCallgraph()
     {
+        $this->searcher->truncate();
         $this->loadFixture($this->saver);
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
@@ -176,6 +152,7 @@ class RunTest extends TestCase
 
     public function testCallgraphData()
     {
+        $this->searcher->truncate();
         $this->loadFixture($this->saver);
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
@@ -193,6 +170,7 @@ class RunTest extends TestCase
     public function testDeleteSubmit()
     {
         $this->skipIfPdo('Undefined index: page');
+        $searcher = $this->searcher->truncate();
         $this->loadFixture($this->saver);
 
         Environment::mock([
@@ -211,18 +189,19 @@ class RunTest extends TestCase
         $this->app->expects($this->once())
             ->method('redirect');
 
-        $result = $this->profiles->getAll(new SearchOptions());
+        $result = $searcher->getAll(new SearchOptions());
         $this->assertCount(5, $result['results']);
 
         $this->runs->deleteSubmit($this->app->request());
 
-        $result = $this->profiles->getAll(new SearchOptions());
+        $result = $searcher->getAll(new SearchOptions());
         $this->assertCount(4, $result['results']);
     }
 
     public function testDeleteAllSubmit()
     {
         $this->skipIfPdo('Undefined index: page');
+        $this->searcher->truncate();
         $this->loadFixture($this->saver);
 
         Environment::mock([
@@ -237,17 +216,18 @@ class RunTest extends TestCase
         $this->app->expects($this->once())
           ->method('redirect');
 
-        $result = $this->profiles->getAll(new SearchOptions());
+        $result = $this->searcher->getAll(new SearchOptions());
         $this->assertCount(5, $result['results']);
 
         $this->runs->deleteAllSubmit();
 
-        $result = $this->profiles->getAll(new SearchOptions());
+        $result = $this->searcher->getAll(new SearchOptions());
         $this->assertCount(0, $result['results']);
     }
 
     public function testFilterCustomMethods()
     {
+        $this->searcher->truncate();
         $this->loadFixture($this->saver);
 
         Environment::mock([
@@ -264,6 +244,7 @@ class RunTest extends TestCase
 
     public function testFilterCustomMethod()
     {
+        $this->searcher->truncate();
         $this->loadFixture($this->saver);
 
         Environment::mock([
@@ -280,6 +261,7 @@ class RunTest extends TestCase
 
     public function testFilterMethods()
     {
+        $this->searcher->truncate();
         $this->loadFixture($this->saver);
 
         Environment::mock([

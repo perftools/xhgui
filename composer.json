@@ -32,6 +32,7 @@
     },
     "require-dev": {
         "glen/php-cs-fixer-config": "^0.3.0",
+        "ocramius/lazy-property": "^1.0",
         "phpunit/phpunit": "^5.7.27 | ^6.5.13"
     },
     "scripts": {

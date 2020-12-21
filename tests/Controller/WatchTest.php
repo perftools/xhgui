@@ -3,45 +3,28 @@
 namespace XHGui\Test\Controller;
 
 use Slim\Environment;
-use Slim\Slim as App;
-use XHGui\Controller\WatchController;
-use XHGui\Searcher\SearcherInterface;
-use XHGui\ServiceContainer;
+use XHGui\Test\LazyContainerProperties;
 use XHGui\Test\TestCase;
 
 class WatchTest extends TestCase
 {
-    /** @var WatchController */
-    private $watches;
-    /** @var App */
-    private $app;
-    /** @var SearcherInterface */
-    private $searcher;
+    use LazyContainerProperties;
 
     public function setUp()
     {
         $this->skipIfPdo('Watchers not implemented');
-
         parent::setUp();
+        $this->setupProperties();
+
         Environment::mock([
            'SCRIPT_NAME' => 'index.php',
            'PATH_INFO' => '/watch',
         ]);
-
-        $di = ServiceContainer::instance();
-        $di['app'] = $this->getMockBuilder(App::class)
-            ->setMethods(['redirect', 'render', 'urlFor'])
-            ->setConstructorArgs([$di['config']])
-            ->getMock();
-
-        $this->watches = $di['watchController'];
-        $this->app = $di['app'];
-        $this->searcher = $di['searcher'];
-        $this->searcher->truncateWatches();
     }
 
     public function testGet()
     {
+        $this->searcher->truncateWatches();
         $this->watches->get();
         $result = $this->watches->templateVars();
         $this->assertEquals([], $result['watched']);
@@ -49,6 +32,7 @@ class WatchTest extends TestCase
 
     public function testPostAdd()
     {
+        $this->searcher->truncateWatches();
         $_POST = [
             'watch' => [
                 ['name' => 'strlen'],
@@ -72,8 +56,9 @@ class WatchTest extends TestCase
 
     public function testPostModify()
     {
-        $this->searcher->saveWatch(['name' => 'strlen']);
-        $saved = $this->searcher->getAllWatches();
+        $searcher = $this->searcher->truncateWatches();
+        $searcher->saveWatch(['name' => 'strlen']);
+        $saved = $searcher->getAllWatches();
 
         $_POST = [
             'watch' => [
@@ -81,7 +66,7 @@ class WatchTest extends TestCase
             ],
         ];
         $this->watches->post($this->app->request());
-        $result = $this->searcher->getAllWatches();
+        $result = $searcher->getAllWatches();
 
         $this->assertCount(1, $result);
         $this->assertEquals('strpos', $result[0]['name']);
@@ -89,6 +74,7 @@ class WatchTest extends TestCase
 
     public function testPostDelete()
     {
+        $this->searcher->truncateWatches();
         $this->searcher->saveWatch(['name' => 'strlen']);
         $saved = $this->searcher->getAllWatches();
 
