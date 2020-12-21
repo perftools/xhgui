@@ -7,6 +7,9 @@ jobs:
   tests:
     name: Build Docker Image
     runs-on: ubuntu-20.04
+    env:
+      COMPOSE_DOCKER_CLI_BUILD: "1"
+      DOCKER_BUILDKIT: "1"
 
     steps:
       - name: Checkout Code
