@@ -5,7 +5,7 @@ namespace XHGui\Test;
 use LazyProperty\LazyPropertiesTrait;
 use MongoDB;
 use Slim\App;
-use Slim\View;
+use Slim\Views\Twig;
 use XHGui\Application;
 use XHGui\Controller;
 use XHGui\Saver\SaverInterface;
@@ -35,7 +35,7 @@ trait LazyContainerProperties
     protected $searcher;
     /** @var SaverInterface */
     protected $saver;
-    /** @var View */
+    /** @var Twig */
     protected $view;
     /** @var Controller\WatchController */
     protected $watches;

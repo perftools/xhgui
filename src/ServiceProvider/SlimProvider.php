@@ -4,7 +4,9 @@ namespace XHGui\ServiceProvider;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use Slim\Slim as App;
+use Slim\App;
+use Slim\Http\Environment;
+use Slim\Http\Uri;
 use Slim\Views\Twig;
 use XHGui\Twig\TwigExtension;
 
@@ -15,25 +17,18 @@ class SlimProvider implements ServiceProviderInterface
      */
     public function register(Container $c): void
     {
-        $c['view'] = static function ($c) {
-            // Configure Twig view for slim
-            $view = new Twig();
+        $c['view'] = static function ($app) {
+            $view = new Twig($app['app.template_dir'], [
+                'cache' => $app['app.cache_dir'],
+            ]);
 
-            $view->twigTemplateDirs = [
-                $c['app.template_dir'],
-            ];
-            $view->parserOptions = [
-                'charset' => 'utf-8',
-                'cache' => $c['app.cache_dir'],
-                'auto_reload' => true,
-                'strict_variables' => false,
-                'autoescape' => 'html',
-            ];
+            // Instantiate and add Slim specific extension
+            $router = $app->get('router');
+            $uri = Uri::createFromEnvironment(new Environment($_SERVER));
+            $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
 
             // set global variables to templates
-            $view->appendData([
-                'date_format' => $c['config']['date.format'],
-            ]);
+            $view['date_format'] = $app['config']['date.format'];
 
             return $view;
         };
