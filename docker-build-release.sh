@@ -4,6 +4,7 @@ set -eu
 set -x
 
 cleanup_vendor() {
+	rm -rf vendor/bin/.phpunit
 	rm -rf vendor/twig/twig/ext/twig
 	rm -rf vendor/pimple/pimple/src/Pimple/Tests
 	rm -rf vendor/twig/twig/src/Test
