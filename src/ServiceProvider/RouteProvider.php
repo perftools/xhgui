@@ -176,7 +176,7 @@ class RouteProvider implements ServiceProviderInterface
 
         $app->get('/custom/help', static function () use ($di, $app) {
             /** @var Controller\CustomController $controller */
-            $controller = $app->controller = $di['customController'];
+            $controller = $di['customController'];
             $request = $app->request();
 
             $controller->help($request);

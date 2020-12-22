@@ -33,8 +33,7 @@ class CustomController extends AbstractController
         } else {
             $res = $this->searcher->latest();
         }
-        $this->_template = 'custom/help.twig';
-        $this->set([
+        $this->render('custom/help.twig', [
             'data' => print_r($res->toArray(), 1),
         ]);
     }
