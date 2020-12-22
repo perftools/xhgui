@@ -3,6 +3,7 @@
 namespace XHGui\Twig;
 
 use Slim\App;
+use Slim\Http\Uri;
 use Slim\Router;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -16,12 +17,14 @@ class TwigExtension extends AbstractExtension
     private $router;
     /** @var string */
     private $pathPrefix;
+    /** @var Uri */
+    private $uri;
 
-    public function __construct(App $app)
+    public function __construct(Router $router, Uri $uri)
     {
-        $this->_app = $app;
-        $this->router = $app->router();
-        $this->pathPrefix = $app->config('path.prefix');
+        $this->router = $router;
+        $this->uri = $uri;
+        $this->pathPrefix = '/'; // null;//$app->config('path.prefix');
     }
 
     public function getFunctions(): array
