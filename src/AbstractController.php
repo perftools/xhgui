@@ -2,8 +2,9 @@
 
 namespace XHGui;
 
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Slim\App;
-use Slim\Http\Response;
 use Slim\Views\Twig;
 
 abstract class AbstractController
@@ -20,14 +21,14 @@ abstract class AbstractController
 
     protected function render(string $template, array $data = []): void
     {
-        /** @var Response $response */
-        $response = $this->app->response;
+        /** @var ContainerInterface $container */
+        $container = $this->app->getContainer();
+        /** @var ResponseInterface $response */
+        $response = $container->get('response');
         /** @var Twig $renderer */
-        $renderer = $this->app->view;
+        $renderer = $container->get('view');
 
-        $renderer->appendData($data);
-        $body = $renderer->fetch($template);
-        $response->write($body);
+        $renderer->render($response, $template, $data);
     }
 
     protected function config(string $key)
