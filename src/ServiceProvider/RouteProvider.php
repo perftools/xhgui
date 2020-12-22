@@ -40,7 +40,7 @@ class RouteProvider implements ServiceProviderInterface
         // Profile Runs routes
         $app->get('/', static function () use ($di, $app) {
             /** @var Controller\RunController $controller */
-            $controller = $app->controller = $di['runController'];
+            $controller = $di['runController'];
             $request = $app->request();
             $response = $app->response();
 

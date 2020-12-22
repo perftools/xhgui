@@ -71,14 +71,13 @@ class RunController extends AbstractController
             'direction' => $result['direction'],
         ];
 
-        $this->_template = 'runs/list.twig';
-        $this->set([
+        $this->render('runs/list.twig', [
             'paging' => $paging,
             'base_url' => 'home',
             'runs' => $result['results'],
             'date_format' => $this->config('date.format'),
             'search' => $search,
-            'has_search' => strlen(implode('', $search)) > 0,
+            'has_search' => implode('', $search) !== '',
             'title' => $title,
         ]);
     }

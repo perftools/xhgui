@@ -25,7 +25,7 @@ class RunTest extends TestCase
     public function testIndexEmpty()
     {
         $this->runs->index($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
 
         $this->assertEquals('Recent runs', $result['title']);
         $this->assertFalse($result['has_search'], 'No search being done.');
@@ -47,7 +47,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->index($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
         $this->assertEquals('Longest wall time', $result['title']);
         $this->assertEquals('wt', $result['paging']['sort']);
     }
@@ -61,7 +61,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->index($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
         $this->assertEquals('Most CPU time', $result['title']);
         $this->assertEquals('cpu', $result['paging']['sort']);
         $this->assertEquals('desc', $result['paging']['direction']);
@@ -76,7 +76,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->index($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
         $this->assertEquals('Highest memory use', $result['title']);
         $this->assertEquals('mu', $result['paging']['sort']);
         $this->assertEquals('asc', $result['paging']['direction']);
