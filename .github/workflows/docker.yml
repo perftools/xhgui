@@ -1,0 +1,23 @@
+name: Docker Image
+
+on:
+  pull_request:
+
+jobs:
+  tests:
+    name: Build Docker Image
+    runs-on: ubuntu-20.04
+    env:
+      COMPOSE_DOCKER_CLI_BUILD: "1"
+      DOCKER_BUILDKIT: "1"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Docker build
+        run: |
+          docker pull xhgui/xhgui:latest
+          docker build --cache-from=xhgui/xhgui:latest .
+
+# vim:ft=yaml:et:ts=2:sw=2
