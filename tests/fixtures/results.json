@@ -6,7 +6,7 @@
             "simple_url": "/tasks",
             "get": [],
             "env": [],
-            "SERVER": {"REQUEST_TIME": 1358787612},
+            "SERVER": {"REQUEST_TIME": 1358787612, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358787612, "usec": 123456}
         },
         "profile": {
@@ -33,7 +33,7 @@
             "simple_url": "/tasks",
             "get": [],
             "env": [],
-            "SERVER": {"REQUEST_TIME": 1358701212},
+            "SERVER": {"REQUEST_TIME": 1358701212, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358701212, "usec": 123456}
         },
         "profile": {
@@ -95,7 +95,7 @@
             "simple_url": "/tasks",
             "get": [],
             "env": [],
-            "SERVER": {"REQUEST_TIME": 1358614812},
+            "SERVER": {"REQUEST_TIME": 1358614812, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358614812, "usec": 123456}
         },
         "profile": {
@@ -150,7 +150,7 @@
             "simple_url": "/",
             "get": [],
             "env": [],
-            "SERVER": {"REQUEST_TIME": 1358528412},
+            "SERVER": {"REQUEST_TIME": 1358528412, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358528412, "usec": 123456}
         },
         "profile": {
@@ -184,7 +184,7 @@
             "simple_url": "/",
             "get": [],
             "env": [],
-            "SERVER": {"REQUEST_TIME": 1358614812},
+            "SERVER": {"REQUEST_TIME": 1358614812, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358614812, "usec": 123456}
         },
         "profile": {
