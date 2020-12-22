@@ -36,7 +36,8 @@ abstract class AbstractController
         return $this->_templateVars;
     }
 
-    public function render()
+    /** @see RenderMiddleware */
+    public function renderView()
     {
         // We want to render the specified Twig template to the output buffer.
         // The simplest way to do that is Slim::render, but that is not allowed

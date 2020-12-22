@@ -15,7 +15,8 @@ class RenderMiddleware extends Middleware
 
         // Render the template.
         if (isset($app->controller)) {
-            $app->controller->render();
+            /** @see AbstractController */
+            $app->controller->renderView();
         }
     }
 }
