@@ -94,7 +94,7 @@ class RouteProvider implements ServiceProviderInterface
 
         $app->get('/run/compare', static function () use ($di, $app) {
             /** @var Controller\RunController $controller */
-            $controller = $app->controller = $di['runController'];
+            $controller = $di['runController'];
             $request = $app->request();
 
             $controller->compare($request);

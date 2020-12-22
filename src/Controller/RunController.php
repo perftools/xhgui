@@ -284,8 +284,7 @@ class RunController extends AbstractController
             $comparison = $baseRun->compare($headRun);
         }
 
-        $this->_template = 'runs/compare.twig';
-        $this->set([
+        $this->render('runs/compare.twig', [
             'base_url' => 'run.compare',
             'base_run' => $baseRun,
             'head_run' => $headRun,
