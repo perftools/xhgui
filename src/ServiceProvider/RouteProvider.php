@@ -86,7 +86,7 @@ class RouteProvider implements ServiceProviderInterface
 
         $app->get('/url/view', static function () use ($di, $app) {
             /** @var Controller\RunController $controller */
-            $controller = $app->controller = $di['runController'];
+            $controller = $di['runController'];
             $request = $app->request();
 
             $controller->url($request);

@@ -236,8 +236,7 @@ class RunController extends AbstractController
             'direction' => $runs['direction'],
         ];
 
-        $this->_template = 'runs/url.twig';
-        $this->set([
+        $this->render('runs/url.twig', [
             'paging' => $paging,
             'base_url' => 'url.view',
             'runs' => $runs['results'],
