@@ -27,9 +27,6 @@ class RouteProvider implements ServiceProviderInterface
                 new TwigExtension($app),
             ];
 
-            // Remove the controller so we don't render it.
-            unset($app->controller);
-
             $app->view($view);
             $app->render('error/view.twig', [
                 'message' => $e->getMessage(),
