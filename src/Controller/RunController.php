@@ -155,8 +155,7 @@ class RunController extends AbstractController
         // Get details
         $result = $this->searcher->get($id);
 
-        $this->_template = 'runs/delete-form.twig';
-        $this->set([
+        $this->render('runs/delete-form.twig', [
             'run_id' => $id,
             'result' => $result,
         ]);
