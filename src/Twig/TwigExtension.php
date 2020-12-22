@@ -2,7 +2,7 @@
 
 namespace XHGui\Twig;
 
-use Slim\App;
+use Slim\Http\Request;
 use Slim\Router;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -10,18 +10,18 @@ use Twig\TwigFunction;
 
 class TwigExtension extends AbstractExtension
 {
-    /** @var App */
-    protected $_app;
     /** @var Router */
     private $router;
-    /** @var string */
+    /** @var string|null */
     private $pathPrefix;
+    /** @var Request */
+    private $request;
 
-    public function __construct(App $app)
+    public function __construct(Router $router, Request $request, ?string $pathPrefix)
     {
-        $this->_app = $app;
-        $this->router = $app->router();
-        $this->pathPrefix = $app->config('path.prefix');
+        $this->router = $router;
+        $this->request = $request;
+        $this->pathPrefix = $pathPrefix;
     }
 
     public function getFunctions(): array
@@ -75,8 +75,8 @@ class TwigExtension extends AbstractExtension
             $query = '?' . http_build_query($queryargs);
         }
 
-        // this is copy of \Slim\Slim::urlFor() to mix path prefix in
-        // \Slim\Slim::urlFor
+        // this is copy of \Slim\Slim::urlFor()
+        // to mix path prefix in \Slim\Slim::urlFor
 
         return rtrim($this->pathPrefix(), '/') . $this->router->urlFor($name) . $query;
     }
@@ -136,8 +136,7 @@ class TwigExtension extends AbstractExtension
             return $this->pathPrefix;
         }
 
-        $request = $this->_app->request();
-        $rootUri = $request->getRootUri();
+        $rootUri = $this->request->getUri()->getBasePath();
 
         // Get URL part prepending index.php
         $indexPos = strpos($rootUri, 'index.php');
