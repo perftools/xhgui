@@ -330,8 +330,7 @@ class RunController extends AbstractController
         $profile->calculateSelf();
         list($parents, $current, $children) = $profile->getRelatives($symbol, $metric, $threshold);
 
-        $this->_template = 'runs/symbol-short.twig';
-        $this->set([
+        $this->render('runs/symbol-short.twig', [
             'symbol' => $symbol,
             'id' => $id,
             'main' => $profile->get('main()'),
