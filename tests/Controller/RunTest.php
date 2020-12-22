@@ -96,7 +96,7 @@ class RunTest extends TestCase
 
         $this->runs->url($this->app->request(), $this->app->response());
 
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
         $this->assertEquals('url.view', $result['base_url']);
         $this->assertEquals('/tasks', $result['url']);
         $this->assertArrayHasKey('chart_data', $result);
@@ -144,7 +144,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->callgraph($this->app->request());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
         $this->assertArrayHasKey('profile', $result);
         $this->assertArrayHasKey('date_format', $result);
         $this->assertArrayNotHasKey('callgraph', $result);

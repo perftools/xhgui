@@ -344,8 +344,7 @@ class RunController extends AbstractController
     {
         $profile = $this->searcher->get($request->get('id'));
 
-        $this->_template = 'runs/callgraph.twig';
-        $this->set([
+        $this->render('runs/callgraph.twig', [
             'profile' => $profile,
             'date_format' => $this->config('date.format'),
         ]);
