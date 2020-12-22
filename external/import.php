@@ -3,9 +3,7 @@
 use XHGui\Saver\SaverInterface;
 use XHGui\ServiceContainer;
 
-if (!defined('XHGUI_ROOT_DIR')) {
-    require dirname(__DIR__) . '/src/bootstrap.php';
-}
+require __DIR__ . '/../vendor/autoload.php';
 
 $options = getopt('f:');
 

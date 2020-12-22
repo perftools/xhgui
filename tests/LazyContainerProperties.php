@@ -49,11 +49,13 @@ trait LazyContainerProperties
 
     protected function getDi()
     {
-        $di = ServiceContainer::instance();
-        $di['app'] = $this->getMockBuilder(App::class)
+        $di = new ServiceContainer();
+        $app = $this->getMockBuilder(App::class)
             ->setMethods(['redirect', 'render', 'urlFor'])
             ->setConstructorArgs([$di['config']])
             ->getMock();
+        $di['app'] = $app;
+        $di->boot();
 
         return $di;
     }

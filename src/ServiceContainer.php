@@ -17,6 +17,8 @@ use XHGui\Middleware\RenderMiddleware;
 use XHGui\Saver\NormalizingSaver;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\PdoSearcher;
+use XHGui\ServiceProvider\ConfigProvider;
+use XHGui\ServiceProvider\RouteProvider;
 use XHGui\Twig\TwigExtension;
 
 class ServiceContainer extends Container
@@ -31,6 +33,7 @@ class ServiceContainer extends Container
     {
         if (empty(static::$_instance)) {
             static::$_instance = new self();
+            static::$_instance->boot();
         }
 
         return static::$_instance;
@@ -39,6 +42,8 @@ class ServiceContainer extends Container
     public function __construct()
     {
         parent::__construct();
+        $this->setupPaths($this);
+        $this->register(new ConfigProvider());
         $this->_slimApp();
         $this->_services();
         $this->storageDriverPdo($this);
@@ -46,19 +51,34 @@ class ServiceContainer extends Container
         $this->_controllers();
     }
 
+    public function boot()
+    {
+        $this->register(new RouteProvider());
+    }
+
+    private function setupPaths(self $app)
+    {
+        $app['app.dir'] = dirname(__DIR__);
+        $app['app.template_dir'] = dirname(__DIR__) . '/templates';
+        $app['app.config_dir'] = dirname(__DIR__) . '/config';
+        $app['app.cache_dir'] = static function ($c) {
+            return $c['config']['cache'] ?? dirname(__DIR__) . '/cache';
+        };
+    }
+
     // Create the Slim app.
     protected function _slimApp()
     {
         $this['view'] = static function ($c) {
-            $cacheDir = $c['config']['cache'] ?? XHGUI_ROOT_DIR . '/cache';
-
             // Configure Twig view for slim
             $view = new Twig();
 
-            $view->twigTemplateDirs = [dirname(__DIR__) . '/templates'];
+            $view->twigTemplateDirs = [
+                $c['app.template_dir'],
+            ];
             $view->parserOptions = [
                 'charset' => 'utf-8',
-                'cache' => $cacheDir,
+                'cache' => $c['app.cache_dir'],
                 'auto_reload' => true,
                 'strict_variables' => false,
                 'autoescape' => true,
@@ -97,8 +117,6 @@ class ServiceContainer extends Container
      */
     protected function _services()
     {
-        $this['config'] = Config::all();
-
         $this['searcher'] = static function ($c) {
             $saver = $c['config']['save.handler'];
 

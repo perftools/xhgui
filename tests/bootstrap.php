@@ -5,7 +5,7 @@
 
 use XHGui\ServiceContainer;
 
-require dirname(__DIR__) . '/src/bootstrap.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $di = ServiceContainer::instance();
 

@@ -1,13 +1,11 @@
 <?php
 
+use Slim\Slim as App;
 use XHGui\ServiceContainer;
 
-require dirname(__DIR__) . '/src/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-$di = new ServiceContainer();
-
+$di = ServiceContainer::instance();
+/** @var App $app */
 $app = $di['app'];
-
-require XHGUI_ROOT_DIR . '/src/routes.php';
-
 $app->run();
