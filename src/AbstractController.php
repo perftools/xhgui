@@ -32,6 +32,6 @@ abstract class AbstractController
 
     protected function config(string $key)
     {
-        return $this->app->config($key);
+        return $this->app->getContainer()->get($key);
     }
 }
