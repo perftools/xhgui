@@ -119,8 +119,7 @@ class RunController extends AbstractController
             $profile = $result->sort('ewt', $result->getProfile());
         }
 
-        $this->_template = 'runs/view.twig';
-        $this->set([
+        $this->render('runs/view.twig', [
             'profile' => $profile,
             'result' => $result,
             'wall_time' => $timeChart,

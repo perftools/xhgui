@@ -237,7 +237,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->view($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
 
         $this->assertCount(1, $result['profile']);
     }
@@ -254,7 +254,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->view($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
 
         $this->assertCount(2, $result['profile']);
     }
@@ -271,7 +271,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->view($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
 
         $this->assertCount(2, $result['profile']);
     }
