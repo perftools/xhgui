@@ -81,7 +81,7 @@ class ServiceContainer extends Container
                 'cache' => $c['app.cache_dir'],
                 'auto_reload' => true,
                 'strict_variables' => false,
-                'autoescape' => true,
+                'autoescape' => 'html',
             ];
 
             return $view;
