@@ -153,9 +153,9 @@ class RouteProvider implements ServiceProviderInterface
         })->setName('run.import');
 
         // Watch function routes.
-        $app->get('/watch', static function () use ($di, $app) {
+        $app->get('/watch', static function () use ($di) {
             /** @var Controller\WatchController $controller */
-            $controller = $app->controller = $di['watchController'];
+            $controller = $di['watchController'];
             $controller->get();
         })->setName('watch.list');
 

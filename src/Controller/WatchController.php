@@ -24,8 +24,7 @@ class WatchController extends AbstractController
     {
         $watched = $this->searcher->getAllWatches();
 
-        $this->_template = 'watch/list.twig';
-        $this->set(['watched' => $watched]);
+        $this->render('watch/list.twig', ['watched' => $watched]);
     }
 
     public function post(Request $request)
