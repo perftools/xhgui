@@ -102,7 +102,7 @@ class RouteProvider implements ServiceProviderInterface
 
         $app->get('/run/symbol', static function () use ($di, $app) {
             /** @var Controller\RunController $controller */
-            $controller = $app->controller = $di['runController'];
+            $controller = $di['runController'];
             $request = $app->request();
 
             $controller->symbol($request);
