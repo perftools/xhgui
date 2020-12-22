@@ -7,6 +7,7 @@ cleanup_vendor() {
 	rm -rf vendor/bin/.phpunit
 	rm -rf vendor/twig/twig/ext/twig
 	rm -rf vendor/pimple/pimple/src/Pimple/Tests
+	rm -rf vendor/pimple/pimple/ext
 	rm -rf vendor/twig/twig/src/Test
 	find vendor -name doc -print0 | sort -zr | xargs -0 -r rm -r
 	find vendor -name docs -print0 | sort -zr | xargs -0 -r rm -r
