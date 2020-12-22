@@ -26,6 +26,7 @@ RUN strip *.so && chmod a+rx *.so
 FROM base AS php
 RUN set -x \
 	&& apk add --no-cache \
+		nginx \
 		php-cli \
 		php-ctype \
 		php-fpm \
@@ -35,14 +36,12 @@ RUN set -x \
 		php-pdo_mysql \
 		php-pdo_pgsql \
 		php-pdo_sqlite \
-	&& ln -s /usr/sbin/php-fpm7 /usr/sbin/php-fpm \
-	# Use www-data uid/gid from alpine also present in docker php images
-	&& addgroup -g 82 -S www-data \
+	# Use www-data uid from alpine also present in docker php images
 	&& adduser -u 82 -D -S -G www-data www-data \
 	# Tweak php-fpm config
 	&& sed -i \
 		-e "s#^;daemonize\s*=\s*yes#daemonize = no#" \
-		-e "s#^error_log\s*=.*#error_log = /var/log/php/fpm.error.log#" \
+		-e "s#^;error_log\s*=.*#error_log = /var/log/php/fpm.error.log#" \
 		$PHP_INI_DIR/php-fpm.conf \
 	&& POOL_CONFIG=$PHP_INI_DIR/php-fpm.d/www.conf \
 	&& sed -i \
@@ -50,13 +49,18 @@ RUN set -x \
 		-e "s#^listen\.allowed_clients\s*=.*#;&#" \
 		-e "s#^;access\.log\s*=.*#access.log = /var/log/php/fpm.access.log#" \
 		-e "s#^;clear_env\s*=.*#clear_env = no#" \
-		-e "s#^user = nobody\s*=.*#user = www-data#" \
-		-e "s#^group = nobody\s*=.*#group = www-data#" \
+		-e "s#^user = nobody\s*#user = www-data#" \
+		-e "s#^group = nobody\s*#group = www-data#" \
 		-e "s#^;catch_workers_output\s*=.*#catch_workers_output = yes#" \
 		$POOL_CONFIG \
+	&& rm -rf /var/log/php7 \
+	&& ln -s php /var/log/php7 \
 	&& install -d -o www-data -g www-data /var/log/php \
-	&& ln -sf /proc/self/fd/2 /var/log/php/fpm.access.log \
-	&& ln -sf /proc/self/fd/2 /var/log/php/fpm.error.log \
+	&& ln -s php-fpm7 /usr/sbin/php-fpm \
+	&& ln -s /dev/stderr /var/log/php/fpm.access.log \
+	&& ln -s /dev/stderr /var/log/php/fpm.error.log \
+	&& ln -s /dev/stdout /var/log/nginx/access.log \
+	&& ln -s /dev/stderr /var/log/nginx/error.log \
 	&& php -m
 
 # prepare sources
@@ -104,8 +108,9 @@ ARG APPDIR=/var/www/xhgui
 ARG WEBROOT=$APPDIR/webroot
 WORKDIR $APPDIR
 
-EXPOSE 9000
-CMD ["php-fpm", "-F"]
+EXPOSE 80
+CMD ["sh", "-c", "nginx && exec php-fpm"]
+VOLUME "/run/nginx"
 
 COPY --from=stage-ext-mongodb /build /
 COPY --from=build --chown=www-data /cache ./cache/
