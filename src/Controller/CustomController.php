@@ -60,7 +60,7 @@ class CustomController extends AbstractController
             return $response->body($json);
         }
 
-        $perPage = $this->app->config('page.limit');
+        $perPage = $this->config('page.limit');
 
         $res = $this->searcher->query($query, $perPage, $retrieve);
 

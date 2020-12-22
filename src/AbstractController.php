@@ -52,4 +52,9 @@ abstract class AbstractController
         $body = $this->app->view->fetch($this->_template);
         $this->app->response->write($body);
     }
+
+    protected function config(string $key)
+    {
+        return $this->app->config($key);
+    }
 }
