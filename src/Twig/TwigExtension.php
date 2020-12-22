@@ -4,11 +4,11 @@ namespace XHGui\Twig;
 
 use Slim\Router;
 use Slim\Slim as App;
-use Twig_Extension;
-use Twig_Filter_Method;
-use Twig_Function_Method;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
-class TwigExtension extends Twig_Extension
+class TwigExtension extends AbstractExtension
 {
     /** @var App */
     protected $_app;
@@ -24,34 +24,35 @@ class TwigExtension extends Twig_Extension
         $this->pathPrefix = $app->config('path.prefix');
     }
 
-    public function getName()
+    public function getFunctions(): array
     {
-        return 'xhgui';
-    }
+        $options = [
+            'is_safe' => ['html'],
+        ];
 
-    public function getFunctions()
-    {
         return [
-            'url' => new Twig_Function_Method($this, 'url'),
-            'static' => new Twig_Function_Method($this, 'staticUrl'),
-            'percent' => new Twig_Function_Method($this, 'makePercent', [
-                'is_safe' => ['html'],
-            ]),
+            new TwigFunction('url', [$this, 'url']),
+            new TwigFunction('static', [$this, 'staticUrl']),
+            new TwigFunction('percent', [$this, 'makePercent'], $options),
         ];
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
+        $options = [
+            'is_safe' => ['html'],
+        ];
+
         return [
-            'as_bytes' => new Twig_Filter_Method($this, 'formatBytes', ['is_safe' => ['html']]),
-            'as_time' => new Twig_Filter_Method($this, 'formatTime', ['is_safe' => ['html']]),
-            'as_diff' => new Twig_Filter_Method($this, 'formatDiff', ['is_safe' => ['html']]),
-            'as_percent' => new Twig_Filter_Method($this, 'formatPercent', ['is_safe' => ['html']]),
-            'truncate' => new Twig_Filter_Method($this, 'truncate'),
+            new TwigFilter('as_bytes', [$this, 'formatBytes'], $options),
+            new TwigFilter('as_time', [$this, 'formatTime'], $options),
+            new TwigFilter('as_diff', [$this, 'formatDiff'], $options),
+            new TwigFilter('as_percent', [$this, 'formatPercent'], $options),
+            new TwigFilter('truncate', [$this, 'truncate']),
         ];
     }
 
-    public function truncate($input, $length = 50)
+    public function truncate(string $input, int $length = 50): string
     {
         if (strlen($input) < $length) {
             return $input;
@@ -64,13 +65,13 @@ class TwigExtension extends Twig_Extension
      * Get a URL for xhgui.
      *
      * @param string $name The file/path you want a link to
-     * @param array $queryargs additional querystring arguments
+     * @param array|null $queryargs additional querystring arguments
      * @return string url
      */
-    public function url($name, $queryargs = [])
+    public function url(string $name, $queryargs = []): string
     {
         $query = '';
-        if (!empty($queryargs)) {
+        if ($queryargs) {
             $query = '?' . http_build_query($queryargs);
         }
 
@@ -86,24 +87,24 @@ class TwigExtension extends Twig_Extension
      * @param string $path The file/path you want a link to
      * @return string url
      */
-    public function staticUrl($path)
+    public function staticUrl(string $path): string
     {
         $rootUri = $this->pathPrefix();
 
         return rtrim($rootUri, '/') . '/' . $path;
     }
 
-    public function formatBytes($value)
+    public function formatBytes($value): string
     {
         return number_format((float)$value) . '&nbsp;<span class="units">bytes</span>';
     }
 
-    public function formatTime($value)
+    public function formatTime($value): string
     {
         return number_format((float)$value) . '&nbsp;<span class="units">µs</span>';
     }
 
-    public function formatDiff($value)
+    public function formatDiff($value): string
     {
         $class = $value > 0 ? 'diff-up' : 'diff-down';
         if ($value == 0) {
@@ -117,22 +118,19 @@ class TwigExtension extends Twig_Extension
         );
     }
 
-    public function makePercent($value, $total)
+    public function makePercent($value, $total): string
     {
         $value = (false === empty($total)) ? $value / $total : 0;
 
         return $this->formatPercent($value);
     }
 
-    public function formatPercent($value)
+    public function formatPercent($value): string
     {
         return number_format((float)$value * 100, 0) . ' <span class="units">%</span>';
     }
 
-    /**
-     * @return string
-     */
-    private function pathPrefix()
+    private function pathPrefix(): string
     {
         if ($this->pathPrefix !== null) {
             return $this->pathPrefix;
