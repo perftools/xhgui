@@ -168,9 +168,9 @@ class RouteProvider implements ServiceProviderInterface
         })->setName('watch.save');
 
         // Custom report routes.
-        $app->get('/custom', static function () use ($di, $app) {
+        $app->get('/custom', static function () use ($di) {
             /** @var Controller\CustomController $controller */
-            $controller = $app->controller = $di['customController'];
+            $controller = $di['customController'];
             $controller->get();
         })->setName('custom.view');
 

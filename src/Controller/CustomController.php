@@ -23,7 +23,7 @@ class CustomController extends AbstractController
 
     public function get()
     {
-        $this->_template = 'custom/create.twig';
+        $this->render('custom/create.twig');
     }
 
     public function help(Request $request)
