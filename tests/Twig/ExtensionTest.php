@@ -35,10 +35,7 @@ class ExtensionTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /**
-     * @return array
-     */
-    public function makePercentProvider()
+    public function makePercentProvider(): array
     {
         return [
             [
@@ -68,7 +65,7 @@ class ExtensionTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public static function urlProvider()
+    public static function urlProvider(): array
     {
         return [
             // simple no query string
