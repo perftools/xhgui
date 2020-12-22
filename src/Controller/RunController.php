@@ -182,7 +182,7 @@ class RunController extends AbstractController
 
     public function deleteAllForm()
     {
-        $this->_template = 'runs/delete-all-form.twig';
+        $this->render('runs/delete-all-form.twig');
     }
 
     public function deleteAllSubmit()

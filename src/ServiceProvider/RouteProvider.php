@@ -72,9 +72,9 @@ class RouteProvider implements ServiceProviderInterface
             $controller->deleteSubmit($request);
         })->setName('run.delete.submit');
 
-        $app->get('/run/delete_all', static function () use ($di, $app) {
+        $app->get('/run/delete_all', static function () use ($di) {
             /** @var Controller\RunController $controller */
-            $controller = $app->controller = $di['runController'];
+            $controller = $di['runController'];
             $controller->deleteAllForm();
         })->setName('run.deleteAll.form');
 
