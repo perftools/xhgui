@@ -2,7 +2,9 @@
 
 namespace XHGui;
 
+use Slim\Http\Response;
 use Slim\Slim as App;
+use Slim\Views\Twig;
 
 abstract class AbstractController
 {
@@ -49,9 +51,19 @@ abstract class AbstractController
 
         // The below is copied from Slim::render (slim/slim@2.6.3).
         // Modified to use View::fetch + Response::write, instead of View::display.
-        $this->app->view->appendData($this->_templateVars);
-        $body = $this->app->view->fetch($this->_template);
-        $this->app->response->write($body);
+        $this->render($this->_template, $this->_templateVars);
+    }
+
+    protected function render(string $template, array $data = [])
+    {
+        /** @var Response $response */
+        $response = $this->app->response;
+        /** @var Twig $renderer */
+        $renderer = $this->app->view;
+
+        $renderer->appendData($data);
+        $body = $renderer->fetch($template);
+        $response->write($body);
     }
 
     protected function config(string $key)
