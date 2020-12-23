@@ -71,14 +71,13 @@ class RunController extends AbstractController
             'direction' => $result['direction'],
         ];
 
-        $this->_template = 'runs/list.twig';
-        $this->set([
+        $this->render('runs/list.twig', [
             'paging' => $paging,
             'base_url' => 'home',
             'runs' => $result['results'],
             'date_format' => $this->config('date.format'),
             'search' => $search,
-            'has_search' => strlen(implode('', $search)) > 0,
+            'has_search' => implode('', $search) !== '',
             'title' => $title,
         ]);
     }
@@ -120,8 +119,7 @@ class RunController extends AbstractController
             $profile = $result->sort('ewt', $result->getProfile());
         }
 
-        $this->_template = 'runs/view.twig';
-        $this->set([
+        $this->render('runs/view.twig', [
             'profile' => $profile,
             'result' => $result,
             'wall_time' => $timeChart,
@@ -157,8 +155,7 @@ class RunController extends AbstractController
         // Get details
         $result = $this->searcher->get($id);
 
-        $this->_template = 'runs/delete-form.twig';
-        $this->set([
+        $this->render('runs/delete-form.twig', [
             'run_id' => $id,
             'result' => $result,
         ]);
@@ -185,7 +182,7 @@ class RunController extends AbstractController
 
     public function deleteAllForm()
     {
-        $this->_template = 'runs/delete-all-form.twig';
+        $this->render('runs/delete-all-form.twig');
     }
 
     public function deleteAllSubmit()
@@ -239,8 +236,7 @@ class RunController extends AbstractController
             'direction' => $runs['direction'],
         ];
 
-        $this->_template = 'runs/url.twig';
-        $this->set([
+        $this->render('runs/url.twig', [
             'paging' => $paging,
             'base_url' => 'url.view',
             'runs' => $runs['results'],
@@ -288,8 +284,7 @@ class RunController extends AbstractController
             $comparison = $baseRun->compare($headRun);
         }
 
-        $this->_template = 'runs/compare.twig';
-        $this->set([
+        $this->render('runs/compare.twig', [
             'base_url' => 'run.compare',
             'base_run' => $baseRun,
             'head_run' => $headRun,
@@ -314,8 +309,7 @@ class RunController extends AbstractController
         $profile->calculateSelf();
         list($parents, $current, $children) = $profile->getRelatives($symbol);
 
-        $this->_template = 'runs/symbol.twig';
-        $this->set([
+        $this->render('runs/symbol.twig', [
             'symbol' => $symbol,
             'id' => $id,
             'main' => $profile->get('main()'),
@@ -336,8 +330,7 @@ class RunController extends AbstractController
         $profile->calculateSelf();
         list($parents, $current, $children) = $profile->getRelatives($symbol, $metric, $threshold);
 
-        $this->_template = 'runs/symbol-short.twig';
-        $this->set([
+        $this->render('runs/symbol-short.twig', [
             'symbol' => $symbol,
             'id' => $id,
             'main' => $profile->get('main()'),
@@ -351,8 +344,7 @@ class RunController extends AbstractController
     {
         $profile = $this->searcher->get($request->get('id'));
 
-        $this->_template = 'runs/callgraph.twig';
-        $this->set([
+        $this->render('runs/callgraph.twig', [
             'profile' => $profile,
             'date_format' => $this->config('date.format'),
         ]);

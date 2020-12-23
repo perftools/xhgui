@@ -26,7 +26,7 @@ class WatchTest extends TestCase
     {
         $this->searcher->truncateWatches();
         $this->watches->get();
-        $result = $this->watches->templateVars();
+        $result = $this->view->all();
         $this->assertEquals([], $result['watched']);
     }
 

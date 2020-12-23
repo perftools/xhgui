@@ -25,7 +25,7 @@ class RunTest extends TestCase
     public function testIndexEmpty()
     {
         $this->runs->index($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
 
         $this->assertEquals('Recent runs', $result['title']);
         $this->assertFalse($result['has_search'], 'No search being done.');
@@ -47,7 +47,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->index($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
         $this->assertEquals('Longest wall time', $result['title']);
         $this->assertEquals('wt', $result['paging']['sort']);
     }
@@ -61,7 +61,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->index($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
         $this->assertEquals('Most CPU time', $result['title']);
         $this->assertEquals('cpu', $result['paging']['sort']);
         $this->assertEquals('desc', $result['paging']['direction']);
@@ -76,7 +76,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->index($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
         $this->assertEquals('Highest memory use', $result['title']);
         $this->assertEquals('mu', $result['paging']['sort']);
         $this->assertEquals('asc', $result['paging']['direction']);
@@ -96,7 +96,7 @@ class RunTest extends TestCase
 
         $this->runs->url($this->app->request(), $this->app->response());
 
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
         $this->assertEquals('url.view', $result['base_url']);
         $this->assertEquals('/tasks', $result['url']);
         $this->assertArrayHasKey('chart_data', $result);
@@ -144,7 +144,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->callgraph($this->app->request());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
         $this->assertArrayHasKey('profile', $result);
         $this->assertArrayHasKey('date_format', $result);
         $this->assertArrayNotHasKey('callgraph', $result);
@@ -237,7 +237,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->view($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
 
         $this->assertCount(1, $result['profile']);
     }
@@ -254,7 +254,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->view($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
 
         $this->assertCount(2, $result['profile']);
     }
@@ -271,7 +271,7 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->view($this->app->request(), $this->app->response());
-        $result = $this->runs->templateVars();
+        $result = $this->view->all();
 
         $this->assertCount(2, $result['profile']);
     }

@@ -47,8 +47,7 @@ class WaterfallController extends AbstractController
             'direction' => $result['direction'],
         ];
 
-        $this->_template = 'waterfall/list.twig';
-        $this->set([
+        $this->render('waterfall/list.twig', [
             'runs' => $result['results'],
             'search' => $search,
             'paging' => $paging,

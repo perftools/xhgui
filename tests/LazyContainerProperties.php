@@ -4,6 +4,7 @@ namespace XHGui\Test;
 
 use LazyProperty\LazyPropertiesTrait;
 use Slim\Slim as App;
+use Slim\View;
 use XHGui\Controller\ImportController;
 use XHGui\Controller\RunController;
 use XHGui\Controller\WatchController;
@@ -11,6 +12,7 @@ use XHGui\Saver\MongoSaver;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\SearcherInterface;
 use XHGui\ServiceContainer;
+use XHGui\Twig\TwigExtension;
 
 trait LazyContainerProperties
 {
@@ -30,6 +32,8 @@ trait LazyContainerProperties
     protected $searcher;
     /** @var MongoSaver */
     protected $saver;
+    /** @var View */
+    protected $view;
     /** @var WatchController */
     protected $watches;
 
@@ -43,6 +47,7 @@ trait LazyContainerProperties
             'runs',
             'saver',
             'searcher',
+            'view',
             'watches',
         ]);
     }
@@ -50,11 +55,21 @@ trait LazyContainerProperties
     protected function getDi()
     {
         $di = new ServiceContainer();
+        $config = $di['config'];
+
+        /** @var App $app */
         $app = $this->getMockBuilder(App::class)
             ->setMethods(['redirect', 'render', 'urlFor'])
-            ->setConstructorArgs([$di['config']])
+            ->setConstructorArgs([$config])
             ->getMock();
         $di['app'] = $app;
+
+        $view = $di['view'];
+        $view->parserExtensions = [
+            new TwigExtension($app),
+        ];
+
+        $app->view($view);
         $di->boot();
 
         return $di;
@@ -88,6 +103,11 @@ trait LazyContainerProperties
     protected function getSaver()
     {
         return $this->di['saver'];
+    }
+
+    protected function getView(): View
+    {
+        return $this->di['view'];
     }
 
     protected function getWatches()

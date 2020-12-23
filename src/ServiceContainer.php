@@ -13,7 +13,6 @@ use Slim\Middleware\SessionCookie;
 use Slim\Slim as App;
 use Slim\Views\Twig;
 use XHGui\Db\PdoRepository;
-use XHGui\Middleware\RenderMiddleware;
 use XHGui\Saver\NormalizingSaver;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\PdoSearcher;
@@ -98,9 +97,6 @@ class ServiceContainer extends Container
             $app->add(new SessionCookie([
                 'httponly' => true,
             ]));
-
-            // Add renderer.
-            $app->add(new RenderMiddleware());
 
             $view = $c['view'];
             $view->parserExtensions = [
