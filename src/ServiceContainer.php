@@ -50,12 +50,12 @@ class ServiceContainer extends Container
         $this->_controllers();
     }
 
-    public function boot()
+    public function boot(): void
     {
         $this->register(new RouteProvider());
     }
 
-    private function setupPaths(self $app)
+    private function setupPaths(self $app): void
     {
         $app['app.dir'] = dirname(__DIR__);
         $app['app.template_dir'] = dirname(__DIR__) . '/templates';
@@ -66,7 +66,7 @@ class ServiceContainer extends Container
     }
 
     // Create the Slim app.
-    protected function _slimApp()
+    protected function _slimApp(): void
     {
         $this['view'] = static function ($c) {
             // Configure Twig view for slim
@@ -111,7 +111,7 @@ class ServiceContainer extends Container
     /**
      * Add common service objects to the container.
      */
-    protected function _services()
+    protected function _services(): void
     {
         $this['searcher'] = static function ($c) {
             $saver = $c['config']['save.handler'];
@@ -126,7 +126,7 @@ class ServiceContainer extends Container
         };
     }
 
-    private function storageDriverPdo(Container $app)
+    private function storageDriverPdo(Container $app): void
     {
         $app['pdo'] = static function ($app) {
             if (!class_exists(PDO::class)) {
@@ -170,7 +170,7 @@ class ServiceContainer extends Container
         };
     }
 
-    private function storageDriverMongoDb(Container $app)
+    private function storageDriverMongoDb(Container $app): void
     {
         // NOTE: db.host, db.options, db.driverOptions, db.db are @deprecated and will be removed in the future
         $app['mongodb.database'] = static function ($app) {
@@ -221,7 +221,7 @@ class ServiceContainer extends Container
     /**
      * Add controllers to the DI container.
      */
-    protected function _controllers()
+    protected function _controllers(): void
     {
         $this['watchController'] = $this->factory(static function ($c) {
             return new Controller\WatchController($c['app'], $c['searcher']);

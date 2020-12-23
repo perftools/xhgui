@@ -35,7 +35,7 @@ abstract class OptionsConfigurator implements ArrayAccess, IteratorAggregate
         return $this->options[$offset];
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (null === $offset) {
             $this->options[] = $value;
@@ -44,7 +44,7 @@ abstract class OptionsConfigurator implements ArrayAccess, IteratorAggregate
         }
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->options[$offset]);
     }

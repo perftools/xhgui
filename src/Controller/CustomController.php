@@ -21,12 +21,12 @@ class CustomController extends AbstractController
         $this->searcher = $searcher;
     }
 
-    public function get()
+    public function get(): void
     {
         $this->render('custom/create.twig');
     }
 
-    public function help(Request $request)
+    public function help(Request $request): void
     {
         if ($request->get('id')) {
             $res = $this->searcher->get($request->get('id'));

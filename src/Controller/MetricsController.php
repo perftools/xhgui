@@ -20,7 +20,7 @@ class MetricsController extends AbstractController
         $this->searcher = $searcher;
     }
 
-    public function metrics(Response $response)
+    public function metrics(Response $response): void
     {
         $stats = $this->searcher->stats();
 

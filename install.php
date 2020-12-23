@@ -7,7 +7,7 @@
  * - Downloads composer.
  * - Installs dependencies.
  */
-function out($out)
+function out($out): void
 {
     if (is_string($out)) {
         echo $out . "\n";

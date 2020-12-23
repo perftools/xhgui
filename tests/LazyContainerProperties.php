@@ -37,7 +37,7 @@ trait LazyContainerProperties
     /** @var WatchController */
     protected $watches;
 
-    protected function setupProperties()
+    protected function setupProperties(): void
     {
         $this->initLazyProperties([
             'di',

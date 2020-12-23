@@ -51,7 +51,7 @@ class Profile
      * method are aggregated. We are not able to maintain a full tree structure
      * in any case, as xhprof only keeps one level of detail.
      */
-    protected function _process()
+    protected function _process(): void
     {
         $result = [];
         foreach ($this->_data['profile'] as $name => $values) {
@@ -587,7 +587,7 @@ class Profile
         return $out;
     }
 
-    protected function _callgraphData($parentName, $main, $metric, $threshold, $parentIndex = null)
+    protected function _callgraphData($parentName, $main, $metric, $threshold, $parentIndex = null): void
     {
         // Leaves don't have children, and don't have links/nodes to add.
         if (!isset($this->_indexed[$parentName])) {

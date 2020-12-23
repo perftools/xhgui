@@ -20,14 +20,14 @@ class WatchController extends AbstractController
         $this->searcher = $searcher;
     }
 
-    public function get()
+    public function get(): void
     {
         $watched = $this->searcher->getAllWatches();
 
         $this->render('watch/list.twig', ['watched' => $watched]);
     }
 
-    public function post(Request $request)
+    public function post(Request $request): void
     {
         $saved = false;
         foreach ((array)$request->post('watch') as $data) {

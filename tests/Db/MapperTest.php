@@ -13,13 +13,13 @@ class MapperTest extends TestCase
     /** @var Mapper */
     private $mapper;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->mapper = new Mapper();
     }
 
-    public function testConvertConditions()
+    public function testConvertConditions(): void
     {
         $opts = [
             'conditions' => [
@@ -52,7 +52,7 @@ class MapperTest extends TestCase
         $this->assertEquals($expected, $result['conditions']);
     }
 
-    public function testConvertConditionsLimit()
+    public function testConvertConditionsLimit(): void
     {
         $opts = [
             'conditions' => [
@@ -73,7 +73,7 @@ class MapperTest extends TestCase
         $this->assertEquals($expected, $result['conditions']);
     }
 
-    public function testConvertConditionsLimitIgnoreDateStart()
+    public function testConvertConditionsLimitIgnoreDateStart(): void
     {
         $opts = [
             'conditions' => [
@@ -95,7 +95,7 @@ class MapperTest extends TestCase
         $this->assertEquals($expected, $result['conditions']);
     }
 
-    public function testConditionsPartial()
+    public function testConditionsPartial(): void
     {
         $result = $this->mapper->convert([
             'conditions' => [
@@ -141,7 +141,7 @@ class MapperTest extends TestCase
         $this->assertEquals($expected, $result['conditions']);
     }
 
-    public function testConvertSort()
+    public function testConvertSort(): void
     {
         $options = [
             'sort' => 'time',
@@ -204,7 +204,7 @@ class MapperTest extends TestCase
         );
     }
 
-    public function testConvertPerPage()
+    public function testConvertPerPage(): void
     {
         $options = [];
         $result = $this->mapper->convert($options);

@@ -12,23 +12,23 @@ class ExtensionTest extends TestCase
     /** @var TwigExtension */
     private $ext;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $app = new App();
-        $app->get('/test', static function () {
+        $app->get('/test', static function (): void {
         })->setName('test');
         $this->ext = new TwigExtension($app);
     }
 
-    public function testFormatBytes()
+    public function testFormatBytes(): void
     {
         $result = $this->ext->formatBytes(2999);
         $expected = '2,999&nbsp;<span class="units">bytes</span>';
         $this->assertEquals($expected, $result);
     }
 
-    public function testFormatTime()
+    public function testFormatTime(): void
     {
         $result = $this->ext->formatTime(2999);
         $expected = '2,999&nbsp;<span class="units">µs</span>';
@@ -59,7 +59,7 @@ class ExtensionTest extends TestCase
     /**
      * @dataProvider makePercentProvider
      */
-    public function testMakePercent($value, $total, $expected)
+    public function testMakePercent($value, $total, $expected): void
     {
         $result = $this->ext->makePercent($value, $total, $total);
         $this->assertEquals($expected, $result);
@@ -86,7 +86,7 @@ class ExtensionTest extends TestCase
     /**
      * @dataProvider urlProvider
      */
-    public function testUrl($url, $query, $expected)
+    public function testUrl($url, $query, $expected): void
     {
         $_SERVER['PHP_SELF'] = '/';
         $_SERVER['REQUEST_METHOD'] = 'GET';
@@ -99,7 +99,7 @@ class ExtensionTest extends TestCase
         $this->assertStringEndsWith($expected, $result);
     }
 
-    public function testStaticUrlNoIndexPhp()
+    public function testStaticUrlNoIndexPhp(): void
     {
         Environment::mock([
             'SCRIPT_NAME' => '/index.php',
@@ -110,7 +110,7 @@ class ExtensionTest extends TestCase
         $this->assertEquals('/css/bootstrap.css', $result);
     }
 
-    public function testStaticUrlWithIndexPhp()
+    public function testStaticUrlWithIndexPhp(): void
     {
         Environment::mock([
             'SCRIPT_NAME' => '/xhgui/webroot/index.php',

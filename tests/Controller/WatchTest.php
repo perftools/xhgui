@@ -10,7 +10,7 @@ class WatchTest extends TestCase
 {
     use LazyContainerProperties;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->skipIfPdo('Watchers not implemented');
         parent::setUp();
@@ -22,7 +22,7 @@ class WatchTest extends TestCase
         ]);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $this->searcher->truncateWatches();
         $this->watches->get();
@@ -30,7 +30,7 @@ class WatchTest extends TestCase
         $this->assertEquals([], $result['watched']);
     }
 
-    public function testPostAdd()
+    public function testPostAdd(): void
     {
         $this->searcher->truncateWatches();
         $_POST = [
@@ -54,7 +54,7 @@ class WatchTest extends TestCase
         $this->assertEquals('strpos', $result[1]['name']);
     }
 
-    public function testPostModify()
+    public function testPostModify(): void
     {
         $searcher = $this->searcher->truncateWatches();
         $searcher->saveWatch(['name' => 'strlen']);
@@ -72,7 +72,7 @@ class WatchTest extends TestCase
         $this->assertEquals('strpos', $result[0]['name']);
     }
 
-    public function testPostDelete()
+    public function testPostDelete(): void
     {
         $this->searcher->truncateWatches();
         $this->searcher->saveWatch(['name' => 'strlen']);

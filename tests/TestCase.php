@@ -10,7 +10,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * Load a fixture into the database.
      */
-    protected function loadFixture(SaverInterface $saver, string $fileName = 'results.json')
+    protected function loadFixture(SaverInterface $saver, string $fileName = 'results.json'): void
     {
         $file = __DIR__ . '/fixtures/' . $fileName;
         $data = json_decode(file_get_contents($file), true);
@@ -19,7 +19,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         }
     }
 
-    protected function skipIfPdo($details = null)
+    protected function skipIfPdo($details = null): void
     {
         $saveHandler = ServiceContainer::instance()['config']['save.handler'];
 

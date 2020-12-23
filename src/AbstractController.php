@@ -18,7 +18,7 @@ abstract class AbstractController
         $this->app = $app;
     }
 
-    protected function render(string $template, array $data = [])
+    protected function render(string $template, array $data = []): void
     {
         /** @var Response $response */
         $response = $this->app->response;

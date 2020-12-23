@@ -40,7 +40,7 @@ class PdoSearcher implements SearcherInterface
         ]);
     }
 
-    public function query($conditions, $limit, $fields = [])
+    public function query($conditions, $limit, $fields = []): void
     {
         throw NotImplementedException::notImplementedPdo(__METHOD__);
     }
@@ -68,12 +68,12 @@ class PdoSearcher implements SearcherInterface
         ]);
     }
 
-    public function getForUrl($url, $options, $conditions = [])
+    public function getForUrl($url, $options, $conditions = []): void
     {
         throw NotImplementedException::notImplementedPdo(__METHOD__);
     }
 
-    public function getPercentileForUrl($percentile, $url, $search = [])
+    public function getPercentileForUrl($percentile, $url, $search = []): void
     {
         throw NotImplementedException::notImplementedPdo(__METHOD__);
     }
@@ -81,7 +81,7 @@ class PdoSearcher implements SearcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getAvgsForUrl($url, $search = [])
+    public function getAvgsForUrl($url, $search = []): void
     {
         throw NotImplementedException::notImplementedPdo(__METHOD__);
     }
@@ -142,7 +142,7 @@ class PdoSearcher implements SearcherInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($id)
+    public function delete($id): void
     {
         $this->db->deleteById($id);
     }

@@ -215,7 +215,7 @@ class MongoSearcher implements SearcherInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($id)
+    public function delete($id): void
     {
         $this->_collection->remove(['_id' => new MongoId($id)], []);
     }

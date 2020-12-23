@@ -13,7 +13,7 @@ class Config
      * Load a config file, it will replace
      * all the currently loaded configuration.
      */
-    public static function load($file)
+    public static function load($file): void
     {
         $config = include $file;
         self::$config = array_merge(self::$config, $config);
