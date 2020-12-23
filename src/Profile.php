@@ -55,7 +55,7 @@ class Profile
     {
         $result = [];
         foreach ($this->_data['profile'] as $name => $values) {
-            list($parent, $func) = $this->splitName($name);
+            [$parent, $func] = $this->splitName($name);
             // normalize, fill all missing keys
             $values += [
                 'ct' => 0,

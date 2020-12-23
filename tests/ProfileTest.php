@@ -95,7 +95,7 @@ class ProfileTest extends TestCase
         $result = $profile->getRelatives('func');
         $this->assertCount(3, $result);
 
-        list($parent, $current, $children) = $result;
+        [$parent, $current, $children] = $result;
         $this->assertCount(2, $parent);
         $this->assertEquals('other_func', $parent[0]['function']);
         $this->assertEquals('your_func', $parent[1]['function']);
@@ -173,7 +173,7 @@ class ProfileTest extends TestCase
         $result = $profile->getRelatives('other_func', 'wt', 0.1);
         $this->assertCount(3, $result);
 
-        list($parent, $current, $children) = $result;
+        [$parent, $current, $children] = $result;
         $this->assertCount(1, $parent);
         $this->assertEquals('main()', $parent[0]['function']);
 
