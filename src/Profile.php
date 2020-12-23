@@ -40,7 +40,7 @@ class Profile
         }
 
         if (!empty($profile['profile']) && $convert) {
-            $this->_process();
+            $this->process();
         }
     }
 
@@ -51,7 +51,7 @@ class Profile
      * method are aggregated. We are not able to maintain a full tree structure
      * in any case, as xhprof only keeps one level of detail.
      */
-    protected function _process(): void
+    private function process(): void
     {
         $result = [];
         foreach ($this->data['profile'] as $name => $values) {
@@ -575,7 +575,7 @@ class Profile
         }
 
         $this->visited = $this->nodes = $this->links = [];
-        $this->_callgraphData(self::NO_PARENT, $main, $metric, $threshold);
+        $this->callgraphData(self::NO_PARENT, $main, $metric, $threshold);
         $out = [
             'metric' => $metric,
             'total' => $main,
@@ -587,7 +587,7 @@ class Profile
         return $out;
     }
 
-    protected function _callgraphData($parentName, $main, $metric, $threshold, $parentIndex = null): void
+    private function callgraphData($parentName, $main, $metric, $threshold, $parentIndex = null): void
     {
         // Leaves don't have children, and don't have links/nodes to add.
         if (!isset($this->indexed[$parentName])) {
@@ -629,7 +629,7 @@ class Profile
             // If the current function has more children,
             // walk that call subgraph.
             if (isset($this->indexed[$childName]) && !$revisit) {
-                $this->_callgraphData($childName, $main, $metric, $threshold, $index);
+                $this->callgraphData($childName, $main, $metric, $threshold, $index);
             }
         }
     }

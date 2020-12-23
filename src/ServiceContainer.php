@@ -43,11 +43,11 @@ class ServiceContainer extends Container
         parent::__construct();
         $this->setupPaths($this);
         $this->register(new ConfigProvider());
-        $this->_slimApp();
-        $this->_services();
+        $this->slimApp();
+        $this->services();
         $this->storageDriverPdo($this);
         $this->storageDriverMongoDb($this);
-        $this->_controllers();
+        $this->controllers();
     }
 
     public function boot(): void
@@ -66,7 +66,7 @@ class ServiceContainer extends Container
     }
 
     // Create the Slim app.
-    protected function _slimApp(): void
+    private function slimApp(): void
     {
         $this['view'] = static function ($c) {
             // Configure Twig view for slim
@@ -111,7 +111,7 @@ class ServiceContainer extends Container
     /**
      * Add common service objects to the container.
      */
-    protected function _services(): void
+    private function services(): void
     {
         $this['searcher'] = static function ($c) {
             $saver = $c['config']['save.handler'];
@@ -221,7 +221,7 @@ class ServiceContainer extends Container
     /**
      * Add controllers to the DI container.
      */
-    protected function _controllers(): void
+    private function controllers(): void
     {
         $this['watchController'] = $this->factory(static function ($c) {
             return new Controller\WatchController($c['app'], $c['searcher']);
