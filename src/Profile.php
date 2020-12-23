@@ -17,7 +17,7 @@ class Profile
     /**
      * @const Key used for methods with no parent
      */
-    const NO_PARENT = '__xhgui_top__';
+    private const NO_PARENT = '__xhgui_top__';
 
     protected $_data;
     protected $_collapsed;

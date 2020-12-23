@@ -15,7 +15,7 @@ class RunController extends AbstractController
     /**
      * HTTP GET attribute name for comma separated filters
      */
-    const FILTER_ARGUMENT_NAME = 'filter';
+    private const FILTER_ARGUMENT_NAME = 'filter';
 
     /**
      * @var SearcherInterface
