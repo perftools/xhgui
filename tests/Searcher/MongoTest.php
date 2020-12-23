@@ -12,7 +12,7 @@ class MongoTest extends TestCase
 {
     use LazyContainerProperties;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setupProperties();
@@ -22,7 +22,7 @@ class MongoTest extends TestCase
         $this->loadFixture($this->di['saver.mongodb']);
     }
 
-    public function testCustomQuery()
+    public function testCustomQuery(): void
     {
         $conditions = ['meta.simple_url' => '/tasks'];
 
@@ -32,7 +32,7 @@ class MongoTest extends TestCase
         $this->assertCount(3, $results);
     }
 
-    public function testGetForUrl()
+    public function testGetForUrl(): void
     {
         $options = [
             'perPage' => 1,
@@ -49,7 +49,7 @@ class MongoTest extends TestCase
         $this->assertCount(0, $result['results']);
     }
 
-    public function testGetForUrlWithSearch()
+    public function testGetForUrlWithSearch(): void
     {
         $options = [
             'perPage' => 2,
@@ -72,7 +72,7 @@ class MongoTest extends TestCase
         $this->assertCount(0, $result['results']);
     }
 
-    public function testGetAvgsForUrl()
+    public function testGetAvgsForUrl(): void
     {
         $result = $this->mongo->getAvgsForUrl('/');
         $this->assertCount(2, $result);
@@ -86,7 +86,7 @@ class MongoTest extends TestCase
         $this->assertEquals('2013-01-19', $result[1]['date']);
     }
 
-    public function testGetAvgsForUrlWithSearch()
+    public function testGetAvgsForUrlWithSearch(): void
     {
         $search = ['date_start' => '2013-01-18', 'date_end' => '2013-01-18'];
         $result = $this->mongo->getAvgsForUrl('/', $search);
@@ -100,7 +100,7 @@ class MongoTest extends TestCase
         $this->assertEquals('2013-01-18', $result[0]['date']);
     }
 
-    public function testGetPercentileForUrlWithSearch()
+    public function testGetPercentileForUrlWithSearch(): void
     {
         $search = ['date_start' => '2013-01-18', 'date_end' => '2013-01-18'];
         $result = $this->mongo->getPercentileForUrl(20, '/', $search);
@@ -112,14 +112,14 @@ class MongoTest extends TestCase
         $this->assertArrayHasKey('pmu', $result[0]);
     }
 
-    public function testGetPercentileForUrlWithLimit()
+    public function testGetPercentileForUrlWithLimit(): void
     {
         $search = ['limit' => 'P1D'];
         $result = $this->mongo->getPercentileForUrl(20, '/', $search);
         $this->assertCount(0, $result);
     }
 
-    public function testGetAllConditions()
+    public function testGetAllConditions(): void
     {
         $result = $this->mongo->getAll(new SearchOptions([
             'conditions' => [
@@ -134,14 +134,14 @@ class MongoTest extends TestCase
         $this->assertCount(2, $result['results']);
     }
 
-    public function testLatest()
+    public function testLatest(): void
     {
         $result = $this->mongo->latest();
         $this->assertInstanceOf(Profile::class, $result);
         $this->assertEquals('2013-01-21', $result->getDate()->format('Y-m-d'));
     }
 
-    public function testSaveInsert()
+    public function testSaveInsert(): void
     {
         $data = [
             'name' => 'strlen',
@@ -156,7 +156,7 @@ class MongoTest extends TestCase
         $this->assertCount(2, $this->mongo->getAllWatches());
     }
 
-    public function testSaveUpdate()
+    public function testSaveUpdate(): void
     {
         $data = [
             'name' => 'strlen',
@@ -171,7 +171,7 @@ class MongoTest extends TestCase
         $this->assertEquals('strpos', $results[0]['name']);
     }
 
-    public function testSaveRemove()
+    public function testSaveRemove(): void
     {
         $data = [
             'name' => 'strlen',

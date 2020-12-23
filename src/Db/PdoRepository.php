@@ -129,7 +129,7 @@ class PdoRepository
         }
     }
 
-    public function deleteById(string $id)
+    public function deleteById(string $id): void
     {
         $stmt = $this->pdo->prepare(sprintf('
           DELETE FROM %s
@@ -166,7 +166,7 @@ class PdoRepository
         return $row ?: null;
     }
 
-    public function initSchema()
+    public function initSchema(): void
     {
         $this->pdo->exec(sprintf('
             CREATE TABLE IF NOT EXISTS %s (
@@ -189,7 +189,7 @@ class PdoRepository
         ', $this->table));
     }
 
-    public function saveProfile(array $data)
+    public function saveProfile(array $data): void
     {
         $stmt = $this->pdo->prepare(sprintf('
             INSERT INTO %s (

@@ -11,7 +11,7 @@ class ImportTest extends TestCase
 {
     use LazyContainerProperties;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setupProperties();
@@ -22,7 +22,7 @@ class ImportTest extends TestCase
         ]);
     }
 
-    public function testImportSuccess()
+    public function testImportSuccess(): void
     {
         $this->skipIfPdo('getForUrl not implemented');
         $data = [

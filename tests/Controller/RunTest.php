@@ -11,7 +11,7 @@ class RunTest extends TestCase
 {
     use LazyContainerProperties;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setupProperties();
@@ -22,7 +22,7 @@ class RunTest extends TestCase
         ]);
     }
 
-    public function testIndexEmpty()
+    public function testIndexEmpty(): void
     {
         $this->runs->index($this->app->request(), $this->app->response());
         $result = $this->view->all();
@@ -38,7 +38,7 @@ class RunTest extends TestCase
         $this->assertEquals($expected, $result['paging']);
     }
 
-    public function testIndexSortedWallTime()
+    public function testIndexSortedWallTime(): void
     {
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
@@ -52,7 +52,7 @@ class RunTest extends TestCase
         $this->assertEquals('wt', $result['paging']['sort']);
     }
 
-    public function testIndexSortedCpu()
+    public function testIndexSortedCpu(): void
     {
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
@@ -67,7 +67,7 @@ class RunTest extends TestCase
         $this->assertEquals('desc', $result['paging']['direction']);
     }
 
-    public function testIndexWithSearch()
+    public function testIndexWithSearch(): void
     {
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
@@ -84,7 +84,7 @@ class RunTest extends TestCase
         $this->assertTrue($result['has_search']);
     }
 
-    public function testUrl()
+    public function testUrl(): void
     {
         $this->skipIfPdo('getForUrl is not implemented');
 
@@ -103,37 +103,37 @@ class RunTest extends TestCase
         $this->assertArrayHasKey('runs', $result);
     }
 
-    public function testUrlWithSearch()
+    public function testUrlWithSearch(): void
     {
         $this->markTestIncomplete('Not done');
     }
 
-    public function testUrlWithSearchInterval()
+    public function testUrlWithSearchInterval(): void
     {
         $this->markTestIncomplete('Not done');
     }
 
-    public function testCompareNoBase()
+    public function testCompareNoBase(): void
     {
         $this->markTestIncomplete('Not done');
     }
 
-    public function testCompareWithBase()
+    public function testCompareWithBase(): void
     {
         $this->markTestIncomplete('Not done');
     }
 
-    public function testCompareWithBaseAndHead()
+    public function testCompareWithBaseAndHead(): void
     {
         $this->markTestIncomplete('Not done');
     }
 
-    public function testSymbol()
+    public function testSymbol(): void
     {
         $this->markTestIncomplete('Not done');
     }
 
-    public function testCallgraph()
+    public function testCallgraph(): void
     {
         $this->searcher->truncate();
         $this->loadFixture($this->saver);
@@ -150,7 +150,7 @@ class RunTest extends TestCase
         $this->assertArrayNotHasKey('callgraph', $result);
     }
 
-    public function testCallgraphData()
+    public function testCallgraphData(): void
     {
         $this->searcher->truncate();
         $this->loadFixture($this->saver);
@@ -167,7 +167,7 @@ class RunTest extends TestCase
         $this->assertStringStartsWith('{"', $response->body());
     }
 
-    public function testDeleteSubmit()
+    public function testDeleteSubmit(): void
     {
         $this->skipIfPdo('Undefined index: page');
         $searcher = $this->searcher->truncate();
@@ -198,7 +198,7 @@ class RunTest extends TestCase
         $this->assertCount(4, $result['results']);
     }
 
-    public function testDeleteAllSubmit()
+    public function testDeleteAllSubmit(): void
     {
         $this->skipIfPdo('Undefined index: page');
         $this->searcher->truncate();
@@ -225,7 +225,7 @@ class RunTest extends TestCase
         $this->assertCount(0, $result['results']);
     }
 
-    public function testFilterCustomMethods()
+    public function testFilterCustomMethods(): void
     {
         $this->searcher->truncate();
         $this->loadFixture($this->saver);
@@ -242,7 +242,7 @@ class RunTest extends TestCase
         $this->assertCount(1, $result['profile']);
     }
 
-    public function testFilterCustomMethod()
+    public function testFilterCustomMethod(): void
     {
         $this->searcher->truncate();
         $this->loadFixture($this->saver);
@@ -259,7 +259,7 @@ class RunTest extends TestCase
         $this->assertCount(2, $result['profile']);
     }
 
-    public function testFilterMethods()
+    public function testFilterMethods(): void
     {
         $this->searcher->truncate();
         $this->loadFixture($this->saver);

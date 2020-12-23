@@ -18,7 +18,7 @@ class SearchOptions extends OptionsConfigurator
      *  - conditions: an array of criteria to match
      *  - projection: an array or bool
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    protected function configureOptions(OptionsResolver $resolver): void
     {
         // NOTE: the null values is trickery to set default values via null value
         $defaults = [

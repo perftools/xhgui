@@ -8,7 +8,7 @@ use XHGui\Test\TestCase;
 
 class MongoTest extends TestCase
 {
-    public function testSave()
+    public function testSave(): void
     {
         $data = json_decode(file_get_contents(__DIR__ . '/../../tests/fixtures/results.json'), true);
 

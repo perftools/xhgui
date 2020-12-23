@@ -27,7 +27,7 @@ class ImportController extends AbstractController
         $this->token = $token;
     }
 
-    public function import(Request $request, Response $response)
+    public function import(Request $request, Response $response): void
     {
         try {
             $id = $this->runImport($request);

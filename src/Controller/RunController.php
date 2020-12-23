@@ -15,7 +15,7 @@ class RunController extends AbstractController
     /**
      * HTTP GET attribute name for comma separated filters
      */
-    const FILTER_ARGUMENT_NAME = 'filter';
+    private const FILTER_ARGUMENT_NAME = 'filter';
 
     /**
      * @var SearcherInterface
@@ -28,7 +28,7 @@ class RunController extends AbstractController
         $this->searcher = $searcher;
     }
 
-    public function index(Request $request, Response $response)
+    public function index(Request $request, Response $response): void
     {
         // The list changes whenever new profiles are recorded.
         // Generally avoid caching, but allow re-use in browser's bfcache
@@ -82,7 +82,7 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function view(Request $request, Response $response)
+    public function view(Request $request, Response $response): void
     {
         // Permalink views to a specific run are meant to be public and immutable.
         // But limit the cache to only a short period of time (enough to allow
@@ -145,7 +145,7 @@ class RunController extends AbstractController
         return $filters;
     }
 
-    public function deleteForm(Request $request)
+    public function deleteForm(Request $request): void
     {
         $id = $request->get('id');
         if (!is_string($id) || !strlen($id)) {
@@ -161,7 +161,7 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function deleteSubmit(Request $request)
+    public function deleteSubmit(Request $request): void
     {
         $id = $request->post('id');
         // Don't call profilers->delete() unless $id is set,
@@ -180,12 +180,12 @@ class RunController extends AbstractController
         $this->app->redirect($this->app->urlFor('home'));
     }
 
-    public function deleteAllForm()
+    public function deleteAllForm(): void
     {
         $this->render('runs/delete-all-form.twig');
     }
 
-    public function deleteAllSubmit()
+    public function deleteAllSubmit(): void
     {
         // Delete all profile runs.
         $this->searcher->truncate();
@@ -195,7 +195,7 @@ class RunController extends AbstractController
         $this->app->redirect($this->app->urlFor('home'));
     }
 
-    public function url(Request $request)
+    public function url(Request $request): void
     {
         $pagination = [
             'sort' => $request->get('sort'),
@@ -247,7 +247,7 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function compare(Request $request)
+    public function compare(Request $request): void
     {
         $baseRun = $headRun = $candidates = $comparison = null;
         $paging = [];
@@ -300,14 +300,14 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function symbol(Request $request)
+    public function symbol(Request $request): void
     {
         $id = $request->get('id');
         $symbol = $request->get('symbol');
 
         $profile = $this->searcher->get($id);
         $profile->calculateSelf();
-        list($parents, $current, $children) = $profile->getRelatives($symbol);
+        [$parents, $current, $children] = $profile->getRelatives($symbol);
 
         $this->render('runs/symbol.twig', [
             'symbol' => $symbol,
@@ -319,7 +319,7 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function symbolShort(Request $request)
+    public function symbolShort(Request $request): void
     {
         $id = $request->get('id');
         $threshold = $request->get('threshold');
@@ -328,7 +328,7 @@ class RunController extends AbstractController
 
         $profile = $this->searcher->get($id);
         $profile->calculateSelf();
-        list($parents, $current, $children) = $profile->getRelatives($symbol, $metric, $threshold);
+        [$parents, $current, $children] = $profile->getRelatives($symbol, $metric, $threshold);
 
         $this->render('runs/symbol-short.twig', [
             'symbol' => $symbol,
@@ -340,7 +340,7 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function callgraph(Request $request)
+    public function callgraph(Request $request): void
     {
         $profile = $this->searcher->get($request->get('id'));
 

@@ -17,30 +17,30 @@ class Profile
     /**
      * @const Key used for methods with no parent
      */
-    const NO_PARENT = '__xhgui_top__';
+    private const NO_PARENT = '__xhgui_top__';
 
-    protected $_data;
-    protected $_collapsed;
-    protected $_indexed;
+    private $data;
+    private $collapsed;
+    private $indexed;
     private $visited;
     private $links;
     private $nodes;
 
-    protected $_keys = ['ct', 'wt', 'cpu', 'mu', 'pmu'];
-    protected $_exclusiveKeys = ['ewt', 'ecpu', 'emu', 'epmu'];
-    protected $_functionCount;
+    private $keys = ['ct', 'wt', 'cpu', 'mu', 'pmu'];
+    private $exclusiveKeys = ['ewt', 'ecpu', 'emu', 'epmu'];
+    private $functionCount;
 
     public function __construct(array $profile, $convert = true)
     {
-        $this->_data = $profile;
+        $this->data = $profile;
 
         // cast MongoIds to string
-        if (isset($this->_data['_id']) && !is_string($this->_data['_id'])) {
-            $this->_data['_id'] = (string) $this->_data['_id'];
+        if (isset($this->data['_id']) && !is_string($this->data['_id'])) {
+            $this->data['_id'] = (string) $this->data['_id'];
         }
 
         if (!empty($profile['profile']) && $convert) {
-            $this->_process();
+            $this->process();
         }
     }
 
@@ -51,11 +51,11 @@ class Profile
      * method are aggregated. We are not able to maintain a full tree structure
      * in any case, as xhprof only keeps one level of detail.
      */
-    protected function _process()
+    private function process(): void
     {
         $result = [];
-        foreach ($this->_data['profile'] as $name => $values) {
-            list($parent, $func) = $this->splitName($name);
+        foreach ($this->data['profile'] as $name => $values) {
+            [$parent, $func] = $this->splitName($name);
             // normalize, fill all missing keys
             $values += [
                 'ct' => 0,
@@ -78,12 +78,12 @@ class Profile
             if ($parent === null) {
                 $parent = self::NO_PARENT;
             }
-            if (!isset($this->_indexed[$parent])) {
-                $this->_indexed[$parent] = [];
+            if (!isset($this->indexed[$parent])) {
+                $this->indexed[$parent] = [];
             }
-            $this->_indexed[$parent][$func] = $values;
+            $this->indexed[$parent][$func] = $values;
         }
-        $this->_collapsed = $result;
+        $this->collapsed = $result;
     }
 
     /**
@@ -95,7 +95,7 @@ class Profile
      */
     protected function _sumKeys($a, $b)
     {
-        foreach ($this->_keys as $key) {
+        foreach ($this->keys as $key) {
             if (!isset($a[$key])) {
                 $a[$key] = 0;
             }
@@ -107,9 +107,9 @@ class Profile
 
     protected function _diffKeys($a, $b, $includeSelf = true)
     {
-        $keys = $this->_keys;
+        $keys = $this->keys;
         if ($includeSelf) {
-            $keys = array_merge($keys, $this->_exclusiveKeys);
+            $keys = array_merge($keys, $this->exclusiveKeys);
         }
         foreach ($keys as $key) {
             $a[$key] -= $b[$key];
@@ -121,9 +121,9 @@ class Profile
     protected function _diffPercentKeys($a, $b, $includeSelf = true)
     {
         $out = [];
-        $keys = $this->_keys;
+        $keys = $this->keys;
         if ($includeSelf) {
-            $keys = array_merge($keys, $this->_exclusiveKeys);
+            $keys = array_merge($keys, $this->exclusiveKeys);
         }
         foreach ($keys as $key) {
             if ($b[$key] != 0) {
@@ -146,12 +146,12 @@ class Profile
      */
     public function getProfile()
     {
-        return $this->_collapsed;
+        return $this->collapsed;
     }
 
     public function getId()
     {
-        return $this->_data['_id'];
+        return $this->data['_id'];
     }
 
     public function getDate()
@@ -173,7 +173,7 @@ class Profile
      */
     public function getMeta($key = null)
     {
-        $data = $this->_data['meta'];
+        $data = $this->data['meta'];
         if ($key === null) {
             return $data;
         }
@@ -198,17 +198,17 @@ class Profile
      */
     public function get($key, $metric = null)
     {
-        if (!isset($this->_collapsed[$key])) {
+        if (!isset($this->collapsed[$key])) {
             return null;
         }
         if (empty($metric)) {
-            return $this->_collapsed[$key];
+            return $this->collapsed[$key];
         }
-        if (!isset($this->_collapsed[$key][$metric])) {
+        if (!isset($this->collapsed[$key][$metric])) {
             return null;
         }
 
-        return $this->_collapsed[$key][$metric];
+        return $this->collapsed[$key][$metric];
     }
 
     /**
@@ -220,17 +220,17 @@ class Profile
      */
     public function getWatched($pattern)
     {
-        if (isset($this->_collapsed[$pattern])) {
-            $data = $this->_collapsed[$pattern];
+        if (isset($this->collapsed[$pattern])) {
+            $data = $this->collapsed[$pattern];
             $data['function'] = $pattern;
 
             return [$data];
         }
         $matches = [];
-        $keys = array_keys($this->_collapsed);
+        $keys = array_keys($this->collapsed);
         foreach ($keys as $func) {
             if (preg_match('`^' . $pattern . '$`', $func)) {
-                $data = $this->_collapsed[$func];
+                $data = $this->collapsed[$func];
                 $data['function'] = $func;
                 $matches[] = $data;
             }
@@ -260,14 +260,14 @@ class Profile
         $parents = [];
 
         // If the function doesn't exist, it won't have parents/children
-        if (empty($this->_collapsed[$symbol])) {
+        if (empty($this->collapsed[$symbol])) {
             return [
                 [],
                 [],
                 [],
             ];
         }
-        $current = $this->_collapsed[$symbol];
+        $current = $this->collapsed[$symbol];
         $current['function'] = $symbol;
 
         $parents = $this->_getParents($symbol);
@@ -286,10 +286,10 @@ class Profile
     protected function _getParents($symbol)
     {
         $parents = [];
-        $current = $this->_collapsed[$symbol];
+        $current = $this->collapsed[$symbol];
         foreach ($current['parents'] as $parent) {
-            if (isset($this->_collapsed[$parent])) {
-                $parents[] = ['function' => $parent] + $this->_collapsed[$parent];
+            if (isset($this->collapsed[$parent])) {
+                $parents[] = ['function' => $parent] + $this->collapsed[$parent];
             }
         }
 
@@ -308,22 +308,22 @@ class Profile
     protected function _getChildren($symbol, $metric = null, $threshold = 0)
     {
         $children = [];
-        if (!isset($this->_indexed[$symbol])) {
+        if (!isset($this->indexed[$symbol])) {
             return $children;
         }
 
         $total = 0;
         if (isset($metric)) {
-            $top = $this->_indexed[self::NO_PARENT];
+            $top = $this->indexed[self::NO_PARENT];
             // Not always 'main()'
             $mainFunc = current($top);
             $total = $mainFunc[$metric];
         }
 
-        foreach ($this->_indexed[$symbol] as $name => $data) {
+        foreach ($this->indexed[$symbol] as $name => $data) {
             if (
                 $metric && $total > 0 && $threshold > 0 &&
-                ($this->_collapsed[$name][$metric] / $total) < $threshold
+                ($this->collapsed[$name][$metric] / $total) < $threshold
             ) {
                 continue;
             }
@@ -348,7 +348,7 @@ class Profile
      */
     public function extractDimension($dimension, $limit)
     {
-        $profile = $this->sort($dimension, $this->_collapsed);
+        $profile = $this->sort($dimension, $this->collapsed);
         $slice = array_slice($profile, 0, $limit);
         $extract = [];
         foreach ($slice as $func => $funcData) {
@@ -390,7 +390,7 @@ class Profile
     public function calculateSelf()
     {
         // Init exclusive values
-        foreach ($this->_collapsed as &$data) {
+        foreach ($this->collapsed as &$data) {
             $data['ewt'] = $data['wt'];
             $data['emu'] = $data['mu'];
             $data['ecpu'] = $data['cpu'];
@@ -401,14 +401,14 @@ class Profile
 
         // Go over each method and remove each childs metrics
         // from the parent.
-        foreach ($this->_collapsed as $name => $data) {
+        foreach ($this->collapsed as $name => $data) {
             $children = $this->_getChildren($name);
             foreach ($children as $child) {
-                $this->_collapsed[$name]['ewt'] -= $child['wt'];
-                $this->_collapsed[$name]['emu'] -= $child['mu'];
-                $this->_collapsed[$name]['ecpu'] -= $child['cpu'];
-                $this->_collapsed[$name]['ect'] -= $child['ct'];
-                $this->_collapsed[$name]['epmu'] -= $child['pmu'];
+                $this->collapsed[$name]['ewt'] -= $child['wt'];
+                $this->collapsed[$name]['emu'] -= $child['mu'];
+                $this->collapsed[$name]['ecpu'] -= $child['cpu'];
+                $this->collapsed[$name]['ect'] -= $child['ct'];
+                $this->collapsed[$name]['epmu'] -= $child['pmu'];
             }
         }
 
@@ -479,16 +479,16 @@ class Profile
      */
     public function getFunctionCount()
     {
-        if ($this->_functionCount) {
-            return $this->_functionCount;
+        if ($this->functionCount) {
+            return $this->functionCount;
         }
         $total = 0;
-        foreach ($this->_collapsed as $data) {
+        foreach ($this->collapsed as $data) {
             $total += $data['ct'];
         }
-        $this->_functionCount = $total;
+        $this->functionCount = $total;
 
-        return $this->_functionCount;
+        return $this->functionCount;
     }
 
     /**
@@ -502,12 +502,12 @@ class Profile
         $this->calculateSelf();
         $head->calculateSelf();
 
-        $keys = array_merge($this->_keys, $this->_exclusiveKeys);
+        $keys = array_merge($this->keys, $this->exclusiveKeys);
         $emptyData = array_fill_keys($keys, 0);
 
         $diffPercent = [];
         $diff = [];
-        foreach ($this->_collapsed as $key => $baseData) {
+        foreach ($this->collapsed as $key => $baseData) {
             $headData = $head->get($key);
             if (!$headData) {
                 $diff[$key] = $this->_diffKeys($emptyData, $baseData);
@@ -539,7 +539,7 @@ class Profile
     protected function _maxValue($metric)
     {
         return array_reduce(
-            $this->_collapsed,
+            $this->collapsed,
             static function ($result, $item) use ($metric) {
                 if ($item[$metric] > $result) {
                     return $item[$metric];
@@ -561,21 +561,21 @@ class Profile
      */
     public function getCallgraph($metric = 'wt', $threshold = 0.01)
     {
-        $valid = array_merge($this->_keys, $this->_exclusiveKeys);
+        $valid = array_merge($this->keys, $this->exclusiveKeys);
         if (!in_array($metric, $valid)) {
             throw new Exception("Unknown metric '$metric'. Cannot generate callgraph.");
         }
         $this->calculateSelf();
 
         // Non exclusive metrics are always main() because it is the root call scope.
-        if (in_array($metric, $this->_exclusiveKeys)) {
+        if (in_array($metric, $this->exclusiveKeys)) {
             $main = $this->_maxValue($metric);
         } else {
-            $main = $this->_collapsed['main()'][$metric];
+            $main = $this->collapsed['main()'][$metric];
         }
 
         $this->visited = $this->nodes = $this->links = [];
-        $this->_callgraphData(self::NO_PARENT, $main, $metric, $threshold);
+        $this->callgraphData(self::NO_PARENT, $main, $metric, $threshold);
         $out = [
             'metric' => $metric,
             'total' => $main,
@@ -587,16 +587,16 @@ class Profile
         return $out;
     }
 
-    protected function _callgraphData($parentName, $main, $metric, $threshold, $parentIndex = null)
+    private function callgraphData($parentName, $main, $metric, $threshold, $parentIndex = null): void
     {
         // Leaves don't have children, and don't have links/nodes to add.
-        if (!isset($this->_indexed[$parentName])) {
+        if (!isset($this->indexed[$parentName])) {
             return;
         }
 
-        $children = $this->_indexed[$parentName];
+        $children = $this->indexed[$parentName];
         foreach ($children as $childName => $metrics) {
-            $metrics = $this->_collapsed[$childName];
+            $metrics = $this->collapsed[$childName];
             if ($metrics[$metric] / $main <= $threshold) {
                 continue;
             }
@@ -628,14 +628,14 @@ class Profile
 
             // If the current function has more children,
             // walk that call subgraph.
-            if (isset($this->_indexed[$childName]) && !$revisit) {
-                $this->_callgraphData($childName, $main, $metric, $threshold, $index);
+            if (isset($this->indexed[$childName]) && !$revisit) {
+                $this->callgraphData($childName, $main, $metric, $threshold, $index);
             }
         }
     }
 
     public function toArray()
     {
-        return $this->_data;
+        return $this->data;
     }
 }

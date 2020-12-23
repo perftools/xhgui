@@ -23,7 +23,7 @@ class WaterfallController extends AbstractController
         $this->searcher = $searcher;
     }
 
-    public function index()
+    public function index(): void
     {
         $request = $this->app->request();
         $search = [];
@@ -55,7 +55,7 @@ class WaterfallController extends AbstractController
         ]);
     }
 
-    public function query(Request $request, Response $response)
+    public function query(Request $request, Response $response): void
     {
         $search = [];
         $keys = ['remote_addr', 'request_start', 'request_end'];

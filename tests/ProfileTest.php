@@ -9,14 +9,14 @@ class ProfileTest extends TestCase
 {
     private $fixture;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $contents = file_get_contents(dirname(__DIR__) . '/tests/fixtures/results.json');
         $this->fixture = json_decode($contents, true);
     }
 
-    public function testProcessIncompleteData()
+    public function testProcessIncompleteData(): void
     {
         $data = [
             'main()' => [],
@@ -30,7 +30,7 @@ class ProfileTest extends TestCase
         $this->assertNotEmpty($profile->get('do_thing()'));
     }
 
-    public function testGetRelatives()
+    public function testGetRelatives(): void
     {
         $data = [
             'main()' => [],
@@ -95,7 +95,7 @@ class ProfileTest extends TestCase
         $result = $profile->getRelatives('func');
         $this->assertCount(3, $result);
 
-        list($parent, $current, $children) = $result;
+        [$parent, $current, $children] = $result;
         $this->assertCount(2, $parent);
         $this->assertEquals('other_func', $parent[0]['function']);
         $this->assertEquals('your_func', $parent[1]['function']);
@@ -111,7 +111,7 @@ class ProfileTest extends TestCase
         $this->assertEquals(2, $current['pmu']);
     }
 
-    public function testGetRelativesWithThreshold()
+    public function testGetRelativesWithThreshold(): void
     {
         $data = [
             'main()' => [
@@ -173,7 +173,7 @@ class ProfileTest extends TestCase
         $result = $profile->getRelatives('other_func', 'wt', 0.1);
         $this->assertCount(3, $result);
 
-        list($parent, $current, $children) = $result;
+        [$parent, $current, $children] = $result;
         $this->assertCount(1, $parent);
         $this->assertEquals('main()', $parent[0]['function']);
 
@@ -181,7 +181,7 @@ class ProfileTest extends TestCase
         $this->assertEquals('func', $children[0]['function']);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $fixture = $this->fixture[0];
         $profile = new Profile($fixture);
@@ -196,7 +196,7 @@ class ProfileTest extends TestCase
         $this->assertNull($profile->get('derp', 'wt'));
     }
 
-    public function testGetMeta()
+    public function testGetMeta(): void
     {
         $fixture = $this->fixture[0];
         $profile = new Profile($fixture);
@@ -210,7 +210,7 @@ class ProfileTest extends TestCase
         $this->assertNull($profile->getMeta('SERVER.NOT_THERE'));
     }
 
-    public function testExtractDimension()
+    public function testExtractDimension(): void
     {
         $profile = new Profile($this->fixture[0]);
         $result = $profile->extractDimension('mu', 1);
@@ -223,7 +223,7 @@ class ProfileTest extends TestCase
         $this->assertEquals($expected, $result[0]);
     }
 
-    public function testCalculateSelf()
+    public function testCalculateSelf(): void
     {
         $profile = new Profile($this->fixture[1]);
         $result = $profile->calculateSelf()->getProfile();
@@ -240,7 +240,7 @@ class ProfileTest extends TestCase
         $this->assertEquals(['main()'], $func['parents']);
     }
 
-    public function testSort()
+    public function testSort(): void
     {
         $data = [
             'main()' => [
@@ -264,7 +264,7 @@ class ProfileTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function testGetWatched()
+    public function testGetWatched(): void
     {
         $fixture = $this->fixture[0];
         $profile = new Profile($fixture);
@@ -291,7 +291,7 @@ class ProfileTest extends TestCase
         $this->assertEquals($data['main()']['wt'], $matches[1]['wt']);
     }
 
-    public function testGetFunctionCount()
+    public function testGetFunctionCount(): void
     {
         $fixture = $this->fixture[0];
         $profile = new Profile($fixture);
@@ -299,7 +299,7 @@ class ProfileTest extends TestCase
         $this->assertEquals(11, $profile->getFunctionCount());
     }
 
-    public function testCompareAllTheSame()
+    public function testCompareAllTheSame(): void
     {
         $fixture = $this->fixture[0];
         $base = new Profile($fixture);
@@ -320,7 +320,7 @@ class ProfileTest extends TestCase
         $this->assertEquals(0, $result['diff']['strpos()']['ewt']);
     }
 
-    public function testCompareWithDifferences()
+    public function testCompareWithDifferences(): void
     {
         $fixture = $this->fixture[0];
         $base = new Profile($this->fixture[3]);
@@ -343,7 +343,7 @@ class ProfileTest extends TestCase
         $this->assertEquals(0.33, number_format($result['diffPercent']['functionCount'], 2));
     }
 
-    public function testGetCallgraph()
+    public function testGetCallgraph(): void
     {
         $profile = new Profile($this->fixture[1]);
 
@@ -419,7 +419,7 @@ class ProfileTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testGetCallgraphNoDuplicates()
+    public function testGetCallgraphNoDuplicates(): void
     {
         $profile = new Profile($this->fixture[2]);
 
@@ -485,7 +485,7 @@ class ProfileTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testGetDateFallback()
+    public function testGetDateFallback(): void
     {
         $data = [
             'meta' => [

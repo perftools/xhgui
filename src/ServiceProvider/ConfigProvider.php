@@ -8,7 +8,7 @@ use XHGui\Config;
 
 class ConfigProvider implements ServiceProviderInterface
 {
-    public function register(Container $app)
+    public function register(Container $app): void
     {
         $app['config'] = static function ($app) {
             // @deprecated

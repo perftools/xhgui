@@ -12,9 +12,9 @@ use XHGui\Profile;
  */
 interface SearcherInterface
 {
-    const DEFAULT_DIRECTION = 'desc';
-    const DEFAULT_PER_PAGE = 25;
-    const DEFAULT_PAGE = 1;
+    public const DEFAULT_DIRECTION = 'desc';
+    public const DEFAULT_PER_PAGE = 25;
+    public const DEFAULT_PAGE = 1;
 
     /**
      * Get the latest profile data.
