@@ -52,7 +52,6 @@ class WaterfallController extends AbstractController
             'search' => $search,
             'paging' => $paging,
             'base_url' => 'waterfall.list',
-            'date_format' => $this->config('date.format'),
         ]);
     }
 
