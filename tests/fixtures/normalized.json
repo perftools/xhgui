@@ -4,7 +4,9 @@
         "meta": {
             "url": "/tasks?page=3",
             "simple_url": "/tasks",
-            "get": [],
+            "get": {
+                "page": "3"
+            },
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358787612, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358787612, "usec": 123456}
@@ -31,7 +33,9 @@
         "meta": {
             "url": "/tasks?page=2",
             "simple_url": "/tasks",
-            "get": [],
+            "get": {
+                "page": "2"
+            },
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358701212, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358701212, "usec": 123456}
@@ -93,7 +97,9 @@
         "meta": {
             "url": "/tasks?page=1",
             "simple_url": "/tasks",
-            "get": [],
+            "get": {
+                "page": "1"
+            },
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358614812, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358614812, "usec": 123456}
@@ -148,7 +154,9 @@
         "meta": {
             "url": "/?page=1",
             "simple_url": "/",
-            "get": [],
+            "get": {
+                "page": "1"
+            },
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358528412, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358528412, "usec": 123456}
@@ -182,7 +190,9 @@
         "meta": {
             "url": "/?page=1",
             "simple_url": "/",
-            "get": [],
+            "get": {
+                "page": "1"
+            },
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358614812, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358614812, "usec": 123456}
@@ -202,7 +212,9 @@
         "meta": {
             "url": "/?page=1",
             "simple_url": "/",
-            "get": [],
+            "get": {
+                "page": "1"
+            },
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358614812, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358614812, "usec": 123456}
@@ -223,7 +235,9 @@
         "meta": {
             "url": "/?page=1",
             "simple_url": "/",
-            "get": [],
+            "get": {
+                "page": "1"
+            },
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358614812, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358614812, "usec": 123456}
