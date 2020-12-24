@@ -103,7 +103,10 @@
                 {{result.meta('SERVER.REQUEST_METHOD')}}
               </a>
             </td>
-            <td><a href="{{ url('url.view', {'url': result.meta.url}) }}">{{ result.meta.url }}</a></td>
+            <td>
+                {% set addr = result.meta('SERVER.SERVER_NAME') ~ result.meta.url %}
+                <a href="{{ url('url.view', {'url': result.meta.url}) }}">{{ addr }}</a>
+            </td>
             <td><a href="{{ url('run.view', {'id': result.id|trim }) }}">{{ result.date|date(date_format) }}</a></td>
             <td class="right">{{ result.get('main()', 'wt') |as_time }}</td>
             <td class="right">{{ result.get('main()', 'cpu') |as_time }}</td>
