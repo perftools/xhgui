@@ -105,7 +105,12 @@
             </td>
             <td>
                 {% set addr = result.meta('SERVER.SERVER_NAME') ~ result.meta.url %}
-                <a href="{{ url('url.view', {'url': result.meta.url}) }}">{{ addr }}</a>
+                {{ helpers.tip_link(
+                    addr,
+                    50,
+                    'url.view',
+                    {'url': result.meta.url}
+                ) }}
             </td>
             <td><a href="{{ url('run.view', {'id': result.id|trim }) }}">{{ result.date|date(date_format) }}</a></td>
             <td class="right">{{ result.get('main()', 'wt') |as_time }}</td>
