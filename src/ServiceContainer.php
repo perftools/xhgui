@@ -83,6 +83,11 @@ class ServiceContainer extends Container
                 'autoescape' => 'html',
             ];
 
+            // set global variables to templates
+            $view->appendData([
+                'date_format' => $c['config']['date.format'],
+            ]);
+
             return $view;
         };
 

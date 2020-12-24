@@ -75,7 +75,6 @@ class RunController extends AbstractController
             'paging' => $paging,
             'base_url' => 'home',
             'runs' => $result['results'],
-            'date_format' => $this->config('date.format'),
             'search' => $search,
             'has_search' => implode('', $search) !== '',
             'title' => $title,
@@ -125,7 +124,6 @@ class RunController extends AbstractController
             'wall_time' => $timeChart,
             'memory' => $memoryChart,
             'watches' => $watchedFunctions,
-            'date_format' => $this->config('date.format'),
         ]);
     }
 
@@ -242,7 +240,6 @@ class RunController extends AbstractController
             'runs' => $runs['results'],
             'url' => $request->get('url'),
             'chart_data' => $chartData,
-            'date_format' => $this->config('date.format'),
             'search' => array_merge($search, ['url' => $request->get('url')]),
         ]);
     }
@@ -290,7 +287,6 @@ class RunController extends AbstractController
             'head_run' => $headRun,
             'candidates' => $candidates,
             'url_params' => $request->get(),
-            'date_format' => $this->config('date.format'),
             'comparison' => $comparison,
             'paging' => $paging,
             'search' => [
@@ -346,7 +342,6 @@ class RunController extends AbstractController
 
         $this->render('runs/callgraph.twig', [
             'profile' => $profile,
-            'date_format' => $this->config('date.format'),
         ]);
     }
 
