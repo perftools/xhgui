@@ -9,7 +9,6 @@ use MongoDB\Driver\Manager;
 use PDO;
 use Pimple\Container;
 use RuntimeException;
-use Slim\Middleware\SessionCookie;
 use Slim\Slim as App;
 use Slim\Views\Twig;
 use XHGui\Db\PdoRepository;
@@ -97,11 +96,6 @@ class ServiceContainer extends Container
             }
 
             $app = new App($c['config']);
-
-            // Enable cookie based sessions
-            $app->add(new SessionCookie([
-                'httponly' => true,
-            ]));
 
             $view = $c['view'];
             $view->parserExtensions = [
