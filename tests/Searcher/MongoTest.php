@@ -19,7 +19,7 @@ class MongoTest extends TestCase
 
         $this->skipIfPdo('This is MongoDB test');
         $this->di[MongoDB::class]->watches->drop();
-        $this->loadFixture($this->di['saver.mongodb']);
+        $this->importFixture($this->di['saver.mongodb']);
     }
 
     public function testCustomQuery(): void
@@ -39,7 +39,7 @@ class MongoTest extends TestCase
         ];
         $result = $this->mongo->getForUrl('/', $options);
         $this->assertEquals(1, $result['page']);
-        $this->assertEquals(2, $result['totalPages']);
+        $this->assertEquals(4, $result['totalPages']);
         $this->assertEquals(1, $result['perPage']);
 
         $this->assertCount(1, $result['results']);

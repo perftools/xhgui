@@ -10,12 +10,12 @@ class MongoTest extends TestCase
 {
     public function testSave(): void
     {
-        $data = json_decode(file_get_contents(__DIR__ . '/../../tests/fixtures/results.json'), true);
+        $data = $this->loadFixture('normalized.json');
 
         $collection = $this->getMockBuilder(MongoCollection::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $collection->expects($this->exactly(5))
+        $collection->expects($this->exactly(count($data)))
             ->method('insert')
             ->withConsecutive($this->equalTo($data));
 

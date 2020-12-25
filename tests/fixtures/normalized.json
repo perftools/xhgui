@@ -209,6 +209,11 @@
         },
         "profile": {
             "main()": {
+                "ct": 0,
+                "wt": 0,
+                "cpu": 0,
+                "mu": 0,
+                "pmu": 0,
                 "unknown": 2
             }
         }
@@ -224,10 +229,6 @@
             "request_ts_micro": {"sec": 1358614812, "usec": 123456}
         },
         "profile": {
-            "strpos()": "",
-            "drink_beer()==>lift_glass()": {},
-            "main()==>drink_beer()": null,
-            "main()==>drink_cerveza()": false,
             "main()": {
                 "ct": 1,
                 "wt": 10,
