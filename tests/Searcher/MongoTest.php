@@ -39,7 +39,7 @@ class MongoTest extends TestCase
         ];
         $result = $this->mongo->getForUrl('/', $options);
         $this->assertEquals(1, $result['page']);
-        $this->assertEquals(3, $result['totalPages']);
+        $this->assertEquals(4, $result['totalPages']);
         $this->assertEquals(1, $result['perPage']);
 
         $this->assertCount(1, $result['results']);
