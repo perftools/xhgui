@@ -196,5 +196,26 @@
                 "pmu": 375999
             }
         }
+    },
+    {
+        "_id": "aaaaaaaaaaaaaaaaaaaaaaaf",
+        "meta": {
+            "url": "/?page=1",
+            "simple_url": "/",
+            "get": [],
+            "env": [],
+            "SERVER": {"REQUEST_TIME": 1358614812, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
+            "request_ts_micro": {"sec": 1358614812, "usec": 123456}
+        },
+        "profile": {
+            "main()": {
+                "ct": 0,
+                "wt": 0,
+                "cpu": 0,
+                "mu": 0,
+                "pmu": 0,
+                "unknown": 2
+            }
+        }
     }
 ]
