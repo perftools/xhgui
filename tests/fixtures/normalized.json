@@ -251,5 +251,33 @@
                 "pmu": 3001
             }
         }
+    },
+    {
+        "_id": "aaaaaaaaaaaaaaaaaaaaaab1",
+        "meta": {
+            "url": "phpunit-7.5.phar --configuration phpunit.xml",
+            "get": [],
+            "env": [],
+            "SERVER": {
+                "PHP_SELF": "/usr/local/bin/phpunit-7.5.phar",
+                "DOCUMENT_ROOT": "",
+                "REQUEST_TIME_FLOAT": 1587223926.187821,
+                "REQUEST_TIME": 1587223926
+            },
+            "simple_url": "phpunit-7.5.phar --configuration phpunit.xml",
+            "request_ts_micro": {
+                "sec": "1587223926",
+                "usec": "1878"
+            }
+        },
+        "profile": {
+            "main()": {
+                "ct": 1,
+                "wt": 127,
+                "cpu": 0,
+                "mu": 0,
+                "pmu": 0
+            }
+        }
     }
 ]

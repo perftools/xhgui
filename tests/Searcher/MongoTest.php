@@ -138,7 +138,7 @@ class MongoTest extends TestCase
     {
         $result = $this->mongo->latest();
         $this->assertInstanceOf(Profile::class, $result);
-        $this->assertEquals('2013-01-21', $result->getDate()->format('Y-m-d'));
+        $this->assertEquals('2020-04-18', $result->getDate()->format('Y-m-d'));
     }
 
     public function testSaveInsert(): void
