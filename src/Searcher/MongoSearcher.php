@@ -222,7 +222,7 @@ class MongoSearcher implements SearcherInterface
 
     public function truncate()
     {
-        $this->_collection->drop();
+        $this->_collection->remove();
 
         return $this;
     }
@@ -276,7 +276,7 @@ class MongoSearcher implements SearcherInterface
 
     public function truncateWatches()
     {
-        $this->_watches->drop();
+        $this->_watches->remove();
 
         return $this;
     }
