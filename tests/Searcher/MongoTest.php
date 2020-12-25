@@ -19,7 +19,7 @@ class MongoTest extends TestCase
 
         $this->skipIfPdo('This is MongoDB test');
         $this->di[MongoDB::class]->watches->drop();
-        $this->loadFixture($this->di['saver.mongodb']);
+        $this->importFixture($this->di['saver.mongodb']);
     }
 
     public function testCustomQuery(): void

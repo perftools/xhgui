@@ -136,7 +136,7 @@ class RunTest extends TestCase
     public function testCallgraph(): void
     {
         $this->searcher->truncate();
-        $this->loadFixture($this->saver);
+        $this->importFixture($this->saver);
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
@@ -153,7 +153,7 @@ class RunTest extends TestCase
     public function testCallgraphData(): void
     {
         $this->searcher->truncate();
-        $this->loadFixture($this->saver);
+        $this->importFixture($this->saver);
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
@@ -171,7 +171,7 @@ class RunTest extends TestCase
     {
         $this->skipIfPdo('Undefined index: page');
         $searcher = $this->searcher->truncate();
-        $this->loadFixture($this->saver);
+        $this->importFixture($this->saver);
 
         Environment::mock([
             'REQUEST_METHOD' => 'POST',
@@ -202,7 +202,7 @@ class RunTest extends TestCase
     {
         $this->skipIfPdo('Undefined index: page');
         $this->searcher->truncate();
-        $this->loadFixture($this->saver);
+        $this->importFixture($this->saver);
 
         Environment::mock([
           'SCRIPT_NAME' => 'index.php',
@@ -228,7 +228,7 @@ class RunTest extends TestCase
     public function testFilterCustomMethods(): void
     {
         $this->searcher->truncate();
-        $this->loadFixture($this->saver);
+        $this->importFixture($this->saver);
 
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
@@ -245,7 +245,7 @@ class RunTest extends TestCase
     public function testFilterCustomMethod(): void
     {
         $this->searcher->truncate();
-        $this->loadFixture($this->saver);
+        $this->importFixture($this->saver);
 
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
@@ -262,7 +262,7 @@ class RunTest extends TestCase
     public function testFilterMethods(): void
     {
         $this->searcher->truncate();
-        $this->loadFixture($this->saver);
+        $this->importFixture($this->saver);
 
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
