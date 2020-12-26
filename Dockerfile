@@ -3,8 +3,10 @@
 # also modifying source, would not need to rebuild extensions layer.
 # Author: Elan Ruusamäe <glen@pld-linux.org>
 
-FROM alpine:3.12 AS base
+# build (build from source), prebuilt (use copy from last release image)
+ARG BUILD_SOURCE=build
 
+FROM alpine:3.12 AS base
 ENV PHP_INI_DIR /etc/php7
 
 # ext-mongodb: build and stage
@@ -23,7 +25,7 @@ COPY --from=build-ext-mongodb /usr/lib/php7/modules/mongodb.so .
 RUN strip *.so && chmod a+rx *.so
 
 # php-fpm runtime
-FROM base AS php
+FROM base AS php-build
 RUN set -x \
 	&& apk add --no-cache \
 		nginx \
@@ -32,10 +34,11 @@ RUN set -x \
 		php-fpm \
 		php-json \
 		php-pdo \
-		php-session \
 		php-pdo_mysql \
 		php-pdo_pgsql \
 		php-pdo_sqlite \
+		php-phar \
+		php-session \
 	# Use www-data uid from alpine also present in docker php images
 	&& adduser -u 82 -D -S -G www-data www-data \
 	# Tweak php-fpm config
@@ -63,6 +66,10 @@ RUN set -x \
 	&& ln -s /dev/stderr /var/log/nginx/error.log \
 	&& php -m
 
+FROM xhgui/xhgui:latest AS php-prebuilt
+# "php" alias
+FROM php-$BUILD_SOURCE AS php
+
 # prepare sources
 FROM scratch AS source
 WORKDIR /app
@@ -73,9 +80,7 @@ WORKDIR /app/vendor
 # install composer vendor
 FROM php AS build
 # extra deps for composer
-RUN apk add --no-cache \
-		php-phar \
-	&& php -m
+RUN apk add --no-cache php-phar
 WORKDIR /app
 ARG COMPOSER_FLAGS="--no-interaction --no-suggest --ansi --no-dev"
 COPY --from=composer:1.10 /usr/bin/composer /usr/bin/
@@ -103,8 +108,10 @@ RUN mv vendor /
 
 RUN install -d /cache -m 700
 
-# build runtime image
-FROM php
+# runtime image from current build
+FROM php AS runtime-build
+COPY --from=stage-ext-mongodb /build /
+
 ARG APPDIR=/var/www/xhgui
 ARG WEBROOT=$APPDIR/webroot
 WORKDIR $APPDIR
@@ -112,8 +119,13 @@ WORKDIR $APPDIR
 EXPOSE 80
 CMD ["sh", "-c", "nginx && exec php-fpm"]
 VOLUME "/run/nginx"
-
-COPY --from=stage-ext-mongodb /build /
 COPY --from=build --chown=www-data /cache ./cache/
+
+# runtime image from last release
+FROM xhgui/xhgui:latest AS runtime-prebuilt
+
+# build final image
+FROM runtime-$BUILD_SOURCE AS runtime
+
 COPY --from=build /vendor ./vendor/
 COPY --from=build /app ./
