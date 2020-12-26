@@ -17,7 +17,6 @@ jobs:
 
       - name: Docker build
         run: |
-          docker pull xhgui/xhgui:latest
-          docker build --cache-from=xhgui/xhgui:latest .
+          docker build --build-arg=BUILD_SOURCE=prebuilt .
 
 # vim:ft=yaml:et:ts=2:sw=2
