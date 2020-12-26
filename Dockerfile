@@ -119,13 +119,14 @@ WORKDIR $APPDIR
 EXPOSE 80
 CMD ["sh", "-c", "nginx && exec php-fpm"]
 VOLUME "/run/nginx"
-COPY --from=build --chown=www-data /cache ./cache/
 
 # runtime image from last release
 FROM xhgui/xhgui:latest AS runtime-prebuilt
+RUN rm -rf $(pwd)
 
 # build final image
 FROM runtime-$BUILD_SOURCE AS runtime
 
+COPY --from=build --chown=www-data /cache ./cache/
 COPY --from=build /vendor ./vendor/
 COPY --from=build /app ./
