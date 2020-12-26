@@ -9,6 +9,7 @@ use Slim\App;
 use Slim\Container as SlimContainer;
 use Slim\Http\Uri;
 use Slim\Views\Twig;
+use XHGui\RequestProxy;
 use XHGui\Twig\TwigExtension;
 
 class SlimProvider implements ServiceProviderInterface
@@ -64,6 +65,10 @@ class SlimProvider implements ServiceProviderInterface
             $env = $container->get('environment');
 
             return Uri::createFromEnvironment($env);
+        };
+
+        $container['request.proxy'] = static function (SlimContainer $container) {
+            return new RequestProxy($container['request']);
         };
     }
 }
