@@ -1,9 +1,10 @@
 <?php
 
-namespace XHGui\Test;
+namespace XHGui\Test\Profile;
 
 use DateTime;
 use XHGui\Profile;
+use XHGui\Test\TestCase;
 
 class ProfileTest extends TestCase
 {
