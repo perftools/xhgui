@@ -7,6 +7,14 @@ use XHGui\ServiceContainer;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
+    use LazyContainerProperties;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->setupProperties();
+    }
+
     /**
      * Load a fixture into the database.
      */

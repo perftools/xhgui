@@ -4,19 +4,15 @@ namespace XHGui\Test\Searcher;
 
 use XHGui\Options\SearchOptions;
 use XHGui\Profile;
-use XHGui\Test\LazyContainerProperties;
+use XHGui\Test\MongoHelper;
 use XHGui\Test\TestCase;
 
 class MongoTest extends TestCase
 {
-    use LazyContainerProperties;
-
     public function setUp(): void
     {
-        parent::setUp();
-        $this->setupProperties();
-
         $this->skipIfPdo('This is MongoDB test');
+        parent::setUp();
         $this->mongodb->watches->drop();
         $this->importFixture($this->di['saver.mongodb']);
     }
