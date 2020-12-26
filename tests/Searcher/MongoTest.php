@@ -2,7 +2,9 @@
 
 namespace XHGui\Test\Searcher;
 
+use ArrayIterator;
 use MongoDB;
+use MultipleIterator;
 use XHGui\Options\SearchOptions;
 use XHGui\Profile;
 use XHGui\Test\LazyContainerProperties;
@@ -182,5 +184,122 @@ class MongoTest extends TestCase
         $result[0]['removed'] = 1;
         $this->assertTrue($this->mongo->saveWatch($result[0]));
         $this->assertCount(0, $this->mongo->getAllWatches());
+    }
+
+    public function testTruncateResultsPreserveIndexes(): void
+    {
+        $mongoDb = $this->getDi()[MongoDB::class];
+        $collection = $mongoDb->results;
+
+        // dropping "results" collection using raw client
+        // (indexes are lost)
+        $collection->drop();
+
+        // recreating collection "results" with indexes
+        $collection = $mongoDb->createCollection('results');
+        $expectedIndexes = [
+            [['_id' => 1], ['name' => '_id_']],
+            [['meta.SERVER.REQUEST_TIME' => -1], ['name' => 'meta_srv_req_t']],
+            [['profile.main().wt' => -1], ['name' => 'profile_wt']],
+            [['profile.main().mu' => -1], ['name' => 'profile_mu']],
+            [['profile.main().cpu' => -1], ['name' => 'profile_cpu']],
+            [['meta.url' => 1], ['name' => 'meta_url']],
+            [['meta.simple_url' => 1], ['name' => 'simple_url']],
+            [['meta.request_ts' => 1], ['name' => 'req_ts', 'expireAfterSeconds' => 432000]],
+        ];
+        foreach ($expectedIndexes as $index) {
+            $collection->createIndex($index[0], $index[1]);
+        }
+
+        $this->importFixture($this->saver);
+
+        $result = $this->mongo->getAll(new SearchOptions());
+        $this->assertCount(7, $result['results']);
+
+        $this->mongo->truncate();
+
+        $result = $this->mongo->getAll(new SearchOptions());
+        $this->assertEmpty($result['results']);
+
+        // assert that all indexes are intact after truncating
+        // fetch indexes
+        $resultIndexInfo = $collection->getIndexInfo();
+        $resultIndexes = array_column($resultIndexInfo, 'key');
+        $resultIndexNames = array_column($resultIndexInfo, 'name');
+
+        // setup iterators
+        $iterator = new MultipleIterator();
+        $iterator->attachIterator(new ArrayIterator($resultIndexes));
+        $iterator->attachIterator(new ArrayIterator($resultIndexNames));
+        $iterator->attachIterator(new ArrayIterator($expectedIndexes));
+
+        // compare result against expected indexes
+        foreach ($iterator as $item) {
+            $index = $item[0];
+            $expectedIndex = $item[2][0];
+            $this->assertEquals($expectedIndex, $index);
+
+            $name = $item[1];
+            $expectedName = $item[2][1]['name'];
+            $this->assertEquals($expectedName, $name);
+
+            if ($name === 'meta.request_ts') {
+                $this->assertArrayHasKey('expireAfterSeconds', $item[2][1]);
+                $this->assertEquals(432000, $item[2][1]['expireAfterSeconds']);
+            }
+        }
+    }
+
+    public function testTruncateWatchesPreserveIndexes(): void
+    {
+        $mongoDb = $this->getDi()[MongoDB::class];
+        $collection = $mongoDb->watches;
+
+        // dropping "watches" collection using raw client
+        // (indexes are lost)
+        $collection->drop();
+
+        // recreating collection "watches" with indexes
+        $collection = $mongoDb->createCollection('watches');
+        $expectedIndexes = [
+            [['_id' => 1], ['name' => '_id_']],
+            [['name' => -1], ['name' => 'test_name']],
+        ];
+        foreach ($expectedIndexes as $index) {
+            $collection->createIndex($index[0], $index[1]);
+        }
+
+        $this->searcher->saveWatch(['name' => 'strlen']);
+
+        $result = $this->searcher->getAllWatches();
+        $this->assertCount(1, $result);
+
+        $this->mongo->truncateWatches();
+
+        $result = $this->searcher->getAllWatches();
+        $this->assertEmpty($result);
+
+        // assert that all indexes are intact after truncating
+        // fetch indexes
+        $resultIndexInfo = $collection->getIndexInfo();
+        $resultIndexes = array_column($resultIndexInfo, 'key');
+        $resultIndexNames = array_column($resultIndexInfo, 'name');
+
+        // setup iterators
+        $iterator = new MultipleIterator();
+        $iterator->attachIterator(new ArrayIterator($resultIndexes));
+        $iterator->attachIterator(new ArrayIterator($resultIndexNames));
+        $iterator->attachIterator(new ArrayIterator($expectedIndexes));
+
+        // compare result against expected indexes
+        foreach ($iterator as $item) {
+            $index = $item[0];
+            $expectedIndex = $item[2][0];
+            $this->assertEquals($expectedIndex, $index);
+
+            $name = $item[1];
+            $expectedName = $item[2][1]['name'];
+            $this->assertEquals($expectedName, $name);
+        }
     }
 }
