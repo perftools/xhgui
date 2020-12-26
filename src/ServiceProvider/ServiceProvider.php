@@ -17,11 +17,7 @@ class ServiceProvider implements ServiceProviderInterface
     private function setupPaths(Container $app): void
     {
         $app['app.dir'] = dirname(__DIR__, 2);
-        $app['app.template_dir'] = $app['app.dir'] . '/templates';
         $app['app.config_dir'] = $app['app.dir'] . '/config';
-        $app['app.cache_dir'] = static function ($app) {
-            return $app['config']['cache'] ?? $app['app.dir'] . '/cache';
-        };
     }
 
     /**
