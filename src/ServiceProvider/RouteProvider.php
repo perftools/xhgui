@@ -48,7 +48,7 @@ class RouteProvider implements ServiceProviderInterface
             // https://github.com/perftools/xhgui/issues/261
             $response = $response->withHeader('Cache-Control', 'public, max-age=0');
 
-            $controller->index(new RequestProxy($request), $response);
+            $controller->index($this['request.proxy'], $response);
         })->setName('home');
 
         $app->get('/run/view', function (Request $request, Response $response) use ($di): void {

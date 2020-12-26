@@ -9,6 +9,7 @@ use Slim\App;
 use Slim\Container as SlimContainer;
 use Slim\Http\Uri;
 use Slim\Views\Twig;
+use XHGui\RequestProxy;
 use XHGui\Twig\TwigExtension;
 
 class SlimProvider implements ServiceProviderInterface
@@ -24,7 +25,7 @@ class SlimProvider implements ServiceProviderInterface
             }
 
             $app = new App($c['config']);
-            $this->registerView($app->getContainer());
+            $this->registerSlimContainer($app->getContainer());
 
             /*
             $view = $c['view'];
@@ -34,7 +35,7 @@ class SlimProvider implements ServiceProviderInterface
         };
     }
 
-    private function registerView(ContainerInterface $c): void
+    private function registerSlimContainer(ContainerInterface $c): void
     {
         $c['view'] = static function (SlimContainer $app) {
             $view = new Twig($app['template_dir'], [
@@ -52,6 +53,10 @@ class SlimProvider implements ServiceProviderInterface
             $view['date_format'] = $app['date.format'];
 
             return $view;
+        };
+
+        $c['request.proxy'] = static function (SlimContainer $app) {
+            return new RequestProxy($app['request']);
         };
     }
 }
