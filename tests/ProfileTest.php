@@ -12,8 +12,7 @@ class ProfileTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $contents = file_get_contents(dirname(__DIR__) . '/tests/fixtures/results.json');
-        $this->fixture = json_decode($contents, true);
+        $this->fixture = $this->loadFixture('results.json');
     }
 
     public function testProcessIncompleteData(): void
