@@ -2,9 +2,7 @@
 
 namespace XHGui\Test\Searcher;
 
-use ArrayIterator;
 use MongoDB;
-use MultipleIterator;
 use XHGui\Options\SearchOptions;
 use XHGui\Profile;
 use XHGui\Test\LazyContainerProperties;
@@ -188,15 +186,13 @@ class MongoTest extends TestCase
 
     public function testTruncateResultsPreserveIndexes(): void
     {
-        $mongoDb = $this->mongodb;
-        $collection = $mongoDb->results;
+        $helper = new MongoHelper($this->mongodb);
 
         // dropping "results" collection using raw client
         // (indexes are lost)
-        $collection->drop();
+        $helper->dropCollection('results');
 
         // recreating collection "results" with indexes
-        $collection = $mongoDb->createCollection('results');
         $expectedIndexes = [
             [['_id' => 1], ['name' => '_id_']],
             [['meta.SERVER.REQUEST_TIME' => -1], ['name' => 'meta_srv_req_t']],
@@ -207,9 +203,7 @@ class MongoTest extends TestCase
             [['meta.simple_url' => 1], ['name' => 'simple_url']],
             [['meta.request_ts' => 1], ['name' => 'req_ts', 'expireAfterSeconds' => 432000]],
         ];
-        foreach ($expectedIndexes as $index) {
-            $collection->createIndex($index[0], $index[1]);
-        }
+        $helper->createCollection('results', $expectedIndexes);
 
         $this->importFixture($this->saver);
 
@@ -222,52 +216,34 @@ class MongoTest extends TestCase
         $this->assertEmpty($result['results']);
 
         // assert that all indexes are intact after truncating
-        // fetch indexes
-        $resultIndexInfo = $collection->getIndexInfo();
-        $resultIndexes = array_column($resultIndexInfo, 'key');
-        $resultIndexNames = array_column($resultIndexInfo, 'name');
-
-        // setup iterators
-        $iterator = new MultipleIterator();
-        $iterator->attachIterator(new ArrayIterator($resultIndexes));
-        $iterator->attachIterator(new ArrayIterator($resultIndexNames));
-        $iterator->attachIterator(new ArrayIterator($expectedIndexes));
-
         // compare result against expected indexes
-        foreach ($iterator as $item) {
-            $index = $item[0];
-            $expectedIndex = $item[2][0];
-            $this->assertEquals($expectedIndex, $index);
+        foreach ($helper->getIndexes('results') as [$index, $name, $expectedIndex]) {
+            $this->assertEquals($expectedIndex[0], $index);
 
-            $name = $item[1];
-            $expectedName = $item[2][1]['name'];
+            $expectedName = $expectedIndex[1]['name'];
             $this->assertEquals($expectedName, $name);
 
             if ($name === 'meta.request_ts') {
-                $this->assertArrayHasKey('expireAfterSeconds', $item[2][1]);
-                $this->assertEquals(432000, $item[2][1]['expireAfterSeconds']);
+                $this->assertArrayHasKey('expireAfterSeconds', $expectedIndex[1]);
+                $this->assertEquals(432000, $expectedIndex[1]['expireAfterSeconds']);
             }
         }
     }
 
     public function testTruncateWatchesPreserveIndexes(): void
     {
-        $mongoDb = $this->mongodb;
-        $collection = $mongoDb->watches;
+        $helper = new MongoHelper($this->mongodb);
 
         // dropping "watches" collection using raw client
         // (indexes are lost)
-        $collection->drop();
+        $helper->dropCollection('watches');
 
         // recreating collection "watches" with indexes
-        $collection = $mongoDb->createCollection('watches');
         $expectedIndexes = [
             [['_id' => 1], ['name' => '_id_']],
             [['name' => -1], ['name' => 'test_name']],
         ];
-        foreach ($expectedIndexes as $index) {
-            $collection->createIndex($index[0], $index[1]);
-        }
+        $helper->createCollection('watches', $expectedIndexes);
 
         $this->searcher->saveWatch(['name' => 'strlen']);
 
@@ -279,26 +255,10 @@ class MongoTest extends TestCase
         $result = $this->searcher->getAllWatches();
         $this->assertEmpty($result);
 
-        // assert that all indexes are intact after truncating
-        // fetch indexes
-        $resultIndexInfo = $collection->getIndexInfo();
-        $resultIndexes = array_column($resultIndexInfo, 'key');
-        $resultIndexNames = array_column($resultIndexInfo, 'name');
-
-        // setup iterators
-        $iterator = new MultipleIterator();
-        $iterator->attachIterator(new ArrayIterator($resultIndexes));
-        $iterator->attachIterator(new ArrayIterator($resultIndexNames));
-        $iterator->attachIterator(new ArrayIterator($expectedIndexes));
-
         // compare result against expected indexes
-        foreach ($iterator as $item) {
-            $index = $item[0];
-            $expectedIndex = $item[2][0];
-            $this->assertEquals($expectedIndex, $index);
-
-            $name = $item[1];
-            $expectedName = $item[2][1]['name'];
+        foreach ($helper->getIndexes('watches') as [$index, $name, $expectedIndex]) {
+            $this->assertEquals($expectedIndex[0], $index);
+            $expectedName = $expectedIndex[1]['name'];
             $this->assertEquals($expectedName, $name);
         }
     }
