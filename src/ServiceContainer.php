@@ -3,10 +3,7 @@
 namespace XHGui;
 
 use Pimple\Container;
-use Slim\Slim as App;
-use Slim\Views\Twig;
 use XHGui\Saver\NormalizingSaver;
-use XHGui\Twig\TwigExtension;
 
 class ServiceContainer extends Container
 {
@@ -33,7 +30,7 @@ class ServiceContainer extends Container
         $this->register(new ServiceProvider\ConfigProvider());
         $this->register(new ServiceProvider\PdoStorageProvider());
         $this->register(new ServiceProvider\MongoStorageProvider());
-        $this->slimApp();
+        $this->register(new ServiceProvider\SlimProvider());
         $this->services();
     }
 
@@ -49,49 +46,6 @@ class ServiceContainer extends Container
         $app['app.config_dir'] = dirname(__DIR__) . '/config';
         $app['app.cache_dir'] = static function ($c) {
             return $c['config']['cache'] ?? dirname(__DIR__) . '/cache';
-        };
-    }
-
-    // Create the Slim app.
-    private function slimApp(): void
-    {
-        $this['view'] = static function ($c) {
-            // Configure Twig view for slim
-            $view = new Twig();
-
-            $view->twigTemplateDirs = [
-                $c['app.template_dir'],
-            ];
-            $view->parserOptions = [
-                'charset' => 'utf-8',
-                'cache' => $c['app.cache_dir'],
-                'auto_reload' => true,
-                'strict_variables' => false,
-                'autoescape' => 'html',
-            ];
-
-            // set global variables to templates
-            $view->appendData([
-                'date_format' => $c['config']['date.format'],
-            ]);
-
-            return $view;
-        };
-
-        $this['app'] = static function ($c) {
-            if ($c['config']['timezone']) {
-                date_default_timezone_set($c['config']['timezone']);
-            }
-
-            $app = new App($c['config']);
-
-            $view = $c['view'];
-            $view->parserExtensions = [
-                new TwigExtension($app),
-            ];
-            $app->view($view);
-
-            return $app;
         };
     }
 
