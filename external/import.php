@@ -1,7 +1,6 @@
 <?php
 
-use XHGui\Saver\SaverInterface;
-use XHGui\ServiceContainer;
+use XHGui\Application;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -21,9 +20,8 @@ if (!$fp) {
     throw new RuntimeException('Can\'t open ' . $file);
 }
 
-$container = ServiceContainer::instance();
-/** @var SaverInterface $saver */
-$saver = $container['saver'];
+$app = new Application();
+$saver = $app->getSaver();
 
 while (!feof($fp)) {
     $line = fgets($fp);

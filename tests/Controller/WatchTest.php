@@ -9,8 +9,8 @@ class WatchTest extends TestCase
 {
     public function setUp(): void
     {
-        $this->skipIfPdo('Watchers not implemented');
         parent::setUp();
+        $this->skipIfPdo('Watchers not implemented');
 
         Environment::mock([
            'SCRIPT_NAME' => 'index.php',

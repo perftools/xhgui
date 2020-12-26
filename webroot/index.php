@@ -1,11 +1,8 @@
 <?php
 
-use Slim\Slim as App;
-use XHGui\ServiceContainer;
+use XHGui\Application;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$di = ServiceContainer::instance();
-/** @var App $app */
-$app = $di['app'];
+$app = new Application();
 $app->run();

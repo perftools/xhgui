@@ -6,38 +6,38 @@ use LazyProperty\LazyPropertiesTrait;
 use MongoDB;
 use Slim\Slim as App;
 use Slim\View;
-use XHGui\Controller\ImportController;
-use XHGui\Controller\RunController;
-use XHGui\Controller\WatchController;
+use XHGui\Application;
+use XHGui\Controller;
 use XHGui\Saver\SaverInterface;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\SearcherInterface;
-use XHGui\ServiceContainer;
 use XHGui\Twig\TwigExtension;
 
 trait LazyContainerProperties
 {
     use LazyPropertiesTrait;
 
-    /** @var ServiceContainer */
+    /** @var Application */
     protected $di;
-    /** @var ImportController */
+    /** @var Controller\ImportController */
     protected $import;
     /** @var MongoSearcher */
     protected $mongo;
     /** @var MongoDB */
     protected $mongodb;
-    /** @var RunController */
+    /** @var Controller\RunController */
     protected $runs;
     /** @var App */
     protected $app;
+    /** @var array */
+    protected $config;
     /** @var SearcherInterface */
     protected $searcher;
     /** @var SaverInterface */
     protected $saver;
     /** @var View */
     protected $view;
-    /** @var WatchController */
+    /** @var Controller\WatchController */
     protected $watches;
 
     protected function setupProperties(): void
@@ -45,6 +45,7 @@ trait LazyContainerProperties
         $this->initLazyProperties([
             'di',
             'app',
+            'config',
             'import',
             'mongo',
             'mongodb',
@@ -58,8 +59,12 @@ trait LazyContainerProperties
 
     protected function getDi()
     {
-        $di = new ServiceContainer();
+        $di = new Application();
         $config = $di['config'];
+
+        // Use a test databases
+        // TODO: do the same for PDO. currently PDO uses DSN syntax and has too many variations
+        $di['mongodb.database'] = 'test_xhgui';
 
         /** @var App $app */
         $app = $this->getMockBuilder(App::class)
@@ -84,9 +89,14 @@ trait LazyContainerProperties
         return $this->di['app'];
     }
 
+    protected function getConfig()
+    {
+        return $this->di['config'];
+    }
+
     protected function getImport()
     {
-        return $this->di['importController'];
+        return $this->di[Controller\ImportController::class];
     }
 
     protected function getMongo()
@@ -106,7 +116,7 @@ trait LazyContainerProperties
 
     protected function getRuns()
     {
-        return $this->di['runController'];
+        return $this->di[Controller\RunController::class];
     }
 
     protected function getSaver()
@@ -121,6 +131,6 @@ trait LazyContainerProperties
 
     protected function getWatches()
     {
-        return $this->di['watchController'];
+        return $this->di[Controller\WatchController::class];
     }
 }

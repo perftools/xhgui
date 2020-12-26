@@ -11,8 +11,8 @@ class MongoTest extends TestCase
 {
     public function setUp(): void
     {
-        $this->skipIfPdo('This is MongoDB test');
         parent::setUp();
+        $this->skipIfPdo('This is MongoDB test');
         $this->mongodb->watches->drop();
         $this->importFixture($this->di['saver.mongodb']);
     }
