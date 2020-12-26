@@ -59,6 +59,10 @@ trait LazyContainerProperties
         $di = new ServiceContainer();
         $config = $di['config'];
 
+        // Use a test databases
+        // TODO: do the same for PDO. currently PDO uses DSN syntax and has too many variations
+        $di['mongodb.database'] = 'test_xhgui';
+
         /** @var App $app */
         $app = $this->getMockBuilder(App::class)
             ->setMethods(['redirect', 'render', 'urlFor'])
