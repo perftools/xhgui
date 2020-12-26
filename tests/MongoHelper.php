@@ -1,6 +1,6 @@
 <?php
 
-namespace XHGui\Test\Searcher;
+namespace XHGui\Test;
 
 use MongoDB;
 

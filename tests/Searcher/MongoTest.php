@@ -4,6 +4,7 @@ namespace XHGui\Test\Searcher;
 
 use XHGui\Options\SearchOptions;
 use XHGui\Profile;
+use XHGui\Test\MongoHelper;
 use XHGui\Test\TestCase;
 
 class MongoTest extends TestCase
