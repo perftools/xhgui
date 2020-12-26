@@ -6,9 +6,7 @@ use LazyProperty\LazyPropertiesTrait;
 use MongoDB;
 use Slim\Slim as App;
 use Slim\View;
-use XHGui\Controller\ImportController;
-use XHGui\Controller\RunController;
-use XHGui\Controller\WatchController;
+use XHGui\Controller;
 use XHGui\Saver\SaverInterface;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\SearcherInterface;
@@ -21,13 +19,13 @@ trait LazyContainerProperties
 
     /** @var ServiceContainer */
     protected $di;
-    /** @var ImportController */
+    /** @var Controller\ImportController */
     protected $import;
     /** @var MongoSearcher */
     protected $mongo;
     /** @var MongoDB */
     protected $mongodb;
-    /** @var RunController */
+    /** @var Controller\RunController */
     protected $runs;
     /** @var App */
     protected $app;
@@ -37,7 +35,7 @@ trait LazyContainerProperties
     protected $saver;
     /** @var View */
     protected $view;
-    /** @var WatchController */
+    /** @var Controller\WatchController */
     protected $watches;
 
     protected function setupProperties(): void
@@ -86,7 +84,7 @@ trait LazyContainerProperties
 
     protected function getImport()
     {
-        return $this->di['importController'];
+        return $this->di[Controller\ImportController::class];
     }
 
     protected function getMongo()
@@ -106,7 +104,7 @@ trait LazyContainerProperties
 
     protected function getRuns()
     {
-        return $this->di['runController'];
+        return $this->di[Controller\RunController::class];
     }
 
     protected function getSaver()
@@ -121,6 +119,6 @@ trait LazyContainerProperties
 
     protected function getWatches()
     {
-        return $this->di['watchController'];
+        return $this->di[Controller\WatchController::class];
     }
 }

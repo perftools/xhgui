@@ -35,7 +35,6 @@ class ServiceContainer extends Container
         $this->register(new ServiceProvider\MongoStorageProvider());
         $this->slimApp();
         $this->services();
-        $this->controllers();
     }
 
     public function boot(): void
@@ -112,35 +111,5 @@ class ServiceContainer extends Container
 
             return new NormalizingSaver($c["saver.$saver"]);
         };
-    }
-
-    /**
-     * Add controllers to the DI container.
-     */
-    private function controllers(): void
-    {
-        $this['watchController'] = $this->factory(static function ($c) {
-            return new Controller\WatchController($c['app'], $c['searcher']);
-        });
-
-        $this['runController'] = $this->factory(static function ($c) {
-            return new Controller\RunController($c['app'], $c['searcher']);
-        });
-
-        $this['customController'] = $this->factory(static function ($c) {
-            return new Controller\CustomController($c['app'], $c['searcher']);
-        });
-
-        $this['waterfallController'] = $this->factory(static function ($c) {
-            return new Controller\WaterfallController($c['app'], $c['searcher']);
-        });
-
-        $this['importController'] = $this->factory(static function ($c) {
-            return new Controller\ImportController($c['app'], $c['saver'], $c['config']['upload.token']);
-        });
-
-        $this['metricsController'] = $this->factory(static function ($c) {
-            return new Controller\MetricsController($c['app'], $c['searcher']);
-        });
     }
 }
