@@ -188,7 +188,7 @@ class MongoTest extends TestCase
 
     public function testTruncateResultsPreserveIndexes(): void
     {
-        $mongoDb = $this->getDi()[MongoDB::class];
+        $mongoDb = $this->mongodb;
         $collection = $mongoDb->results;
 
         // dropping "results" collection using raw client
@@ -252,7 +252,7 @@ class MongoTest extends TestCase
 
     public function testTruncateWatchesPreserveIndexes(): void
     {
-        $mongoDb = $this->getDi()[MongoDB::class];
+        $mongoDb = $this->mongodb;
         $collection = $mongoDb->watches;
 
         // dropping "watches" collection using raw client
