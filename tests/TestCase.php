@@ -3,7 +3,6 @@
 namespace XHGui\Test;
 
 use XHGui\Saver\SaverInterface;
-use XHGui\ServiceContainer;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
@@ -37,7 +36,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     protected function skipIfPdo($details = null): void
     {
-        $saveHandler = ServiceContainer::instance()['config']['save.handler'];
+        $saveHandler = $this->config['save.handler'];
 
         if ($saveHandler !== 'pdo') {
             return;

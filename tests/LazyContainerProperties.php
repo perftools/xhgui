@@ -29,6 +29,8 @@ trait LazyContainerProperties
     protected $runs;
     /** @var App */
     protected $app;
+    /** @var array */
+    protected $config;
     /** @var SearcherInterface */
     protected $searcher;
     /** @var SaverInterface */
@@ -43,6 +45,7 @@ trait LazyContainerProperties
         $this->initLazyProperties([
             'di',
             'app',
+            'config',
             'import',
             'mongo',
             'mongodb',
@@ -84,6 +87,11 @@ trait LazyContainerProperties
     protected function getApp()
     {
         return $this->di['app'];
+    }
+
+    protected function getConfig()
+    {
+        return $this->di['config'];
     }
 
     protected function getImport()
