@@ -6,18 +6,18 @@ use LazyProperty\LazyPropertiesTrait;
 use MongoDB;
 use Slim\Slim as App;
 use Slim\View;
+use XHGui\Application;
 use XHGui\Controller;
 use XHGui\Saver\SaverInterface;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\SearcherInterface;
-use XHGui\ServiceContainer;
 use XHGui\Twig\TwigExtension;
 
 trait LazyContainerProperties
 {
     use LazyPropertiesTrait;
 
-    /** @var ServiceContainer */
+    /** @var Application */
     protected $di;
     /** @var Controller\ImportController */
     protected $import;
@@ -59,7 +59,7 @@ trait LazyContainerProperties
 
     protected function getDi()
     {
-        $di = new ServiceContainer();
+        $di = new Application();
         $config = $di['config'];
 
         // Use a test databases
