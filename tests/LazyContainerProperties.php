@@ -9,7 +9,7 @@ use Slim\View;
 use XHGui\Controller\ImportController;
 use XHGui\Controller\RunController;
 use XHGui\Controller\WatchController;
-use XHGui\Saver\MongoSaver;
+use XHGui\Saver\SaverInterface;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\SearcherInterface;
 use XHGui\ServiceContainer;
@@ -24,7 +24,7 @@ trait LazyContainerProperties
     /** @var ImportController */
     protected $import;
     /** @var MongoSearcher */
-    private $mongo;
+    protected $mongo;
     /** @var MongoDB */
     protected $mongodb;
     /** @var RunController */
@@ -33,7 +33,7 @@ trait LazyContainerProperties
     protected $app;
     /** @var SearcherInterface */
     protected $searcher;
-    /** @var MongoSaver */
+    /** @var SaverInterface */
     protected $saver;
     /** @var View */
     protected $view;
