@@ -4,17 +4,13 @@ namespace XHGui\Test\Controller;
 
 use Slim\Environment;
 use XHGui\Profile;
-use XHGui\Test\LazyContainerProperties;
 use XHGui\Test\TestCase;
 
 class ImportTest extends TestCase
 {
-    use LazyContainerProperties;
-
     public function setUp(): void
     {
         parent::setUp();
-        $this->setupProperties();
 
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',

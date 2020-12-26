@@ -10,8 +10,6 @@ class NormalizerTest extends TestCase
 {
     /** @var NormalizingSaver */
     private $normalizer;
-    /** @var SaverInterface */
-    private $saver;
 
     public function setUp(): void
     {

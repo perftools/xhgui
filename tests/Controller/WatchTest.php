@@ -3,18 +3,14 @@
 namespace XHGui\Test\Controller;
 
 use Slim\Environment;
-use XHGui\Test\LazyContainerProperties;
 use XHGui\Test\TestCase;
 
 class WatchTest extends TestCase
 {
-    use LazyContainerProperties;
-
     public function setUp(): void
     {
         $this->skipIfPdo('Watchers not implemented');
         parent::setUp();
-        $this->setupProperties();
 
         Environment::mock([
            'SCRIPT_NAME' => 'index.php',
