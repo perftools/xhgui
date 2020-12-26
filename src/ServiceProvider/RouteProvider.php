@@ -2,7 +2,6 @@
 
 namespace XHGui\ServiceProvider;
 
-use Exception;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Slim\App;
@@ -20,8 +19,9 @@ class RouteProvider implements ServiceProviderInterface
 
     private function registerRoutes(Container $di, App $app): void
     {
+        /*
         $app->error(static function (Exception $e) use ($di, $app): void {
-            /** @var Twig $view */
+            // @var Twig $view
             $view = $di['view'];
             $view->parserOptions['cache'] = false;
             $view->parserExtensions = [
@@ -34,6 +34,7 @@ class RouteProvider implements ServiceProviderInterface
                 'stack_trace' => $e->getTraceAsString(),
             ]);
         });
+        */
 
         /**
          * Wrap Request/Response with RequestProxuy/RequestWrapper
