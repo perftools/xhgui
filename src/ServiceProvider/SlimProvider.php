@@ -40,11 +40,12 @@ class SlimProvider implements ServiceProviderInterface
 
             $app = new App($c['config']);
 
+            /*
             $view = $c['view'];
-            $view->parserExtensions = [
-                new TwigExtension($app),
-            ];
+            $view->addExtension(new TwigExtension($app));
+
             $app->view($view);
+            */
 
             return $app;
         };
