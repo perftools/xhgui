@@ -16,7 +16,7 @@ class ExtensionTest extends TestCase
     {
         parent::setUp();
         $app = new App();
-        $app->get('/test', static function (): void {
+        $app->get('/test', function (): void {
         })->setName('test');
         $this->ext = new TwigExtension($app);
     }
