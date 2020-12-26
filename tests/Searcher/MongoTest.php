@@ -183,4 +183,83 @@ class MongoTest extends TestCase
         $this->assertTrue($this->mongo->saveWatch($result[0]));
         $this->assertCount(0, $this->mongo->getAllWatches());
     }
+
+    public function testTruncateResultsPreserveIndexes(): void
+    {
+        $helper = new MongoHelper($this->mongodb);
+
+        // dropping "results" collection using raw client
+        // (indexes are lost)
+        $helper->dropCollection('results');
+
+        // recreating collection "results" with indexes
+        $expectedIndexes = [
+            [['_id' => 1], ['name' => '_id_']],
+            [['meta.SERVER.REQUEST_TIME' => -1], ['name' => 'meta_srv_req_t']],
+            [['profile.main().wt' => -1], ['name' => 'profile_wt']],
+            [['profile.main().mu' => -1], ['name' => 'profile_mu']],
+            [['profile.main().cpu' => -1], ['name' => 'profile_cpu']],
+            [['meta.url' => 1], ['name' => 'meta_url']],
+            [['meta.simple_url' => 1], ['name' => 'simple_url']],
+            [['meta.request_ts' => 1], ['name' => 'req_ts', 'expireAfterSeconds' => 432000]],
+        ];
+        $helper->createCollection('results', $expectedIndexes);
+
+        $this->importFixture($this->saver);
+
+        $result = $this->mongo->getAll(new SearchOptions());
+        $this->assertCount(7, $result['results']);
+
+        $this->mongo->truncate();
+
+        $result = $this->mongo->getAll(new SearchOptions());
+        $this->assertEmpty($result['results']);
+
+        // assert that all indexes are intact after truncating
+        // compare result against expected indexes
+        foreach ($helper->getIndexes('results') as [$index, $name, $expectedIndex]) {
+            $this->assertEquals($expectedIndex[0], $index);
+
+            $expectedName = $expectedIndex[1]['name'];
+            $this->assertEquals($expectedName, $name);
+
+            if ($name === 'meta.request_ts') {
+                $this->assertArrayHasKey('expireAfterSeconds', $expectedIndex[1]);
+                $this->assertEquals(432000, $expectedIndex[1]['expireAfterSeconds']);
+            }
+        }
+    }
+
+    public function testTruncateWatchesPreserveIndexes(): void
+    {
+        $helper = new MongoHelper($this->mongodb);
+
+        // dropping "watches" collection using raw client
+        // (indexes are lost)
+        $helper->dropCollection('watches');
+
+        // recreating collection "watches" with indexes
+        $expectedIndexes = [
+            [['_id' => 1], ['name' => '_id_']],
+            [['name' => -1], ['name' => 'test_name']],
+        ];
+        $helper->createCollection('watches', $expectedIndexes);
+
+        $this->searcher->saveWatch(['name' => 'strlen']);
+
+        $result = $this->searcher->getAllWatches();
+        $this->assertCount(1, $result);
+
+        $this->mongo->truncateWatches();
+
+        $result = $this->searcher->getAllWatches();
+        $this->assertEmpty($result);
+
+        // compare result against expected indexes
+        foreach ($helper->getIndexes('watches') as [$index, $name, $expectedIndex]) {
+            $this->assertEquals($expectedIndex[0], $index);
+            $expectedName = $expectedIndex[1]['name'];
+            $this->assertEquals($expectedName, $name);
+        }
+    }
 }

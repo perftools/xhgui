@@ -3,6 +3,7 @@
 namespace XHGui\Test;
 
 use LazyProperty\LazyPropertiesTrait;
+use MongoDB;
 use Slim\Slim as App;
 use Slim\View;
 use XHGui\Controller\ImportController;
@@ -24,6 +25,8 @@ trait LazyContainerProperties
     protected $import;
     /** @var MongoSearcher */
     private $mongo;
+    /** @var MongoDB */
+    protected $mongodb;
     /** @var RunController */
     protected $runs;
     /** @var App */
@@ -44,6 +47,7 @@ trait LazyContainerProperties
             'app',
             'import',
             'mongo',
+            'mongodb',
             'runs',
             'saver',
             'searcher',
@@ -88,6 +92,11 @@ trait LazyContainerProperties
     protected function getMongo()
     {
         return $this->di['searcher.mongodb'];
+    }
+
+    protected function getMongoDb()
+    {
+        return $this->di[MongoDB::class];
     }
 
     protected function getSearcher()
