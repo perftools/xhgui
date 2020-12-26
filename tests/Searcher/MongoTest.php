@@ -217,13 +217,9 @@ class MongoTest extends TestCase
 
         // assert that all indexes are intact after truncating
         // compare result against expected indexes
-        foreach ($helper->getIndexes('results') as [$index, $name, $expectedIndex]) {
-            [$keys, $options] = $expectedIndex;
-
+        foreach ($helper->getIndexes('results') as [$index, $name, $keys, $options]) {
             $this->assertEquals($keys, $index);
-
-            $expectedName = $options['name'];
-            $this->assertEquals($expectedName, $name);
+            $this->assertEquals($options['name'], $name);
 
             if ($name === 'meta.request_ts') {
                 $this->assertArrayHasKey('expireAfterSeconds', $options);
@@ -258,11 +254,9 @@ class MongoTest extends TestCase
         $this->assertEmpty($result);
 
         // compare result against expected indexes
-        foreach ($helper->getIndexes('watches') as [$index, $name, $expectedIndex]) {
-            [$keys, $options] = $expectedIndex;
+        foreach ($helper->getIndexes('watches') as [$index, $name, $keys, $options]) {
             $this->assertEquals($keys, $index);
-            $expectedName = $options['name'];
-            $this->assertEquals($expectedName, $name);
+            $this->assertEquals($options['name'], $name);
         }
     }
 }
