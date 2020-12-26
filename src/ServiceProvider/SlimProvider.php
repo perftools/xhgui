@@ -7,7 +7,6 @@ use Pimple\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Container as SlimContainer;
-use Slim\Http\Environment;
 use Slim\Http\Uri;
 use Slim\Views\Twig;
 use XHGui\Twig\TwigExtension;
@@ -44,7 +43,8 @@ class SlimProvider implements ServiceProviderInterface
 
             // Instantiate and add Slim specific extension
             $router = $app->get('router');
-            $uri = Uri::createFromEnvironment(new Environment($_SERVER));
+            $env = $app->get('environment');
+            $uri = Uri::createFromEnvironment($env);
             $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
             $view->addExtension(new TwigExtension($router, $uri));
 
