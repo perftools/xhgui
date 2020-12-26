@@ -2,9 +2,7 @@
 
 namespace XHGui\Test\Searcher;
 
-use ArrayIterator;
 use MongoDB;
-use MultipleIterator;
 
 class MongoHelper
 {
@@ -34,20 +32,18 @@ class MongoHelper
         $this->indexes[$collectionName] = $indexes;
     }
 
-    public function getIndexes(string $collectionName): MultipleIterator
+    public function getIndexes(string $collectionName): iterable
     {
         $collection = $this->mongodb->selectCollection($collectionName);
         $expectedIndexes = $this->indexes[$collectionName];
 
-        $resultIndexInfo = $collection->getIndexInfo();
-        $resultIndexes = array_column($resultIndexInfo, 'key');
-        $resultIndexNames = array_column($resultIndexInfo, 'name');
-
-        $iterator = new MultipleIterator();
-        $iterator->attachIterator(new ArrayIterator($resultIndexes));
-        $iterator->attachIterator(new ArrayIterator($resultIndexNames));
-        $iterator->attachIterator(new ArrayIterator($expectedIndexes));
-
-        return $iterator;
+        foreach ($collection->getIndexInfo() as $offset => $index) {
+            yield [
+                $index['key'],
+                $index['name'],
+                $expectedIndexes[$offset][0],
+                $expectedIndexes[$offset][1],
+            ];
+        }
     }
 }

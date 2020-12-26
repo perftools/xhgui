@@ -2,7 +2,6 @@
 
 namespace XHGui\Test\Searcher;
 
-use MongoDB;
 use XHGui\Options\SearchOptions;
 use XHGui\Profile;
 use XHGui\Test\LazyContainerProperties;
@@ -18,7 +17,7 @@ class MongoTest extends TestCase
         $this->setupProperties();
 
         $this->skipIfPdo('This is MongoDB test');
-        $this->di[MongoDB::class]->watches->drop();
+        $this->mongodb->watches->drop();
         $this->importFixture($this->di['saver.mongodb']);
     }
 
@@ -217,15 +216,13 @@ class MongoTest extends TestCase
 
         // assert that all indexes are intact after truncating
         // compare result against expected indexes
-        foreach ($helper->getIndexes('results') as [$index, $name, $expectedIndex]) {
-            $this->assertEquals($expectedIndex[0], $index);
-
-            $expectedName = $expectedIndex[1]['name'];
-            $this->assertEquals($expectedName, $name);
+        foreach ($helper->getIndexes('results') as [$index, $name, $keys, $options]) {
+            $this->assertEquals($keys, $index);
+            $this->assertEquals($options['name'], $name);
 
             if ($name === 'meta.request_ts') {
-                $this->assertArrayHasKey('expireAfterSeconds', $expectedIndex[1]);
-                $this->assertEquals(432000, $expectedIndex[1]['expireAfterSeconds']);
+                $this->assertArrayHasKey('expireAfterSeconds', $options);
+                $this->assertEquals(432000, $options['expireAfterSeconds']);
             }
         }
     }
@@ -256,10 +253,9 @@ class MongoTest extends TestCase
         $this->assertEmpty($result);
 
         // compare result against expected indexes
-        foreach ($helper->getIndexes('watches') as [$index, $name, $expectedIndex]) {
-            $this->assertEquals($expectedIndex[0], $index);
-            $expectedName = $expectedIndex[1]['name'];
-            $this->assertEquals($expectedName, $name);
+        foreach ($helper->getIndexes('watches') as [$index, $name, $keys, $options]) {
+            $this->assertEquals($keys, $index);
+            $this->assertEquals($options['name'], $name);
         }
     }
 }
