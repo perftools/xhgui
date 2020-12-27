@@ -7,6 +7,7 @@ use MongoDB;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Slim\App;
+use Slim\Http\Environment;
 use Slim\Views\Twig;
 use XHGui\Application;
 use XHGui\Controller;
@@ -32,6 +33,8 @@ trait LazyContainerProperties
     protected $app;
     /** @var array */
     protected $config;
+    /** @var Environment */
+    protected $env;
     /** @var SearcherInterface */
     protected $searcher;
     /** @var SaverInterface */
@@ -47,6 +50,7 @@ trait LazyContainerProperties
             'di',
             'app',
             'config',
+            'env',
             'import',
             'mongo',
             'mongodb',
@@ -88,6 +92,11 @@ trait LazyContainerProperties
     protected function getConfig()
     {
         return $this->di['config'];
+    }
+
+    protected function getEnv()
+    {
+        return Environment::mock();
     }
 
     protected function getImport()
