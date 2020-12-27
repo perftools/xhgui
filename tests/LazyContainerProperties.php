@@ -13,6 +13,7 @@ use Slim\Http\Response;
 use Slim\Views\Twig;
 use XHGui\Application;
 use XHGui\Controller;
+use XHGui\RequestProxy;
 use XHGui\Saver\SaverInterface;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\SearcherInterface;
@@ -29,7 +30,7 @@ trait LazyContainerProperties
     protected $mongo;
     /** @var MongoDB */
     protected $mongodb;
-    /** @var Request */
+    /** @var RequestProxy */
     protected $request;
     /** @var Response */
     protected $response;
@@ -122,14 +123,14 @@ trait LazyContainerProperties
         return $this->di[MongoDB::class];
     }
 
-    protected function getRequest(): Request
+    protected function getRequest(): RequestProxy
     {
-        return $this->di['app']->request();
+        return new RequestProxy(Request::createFromEnvironment($this->env));
     }
 
     protected function getResponse(): Response
     {
-        return $this->di['app']->response();
+        return $this->di['app']->getContainer()->get('response');
     }
 
     protected function getSearcher()
