@@ -35,8 +35,9 @@ class SlimProvider implements ServiceProviderInterface
 
     private function registerSlimContainer(ContainerInterface $container): void
     {
+        $container['view.class'] = Twig::class;
         $container['view'] = static function (SlimContainer $container) {
-            $view = new Twig($container['template_dir'], [
+            $view = new $container['view.class']($container['template_dir'], [
                 'cache' => $container['cache_dir'],
             ]);
 
