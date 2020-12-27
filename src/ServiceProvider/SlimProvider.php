@@ -35,29 +35,37 @@ class SlimProvider implements ServiceProviderInterface
         };
     }
 
-    private function registerSlimContainer(ContainerInterface $c): void
+    private function registerSlimContainer(ContainerInterface $container): void
     {
-        $c['view.class'] = Twig::class;
-        $c['view'] = static function (SlimContainer $app) {
-            $view = new $app['view.class']($app['template_dir'], [
-                'cache' => $app['cache_dir'],
+        $container['view.class'] = Twig::class;
+        $container['view'] = static function (SlimContainer $container) {
+            $view = new $container['view.class']($container['template_dir'], [
+                'cache' => $container['cache_dir'],
             ]);
 
-            // Instantiate and add Slim specific extension
-            $router = $app->get('router');
-            $env = $app->get('environment');
-            $uri = Uri::createFromEnvironment($env);
-            $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
-            $view->addExtension(new TwigExtension($router, $uri));
+            $view->addExtension($container[TwigExtension::class]);
 
             // set global variables to templates
-            $view['date_format'] = $app['date.format'];
+            $view['date_format'] = $container['date.format'];
 
             return $view;
         };
 
-        $c['request.proxy'] = static function (SlimContainer $app) {
-            return new RequestProxy($app['request']);
+        $container[TwigExtension::class] = static function (SlimContainer $container) {
+            $router = $container['router'];
+            $uri = $container[Uri::class];
+
+            return new TwigExtension($router, $uri);
+        };
+
+        $container[Uri::class] = static function (SlimContainer $container) {
+            $env = $container->get('environment');
+
+            return Uri::createFromEnvironment($env);
+        };
+
+        $container['request.proxy'] = static function (SlimContainer $container) {
+            return new RequestProxy($container['request']);
         };
     }
 }
