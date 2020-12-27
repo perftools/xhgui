@@ -12,7 +12,7 @@ class ImportTest extends TestCase
     {
         parent::setUp();
 
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
         ]);
@@ -40,7 +40,7 @@ class ImportTest extends TestCase
                 ],
             ],
         ];
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'slim.input' => json_encode($data),
