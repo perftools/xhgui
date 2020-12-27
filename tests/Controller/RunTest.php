@@ -12,7 +12,7 @@ class RunTest extends TestCase
     {
         parent::setUp();
 
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
         ]);
@@ -20,7 +20,7 @@ class RunTest extends TestCase
 
     public function testIndexEmpty(): void
     {
-        $this->runs->index($this->app->request(), $this->app->response());
+        $this->runs->index($this->request, $this->response);
         $result = $this->view->all();
 
         $this->assertEquals('Recent runs', $result['title']);
@@ -36,13 +36,13 @@ class RunTest extends TestCase
 
     public function testIndexSortedWallTime(): void
     {
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=wt',
         ]);
 
-        $this->runs->index($this->app->request(), $this->app->response());
+        $this->runs->index($this->request, $this->response);
         $result = $this->view->all();
         $this->assertEquals('Longest wall time', $result['title']);
         $this->assertEquals('wt', $result['paging']['sort']);
@@ -50,13 +50,13 @@ class RunTest extends TestCase
 
     public function testIndexSortedCpu(): void
     {
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=cpu&direction=desc',
         ]);
 
-        $this->runs->index($this->app->request(), $this->app->response());
+        $this->runs->index($this->request, $this->response);
         $result = $this->view->all();
         $this->assertEquals('Most CPU time', $result['title']);
         $this->assertEquals('cpu', $result['paging']['sort']);
@@ -65,13 +65,13 @@ class RunTest extends TestCase
 
     public function testIndexWithSearch(): void
     {
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=mu&direction=asc&url=index.php',
         ]);
 
-        $this->runs->index($this->app->request(), $this->app->response());
+        $this->runs->index($this->request, $this->response);
         $result = $this->view->all();
         $this->assertEquals('Highest memory use', $result['title']);
         $this->assertEquals('mu', $result['paging']['sort']);
@@ -133,13 +133,13 @@ class RunTest extends TestCase
     {
         $this->searcher->truncate();
         $this->importFixture($this->saver);
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
         ]);
 
-        $this->runs->callgraph($this->app->request());
+        $this->runs->callgraph($this->request);
         $result = $this->view->all();
         $this->assertArrayHasKey('profile', $result);
         $this->assertArrayHasKey('date_format', $result);
@@ -150,13 +150,13 @@ class RunTest extends TestCase
     {
         $this->searcher->truncate();
         $this->importFixture($this->saver);
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
         ]);
 
-        $this->runs->callgraphData($this->app->request(), $this->app->response());
+        $this->runs->callgraphData($this->request, $this->response);
         $response = $this->app->response();
 
         $this->assertEquals('application/json', $response['Content-Type']);
@@ -226,13 +226,13 @@ class RunTest extends TestCase
         $this->searcher->truncate();
         $this->importFixture($this->saver);
 
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*,strpos()',
         ]);
 
-        $this->runs->view($this->app->request(), $this->app->response());
+        $this->runs->view($this->request, $this->response);
         $result = $this->view->all();
 
         $this->assertCount(1, $result['profile']);
@@ -243,13 +243,13 @@ class RunTest extends TestCase
         $this->searcher->truncate();
         $this->importFixture($this->saver);
 
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*',
         ]);
 
-        $this->runs->view($this->app->request(), $this->app->response());
+        $this->runs->view($this->request, $this->response);
         $result = $this->view->all();
 
         $this->assertCount(2, $result['profile']);
@@ -260,13 +260,13 @@ class RunTest extends TestCase
         $this->searcher->truncate();
         $this->importFixture($this->saver);
 
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=true',
         ]);
 
-        $this->runs->view($this->app->request(), $this->app->response());
+        $this->runs->view($this->request, $this->response);
         $result = $this->view->all();
 
         $this->assertCount(2, $result['profile']);
