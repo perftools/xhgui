@@ -17,6 +17,7 @@ use XHGui\RequestProxy;
 use XHGui\Saver\SaverInterface;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\SearcherInterface;
+use XHGui\Twig\TwigExtension;
 
 trait LazyContainerProperties
 {
@@ -42,6 +43,8 @@ trait LazyContainerProperties
     protected $config;
     /** @var Environment */
     protected $env;
+    /** @var TwigExtension */
+    protected $ext;
     /** @var SearcherInterface */
     protected $searcher;
     /** @var SaverInterface */
@@ -58,6 +61,7 @@ trait LazyContainerProperties
             'app',
             'config',
             'env',
+            'ext',
             'import',
             'mongo',
             'mongodb',
@@ -81,10 +85,20 @@ trait LazyContainerProperties
 
         /** @var \Slim\Container $container */
         $container = $di['app']->getContainer();
-        $container->register(new class() implements ServiceProviderInterface {
+        $container->register(new class($this) implements ServiceProviderInterface {
+            private $ctx;
+
+            public function __construct($ctx)
+            {
+                $this->ctx = $ctx;
+            }
+
             public function register(Container $container): void
             {
                 $container['view.class'] = TwigView::class;
+                $container['environment'] = function () {
+                    return $this->ctx->getEnv();
+                };
             }
         });
 
@@ -103,9 +117,14 @@ trait LazyContainerProperties
         return $this->di['config'];
     }
 
-    protected function getEnv()
+    public function getEnv()
     {
-        return Environment::mock();
+        return $this->env ?? $this->env = Environment::mock();
+    }
+
+    protected function getExt()
+    {
+        return $this->app->getContainer()[TwigExtension::class];
     }
 
     protected function getImport()
