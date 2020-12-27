@@ -4,6 +4,8 @@ namespace XHGui\Test;
 
 use LazyProperty\LazyPropertiesTrait;
 use MongoDB;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use Slim\App;
 use Slim\Views\Twig;
 use XHGui\Application;
@@ -11,7 +13,6 @@ use XHGui\Controller;
 use XHGui\Saver\SaverInterface;
 use XHGui\Searcher\MongoSearcher;
 use XHGui\Searcher\SearcherInterface;
-use XHGui\Twig\TwigExtension;
 
 trait LazyContainerProperties
 {
@@ -35,7 +36,7 @@ trait LazyContainerProperties
     protected $searcher;
     /** @var SaverInterface */
     protected $saver;
-    /** @var Twig */
+    /** @var TwigView */
     protected $view;
     /** @var Controller\WatchController */
     protected $watches;
@@ -60,25 +61,20 @@ trait LazyContainerProperties
     protected function getDi()
     {
         $di = new Application();
-        $config = $di['config'];
 
         // Use a test databases
         // TODO: do the same for PDO. currently PDO uses DSN syntax and has too many variations
         $di['mongodb.database'] = 'test_xhgui';
 
-        /** @var App $app */
-        $app = $this->getMockBuilder(App::class)
-            ->setMethods(['redirect', 'render', 'urlFor'])
-            ->setConstructorArgs([$config])
-            ->getMock();
-        $di['app'] = $app;
+        /** @var \Slim\Container $container */
+        $container = $di['app']->getContainer();
+        $container->register(new class() implements ServiceProviderInterface {
+            public function register(Container $container): void
+            {
+                $container['view.class'] = TwigView::class;
+            }
+        });
 
-        $view = $di['view'];
-        $view->parserExtensions = [
-            new TwigExtension($app),
-        ];
-
-        $app->view($view);
         $di->boot();
 
         return $di;
@@ -124,9 +120,9 @@ trait LazyContainerProperties
         return $this->di['saver'];
     }
 
-    protected function getView(): View
+    protected function getView(): Twig
     {
-        return $this->di['view'];
+        return $this->di['app']->getContainer()->get('view');
     }
 
     protected function getWatches()
