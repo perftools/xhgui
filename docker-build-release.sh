@@ -37,6 +37,8 @@ cleanup() {
 	rm -rf build
 }
 
+export DOCKER_BUILDKIT=1
+
 prepare
 build
 cleanup
