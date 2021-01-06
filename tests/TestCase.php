@@ -17,7 +17,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * Load a fixture into the database.
      */
-    protected function importFixture(SaverInterface $saver, string $fileName = 'results.json'): void
+    protected function importFixture(SaverInterface $saver, string $fileName = 'normalized.json'): void
     {
         foreach ($this->loadFixture($fileName) as $record) {
             $saver->save($record, $record['_id'] ?? null);

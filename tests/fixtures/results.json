@@ -4,7 +4,6 @@
         "meta": {
             "url": "/tasks?page=3",
             "simple_url": "/tasks",
-            "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358787612, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358787612, "usec": 123456}
@@ -31,7 +30,6 @@
         "meta": {
             "url": "/tasks?page=2",
             "simple_url": "/tasks",
-            "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358701212, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358701212, "usec": 123456}
@@ -93,7 +91,6 @@
         "meta": {
             "url": "/tasks?page=1",
             "simple_url": "/tasks",
-            "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358614812, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358614812, "usec": 123456}
@@ -148,7 +145,6 @@
         "meta": {
             "url": "/?page=1",
             "simple_url": "/",
-            "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358528412, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358528412, "usec": 123456}
@@ -182,7 +178,6 @@
         "meta": {
             "url": "/?page=1",
             "simple_url": "/",
-            "get": [],
             "env": [],
             "SERVER": {"REQUEST_TIME": 1358614812, "SERVER_NAME": "localhost", "REQUEST_METHOD": "GET"},
             "request_ts_micro": {"sec": 1358614812, "usec": 123456}
@@ -234,6 +229,31 @@
                 "cpu": 12,
                 "mu": 3000,
                 "pmu": 3001
+            }
+        }
+    },
+    {
+        "_id": "aaaaaaaaaaaaaaaaaaaaaab1",
+        "meta": {
+            "url": "phpunit-7.5.phar --configuration phpunit.xml",
+            "get": [],
+            "env": [],
+            "SERVER": {
+                "PHP_SELF": "/usr/local/bin/phpunit-7.5.phar",
+                "DOCUMENT_ROOT": "",
+                "REQUEST_TIME_FLOAT": 1587223926.187821,
+                "REQUEST_TIME": 1587223926
+            },
+            "simple_url": "phpunit-7.5.phar --configuration phpunit.xml",
+            "request_ts_micro": {
+                "sec": "1587223926",
+                "usec": "1878"
+            }
+        },
+        "profile": {
+            "main()": {
+                "ct": 1,
+                "wt": 127
             }
         }
     }

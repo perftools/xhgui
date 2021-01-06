@@ -186,12 +186,12 @@ class RunTest extends TestCase
             ->method('redirect');
 
         $result = $searcher->getAll(new SearchOptions());
-        $this->assertCount(7, $result['results']);
+        $count = count($result['results']);
 
         $this->runs->deleteSubmit($this->app->request());
 
         $result = $searcher->getAll(new SearchOptions());
-        $this->assertCount(6, $result['results']);
+        $this->assertCount($count - 1, $result['results']);
     }
 
     public function testDeleteAllSubmit(): void
@@ -213,7 +213,7 @@ class RunTest extends TestCase
           ->method('redirect');
 
         $result = $this->searcher->getAll(new SearchOptions());
-        $this->assertCount(7, $result['results']);
+        $this->assertGreaterThan(0, count($result['results']));
 
         $this->runs->deleteAllSubmit();
 

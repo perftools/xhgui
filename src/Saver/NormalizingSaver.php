@@ -15,6 +15,13 @@ class NormalizingSaver implements SaverInterface
 
     public function save(array $data, string $id = null): string
     {
+        // extract "get" from "url"
+        // profiler no longer needs to send "get" over the wire.
+        // the individual savers may choose not to store this down separately
+        $query = parse_url($data['meta']['url'], PHP_URL_QUERY);
+        parse_str($query, $get);
+        $data['meta']['get'] = $get;
+
         foreach ($data['profile'] as $index => &$profile) {
             // skip empty profilings
             if (!$profile) {
