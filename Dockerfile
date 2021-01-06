@@ -39,6 +39,7 @@ RUN set -x \
 		php-pdo_sqlite \
 		php-phar \
 		php-session \
+		php-simplexml \
 	# Use www-data uid from alpine also present in docker php images
 	&& adduser -u 82 -D -S -G www-data www-data \
 	# Tweak php-fpm config
