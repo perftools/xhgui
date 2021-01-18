@@ -72,11 +72,12 @@ FROM xhgui/xhgui:latest AS php-prebuilt
 FROM php-$BUILD_SOURCE AS php
 
 # prepare sources
-FROM scratch AS source
+FROM alpine AS source
 WORKDIR /app
 COPY . .
 # mkdir "vendor" dir, so the next stage can optionally use external vendor dir contents
 WORKDIR /app/vendor
+RUN chmod -R a+rX /app
 
 # install composer vendor
 FROM php AS build
