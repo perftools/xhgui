@@ -81,8 +81,6 @@ RUN chmod -R a+rX /app
 
 # install composer vendor
 FROM php AS build
-# extra deps for composer
-RUN apk add --no-cache php-phar
 WORKDIR /app
 ARG COMPOSER_FLAGS="--no-interaction --no-suggest --ansi --no-dev"
 COPY --from=composer:1.10 /usr/bin/composer /usr/bin/
