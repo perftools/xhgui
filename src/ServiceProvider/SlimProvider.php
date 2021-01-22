@@ -4,6 +4,7 @@ namespace XHGui\ServiceProvider;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Slim\Middleware\SessionCookie;
 use Slim\Slim as App;
 use Slim\Views\Twig;
 use XHGui\Twig\TwigExtension;
@@ -44,6 +45,11 @@ class SlimProvider implements ServiceProviderInterface
             }
 
             $app = new App($c['config']);
+
+            // Enable cookie based sessions
+            $app->add(new SessionCookie([
+                'httponly' => true,
+            ]));
 
             $view = $c['view'];
             $view->parserExtensions = [
