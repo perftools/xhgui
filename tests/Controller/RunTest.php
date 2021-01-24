@@ -171,12 +171,14 @@ class RunTest extends TestCase
 
         Environment::mock([
             'REQUEST_METHOD' => 'POST',
+            'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/delete',
-            'slim.request.form_hash' => [
-                'id' => 'aaaaaaaaaaaaaaaaaaaaaaaa',
-            ],
         ]);
+
+        $_POST = [
+            'id' => 'aaaaaaaaaaaaaaaaaaaaaaaa',
+        ];
 
         $this->app->expects($this->once())
             ->method('urlFor')
