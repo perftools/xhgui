@@ -1,4 +1,5 @@
 # https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+# https://docs.github.com/en/actions/reference/environment-variables
 
 name: "Automatic Releases"
 
@@ -11,6 +12,9 @@ jobs:
   release:
     name: "GIT tag, release & create merge-up PR"
     runs-on: ubuntu-latest
+    env:
+      # https://symfony.com/doc/5.2/console/verbosity.html#verbosity-levels
+      SHELL_VERBOSITY: 3
 
     steps:
       - name: "Checkout"
