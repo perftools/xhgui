@@ -10,6 +10,8 @@ class MongoTest extends TestCase
 {
     public function testSave(): void
     {
+        $this->skipIfPdo('This is MongoDB test');
+
         $data = $this->loadFixture('normalized.json');
 
         $collection = $this->getMockBuilder(MongoCollection::class)
