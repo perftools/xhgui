@@ -8,6 +8,9 @@
                 <th>&nbsp;</th>
                 {% endif %}
                 <th>
+                  Server Name
+                </th>
+                <th>
                   Method
                 </th>
                 <th>URL</th>
@@ -50,17 +53,21 @@
             </td>
             {% endif %}
             <td>
+              <a href="{{ url('home', {'server_name': result.meta('SERVER.SERVER_NAME')}) }}">
+                {{result.meta('SERVER.SERVER_NAME')}}
+              </a>
+            </td>
+            <td>
               <a href="{{ url('run.view', {'id': result.id|trim }) }}">
                 {{result.meta('SERVER.REQUEST_METHOD')}}
               </a>
             </td>
             <td>
-                {% set addr = result.meta('SERVER.SERVER_NAME') ~ result.meta.url %}
                 {{ helpers.tip_link(
-                    addr,
+                    result.meta.url,
                     50,
                     'url.view',
-                    {'url': result.meta.simple_url}
+                    {'server_name': result.meta('SERVER.SERVER_NAME'), 'url': result.meta.simple_url}
                 ) }}
             </td>
             <td>
