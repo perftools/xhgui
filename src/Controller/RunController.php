@@ -37,7 +37,7 @@ class RunController extends AbstractController
         $response->headers->set('Cache-Control', 'public, max-age=0');
 
         $search = [];
-        $keys = ['date_start', 'date_end', 'url'];
+        $keys = ['date_start', 'date_end', 'server_name', 'url'];
         foreach ($keys as $key) {
             if ($request->get($key)) {
                 $search[$key] = $request->get($key);
@@ -203,7 +203,7 @@ class RunController extends AbstractController
         ];
 
         $search = [];
-        $keys = ['date_start', 'date_end', 'limit', 'limit_custom'];
+        $keys = ['date_start', 'date_end', 'limit', 'limit_custom', 'server_name'];
         foreach ($keys as $key) {
             $search[$key] = $request->get($key);
         }
@@ -262,7 +262,8 @@ class RunController extends AbstractController
             ];
             $candidates = $this->searcher->getForUrl(
                 $baseRun->getMeta('simple_url'),
-                $pagination
+                $pagination,
+                ['server_name' => $baseRun->getMeta('SERVER.SERVER_NAME')]
             );
 
             $paging = [
