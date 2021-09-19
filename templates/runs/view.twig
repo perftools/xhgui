@@ -7,7 +7,7 @@
 
 {% block content %}
 <div class="row-fluid">
-    <h1>Profile data for {{ result.meta('SERVER.REQUEST_METHOD')}} {{ result.meta.url }}</h1>
+    <h1>Profile data for {{ result.meta('SERVER.REQUEST_METHOD')}} {{ result.meta.SERVER.SERVER_NAME }}{{ result.meta.url }}</h1>
 </div>
 <div class="row-fluid">
 <div class="span3">

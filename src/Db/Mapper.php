@@ -46,6 +46,9 @@ class Mapper
         if (!empty($search['date_end']) && !$hasLimit) {
             $conditions['meta.request_date']['$lte'] = (string)$search['date_end'];
         }
+        if (!empty($search['server_name'])) {
+            $conditions['meta.SERVER.SERVER_NAME'] = (string)$search['server_name'];
+        }
         if (isset($search['simple_url'])) {
             $conditions['meta.simple_url'] = (string)$search['simple_url'];
         }

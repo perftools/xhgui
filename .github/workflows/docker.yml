@@ -10,13 +10,18 @@ jobs:
     env:
       COMPOSE_DOCKER_CLI_BUILD: "1"
       DOCKER_BUILDKIT: "1"
+      CACHE_TAG: "xhgui/xhgui:latest"
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
 
       - name: Docker build
-        run: |
-          docker build --build-arg=BUILD_SOURCE=prebuilt .
+        run: >
+          docker build
+          --build-arg=BUILDKIT_INLINE_CACHE=1
+          --build-arg=BUILD_SOURCE=prebuilt
+          --cache-from=$CACHE_TAG
+          .
 
 # vim:ft=yaml:et:ts=2:sw=2
