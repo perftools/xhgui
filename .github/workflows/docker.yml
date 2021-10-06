@@ -63,6 +63,8 @@ jobs:
           platforms: linux/amd64
           load: true
           tags: ${{ env.TEST_IMAGE }}:amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Build and export to Docker (linux/arm64)
         uses: docker/build-push-action@v2
@@ -71,6 +73,8 @@ jobs:
           platforms: linux/arm64
           load: true
           tags: ${{ env.TEST_IMAGE }}:arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Build and export to Docker (linux/arm/v7)
         uses: docker/build-push-action@v2
@@ -79,6 +83,8 @@ jobs:
           platforms: linux/arm/v7
           load: true
           tags: ${{ env.TEST_IMAGE }}:armv7
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Test Docker images
         run: |
