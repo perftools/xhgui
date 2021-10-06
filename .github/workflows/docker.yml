@@ -15,7 +15,8 @@ on:
 env:
   REGISTRY: docker.io
   IMAGE_NAME: xhgui/xhgui
-  TEST_IMAGE: xhgui:ci-test
+  TEST_IMAGE: xhgui
+  PLATFORMS: linux/amd64,linux/arm64,linux/arm/v7
 
 jobs:
   build-and-push-image:
@@ -55,22 +56,41 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/0.') }}
 
-      - name: Build and export to Docker
+      - name: Build and export to Docker (linux/amd64)
         uses: docker/build-push-action@v2
         with:
           context: .
+          platforms: linux/amd64
           load: true
-          tags: ${{ env.TEST_IMAGE }}
+          tags: ${{ env.TEST_IMAGE }}:amd64
 
-      - name: Test Docker image
+      - name: Build and export to Docker (linux/arm64)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/arm64
+          load: true
+          tags: ${{ env.TEST_IMAGE }}:arm64
+
+      - name: Build and export to Docker (linux/arm/v7)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/arm/v7
+          load: true
+          tags: ${{ env.TEST_IMAGE }}:armv7
+
+      - name: Test Docker images
         run: |
-          docker run --rm ${{ env.TEST_IMAGE }} php --version
+          docker run --rm ${{ env.TEST_IMAGE }}:amd64 php --version
+          docker run --rm ${{ env.TEST_IMAGE }}:arm64 php --version
+          docker run --rm ${{ env.TEST_IMAGE }}:armv7 php --version
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2.7.0
         with:
           context: .
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: ${{ env.PLATFORMS }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
