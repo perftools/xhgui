@@ -1,27 +1,104 @@
-name: Docker Image
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Publish Docker image
 
 on:
-  pull_request:
+  push:
+    branches:
+      - "*.*.x"
+    tags:
+      - "*.*.*"
+
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: xhgui/xhgui
+  TEST_IMAGE: xhgui
+  PLATFORMS: linux/amd64,linux/arm64,linux/arm/v7
 
 jobs:
-  tests:
-    name: Build Docker Image
-    runs-on: ubuntu-20.04
-    env:
-      COMPOSE_DOCKER_CLI_BUILD: "1"
-      DOCKER_BUILDKIT: "1"
-      CACHE_TAG: "xhgui/xhgui:latest"
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Docker build
-        run: >
-          docker build
-          --build-arg=BUILDKIT_INLINE_CACHE=1
-          --build-arg=BUILD_SOURCE=prebuilt
-          --cache-from=$CACHE_TAG
-          .
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          # For docker.io tokens, see
+          # https://docs.docker.com/docker-hub/access-tokens/
+          # https://github.com/perftools/xhgui/settings/secrets/actions
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKER_LOGIN }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3.5.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/0.') }}
+
+      - name: Build and export to Docker (linux/amd64)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          tags: ${{ env.TEST_IMAGE }}:amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and export to Docker (linux/arm64)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/arm64
+          load: true
+          tags: ${{ env.TEST_IMAGE }}:arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and export to Docker (linux/arm/v7)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/arm/v7
+          load: true
+          tags: ${{ env.TEST_IMAGE }}:armv7
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Test Docker images
+        run: |
+          docker run --rm ${{ env.TEST_IMAGE }}:amd64 php --version
+          docker run --rm ${{ env.TEST_IMAGE }}:arm64 php --version
+          docker run --rm ${{ env.TEST_IMAGE }}:armv7 php --version
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2.7.0
+        with:
+          context: .
+          platforms: ${{ env.PLATFORMS }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
 # vim:ft=yaml:et:ts=2:sw=2
