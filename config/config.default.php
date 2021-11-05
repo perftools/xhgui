@@ -17,6 +17,7 @@ return [
         'user' => getenv('XHGUI_PDO_USER') ?: null,
         'pass' => getenv('XHGUI_PDO_PASS') ?: null,
         'table' => getenv('XHGUI_PDO_TABLE') ?: 'results',
+        'tableWatch' => getenv('XHGUI_PDO_TABLE_WATCHES') ?: 'watches',
     ],
 
     // Database options for MongoDB.

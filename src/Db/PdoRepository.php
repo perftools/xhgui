@@ -14,15 +14,19 @@ class PdoRepository
     /** @var string */
     private $table;
 
+    /** @var string */
+    private $tableWatches;
+
     /**
      * @param PDO $pdo An open database connection
      * @param string $table Table name where Xhgui profiles are stored
+     * @param string $tableWatch Table name where Xhgui watch functions are stored
      */
-    public function __construct(PDO $pdo, string $table)
+    public function __construct(PDO $pdo, string $table, string $tableWatch)
     {
         $this->pdo = $pdo;
         $this->table = sprintf('"%s"', $table);
-        $this->initSchema();
+        $this->tableWatches = sprintf('"%s"', $tableWatch);
     }
 
     public function getLatest(): array
@@ -191,6 +195,7 @@ class PdoRepository
 
     public function saveProfile(array $data): void
     {
+        $this->initSchema();
         $stmt = $this->pdo->prepare(sprintf('
             INSERT INTO %s (
               "id",
@@ -227,5 +232,79 @@ class PdoRepository
             )
         ', $this->table));
         $stmt->execute($data);
+    }
+
+    public function saveWatch(array $data): bool
+    {
+        $this->initWatchesSchema();
+        $stmt = $this->pdo->prepare(sprintf('
+            INSERT INTO %s (
+              "id",
+              "removed",
+              "name"
+            ) VALUES (
+              :_id,
+              :removed,
+              :name
+            )
+        ', $this->tableWatches));
+
+        return $stmt->execute($data);
+    }
+
+    public function removeWatch(string $id): bool
+    {
+        $stmt = $this->pdo->prepare(sprintf('
+          DELETE FROM %s
+          WHERE id = :id
+        ', $this->tableWatches));
+
+        return $stmt->execute(['id' => $id]);
+    }
+
+    public function updateWatch(array $data): bool
+    {
+        $stmt = $this->pdo->prepare(sprintf('
+            UPDATE %s SET
+              "removed" = :removed,
+              "name" = :name
+            WHERE
+              "id" = :_id
+        ', $this->tableWatches));
+
+        return $stmt->execute($data);
+    }
+
+    public function getAllWatches(): Generator
+    {
+        $query = sprintf('
+          SELECT
+            "id",
+            "removed",
+            "name"
+          FROM %s
+          ', $this->tableWatches);
+        $stmt = $this->pdo->query($query);
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            yield $row;
+        }
+    }
+
+    public function truncateWatches()
+    {
+        return is_int(
+            $this->pdo->exec(sprintf('DELETE FROM %s', $this->tableWatches))
+        );
+    }
+
+    private function initWatchesSchema(): void
+    {
+        $this->pdo->exec(sprintf('
+            CREATE TABLE IF NOT EXISTS %s (
+              "id"               CHAR(24) PRIMARY KEY,
+              "removed"          TEXT           NULL,
+              "name"             TEXT           NOT NULL
+            )
+        ', $this->tableWatches));
     }
 }
