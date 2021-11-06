@@ -27,6 +27,7 @@ class PdoRepository
         $this->pdo = $pdo;
         $this->table = sprintf('"%s"', $table);
         $this->tableWatches = sprintf('"%s"', $tableWatch);
+        $this->initSchema();
     }
 
     public function getLatest(): array
@@ -191,11 +192,17 @@ class PdoRepository
               "main_pmu"         INTEGER        NOT NULL
             )
         ', $this->table));
+        $this->pdo->exec(sprintf('
+            CREATE TABLE IF NOT EXISTS %s (
+              "id"               CHAR(24) PRIMARY KEY,
+              "removed"          TEXT           NULL,
+              "name"             TEXT           NOT NULL
+            )
+        ', $this->tableWatches));
     }
 
     public function saveProfile(array $data): void
     {
-        $this->initSchema();
         $stmt = $this->pdo->prepare(sprintf('
             INSERT INTO %s (
               "id",
@@ -236,7 +243,6 @@ class PdoRepository
 
     public function saveWatch(array $data): bool
     {
-        $this->initWatchesSchema();
         $stmt = $this->pdo->prepare(sprintf('
             INSERT INTO %s (
               "id",
@@ -295,16 +301,5 @@ class PdoRepository
         return is_int(
             $this->pdo->exec(sprintf('DELETE FROM %s', $this->tableWatches))
         );
-    }
-
-    private function initWatchesSchema(): void
-    {
-        $this->pdo->exec(sprintf('
-            CREATE TABLE IF NOT EXISTS %s (
-              "id"               CHAR(24) PRIMARY KEY,
-              "removed"          TEXT           NULL,
-              "name"             TEXT           NOT NULL
-            )
-        ', $this->tableWatches));
     }
 }
