@@ -29,7 +29,12 @@ return [
         // Additional options for the MongoClient constructor,
         // for example 'username', 'password', or 'replicaSet'.
         // See <https://www.php.net/mongoclient_construct#options>.
-        'options' => [],
+        'options' => [
+            /*
+            'username' => getenv('XHGUI_MONGO_USERNAME') ?: null,
+            'password' => getenv('XHGUI_MONGO_PASSWORD') ?: null,
+            */
+        ],
         // An array of options for the MongoDB driver.
         // Options include setting connection context options for SSL or logging callbacks.
         // See <https://www.php.net/mongoclient_construct#options>.
