@@ -6,6 +6,7 @@ use XHGui\Db\PdoRepository;
 use XHGui\Exception\NotImplementedException;
 use XHGui\Options\SearchOptions;
 use XHGui\Profile;
+use XHGui\Util;
 
 class PdoSearcher implements SearcherInterface
 {
@@ -157,17 +158,46 @@ class PdoSearcher implements SearcherInterface
     /**
      * {@inheritdoc}
      */
-    public function saveWatch(array $data)
+    public function saveWatch(array $data): bool
     {
+        if (empty($data['name'])) {
+            return false;
+        }
+
+        if (!empty($data['removed']) && isset($data['_id'])) {
+            $this->db->removeWatch($data['_id']);
+
+            return true;
+        }
+
+        if (empty($data['_id'])) {
+            $data['_id'] = Util::generateId();
+            $data['removed'] = 0;
+            $this->db->saveWatch($data);
+
+            return true;
+        }
+
+        $this->db->updateWatch($data);
+
         return true;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getAllWatches()
+    public function getAllWatches(): array
     {
-        return [];
+        $results = [];
+        foreach ($this->db->getAllWatches() as $row) {
+            $results[] = [
+                '_id' => $row['id'],
+                'removed' => $row['removed'],
+                'name' => $row['name'],
+            ];
+        }
+
+        return $results;
     }
 
     /**
@@ -175,6 +205,8 @@ class PdoSearcher implements SearcherInterface
      */
     public function truncateWatches()
     {
+        $this->db->truncateWatches();
+
         return $this;
     }
 

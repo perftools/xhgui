@@ -35,6 +35,9 @@
         "ocramius/lazy-property": "^1.0",
         "symfony/phpunit-bridge": "^5.2"
     },
+    "suggest": {
+        "ext-pdo": "Required to pdo backend."
+    },
     "scripts": {
         "post-install-cmd": [
             "@phpunit-setup"
