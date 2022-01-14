@@ -50,6 +50,7 @@ class ImportTest extends TestCase
 
         $request = Request::createFromEnvironment($this->env);
 
+
         $body = $request;
         $stream = $body->getBody();
         $stream->write(json_encode($data));
