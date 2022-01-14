@@ -6,6 +6,7 @@ use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use XHGui\Options\SearchOptions;
+use XHGui\RequestProxy;
 use XHGui\Test\TestCase;
 
 class RunTest extends TestCase
@@ -161,43 +162,47 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
         ]);
 
-        $this->runs->callgraphData($this->request, $this->response);
-//        $response = $this->app->response();
         $response = new Response();
+        $this->runs->callgraphData($this->request, $response);
+//        $response = $this->app->response();
 
-        $this->assertEquals('application/json', $response->getHeader('Content-Type'));
-        $this->assertStringStartsWith('{"', $response->body());
+        $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
+        $this->assertStringStartsWith('{"', $response->getBody());
     }
 
     public function testDeleteSubmit(): void
     {
 
-        $this->markTestSkipped('Replacement for $this->app->expects needed');
+//        $this->markTestSkipped('Replacement for $this->app->expects needed');
 
         $this->skipIfPdo('Undefined index: page');
         $searcher = $this->searcher->truncate();
         $this->importFixture($this->saver);
 
-        Environment::mock([
+        $env = [
             'REQUEST_METHOD' => 'POST',
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/delete',
+            'CONTENT_TYPE' => 'application/json',
             'slim.request.form_hash' => [
                 'id' => 'aaaaaaaaaaaaaaaaaaaaaaaa',
             ],
-        ]);
+        ];
+        
+        $app = $this->getMockApp();
+        $request = $this->buildPostRequest($env, array('id' => 'aaaaaaaaaaaaaaaaaaaaaaaa'));
+        
+//        $app->expects($this->once())
+//            ->method('urlFor')
+//            ->with('home');
 
-        $this->app->expects($this->once())
-            ->method('urlFor')
-            ->with('home');
-
-        $this->app->expects($this->once())
-            ->method('redirect');
+//        $app->expects($this->once())
+//            ->method('redirect');
 
         $result = $searcher->getAll(new SearchOptions());
         $count = count($result['results']);
 
-        $this->runs->deleteSubmit($this->app->request());
+        $this->runs->deleteSubmit(new RequestProxy($request));
 
         $result = $searcher->getAll(new SearchOptions());
         $this->assertCount($count - 1, $result['results']);
@@ -206,7 +211,7 @@ class RunTest extends TestCase
     public function testDeleteAllSubmit(): void
     {
 
-        $this->markTestSkipped('Replacement for $this->app->expects needed');
+//        $this->markTestSkipped('Replacement for $this->app->expects needed');
 
         $this->skipIfPdo('Undefined index: page');
         $this->searcher->truncate();
@@ -217,12 +222,14 @@ class RunTest extends TestCase
           'PATH_INFO' => '/run/delete_all',
         ]);
 
-        $this->app->expects($this->once())
-          ->method('urlFor')
-          ->with('home');
+        $app = $this->getMockApp();
+        
+//        $app->expects($this->once())
+//          ->method('urlFor')
+//          ->with('home');
 
-        $this->app->expects($this->once())
-          ->method('redirect');
+//        $app->expects($this->once())
+//          ->method('redirect');
 
         $result = $this->searcher->getAll(new SearchOptions());
         $this->assertGreaterThan(0, count($result['results']));

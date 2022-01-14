@@ -2,6 +2,7 @@
 
 namespace XHGui\Test\Controller;
 
+use Slim\App;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use XHGui\Test\TestCase;
@@ -30,23 +31,44 @@ class WatchTest extends TestCase
     public function testPostAdd(): void
     {
 
-        $this->markTestSkipped('Replacement for $this->app->expects needed');
+//        $this->markTestSkipped('Replacement for $this->app->expects needed');
 
         $this->searcher->truncateWatches();
+    
+        $app = $this->getMockApp();
+        
         $_POST = [
             'watch' => [
                 ['name' => 'strlen'],
                 ['name' => 'strpos'],
             ],
         ];
-        $this->app->expects($this->once())
-            ->method('urlFor')
-            ->with('watch.list');
-
-        $this->app->expects($this->once())
-            ->method('redirect');
-
-        $this->watches->post($this->app->request());
+        
+//        $app->expects($this->once())
+//            ->method('urlFor')
+//            ->with('watch.list');
+//
+//        $app->expects($this->once())
+//            ->method('redirect');
+    
+    
+    
+        $_P = [
+            'watch' => [
+                ['name' => 'strlen'],
+                ['name' => 'strpos'],
+            ],
+        ];
+    
+        $env = [
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/watch',
+            'Content_Type' => 'application/json'
+        ];
+    
+        $request = $this->buildPostRequest($env, $_P);
+        
+        $this->watches->post($request);
         $result = $this->searcher->getAllWatches();
 
         $this->assertCount(2, $result);
@@ -106,19 +128,14 @@ class WatchTest extends TestCase
             ],
         ];
 
-        $env = Environment::mock([
+        $env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/watch',
             'Content_Type' => 'application/json'
-        ]);
+        ];
 
-        $request = Request::createFromEnvironment($env);
-
-        $post_body = json_encode($_P);
-
-        $stream = $request->getBody();
-        $stream->write($post_body);
-        $stream->rewind();
+        $request = $this->buildPostRequest($env, $_P);
+        
         $this->watches->post($request);
 
         $result = $this->searcher->getAllWatches();

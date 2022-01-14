@@ -26,6 +26,8 @@ class RunController extends AbstractController
     {
         parent::__construct($app);
         $this->searcher = $searcher;
+    
+        $this->flash = $this->app->getContainer()->get('flash');
     }
 
     public function index(Request $request, Response $response): void
@@ -160,9 +162,9 @@ class RunController extends AbstractController
         // Delete the profile run.
         $this->searcher->delete($id);
 
-        $this->app->flash('success', 'Deleted profile ' . $id);
+        $this->flash->addMessage('success', 'Deleted profile ' . $id);
 
-        $this->app->redirect($this->app->urlFor('home'));
+        $this->app->redirect('/', $this->app->getContainer()->get('router')->pathFor('home'));
     }
 
     public function deleteAllForm(): void
@@ -174,10 +176,11 @@ class RunController extends AbstractController
     {
         // Delete all profile runs.
         $this->searcher->truncate();
+    
+        $this->flash->addMessage('success', 'Deleted all profiles');
 
-        $this->app->flash('success', 'Deleted all profiles');
-
-        $this->app->redirect($this->app->urlFor('home'));
+        $this->app->redirect('/', $this->app->getContainer()->get('router')->pathFor('home'));
+        
     }
 
     public function url(Request $request): void
@@ -332,7 +335,7 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function callgraphData(Request $request, Response $response)
+    public function callgraphData(Request $request, Response &$response)
     {
         $profile = $this->searcher->get($request->get('id'));
         $metric = $request->get('metric') ?: 'wt';
@@ -343,7 +346,7 @@ class RunController extends AbstractController
 
 //        return $response->body(json_encode($callgraph));
 
-        $response->withHeader('Content-Type', 'application/json');
+        $response = $response->withHeader('Content-Type', 'application/json');
 
         $response_body = $response->getBody();
         return $response_body->write(json_encode($callgraph));

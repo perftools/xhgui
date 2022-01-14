@@ -2,6 +2,9 @@
 
 namespace XHGui\Test;
 
+use Slim\App;
+use Slim\Http\Environment;
+use Slim\Http\Request;
 use XHGui\Saver\SaverInterface;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
@@ -47,5 +50,34 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $message .= ': ' . $details;
         }
         $this->markTestIncomplete($message);
+    }
+    
+    protected function buildPostRequest(array $env, array $post_data)
+    {
+        
+        $nev['content_type'] = 'application/json';
+        
+        $env     = Environment::mock($env);
+        $request = Request::createFromEnvironment($env);
+    
+        $post_body = json_encode($post_data);
+    
+        $stream = $request->getBody();
+        $stream->write($post_body);
+        $stream->rewind();
+        
+        return $request;
+    
+    }
+    
+    protected function getMockApp()
+    {
+        /** @var App $app */
+        $app = $this->getMockBuilder(App::class)
+            ->setMethods(['redirect', 'render', 'urlFor'])
+            ->setConstructorArgs([$this->getConfig()])
+            ->getMock();
+        
+        return $app;
     }
 }
