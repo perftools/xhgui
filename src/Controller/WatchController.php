@@ -6,6 +6,11 @@ use Slim\App;
 use Slim\Http\Request;
 use XHGui\AbstractController;
 use XHGui\Searcher\SearcherInterface;
+use XHGui\Twig\TwigExtension;
+
+
+use Slim\Flash\Messages;
+
 
 class WatchController extends AbstractController
 {
@@ -18,6 +23,7 @@ class WatchController extends AbstractController
     {
         parent::__construct($app);
         $this->searcher = $searcher;
+
     }
 
     public function get(): void
@@ -30,13 +36,17 @@ class WatchController extends AbstractController
     public function post(Request $request): void
     {
         $saved = false;
-        foreach ((array)$request->post('watch') as $data) {
+//        foreach ((array)$request->post('watch') as $data) {
+        foreach ((array)$request->getParsedBodyParam('watch') as $data) {
             $saved = true;
             $this->searcher->saveWatch($data);
         }
         if ($saved) {
-            $this->app->flash('success', 'Watch functions updated.');
+//            $this->app->flash('success', 'Watch functions updated.');
+            $flash = $this->app->getContainer()->get('flash');
+            $flash->addMessage('success', 'Watch functions updated.');
         }
-        $this->app->redirect($this->app->urlFor('watch.list'));
+        $twig = $this->app->getContainer()->get(TwigExtension::class);
+        $this->app->redirect('/', $twig->url('watch.list'));
     }
 }

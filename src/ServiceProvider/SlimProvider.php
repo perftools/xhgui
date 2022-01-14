@@ -12,6 +12,8 @@ use Slim\Views\Twig;
 use XHGui\RequestProxy;
 use XHGui\Twig\TwigExtension;
 
+use Slim\Flash\Messages;
+
 class SlimProvider implements ServiceProviderInterface
 {
     /**
@@ -25,6 +27,7 @@ class SlimProvider implements ServiceProviderInterface
             }
 
             $app = new App($c['config']);
+
             $this->registerSlimContainer($app->getContainer());
 
             /*
@@ -66,6 +69,11 @@ class SlimProvider implements ServiceProviderInterface
 
         $container['request.proxy'] = static function (SlimContainer $container) {
             return new RequestProxy($container['request']);
+        };
+
+        $container['flash'] = static function() {
+            $sess = array();
+            return new \Slim\Flash\Messages($sess);
         };
     }
 }

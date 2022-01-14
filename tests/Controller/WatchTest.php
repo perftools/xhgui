@@ -3,6 +3,7 @@
 namespace XHGui\Test\Controller;
 
 use Slim\Http\Environment;
+use Slim\Http\Request;
 use XHGui\Test\TestCase;
 
 class WatchTest extends TestCase
@@ -56,12 +57,27 @@ class WatchTest extends TestCase
         $searcher->saveWatch(['name' => 'strlen']);
         $saved = $searcher->getAllWatches();
 
-        $_POST = [
+        $_P = [
             'watch' => [
                 ['name' => 'strpos', '_id' => $saved[0]['_id']],
             ],
         ];
-        $this->watches->post($this->app->request());
+
+        $env = Environment::mock([
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/watch',
+            'Content_Type' => 'application/json'
+        ]);
+
+        $request = Request::createFromEnvironment($env);
+
+        $post_body = json_encode($_P);
+
+        $stream = $request->getBody();
+        $stream->write($post_body);
+        $stream->rewind();
+
+        $this->watches->post($request);
         $result = $searcher->getAllWatches();
 
         $this->assertCount(1, $result);
@@ -74,12 +90,34 @@ class WatchTest extends TestCase
         $this->searcher->saveWatch(['name' => 'strlen']);
         $saved = $this->searcher->getAllWatches();
 
-        $_POST = [
+//        $_POST = [
+//            'watch' => [
+//                ['removed' => 1, 'name' => 'strpos', '_id' => $saved[0]['_id']],
+//            ],
+//        ];
+//        $this->watches->post($this->app->request());
+
+        $_P = [
             'watch' => [
                 ['removed' => 1, 'name' => 'strpos', '_id' => $saved[0]['_id']],
             ],
         ];
-        $this->watches->post($this->app->request());
+
+        $env = Environment::mock([
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/watch',
+            'Content_Type' => 'application/json'
+        ]);
+
+        $request = Request::createFromEnvironment($env);
+
+        $post_body = json_encode($_P);
+
+        $stream = $request->getBody();
+        $stream->write($post_body);
+        $stream->rewind();
+        $this->watches->post($request);
+
         $result = $this->searcher->getAllWatches();
 
         $this->assertCount(0, $result);

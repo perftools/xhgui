@@ -45,7 +45,7 @@ class ImportTest extends TestCase
         Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
-            'slim.input' => json_encode($data),
+//            'slim.input' => json_encode($data),
         ]);
 
         $request = Request::createFromEnvironment($this->env);

@@ -3,6 +3,8 @@
 namespace XHGui\Test\Controller;
 
 use Slim\Http\Environment;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use XHGui\Options\SearchOptions;
 use XHGui\Test\TestCase;
 
@@ -90,7 +92,10 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'url=%2Ftasks',
         ]);
 
-        $this->runs->url($this->app->request(), $this->app->response());
+        $request = Request::createFromEnvironment($this->env);
+        $response = new Response();
+
+        $this->runs->url($request, $response);
 
         $result = $this->view->all();
         $this->assertEquals('url.view', $result['base_url']);
@@ -157,9 +162,10 @@ class RunTest extends TestCase
         ]);
 
         $this->runs->callgraphData($this->request, $this->response);
-        $response = $this->app->response();
+//        $response = $this->app->response();
+        $response = new Response();
 
-        $this->assertEquals('application/json', $response['Content-Type']);
+        $this->assertEquals('application/json', $response->getHeader('Content-Type'));
         $this->assertStringStartsWith('{"', $response->body());
     }
 

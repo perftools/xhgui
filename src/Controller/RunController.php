@@ -98,7 +98,8 @@ class RunController extends AbstractController
         }
 
         if (false !== $request->get(self::FILTER_ARGUMENT_NAME, false)) {
-            $profile = $result->sort('ewt', $result->filter($result->getProfile(), $this->getFilters()));
+//            $profile = $result->sort('ewt', $result->filter($result->getProfile(), $this->getFilters()));
+            $profile = $result->sort('ewt', $result->filter($result->getProfile(), $this->getFilters($request)));
         } else {
             $profile = $result->sort('ewt', $result->getProfile());
         }
@@ -115,9 +116,10 @@ class RunController extends AbstractController
     /**
      * @return array
      */
-    protected function getFilters()
+//    protected function getFilters()
+    protected function getFilters(Request $request)
     {
-        $request = $this->app->request();
+//        $request = $this->app->request();
         $filterString = $request->get(self::FILTER_ARGUMENT_NAME);
         if (strlen($filterString) > 1 && $filterString !== 'true') {
             $filters = array_map('trim', explode(',', $filterString));
@@ -337,9 +339,15 @@ class RunController extends AbstractController
         $threshold = (float)$request->get('threshold') ?: 0.01;
         $callgraph = $profile->getCallgraph($metric, $threshold);
 
-        $response['Content-Type'] = 'application/json';
+//        $response['Content-Type'] = 'application/json';
 
-        return $response->body(json_encode($callgraph));
+//        return $response->body(json_encode($callgraph));
+
+        $response->withHeader('Content-Type', 'application/json');
+
+        $response_body = $response->getBody();
+        return $response_body->write(json_encode($callgraph));
+
     }
 
     public function callgraphDataDot(Request $request, Response $response)
