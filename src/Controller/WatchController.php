@@ -7,10 +7,7 @@ use Slim\Http\Request;
 use XHGui\AbstractController;
 use XHGui\Searcher\SearcherInterface;
 use XHGui\Twig\TwigExtension;
-
-
 use Slim\Flash\Messages;
-
 
 class WatchController extends AbstractController
 {

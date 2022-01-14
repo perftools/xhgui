@@ -71,7 +71,7 @@ class SlimProvider implements ServiceProviderInterface
             return new RequestProxy($container['request']);
         };
 
-        $container['flash'] = static function() {
+        $container['flash'] = static function () {
             $sess = array();
             return new \Slim\Flash\Messages($sess);
         };
