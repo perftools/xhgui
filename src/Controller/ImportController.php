@@ -40,8 +40,11 @@ class ImportController extends AbstractController
             $response->setStatus(500);
         }
 
-        $response['Content-Type'] = 'application/json';
-        $response->body(json_encode($result));
+//        $response['Content-Type'] = 'application/json';
+//        $response->body(json_encode($result));
+
+        $response->withHeader('Content-Type', 'application/json');
+        $response->write(json_encode($result));
     }
 
     private function runImport(Request $request): string

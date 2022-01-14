@@ -3,6 +3,8 @@
 namespace XHGui\Test\Controller;
 
 use Slim\Http\Environment;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use XHGui\Profile;
 use XHGui\Test\TestCase;
 
@@ -46,11 +48,20 @@ class ImportTest extends TestCase
             'slim.input' => json_encode($data),
         ]);
 
+        $request = Request::createFromEnvironment($this->env);
+
+        $body = $request;
+        $stream = $body->getBody();
+        $stream->write(json_encode($data));
+        $stream->rewind();
+
+        $response = new Response();
+
         $searcher = $this->searcher->truncate();
         $before = $searcher->getForUrl('/things', []);
         $this->assertEmpty($before['results']);
 
-        $this->import->import($this->app->request(), $this->app->response());
+        $this->import->import($request, $response);
 
         $after = $searcher->getForUrl('/things', []);
         $this->assertNotEmpty($after['results']);
