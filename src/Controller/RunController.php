@@ -172,14 +172,21 @@ class RunController extends AbstractController
         $this->render('runs/delete-all-form.twig');
     }
 
-    public function deleteAllSubmit(): void
+    public function deleteAllSubmit(Request $request, Response $response): Response
     {
+        
+//        $this->app->redirect('/', '/');
+        
+        return $response->withRedirect($this->app->getContainer()->get('router')->pathFor('home'));
+        
         // Delete all profile runs.
         $this->searcher->truncate();
     
         $this->flash->addMessage('success', 'Deleted all profiles');
 
-        $this->app->redirect('/', $this->app->getContainer()->get('router')->pathFor('home'));
+        $redirect = $this->app->getContainer()->get('router')->pathFor('home');
+        
+        $this->app->redirect('/xhgui/run/delete_all', $this->app->getContainer()->get('router')->pathFor('home'));
         
     }
 

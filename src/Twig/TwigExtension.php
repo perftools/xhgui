@@ -20,11 +20,13 @@ class TwigExtension extends AbstractExtension
     /** @var Uri */
     private $uri;
 
-    public function __construct(Router $router, Uri $uri)
+    public function __construct(Router $router, Uri $uri, $container)
     {
         $this->router = $router;
         $this->uri = $uri;
-        $this->pathPrefix = '/'; // null;//$app->config('path.prefix');
+//        $this->pathPrefix = '/'; // null;//$app->config('path.prefix');
+//        $this->pathPrefix = $container->get('path.prefix'); // null;//$app->config('path.prefix');
+//        $this->pathPrefix = $uri->getPath(); // null;//$app->config('path.prefix');
     }
 
     public function getFunctions(): array
@@ -78,10 +80,13 @@ class TwigExtension extends AbstractExtension
             $query = '?' . http_build_query($queryargs);
         }
 
+        $link = $this->router->urlFor($name);
+        
         // this is copy of \Slim\Slim::urlFor() to mix path prefix in
         // \Slim\Slim::urlFor
 
-        return rtrim($this->pathPrefix(), '/') . $this->router->urlFor($name) . $query;
+//        return rtrim($this->pathPrefix(), '/') . $this->router->urlFor($name) . $query;
+        return $this->router->urlFor($name) . $query;
     }
 
     /**
@@ -93,6 +98,7 @@ class TwigExtension extends AbstractExtension
     public function staticUrl(string $path): string
     {
         $rootUri = $this->pathPrefix();
+        
 
         return rtrim($rootUri, '/') . '/' . $path;
     }
@@ -139,9 +145,11 @@ class TwigExtension extends AbstractExtension
             return $this->pathPrefix;
         }
 
-        $request = $this->_app->request();
-        $rootUri = $request->getRootUri();
+//        $request = $this->_app->request();
+//        $rootUri = $request->getRootUri();
 
+        $rootUri = $this->router->getBasePath();
+        
         // Get URL part prepending index.php
         $indexPos = strpos($rootUri, 'index.php');
         if ($indexPos > 0) {

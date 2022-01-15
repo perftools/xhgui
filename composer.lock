@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "129ea9eeefd256ce64df58c35f868657",
+    "content-hash": "9351108e41f242097ef1520cf8011952",
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -175,6 +175,98 @@
                 "routing"
             ],
             "time": "2018-02-13T20:26:39+00:00"
+        },
+        {
+            "name": "paragonie/random_compat",
+            "version": "v9.99.100",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paragonie/random_compat.git",
+                "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/996434e5492cb4c3edcb9168db6fbb1359ef965a",
+                "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">= 7"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*|5.*",
+                "vimeo/psalm": "^1"
+            },
+            "suggest": {
+                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com",
+                    "homepage": "https://paragonie.com"
+                }
+            ],
+            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
+            "keywords": [
+                "csprng",
+                "polyfill",
+                "pseudorandom",
+                "random"
+            ],
+            "time": "2020-10-15T08:29:30+00:00"
+        },
+        {
+            "name": "perftools/xhgui-collector",
+            "version": "1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/perftools/xhgui-collector.git",
+                "reference": "582146bea0ea37fb46e48a4f60c20875e97e36cf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/perftools/xhgui-collector/zipball/582146bea0ea37fb46e48a4f60c20875e97e36cf",
+                "reference": "582146bea0ea37fb46e48a4f60c20875e97e36cf",
+                "shasum": ""
+            },
+            "require": {
+                "paragonie/random_compat": ">=2.0",
+                "php": ">=5.3.0"
+            },
+            "suggest": {
+                "alcaeus/mongo-php-adapter": "Mongo PHP Adapter is required for PHP >7 (when using ext-mongodb)",
+                "ext-curl": "You need to install the curl extension to upload saved files",
+                "ext-mongo": "Mongo is needed to store profiler results for PHP < 7.",
+                "ext-mongodb": "Mongo is needed to store profiler results for PHP > 7.",
+                "ext-pdo": "You need to install the pdo extension to store profiler results to a relational database",
+                "ext-uprofiler": "You need to install either xhprof or uprofiler to use XHGui.",
+                "ext-xhprof": "You need to install either xhprof or uprofiler to use XHGui."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Xhgui_": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lauri Piisang",
+                    "email": "lauri.piisang@eesti.ee"
+                }
+            ],
+            "description": "Library for collecting and storing XHProf results for later use by XHGUI.",
+            "abandoned": true,
+            "time": "2020-07-09T14:36:21+00:00"
         },
         {
             "name": "pimple/pimple",

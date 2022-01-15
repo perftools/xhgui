@@ -46,7 +46,7 @@ return [
 
     // Add this path prefix to all links and resources
     // If this is not defined, auto-detection will try to find it itself
-    'path.prefix' => null,
+    'path.prefix' => '',
 
     // Setup timezone for date formatting
     // Example: 'UTC', 'Europe/Tallinn'
