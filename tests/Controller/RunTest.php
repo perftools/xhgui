@@ -15,15 +15,19 @@ class RunTest extends TestCase
     {
         parent::setUp();
 
-        $this->env = Environment::mock([
+        $this->env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
-        ]);
+        ];
     }
 
     public function testIndexEmpty(): void
     {
-        $this->runs->index($this->request, $this->response);
+        
+        $request = $this->buildRequest($this->env);
+        $response = new Response();
+        
+        $this->runs->index($request, $response);
         $result = $this->view->all();
 
         $this->assertEquals('Recent runs', $result['title']);
@@ -39,13 +43,17 @@ class RunTest extends TestCase
 
     public function testIndexSortedWallTime(): void
     {
-        $this->env = Environment::mock([
+        $env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
-            'QUERY_STRING' => 'sort=wt',
-        ]);
-
-        $this->runs->index($this->request, $this->response);
+        ];
+        $query = array('sort' => 'wt');
+        
+        $request = $this->buildRequest($env, array(), $query);
+        $response = new Response();
+        
+        $this->runs->index($request, $response);
+        
         $result = $this->view->all();
         $this->assertEquals('Longest wall time', $result['title']);
         $this->assertEquals('wt', $result['paging']['sort']);
@@ -53,13 +61,18 @@ class RunTest extends TestCase
 
     public function testIndexSortedCpu(): void
     {
-        $this->env = Environment::mock([
+        $env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=cpu&direction=desc',
-        ]);
-
-        $this->runs->index($this->request, $this->response);
+        ];
+    
+        $query = array('sort' => 'cpu', 'direction' => 'desc');
+    
+        $request = $this->buildRequest($env, array(), $query);
+        $response = new Response();
+    
+        $this->runs->index($request, $response);
         $result = $this->view->all();
         $this->assertEquals('Most CPU time', $result['title']);
         $this->assertEquals('cpu', $result['paging']['sort']);
@@ -68,13 +81,18 @@ class RunTest extends TestCase
 
     public function testIndexWithSearch(): void
     {
-        $this->env = Environment::mock([
+        $env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=mu&direction=asc&url=index.php',
-        ]);
-
-        $this->runs->index($this->request, $this->response);
+        ];
+    
+        $query = array('sort' => 'mu', 'direction' => 'asc', 'url' => 'index.php');
+    
+        $request = $this->buildRequest($env, array(), $query);
+        $response = new Response();
+    
+        $this->runs->index($request, $response);
         $result = $this->view->all();
         $this->assertEquals('Highest memory use', $result['title']);
         $this->assertEquals('mu', $result['paging']['sort']);
@@ -87,16 +105,16 @@ class RunTest extends TestCase
     {
         $this->skipIfPdo('getForUrl is not implemented');
 
-        Environment::mock([
+        $env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/url/view',
-            'QUERY_STRING' => 'url=%2Ftasks',
-        ]);
+        ];
+        
+        $query = array('url' => '/tasks');
 
-//        $request = Request::createFromEnvironment($this->env);
-
-
-        $this->runs->url($this->getRequest(), $this->response);
+        $request = $this->buildRequest($env, array(), $query);
+        
+        $this->runs->url($request);
 
         $result = $this->view->all();
         $this->assertEquals('url.view', $result['base_url']);
@@ -139,13 +157,18 @@ class RunTest extends TestCase
     {
         $this->searcher->truncate();
         $this->importFixture($this->saver);
-        $this->env = Environment::mock([
+        $env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
-        ]);
-
-        $this->runs->callgraph($this->request);
+        ];
+    
+        $query = array('id' => 'aaaaaaaaaaaaaaaaaaaaaaaa');
+    
+        $request = $this->buildRequest($env, array(), $query);
+        $response = new Response();
+        
+        $this->runs->callgraph($request);
         $result = $this->view->all();
         $this->assertArrayHasKey('profile', $result);
         $this->assertArrayHasKey('date_format', $result);
@@ -156,24 +179,24 @@ class RunTest extends TestCase
     {
         $this->searcher->truncate();
         $this->importFixture($this->saver);
-        $this->env = Environment::mock([
+        $env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
-            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
-        ]);
-
+        ];
+    
+        $query = array('id' => 'aaaaaaaaaaaaaaaaaaaaaaaa');
+    
+        $request = $this->buildRequest($env, array(), $query);
         $response = new Response();
-        $this->runs->callgraphData($this->request, $response);
-//        $response = $this->app->response();
+    
+        $response = $this->runs->callgraphData($request, $response);
 
         $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
-        $this->assertStringStartsWith('{"', $response->getBody());
+        $this->assertStringStartsWith('{"', (string)$response->getBody());
     }
 
     public function testDeleteSubmit(): void
     {
-
-//        $this->markTestSkipped('Replacement for $this->app->expects needed');
 
         $this->skipIfPdo('Undefined index: page');
         $searcher = $this->searcher->truncate();
@@ -184,25 +207,23 @@ class RunTest extends TestCase
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/delete',
             'CONTENT_TYPE' => 'application/json',
-            'slim.request.form_hash' => [
-                'id' => 'aaaaaaaaaaaaaaaaaaaaaaaa',
-            ],
         ];
         
-        $app = $this->getMockApp();
-        $request = $this->buildPostRequest($env, array('id' => 'aaaaaaaaaaaaaaaaaaaaaaaa'));
+        $request = $this->buildRequest($env, array('id' => 'aaaaaaaaaaaaaaaaaaaaaaaa'));
+        $response = new Response();
+        
         
 //        $app->expects($this->once())
 //            ->method('urlFor')
 //            ->with('home');
 
-//        $app->expects($this->once())
-//            ->method('redirect');
+//        $response->expects($this->once())
+//            ->method('withRedirect');
 
         $result = $searcher->getAll(new SearchOptions());
         $count = count($result['results']);
-
-        $this->runs->deleteSubmit(new RequestProxy($request));
+    
+        $this->runs->deleteSubmit($request, $response);
 
         $result = $searcher->getAll(new SearchOptions());
         $this->assertCount($count - 1, $result['results']);
@@ -211,18 +232,16 @@ class RunTest extends TestCase
     public function testDeleteAllSubmit(): void
     {
 
-//        $this->markTestSkipped('Replacement for $this->app->expects needed');
-
         $this->skipIfPdo('Undefined index: page');
         $this->searcher->truncate();
         $this->importFixture($this->saver);
 
-        Environment::mock([
+        $env = [
           'SCRIPT_NAME' => 'index.php',
           'PATH_INFO' => '/run/delete_all',
-        ]);
+        ];
 
-        $app = $this->getMockApp();
+//        $app = $this->getMockApp();
         
 //        $app->expects($this->once())
 //          ->method('urlFor')
@@ -233,8 +252,11 @@ class RunTest extends TestCase
 
         $result = $this->searcher->getAll(new SearchOptions());
         $this->assertGreaterThan(0, count($result['results']));
-
-        $this->runs->deleteAllSubmit();
+    
+        $request = $this->buildRequest($env);
+        $response = new Response();
+        
+        $this->runs->deleteAllSubmit($request, $response);
 
         $result = $this->searcher->getAll(new SearchOptions());
         $this->assertCount(0, $result['results']);
@@ -245,13 +267,17 @@ class RunTest extends TestCase
         $this->searcher->truncate();
         $this->importFixture($this->saver);
 
-        $this->env = Environment::mock([
+        $env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
-            'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*,strpos()',
-        ]);
-
-        $this->runs->view($this->request, $this->response);
+        ];
+    
+        $query = array('id' => 'aaaaaaaaaaaaaaaaaaaaaaaa', 'filter' => 'main*,strpos()');
+    
+        $request = $this->buildRequest($env, array(), $query);
+        $response = new Response();
+        
+        $this->runs->view($request, $response);
         $result = $this->view->all();
 
         $this->assertCount(1, $result['profile']);
@@ -262,13 +288,18 @@ class RunTest extends TestCase
         $this->searcher->truncate();
         $this->importFixture($this->saver);
 
-        $this->env = Environment::mock([
+        $env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*',
-        ]);
-
-        $this->runs->view($this->request, $this->response);
+        ];
+    
+        $query = array('id' => 'aaaaaaaaaaaaaaaaaaaaaaaa', 'filter' => 'main');
+    
+        $request = $this->buildRequest($env, array(), $query);
+        $response = new Response();
+        
+        $this->runs->view($request, $response);
         $result = $this->view->all();
 
         $this->assertCount(2, $result['profile']);
@@ -279,13 +310,18 @@ class RunTest extends TestCase
         $this->searcher->truncate();
         $this->importFixture($this->saver);
 
-        $this->env = Environment::mock([
+        $env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=true',
-        ]);
-
-        $this->runs->view($this->request, $this->response);
+        ];
+    
+        $query = array('id' => 'aaaaaaaaaaaaaaaaaaaaaaaa', 'filter' => 'true');
+    
+        $request = $this->buildRequest($env, array(), $query);
+        $response = new Response();
+    
+        $this->runs->view($request, $response);
         $result = $this->view->all();
 
         $this->assertCount(2, $result['profile']);

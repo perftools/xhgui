@@ -5,6 +5,7 @@ namespace XHGui\Test\Controller;
 use Slim\App;
 use Slim\Http\Environment;
 use Slim\Http\Request;
+use XHGui\RequestProxy;
 use XHGui\Test\TestCase;
 
 class WatchTest extends TestCase
@@ -31,11 +32,7 @@ class WatchTest extends TestCase
     public function testPostAdd(): void
     {
 
-//        $this->markTestSkipped('Replacement for $this->app->expects needed');
-
         $this->searcher->truncateWatches();
-    
-        $app = $this->getMockApp();
         
         $_POST = [
             'watch' => [
@@ -51,22 +48,13 @@ class WatchTest extends TestCase
 //        $app->expects($this->once())
 //            ->method('redirect');
     
-    
-    
-        $_P = [
-            'watch' => [
-                ['name' => 'strlen'],
-                ['name' => 'strpos'],
-            ],
-        ];
-    
         $env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/watch',
             'Content_Type' => 'application/json'
         ];
     
-        $request = $this->buildPostRequest($env, $_P);
+        $request = $this->buildRequest($env, $_POST);
         
         $this->watches->post($request);
         $result = $this->searcher->getAllWatches();
@@ -82,26 +70,20 @@ class WatchTest extends TestCase
         $searcher->saveWatch(['name' => 'strlen']);
         $saved = $searcher->getAllWatches();
 
-        $_P = [
+        $_POST = [
             'watch' => [
                 ['name' => 'strpos', '_id' => $saved[0]['_id']],
             ],
         ];
 
-        $env = Environment::mock([
+        $env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/watch',
             'Content_Type' => 'application/json'
-        ]);
+        ];
 
-        $request = Request::createFromEnvironment($env);
-
-        $post_body = json_encode($_P);
-
-        $stream = $request->getBody();
-        $stream->write($post_body);
-        $stream->rewind();
-
+        $request = $this->buildRequest($env, $_POST);
+        
         $this->watches->post($request);
         $result = $searcher->getAllWatches();
 
@@ -115,14 +97,7 @@ class WatchTest extends TestCase
         $this->searcher->saveWatch(['name' => 'strlen']);
         $saved = $this->searcher->getAllWatches();
 
-//        $_POST = [
-//            'watch' => [
-//                ['removed' => 1, 'name' => 'strpos', '_id' => $saved[0]['_id']],
-//            ],
-//        ];
-//        $this->watches->post($this->app->request());
-
-        $_P = [
+        $_POST = [
             'watch' => [
                 ['removed' => 1, 'name' => 'strpos', '_id' => $saved[0]['_id']],
             ],
@@ -134,7 +109,7 @@ class WatchTest extends TestCase
             'Content_Type' => 'application/json'
         ];
 
-        $request = $this->buildPostRequest($env, $_P);
+        $request = $this->buildRequest($env, $_POST);
         
         $this->watches->post($request);
 

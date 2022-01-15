@@ -5,9 +5,9 @@ namespace XHGui\Controller;
 use Exception;
 use Slim\App;
 use Slim\Http\Response;
+use Slim\Http\Request;
 use XHGui\AbstractController;
 use XHGui\Options\SearchOptions;
-use XHGui\RequestProxy as Request;
 use XHGui\Searcher\SearcherInterface;
 
 class RunController extends AbstractController
@@ -27,7 +27,8 @@ class RunController extends AbstractController
         parent::__construct($app);
         $this->searcher = $searcher;
     
-        $this->flash = $this->app->getContainer()->get('flash');
+        $this->flash  = $this->app->getContainer()->get('flash');
+        $this->router = $this->app->getContainer()->get('router');
     }
 
     public function index(Request $request, Response $response): void
@@ -121,7 +122,6 @@ class RunController extends AbstractController
 //    protected function getFilters()
     protected function getFilters(Request $request)
     {
-//        $request = $this->app->request();
         $filterString = $request->get(self::FILTER_ARGUMENT_NAME);
         if (strlen($filterString) > 1 && $filterString !== 'true') {
             $filters = array_map('trim', explode(',', $filterString));
@@ -148,7 +148,7 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function deleteSubmit(Request $request): void
+    public function deleteSubmit(Request $request, Response $response): Response
     {
         $id = $request->post('id');
         // Don't call profilers->delete() unless $id is set,
@@ -164,7 +164,7 @@ class RunController extends AbstractController
 
         $this->flash->addMessage('success', 'Deleted profile ' . $id);
 
-        $this->app->redirect('/', $this->app->getContainer()->get('router')->pathFor('home'));
+        return $response->withRedirect($this->router->pathFor('home'));
     }
 
     public function deleteAllForm(): void
@@ -174,19 +174,12 @@ class RunController extends AbstractController
 
     public function deleteAllSubmit(Request $request, Response $response): Response
     {
-        
-//        $this->app->redirect('/', '/');
-        
-        return $response->withRedirect($this->app->getContainer()->get('router')->pathFor('home'));
-        
         // Delete all profile runs.
         $this->searcher->truncate();
     
         $this->flash->addMessage('success', 'Deleted all profiles');
 
-        $redirect = $this->app->getContainer()->get('router')->pathFor('home');
-        
-        $this->app->redirect('/xhgui/run/delete_all', $this->app->getContainer()->get('router')->pathFor('home'));
+        return $response->withRedirect($this->router->pathFor('home'));
         
     }
 
@@ -342,33 +335,29 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function callgraphData(Request $request, Response &$response)
+    public function callgraphData(Request $request, Response &$response) : Response
     {
         $profile = $this->searcher->get($request->get('id'));
         $metric = $request->get('metric') ?: 'wt';
         $threshold = (float)$request->get('threshold') ?: 0.01;
         $callgraph = $profile->getCallgraph($metric, $threshold);
-
-//        $response['Content-Type'] = 'application/json';
-
-//        return $response->body(json_encode($callgraph));
-
-        $response = $response->withHeader('Content-Type', 'application/json');
-
+    
         $response_body = $response->getBody();
-        return $response_body->write(json_encode($callgraph));
-
+        $response_body->write(json_encode($callgraph));
+    
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
-    public function callgraphDataDot(Request $request, Response $response)
+    public function callgraphDataDot(Request $request, Response $response): Response
     {
         $profile = $this->searcher->get($request->get('id'));
         $metric = $request->get('metric') ?: 'wt';
         $threshold = (float)$request->get('threshold') ?: 0.01;
         $callgraph = $profile->getCallgraphNodes($metric, $threshold);
-
-        $response['Content-Type'] = 'application/json';
-
-        return $response->body(json_encode($callgraph));
+    
+        $response_body = $response->getBody();
+        $response_body->write(json_encode($callgraph));
+    
+        return $response->withHeader('Content-Type', 'application/json');
     }
 }

@@ -5,6 +5,7 @@ namespace XHGui\Test;
 use Slim\App;
 use Slim\Http\Environment;
 use Slim\Http\Request;
+use Slim\Http\Response;
 use XHGui\Saver\SaverInterface;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
@@ -52,32 +53,34 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $this->markTestIncomplete($message);
     }
     
-    protected function buildPostRequest(array $env, array $post_data)
+    protected function buildRequest(array $env, array $post_data = array(), array $query_data = array())
     {
-        
-        $nev['content_type'] = 'application/json';
         
         $env     = Environment::mock($env);
         $request = Request::createFromEnvironment($env);
     
-        $post_body = json_encode($post_data);
-    
-        $stream = $request->getBody();
-        $stream->write($post_body);
-        $stream->rewind();
+        if (count($post_data)) {
+            $post_body = json_encode($post_data);
+            $stream = $request->getBody();
+            $stream->write($post_body);
+            $stream->rewind();
+        }
+        
+        if (count($query_data)) {
+            $request = $request->withQueryParams($query_data);
+        }
         
         return $request;
     
     }
     
-    protected function getMockApp()
+    protected function getMockReponse()
     {
-        /** @var App $app */
-        $app = $this->getMockBuilder(App::class)
-            ->setMethods(['redirect', 'render', 'urlFor'])
-            ->setConstructorArgs([$this->getConfig()])
+        /** @var Response $response */
+        $response = $this->getMockBuilder(Response::class)
+            ->setMethods(['withRedirect'])
             ->getMock();
         
-        return $app;
+        return $response;
     }
 }

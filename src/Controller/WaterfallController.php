@@ -3,8 +3,8 @@
 namespace XHGui\Controller;
 
 use Slim\App;
-use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Http\Request;
 use XHGui\AbstractController;
 use XHGui\Options\SearchOptions;
 use XHGui\Profile;
@@ -23,9 +23,8 @@ class WaterfallController extends AbstractController
         $this->searcher = $searcher;
     }
 
-    public function index(): void
+    public function index(Request $request): void
     {
-        $request = $this->app->request();
         $search = [];
         $keys = ['remote_addr', 'request_start', 'request_end'];
         foreach ($keys as $key) {
@@ -55,7 +54,7 @@ class WaterfallController extends AbstractController
         ]);
     }
 
-    public function query(Request $request, Response $response): void
+    public function query(Request $request, Response $response): Response
     {
         $search = [];
         $keys = ['remote_addr', 'request_start', 'request_end'];
@@ -81,7 +80,12 @@ class WaterfallController extends AbstractController
                 'duration' => $duration / 1000, // Convert to correct scale
             ];
         }
-        $response->body(json_encode($datas));
-        $response['Content-Type'] = 'application/json';
+    
+        $response_body = $response->getBody();
+        $response_body->write(json_encode($datas));
+    
+        return $response->withHeader('Content-Type', 'application/json');
+//        $response->body(json_encode($datas));
+//        $response['Content-Type'] = 'application/json';
     }
 }

@@ -63,19 +63,19 @@ class RouteProvider implements ServiceProviderInterface
 
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $controller->view(new RequestProxy($request), $response);
+            $controller->view($request, $response);
         })->setName('run.view');
 
         $app->get('/run/delete', function (Request $request) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $controller->deleteForm(new RequestProxy($request));
+            $controller->deleteForm($request);
         })->setName('run.delete.form');
 
-        $app->post('/run/delete', function (Request $request) use ($di): void {
+        $app->post('/run/delete', function (Request $request) use ($di): Response {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $controller->deleteSubmit(new RequestProxy($request));
+            return $controller->deleteSubmit($request);
         })->setName('run.delete.submit');
 
         $app->get('/run/delete_all', function () use ($di): void {
@@ -87,49 +87,49 @@ class RouteProvider implements ServiceProviderInterface
         $app->post('/run/delete_all', function (Request $request, Response $response) use ($di): Response {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            return $controller->deleteAllSubmit(new RequestProxy($request), $response);
+            return $controller->deleteAllSubmit($request, $response);
         })->setName('run.deleteAll.submit');
 
         $app->get('/url/view', function (Request $request) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $controller->url(new RequestProxy($request));
+            $controller->url($request);
         })->setName('url.view');
 
         $app->get('/run/compare', function (Request $request) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $controller->compare(new RequestProxy($request));
+            $controller->compare($request);
         })->setName('run.compare');
 
         $app->get('/run/symbol', function (Request $request) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $controller->symbol(new RequestProxy($request));
+            $controller->symbol($request);
         })->setName('run.symbol');
 
         $app->get('/run/symbol/short', function (Request $request) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $controller->symbolShort(new RequestProxy($request));
+            $controller->symbolShort($request);
         })->setName('run.symbol-short');
 
         $app->get('/run/callgraph', function (Request $request) use ($di): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $controller->callgraph(new RequestProxy($request));
+            $controller->callgraph($request);
         })->setName('run.callgraph');
 
-        $app->get('/run/callgraph/data', function (Request $request, Response $response) use ($di): void {
+        $app->get('/run/callgraph/data', function (Request $request, Response $response) use ($di): Response {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $controller->callgraphData(new RequestProxy($request), $response);
+            return $controller->callgraphData($request, $response);
         })->setName('run.callgraph.data');
 
-        $app->get('/run/callgraph/dot', function (Request $request, Response $response) use ($di): void {
+        $app->get('/run/callgraph/dot', function (Request $request, Response $response) use ($di): Response {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $controller->callgraphDataDot(new RequestProxy($request), $response);
+            return $controller->callgraphDataDot($request, $response);
         })->setName('run.callgraph.dot');
 
         // Import route
@@ -172,16 +172,16 @@ class RouteProvider implements ServiceProviderInterface
         })->setName('custom.query');
 
         // Waterfall routes
-        $app->get('/waterfall', function () use ($di): void {
+        $app->get('/waterfall', function (Request $request) use ($di): void {
             /** @var Controller\WaterfallController $controller */
             $controller = $di[Controller\WaterfallController::class];
-            $controller->index();
+            $controller->index($request);
         })->setName('waterfall.list');
 
-        $app->get('/waterfall/data', function (Request $request, Response $response) use ($di): void {
+        $app->get('/waterfall/data', function (Request $request, Response $response) use ($di): Response {
             /** @var Controller\WaterfallController $controller */
             $controller = $di[Controller\WaterfallController::class];
-            $controller->query($request, $response);
+            return $controller->query($request, $response);
         })->setName('waterfall.data');
 
         // Metrics

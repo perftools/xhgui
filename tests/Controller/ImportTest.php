@@ -6,6 +6,7 @@ use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use XHGui\Profile;
+use XHGui\RequestProxy;
 use XHGui\Test\TestCase;
 
 class ImportTest extends TestCase
@@ -42,20 +43,13 @@ class ImportTest extends TestCase
                 ],
             ],
         ];
-        Environment::mock([
+
+        $env = [
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
-//            'slim.input' => json_encode($data),
-        ]);
+        ];
 
-        $request = Request::createFromEnvironment($this->env);
-
-
-        $body = $request;
-        $stream = $body->getBody();
-        $stream->write(json_encode($data));
-        $stream->rewind();
-
+        $request = $this->buildRequest($env, $data);
         $response = new Response();
 
         $searcher = $this->searcher->truncate();
