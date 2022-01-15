@@ -15,16 +15,20 @@ class RunTest extends TestCase
     {
         parent::setUp();
 
-        $this->env = [
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
-        ];
+        ]);
     }
 
     public function testIndexEmpty(): void
     {
+        $env = [
+            'SCRIPT_NAME' => 'index.php',
+            'PATH_INFO' => '/',
+        ];
         
-        $request = $this->buildRequest($this->env);
+        $request = $this->buildRequest($env);
         $response = new Response();
         
         $this->runs->index($request, $response);

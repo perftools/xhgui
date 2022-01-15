@@ -40,13 +40,13 @@ class CustomController extends AbstractController
 
     public function query(Request $request, Response $response) : Response
     {
-        $query = json_decode($request->post('query'), true);
+        $query = json_decode($request->getParsedBodyParam('query'), true);
         $error = [];
         if (null === $query) {
             $error['query'] = json_last_error();
         }
 
-        $retrieve = json_decode($request->post('retrieve'), true);
+        $retrieve = json_decode($request->getParsedBodyParam('retrieve'), true);
         if (null === $retrieve) {
             $error['retrieve'] = json_last_error();
         }

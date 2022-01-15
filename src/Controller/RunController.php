@@ -36,16 +36,16 @@ class RunController extends AbstractController
         $search = [];
         $keys = ['date_start', 'date_end', 'url'];
         foreach ($keys as $key) {
-            if ($request->get($key)) {
-                $search[$key] = $request->get($key);
+            if ($request->getQueryParam($key)) {
+                $search[$key] = $request->getQueryParam($key);
             }
         }
-        $sort = $request->get('sort');
+        $sort = $request->getQueryParam('sort');
 
         $result = $this->searcher->getAll(new SearchOptions([
             'sort' => $sort,
-            'page' => (int)$request->get('page', SearcherInterface::DEFAULT_PAGE),
-            'direction' => $request->get('direction'),
+            'page' => (int)$request->getQueryParam('page', SearcherInterface::DEFAULT_PAGE),
+            'direction' => $request->getQueryParam('direction'),
             'perPage' => (int)$this->config('page.limit'),
             'conditions' => $search,
             'projection' => true,
@@ -81,7 +81,7 @@ class RunController extends AbstractController
     public function view(Request $request, Response $response): void
     {
         $detailCount = $this->config('detail.count');
-        $result = $this->searcher->get($request->get('id'));
+        $result = $this->searcher->get($request->getQueryParam('id'));
 
         $result->calculateSelf();
 
@@ -100,7 +100,7 @@ class RunController extends AbstractController
             }
         }
 
-        if (false !== $request->get(self::FILTER_ARGUMENT_NAME, false)) {
+        if (false !== $request->getQueryParam(self::FILTER_ARGUMENT_NAME, false)) {
 //            $profile = $result->sort('ewt', $result->filter($result->getProfile(), $this->getFilters()));
             $profile = $result->sort('ewt', $result->filter($result->getProfile(), $this->getFilters($request)));
         } else {
@@ -122,7 +122,7 @@ class RunController extends AbstractController
 //    protected function getFilters()
     protected function getFilters(Request $request)
     {
-        $filterString = $request->get(self::FILTER_ARGUMENT_NAME);
+        $filterString = $request->getQueryParam(self::FILTER_ARGUMENT_NAME);
         if (strlen($filterString) > 1 && $filterString !== 'true') {
             $filters = array_map('trim', explode(',', $filterString));
         } else {
@@ -134,7 +134,7 @@ class RunController extends AbstractController
 
     public function deleteForm(Request $request): void
     {
-        $id = $request->get('id');
+        $id = $request->getQueryParam('id');
         if (!is_string($id) || !strlen($id)) {
             throw new Exception('The "id" parameter is required.');
         }
@@ -150,7 +150,7 @@ class RunController extends AbstractController
 
     public function deleteSubmit(Request $request, Response $response): Response
     {
-        $id = $request->post('id');
+        $id = $request->getParsedBodyParam('id');
         // Don't call profilers->delete() unless $id is set,
         // otherwise it will turn the null into a MongoId and return "Successful".
         if (!is_string($id) || !strlen($id)) {
@@ -186,20 +186,20 @@ class RunController extends AbstractController
     public function url(Request $request): void
     {
         $pagination = [
-            'sort' => $request->get('sort'),
-            'direction' => $request->get('direction'),
-            'page' => $request->get('page'),
+            'sort' => $request->getQueryParam('sort'),
+            'direction' => $request->getQueryParam('direction'),
+            'page' => $request->getQueryParam('page'),
             'perPage' => $this->config('page.limit'),
         ];
 
         $search = [];
         $keys = ['date_start', 'date_end', 'limit', 'limit_custom'];
         foreach ($keys as $key) {
-            $search[$key] = $request->get($key);
+            $search[$key] = $request->getQueryParam($key);
         }
 
         $runs = $this->searcher->getForUrl(
-            $request->get('url'),
+            $request->getQueryParam('url'),
             $pagination,
             $search
         );
@@ -213,7 +213,7 @@ class RunController extends AbstractController
 
         $chartData = $this->searcher->getPercentileForUrl(
             90,
-            $request->get('url'),
+            $request->getQueryParam('url'),
             $search
         );
 
@@ -228,9 +228,9 @@ class RunController extends AbstractController
             'paging' => $paging,
             'base_url' => 'url.view',
             'runs' => $runs['results'],
-            'url' => $request->get('url'),
+            'url' => $request->getQueryParam('url'),
             'chart_data' => $chartData,
-            'search' => array_merge($search, ['url' => $request->get('url')]),
+            'search' => array_merge($search, ['url' => $request->getQueryParam('url')]),
         ]);
     }
 
@@ -239,15 +239,15 @@ class RunController extends AbstractController
         $baseRun = $headRun = $candidates = $comparison = null;
         $paging = [];
 
-        if ($request->get('base')) {
-            $baseRun = $this->searcher->get($request->get('base'));
+        if ($request->getQueryParam('base')) {
+            $baseRun = $this->searcher->get($request->getQueryParam('base'));
         }
 
-        if ($baseRun && !$request->get('head')) {
+        if ($baseRun && !$request->getQueryParam('head')) {
             $pagination = [
-                'direction' => $request->get('direction'),
-                'sort' => $request->get('sort'),
-                'page' => $request->get('page'),
+                'direction' => $request->getQueryParam('direction'),
+                'sort' => $request->getQueryParam('sort'),
+                'page' => $request->getQueryParam('page'),
                 'perPage' => $this->config('page.limit'),
             ];
             $candidates = $this->searcher->getForUrl(
@@ -263,8 +263,8 @@ class RunController extends AbstractController
             ];
         }
 
-        if ($request->get('head')) {
-            $headRun = $this->searcher->get($request->get('head'));
+        if ($request->getQueryParam('head')) {
+            $headRun = $this->searcher->get($request->getQueryParam('head'));
         }
 
         if ($baseRun && $headRun) {
@@ -276,20 +276,20 @@ class RunController extends AbstractController
             'base_run' => $baseRun,
             'head_run' => $headRun,
             'candidates' => $candidates,
-            'url_params' => $request->get(),
+            'url_params' => $request->getQueryParams(),
             'comparison' => $comparison,
             'paging' => $paging,
             'search' => [
-                'base' => $request->get('base'),
-                'head' => $request->get('head'),
+                'base' => $request->getQueryParam('base'),
+                'head' => $request->getQueryParam('head'),
             ],
         ]);
     }
 
     public function symbol(Request $request): void
     {
-        $id = $request->get('id');
-        $symbol = $request->get('symbol');
+        $id = $request->getQueryParam('id');
+        $symbol = $request->getQueryParam('symbol');
 
         $profile = $this->searcher->get($id);
         $profile->calculateSelf();
@@ -307,10 +307,10 @@ class RunController extends AbstractController
 
     public function symbolShort(Request $request): void
     {
-        $id = $request->get('id');
-        $threshold = $request->get('threshold');
-        $symbol = $request->get('symbol');
-        $metric = $request->get('metric');
+        $id = $request->getQueryParam('id');
+        $threshold = $request->getQueryParam('threshold');
+        $symbol = $request->getQueryParam('symbol');
+        $metric = $request->getQueryParam('metric');
 
         $profile = $this->searcher->get($id);
         $profile->calculateSelf();
@@ -328,7 +328,7 @@ class RunController extends AbstractController
 
     public function callgraph(Request $request): void
     {
-        $profile = $this->searcher->get($request->get('id'));
+        $profile = $this->searcher->get($request->getQueryParam('id'));
 
         $this->render('runs/callgraph.twig', [
             'profile' => $profile,
@@ -337,9 +337,9 @@ class RunController extends AbstractController
 
     public function callgraphData(Request $request, Response &$response) : Response
     {
-        $profile = $this->searcher->get($request->get('id'));
-        $metric = $request->get('metric') ?: 'wt';
-        $threshold = (float)$request->get('threshold') ?: 0.01;
+        $profile = $this->searcher->get($request->getQueryParam('id'));
+        $metric = $request->getQueryParam('metric') ?: 'wt';
+        $threshold = (float)$request->getQueryParam('threshold') ?: 0.01;
         $callgraph = $profile->getCallgraph($metric, $threshold);
     
         $response_body = $response->getBody();
@@ -350,9 +350,9 @@ class RunController extends AbstractController
 
     public function callgraphDataDot(Request $request, Response $response): Response
     {
-        $profile = $this->searcher->get($request->get('id'));
-        $metric = $request->get('metric') ?: 'wt';
-        $threshold = (float)$request->get('threshold') ?: 0.01;
+        $profile = $this->searcher->get($request->getQueryParam('id'));
+        $metric = $request->getQueryParam('metric') ?: 'wt';
+        $threshold = (float)$request->getQueryParam('threshold') ?: 0.01;
         $callgraph = $profile->getCallgraphNodes($metric, $threshold);
     
         $response_body = $response->getBody();

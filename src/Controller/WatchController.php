@@ -33,13 +33,11 @@ class WatchController extends AbstractController
     public function post(Request $request): void
     {
         $saved = false;
-//        foreach ((array)$request->post('watch') as $data) {
         foreach ((array)$request->getParsedBodyParam('watch') as $data) {
             $saved = true;
             $this->searcher->saveWatch($data);
         }
         if ($saved) {
-//            $this->app->flash('success', 'Watch functions updated.');
             $flash = $this->app->getContainer()->get('flash');
             $flash->addMessage('success', 'Watch functions updated.');
         }
