@@ -174,15 +174,14 @@ class RunTest extends TestCase
             'REQUEST_METHOD' => 'POST',
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/delete',
-            'slim.request.form_hash' => [
-                'id' => 'aaaaaaaaaaaaaaaaaaaaaaaa',
-            ],
         ]);
+
+        $request = $this->createPostRequest(['id' => 'aaaaaaaaaaaaaaaaaaaaaaaa']);
 
         $result = $searcher->getAll(new SearchOptions());
         $count = count($result['results']);
 
-        $this->runs->deleteSubmit($this->request);
+        $this->runs->deleteSubmit($request);
 
         $result = $searcher->getAll(new SearchOptions());
         $this->assertCount($count - 1, $result['results']);
