@@ -52,6 +52,16 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         return new RequestProxy($request);
     }
 
+    protected function createJsonPostRequest(array $data): RequestProxy
+    {
+        $request = Request::createFromEnvironment($this->env);
+        $stream = $request->getBody();
+        $stream->write(json_encode($data));
+        $stream->rewind();
+
+        return new RequestProxy($request);
+    }
+
     protected function skipIfPdo($details = null): void
     {
         $saveHandler = $this->config['save.handler'];
