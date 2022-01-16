@@ -27,7 +27,7 @@ class ImportController extends AbstractController
         $this->token = $token;
     }
 
-    public function import(Request $request, Response $response): void
+    public function import(Request $request, Response $response)
     {
         try {
             $id = $this->runImport($request);
@@ -40,8 +40,7 @@ class ImportController extends AbstractController
             $response->setStatus(500);
         }
 
-        $response['Content-Type'] = 'application/json';
-        $response->body(json_encode($result));
+        return $result;
     }
 
     private function runImport(Request $request): string
