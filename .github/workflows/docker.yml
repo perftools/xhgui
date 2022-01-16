@@ -6,11 +6,19 @@
 name: Publish Docker image
 
 on:
+  # Runs your workflow when someone creates a Git reference (Git branch or tag) in the workflow's repository.
+  # https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows#create
+  # Note: An event will not be created when you create more than three tags at once.
+  create:
+    tags:
+      - "*.*.*"
+
+  # Runs your workflow when you push a commit or tag.
+  # https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows#push
+  # Note: An event will not be created when you push more than three tags at once.
   push:
     branches:
       - "*.*.x"
-    tags:
-      - "*.*.*"
 
 env:
   REGISTRY: docker.io
