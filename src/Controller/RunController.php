@@ -4,7 +4,6 @@ namespace XHGui\Controller;
 
 use Exception;
 use Slim\Http\Request;
-use Slim\Http\Response;
 use Slim\Slim as App;
 use XHGui\AbstractController;
 use XHGui\Options\SearchOptions;
@@ -340,15 +339,12 @@ class RunController extends AbstractController
         return $profile->getCallgraph($metric, $threshold);
     }
 
-    public function callgraphDataDot(Request $request, Response $response)
+    public function callgraphDataDot(Request $request)
     {
         $profile = $this->searcher->get($request->get('id'));
         $metric = $request->get('metric') ?: 'wt';
         $threshold = (float)$request->get('threshold') ?: 0.01;
-        $callgraph = $profile->getCallgraphNodes($metric, $threshold);
 
-        $response['Content-Type'] = 'application/json';
-
-        return $response->body(json_encode($callgraph));
+        return $profile->getCallgraphNodes($metric, $threshold);
     }
 }

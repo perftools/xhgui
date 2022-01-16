@@ -155,7 +155,10 @@ class RouteProvider implements ServiceProviderInterface
             $request = $app->request();
             $response = $app->response();
 
-            $controller->callgraphDataDot($request, $response);
+            $callgraph = $controller->callgraphDataDot($request);
+
+            $response['Content-Type'] = 'application/json';
+            $response->body(json_encode($callgraph));
         })->setName('run.callgraph.dot');
 
         // Import route
