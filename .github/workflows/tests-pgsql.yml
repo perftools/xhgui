@@ -1,7 +1,7 @@
 name: "Tests: PostgreSQL"
 
 on:
-  - pull_request
+  pull_request:
 
 jobs:
   pgsql:
