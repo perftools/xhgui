@@ -73,5 +73,12 @@ class SlimProvider implements ServiceProviderInterface
         $container['response.proxy'] = static function (SlimContainer $container) {
             return new ResponseProxy($container['response']);
         };
+
+        $container['response.final'] = static function (SlimContainer $container) {
+            /** @var ResponseProxy $response */
+            $response = $container['response.proxy'];
+
+            return $response->getResponse();
+        };
     }
 }
