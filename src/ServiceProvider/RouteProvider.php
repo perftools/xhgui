@@ -48,7 +48,7 @@ class RouteProvider implements ServiceProviderInterface
             // https://github.com/perftools/xhgui/issues/261
             $response->headers->set('Cache-Control', 'public, max-age=0');
 
-            $controller->index($request, $response);
+            $controller->index($request);
         })->setName('home');
 
         $app->get('/run/view', static function () use ($di, $app): void {
@@ -66,7 +66,7 @@ class RouteProvider implements ServiceProviderInterface
 
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $controller->view($request, $response);
+            $controller->view($request);
         })->setName('run.view');
 
         $app->get('/run/delete', static function () use ($di, $app): void {
@@ -143,7 +143,10 @@ class RouteProvider implements ServiceProviderInterface
             $request = $app->request();
             $response = $app->response();
 
-            $controller->callgraphData($request, $response);
+            $callgraph = $controller->callgraphData($request, $response);
+
+            $response['Content-Type'] = 'application/json';
+            $response->body(json_encode($callgraph));
         })->setName('run.callgraph.data');
 
         $app->get('/run/callgraph/dot', static function () use ($di, $app): void {
@@ -152,7 +155,10 @@ class RouteProvider implements ServiceProviderInterface
             $request = $app->request();
             $response = $app->response();
 
-            $controller->callgraphDataDot($request, $response);
+            $callgraph = $controller->callgraphDataDot($request);
+
+            $response['Content-Type'] = 'application/json';
+            $response->body(json_encode($callgraph));
         })->setName('run.callgraph.dot');
 
         // Import route
@@ -162,7 +168,11 @@ class RouteProvider implements ServiceProviderInterface
             $request = $app->request();
             $response = $app->response();
 
-            $controller->import($request, $response);
+            [$status, $result] = $controller->import($request);
+
+            $response['Content-Type'] = 'application/json';
+            $response->setStatus($status);
+            $response->body(json_encode($result));
         })->setName('run.import');
 
         // Watch function routes.
@@ -201,7 +211,13 @@ class RouteProvider implements ServiceProviderInterface
             $request = $app->request();
             $response = $app->response();
 
-            $controller->query($request, $response);
+            $query = $request->post('query');
+            $retrieve = $request->post('retrieve');
+
+            $result = $controller->query($query, $retrieve);
+
+            $response->body(json_encode($result));
+            $response['Content-Type'] = 'application/json';
         })->setName('custom.query');
 
         // Waterfall routes
@@ -217,7 +233,10 @@ class RouteProvider implements ServiceProviderInterface
             $request = $app->request();
             $response = $app->response();
 
-            $controller->query($request, $response);
+            $data = $controller->query($request);
+
+            $response->body(json_encode($data));
+            $response['Content-Type'] = 'application/json';
         })->setName('waterfall.data');
 
         // Metrics
@@ -226,7 +245,10 @@ class RouteProvider implements ServiceProviderInterface
             $controller = $di[Controller\MetricsController::class];
             $response = $app->response();
 
-            $controller->metrics($response);
+            $body = $controller->metrics();
+
+            $response->body($body);
+            $response['Content-Type'] = 'text/plain; version=0.0.4';
         })->setName('metrics');
     }
 

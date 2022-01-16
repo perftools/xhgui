@@ -4,7 +4,6 @@ namespace XHGui\Controller;
 
 use Exception;
 use Slim\Http\Request;
-use Slim\Http\Response;
 use Slim\Slim as App;
 use XHGui\AbstractController;
 use XHGui\Options\SearchOptions;
@@ -28,7 +27,7 @@ class RunController extends AbstractController
         $this->searcher = $searcher;
     }
 
-    public function index(Request $request, Response $response): void
+    public function index(Request $request): void
     {
         $search = [];
         $keys = ['date_start', 'date_end', 'server_name', 'url'];
@@ -75,7 +74,7 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function view(Request $request, Response $response): void
+    public function view(Request $request): void
     {
         $detailCount = $this->config('detail.count');
         $result = $this->searcher->get($request->get('id'));
@@ -331,27 +330,21 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function callgraphData(Request $request, Response $response)
+    public function callgraphData(Request $request)
     {
         $profile = $this->searcher->get($request->get('id'));
         $metric = $request->get('metric') ?: 'wt';
         $threshold = (float)$request->get('threshold') ?: 0.01;
-        $callgraph = $profile->getCallgraph($metric, $threshold);
 
-        $response['Content-Type'] = 'application/json';
-
-        return $response->body(json_encode($callgraph));
+        return $profile->getCallgraph($metric, $threshold);
     }
 
-    public function callgraphDataDot(Request $request, Response $response)
+    public function callgraphDataDot(Request $request)
     {
         $profile = $this->searcher->get($request->get('id'));
         $metric = $request->get('metric') ?: 'wt';
         $threshold = (float)$request->get('threshold') ?: 0.01;
-        $callgraph = $profile->getCallgraphNodes($metric, $threshold);
 
-        $response['Content-Type'] = 'application/json';
-
-        return $response->body(json_encode($callgraph));
+        return $profile->getCallgraphNodes($metric, $threshold);
     }
 }
