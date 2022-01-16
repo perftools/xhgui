@@ -3,7 +3,6 @@
 namespace XHGui\Controller;
 
 use Slim\Http\Request;
-use Slim\Http\Response;
 use Slim\Slim as App;
 use XHGui\AbstractController;
 use XHGui\Searcher\SearcherInterface;
@@ -38,31 +37,25 @@ class CustomController extends AbstractController
         ]);
     }
 
-    public function query(Request $request, Response $response)
+    public function query($query, $retrieve)
     {
-        $response['Content-Type'] = 'application/json';
-
-        $query = json_decode($request->post('query'), true);
         $error = [];
-        if (null === $query) {
+        $conditions = json_decode($query, true);
+        if (null === $conditions) {
             $error['query'] = json_last_error();
         }
 
-        $retrieve = json_decode($request->post('retrieve'), true);
-        if (null === $retrieve) {
+        $fields = json_decode($retrieve, true);
+        if (null === $fields) {
             $error['retrieve'] = json_last_error();
         }
 
         if (count($error) > 0) {
-            $json = json_encode(['error' => $error]);
-
-            return $response->body($json);
+            return ['error' => $error];
         }
 
         $perPage = $this->config('page.limit');
 
-        $res = $this->searcher->query($query, $perPage, $retrieve);
-
-        return $response->body(json_encode($res));
+        return $this->searcher->query($conditions, $perPage, $fields);
     }
 }

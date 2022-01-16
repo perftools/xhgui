@@ -201,7 +201,13 @@ class RouteProvider implements ServiceProviderInterface
             $request = $app->request();
             $response = $app->response();
 
-            $controller->query($request, $response);
+            $query = $request->post('query');
+            $retrieve = $request->post('retrieve');
+
+            $result = $controller->query($query, $retrieve);
+
+            $response->body(json_encode($result));
+            $response['Content-Type'] = 'application/json';
         })->setName('custom.query');
 
         // Waterfall routes
