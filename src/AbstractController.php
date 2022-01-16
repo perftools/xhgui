@@ -5,6 +5,7 @@ namespace XHGui;
 use Psr\Http\Message\ResponseInterface;
 use Slim\App;
 use Slim\Flash;
+use Slim\Router;
 use Slim\Views\Twig;
 
 abstract class AbstractController
@@ -38,7 +39,14 @@ abstract class AbstractController
      */
     protected function redirectTo(string $name, array $params = []): void
     {
-        $this->app->redirectTo($name, $params);
+        $container = $this->app->getContainer();
+        /** @var ResponseProxy $response */
+        $response = $container->get('response.proxy');
+        /** @var Router $router */
+        $router = $container->get('router');
+
+        $url = $router->pathFor($name, $params);
+        $response->redirect($url);
     }
 
     protected function flashSuccess(string $message): void
