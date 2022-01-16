@@ -1,6 +1,7 @@
 # https://help.github.com/en/categories/automating-your-workflow-with-github-actions
 # https://docs.github.com/en/actions/reference/environment-variables
 # https://github.com/laminas/automatic-releases
+# https://github.com/perftools/xhgui/settings/secrets/actions
 
 name: "Automatic Releases"
 
