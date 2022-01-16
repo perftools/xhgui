@@ -31,4 +31,9 @@ class RequestProxy
     {
         return $this->request->getBody();
     }
+
+    public function getContentLength(): ?int
+    {
+        return $this->request->getContentLength();
+    }
 }
