@@ -1,7 +1,7 @@
 name: "Tests: MySQL"
 
 on:
-  - pull_request
+  pull_request:
 
 jobs:
   mysql:
