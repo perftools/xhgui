@@ -2,6 +2,8 @@
 
 namespace XHGui\Test;
 
+use Slim\Http\Request;
+use XHGui\RequestProxy;
 use XHGui\Saver\SaverInterface;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
@@ -32,6 +34,22 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $this->assertNotEmpty($data);
 
         return $data;
+    }
+
+    protected function createRequest(array $query): RequestProxy
+    {
+        $request = Request::createFromEnvironment($this->env);
+        $request = $request->withQueryParams($query);
+
+        return new RequestProxy($request);
+    }
+
+    protected function createPostRequest(array $post): RequestProxy
+    {
+        $request = Request::createFromEnvironment($this->env);
+        $request = $request->withParsedBody($post);
+
+        return new RequestProxy($request);
     }
 
     protected function skipIfPdo($details = null): void
