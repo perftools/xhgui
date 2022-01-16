@@ -2,7 +2,6 @@
 
 namespace XHGui\Controller;
 
-use Slim\Http\Response;
 use Slim\Slim as App;
 use XHGui\AbstractController;
 use XHGui\Searcher\SearcherInterface;
@@ -20,7 +19,7 @@ class MetricsController extends AbstractController
         $this->searcher = $searcher;
     }
 
-    public function metrics(Response $response): void
+    public function metrics()
     {
         $stats = $this->searcher->stats();
 
@@ -36,7 +35,6 @@ class MetricsController extends AbstractController
         $body .= "# TYPE xhgui_latest_profile_seconds gauge\n";
         $body .= sprintf("xhgui_latest_profile_seconds %0.1F\n", $stats['latest']);
 
-        $response->body($body);
-        $response['Content-Type'] = 'text/plain; version=0.0.4';
+        return $body;
     }
 }

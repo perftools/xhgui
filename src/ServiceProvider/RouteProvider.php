@@ -235,7 +235,10 @@ class RouteProvider implements ServiceProviderInterface
             $controller = $di[Controller\MetricsController::class];
             $response = $app->response();
 
-            $controller->metrics($response);
+            $body = $controller->metrics();
+
+            $response->body($body);
+            $response['Content-Type'] = 'text/plain; version=0.0.4';
         })->setName('metrics');
     }
 
