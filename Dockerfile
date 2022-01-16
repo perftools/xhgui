@@ -128,7 +128,6 @@ RUN rm -rf $(pwd)
 
 # build final image
 FROM runtime-$BUILD_SOURCE AS runtime
-
-COPY --from=build --chown=www-data /cache ./cache/
 COPY --from=build /vendor ./vendor/
 COPY --from=build /app ./
+COPY --from=build --chown=www-data /cache ./cache/
