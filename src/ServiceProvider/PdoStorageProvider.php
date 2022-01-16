@@ -14,12 +14,16 @@ class PdoStorageProvider implements ServiceProviderInterface
 {
     public function register(Container $app): void
     {
+        $app['pdo.driver'] = static function ($app) {
+            return explode(':', $app['config']['pdo']['dsn'], 2)[0];
+        };
+
         $app['pdo'] = static function ($app) {
             if (!class_exists(PDO::class)) {
                 throw new RuntimeException('Required extension ext-pdo is missing');
             }
 
-            $driver = explode(':', $app['config']['pdo']['dsn'], 2)[0];
+            $driver = $app['pdo.driver'];
 
             // check the PDO driver is available
             if (!in_array($driver, PDO::getAvailableDrivers(), true)) {
@@ -46,6 +50,7 @@ class PdoStorageProvider implements ServiceProviderInterface
         $app[PdoRepository::class] = static function ($app) {
             return new PdoRepository(
                 $app['pdo'],
+                $app['pdo.driver'],
                 $app['config']['pdo']['table'],
                 $app['config']['pdo']['tableWatch']
             );

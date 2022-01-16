@@ -42,15 +42,30 @@ class RouteProvider implements ServiceProviderInterface
             $request = $app->request();
             $response = $app->response();
 
+            // The list changes whenever new profiles are recorded.
+            // Generally avoid caching, but allow re-use in browser's bfcache
+            // and by cache proxies for concurrent requests.
+            // https://github.com/perftools/xhgui/issues/261
+            $response->headers->set('Cache-Control', 'public, max-age=0');
+
             $controller->index($request, $response);
         })->setName('home');
 
         $app->get('/run/view', static function () use ($di, $app): void {
-            /** @var Controller\RunController $controller */
-            $controller = $di[Controller\RunController::class];
             $request = $app->request();
             $response = $app->response();
 
+            // Permalink views to a specific run are meant to be public and immutable.
+            // But limit the cache to only a short period of time (enough to allow
+            // handling of abuse or other stampedes). This way we don't have to
+            // deal with any kind of purging system for when profiles are deleted,
+            // or for after XHGui itself is upgraded and static assets may be
+            // incompatible etc.
+            // https://github.com/perftools/xhgui/issues/261
+            $response->headers->set('Cache-Control', 'public, max-age=60, must-revalidate');
+
+            /** @var Controller\RunController $controller */
+            $controller = $di[Controller\RunController::class];
             $controller->view($request, $response);
         })->setName('run.view');
 
