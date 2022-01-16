@@ -156,11 +156,13 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
         ]);
 
-        $this->runs->callgraphData($this->app->request(), $this->app->response());
-        $response = $this->app->response();
+        $result = $this->runs->callgraphData($this->app->request());
 
-        $this->assertEquals('application/json', $response['Content-Type']);
-        $this->assertStringStartsWith('{"', $response->body());
+        $this->assertInternalType('array', $result);
+        $this->assertArrayHasKey('metric', $result);
+        $this->assertArrayHasKey('total', $result);
+        $this->assertArrayHasKey('nodes', $result);
+        $this->assertArrayHasKey('links', $result);
     }
 
     public function testDeleteSubmit(): void

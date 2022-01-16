@@ -143,7 +143,10 @@ class RouteProvider implements ServiceProviderInterface
             $request = $app->request();
             $response = $app->response();
 
-            $controller->callgraphData($request, $response);
+            $callgraph = $controller->callgraphData($request, $response);
+
+            $response['Content-Type'] = 'application/json';
+            $response->body(json_encode($callgraph));
         })->setName('run.callgraph.data');
 
         $app->get('/run/callgraph/dot', static function () use ($di, $app): void {

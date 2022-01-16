@@ -331,16 +331,13 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function callgraphData(Request $request, Response $response)
+    public function callgraphData(Request $request)
     {
         $profile = $this->searcher->get($request->get('id'));
         $metric = $request->get('metric') ?: 'wt';
         $threshold = (float)$request->get('threshold') ?: 0.01;
-        $callgraph = $profile->getCallgraph($metric, $threshold);
 
-        $response['Content-Type'] = 'application/json';
-
-        return $response->body(json_encode($callgraph));
+        return $profile->getCallgraph($metric, $threshold);
     }
 
     public function callgraphDataDot(Request $request, Response $response)
