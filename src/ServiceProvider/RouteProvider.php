@@ -232,7 +232,10 @@ class RouteProvider implements ServiceProviderInterface
             $request = $app->request();
             $response = $app->response();
 
-            $controller->query($request, $response);
+            $data = $controller->query($request);
+
+            $response->body(json_encode($data));
+            $response['Content-Type'] = 'application/json';
         })->setName('waterfall.data');
 
         // Metrics
