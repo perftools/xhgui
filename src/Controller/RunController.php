@@ -28,7 +28,7 @@ class RunController extends AbstractController
         $this->searcher = $searcher;
     }
 
-    public function index(Request $request, Response $response): void
+    public function index(Request $request): void
     {
         $search = [];
         $keys = ['date_start', 'date_end', 'server_name', 'url'];
