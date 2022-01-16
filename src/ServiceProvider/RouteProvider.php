@@ -168,9 +168,10 @@ class RouteProvider implements ServiceProviderInterface
             $request = $app->request();
             $response = $app->response();
 
-            $result = $controller->import($request, $response);
+            [$status, $result] = $controller->import($request);
 
             $response['Content-Type'] = 'application/json';
+            $response->setStatus($status);
             $response->body(json_encode($result));
         })->setName('run.import');
 
