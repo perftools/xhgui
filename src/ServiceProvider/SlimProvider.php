@@ -11,6 +11,7 @@ use Slim\Flash;
 use Slim\Http\Uri;
 use Slim\Views\Twig;
 use XHGui\RequestProxy;
+use XHGui\ResponseProxy;
 use XHGui\Twig\TwigExtension;
 
 class SlimProvider implements ServiceProviderInterface
@@ -67,6 +68,10 @@ class SlimProvider implements ServiceProviderInterface
 
         $container['request.proxy'] = static function (SlimContainer $container) {
             return new RequestProxy($container['request']);
+        };
+
+        $container['response.proxy'] = static function (SlimContainer $container) {
+            return new ResponseProxy($container['response']);
         };
     }
 }
