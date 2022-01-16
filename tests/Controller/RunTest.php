@@ -180,13 +180,6 @@ class RunTest extends TestCase
             ],
         ]);
 
-        $this->app->expects($this->once())
-            ->method('urlFor')
-            ->with('home');
-
-        $this->app->expects($this->once())
-            ->method('redirect');
-
         $result = $searcher->getAll(new SearchOptions());
         $count = count($result['results']);
 
@@ -206,13 +199,6 @@ class RunTest extends TestCase
           'SCRIPT_NAME' => 'index.php',
           'PATH_INFO' => '/run/delete_all',
         ]);
-
-        $this->app->expects($this->once())
-          ->method('urlFor')
-          ->with('home');
-
-        $this->app->expects($this->once())
-          ->method('redirect');
 
         $result = $this->searcher->getAll(new SearchOptions());
         $this->assertGreaterThan(0, count($result['results']));

@@ -35,12 +35,6 @@ class WatchTest extends TestCase
                 ['name' => 'strpos'],
             ],
         ];
-        $this->app->expects($this->once())
-            ->method('urlFor')
-            ->with('watch.list');
-
-        $this->app->expects($this->once())
-            ->method('redirect');
 
         $this->watches->post($this->request);
         $result = $this->searcher->getAllWatches();
