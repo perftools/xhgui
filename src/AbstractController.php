@@ -30,6 +30,11 @@ abstract class AbstractController
         $response->write($body);
     }
 
+    protected function flashSuccess(string $message): void
+    {
+        $this->app->flash('success', $message);
+    }
+
     protected function config(string $key)
     {
         return $this->app->config($key);
