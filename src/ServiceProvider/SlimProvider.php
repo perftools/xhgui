@@ -7,6 +7,7 @@ use Pimple\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Container as SlimContainer;
+use Slim\Flash;
 use Slim\Http\Uri;
 use Slim\Views\Twig;
 use XHGui\RequestProxy;
@@ -27,13 +28,6 @@ class SlimProvider implements ServiceProviderInterface
             $app = new App($c['config']);
             $this->registerSlimContainer($app->getContainer());
 
-/*
-            // Enable cookie based sessions
-            $app->add(new SessionCookie([
-                'httponly' => true,
-            ]));
-*/
-
             return $app;
         };
     }
@@ -51,6 +45,10 @@ class SlimProvider implements ServiceProviderInterface
             $view['date_format'] = $container['date.format'];
 
             return $view;
+        };
+
+        $container['flash'] = static function () {
+            return new Flash\Messages();
         };
 
         $container[TwigExtension::class] = static function (SlimContainer $container) {
