@@ -96,6 +96,7 @@ trait LazyContainerProperties
             public function register(Container $container): void
             {
                 $container['view.class'] = TwigView::class;
+                $container['flash.storage'] = [];
                 $container['environment'] = function () {
                     return $this->ctx->getEnv();
                 };

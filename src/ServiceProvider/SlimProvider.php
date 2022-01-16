@@ -49,8 +49,12 @@ class SlimProvider implements ServiceProviderInterface
             return $view;
         };
 
-        $container['flash'] = static function () {
-            return new Flash\Messages();
+        // Having "null" here will make use of $_SESSION
+        $container['flash.storage'] = null;
+        $container['flash'] = static function ($container) {
+            $storage = $container['flash.storage'];
+
+            return new Flash\Messages($storage);
         };
 
         $container[TwigExtension::class] = static function (SlimContainer $container) {
