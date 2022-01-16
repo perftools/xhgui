@@ -69,14 +69,57 @@ class PdoSearcher implements SearcherInterface
         ]);
     }
 
-    public function getForUrl($url, $options, $conditions = []): void
+    public function getForUrl($url, $options, $conditions = []): array
     {
-        throw NotImplementedException::notImplementedPdo(__METHOD__);
+        $conditions = array_merge(
+            (array)$conditions,
+            ['simple_url' => $url]
+        );
+
+        $options = array_merge($options, [
+            'conditions' => $conditions,
+        ]);
+
+        return $this->paginate($options);
     }
 
-    public function getPercentileForUrl($percentile, $url, $search = []): void
+    public function getPercentileForUrl($percentile, $url, $search = []): array
     {
-        throw NotImplementedException::notImplementedPdo(__METHOD__);
+        $search = array_merge((array)$search, ['simple_url' => $url]);
+        $option = $this->db->buildQuery(['conditions' => $search]);
+
+        $results = [];
+        foreach ($this->db->aggregate($option) as $row) {
+            $timestamp = $row['request_ts'];
+            $rowCount = $results[$timestamp]['row_count'] ?? 0;
+
+            $results[$timestamp]['_id'] = $timestamp;
+            $results[$timestamp]['row_count'] = $rowCount + 1;
+            $results[$timestamp]['raw_index'] = $percentile / 100;
+            $results[$timestamp]['wall_times'][] = intval($row['main_wt']);
+            $results[$timestamp]['cpu_times'][] = intval($row['main_cpu']);
+            $results[$timestamp]['mu_times'][] = intval($row['main_mu']);
+            $results[$timestamp]['pmu_times'][] = intval($row['main_pmu']);
+        }
+
+        $keys = [
+            'wall_times' => 'wt',
+            'cpu_times' => 'cpu',
+            'mu_times' => 'mu',
+            'pmu_times' => 'pmu',
+        ];
+        foreach ($results as &$result) {
+            $result['date'] = date('Y-m-d H:i:s', $result['_id']);
+            unset($result['_id']);
+            $index = max(round($result['raw_index']) - 1, 0);
+            foreach ($keys as $key => $out) {
+                sort($result[$key]);
+                $result[$out] = $result[$key][$index] ?? null;
+                unset($result[$key]);
+            }
+        }
+
+        return array_values($results);
     }
 
     /**
@@ -92,52 +135,7 @@ class PdoSearcher implements SearcherInterface
      */
     public function getAll(SearchOptions $options): array
     {
-        $page = $options['page'];
-        $direction = $options['direction'];
-        $perPage = $options['perPage'];
-        $url = $options['conditions']['url'] ?? '';
-
-        $totalRows = $this->db->countByUrl($url);
-        $totalPages = max(ceil($totalRows / $perPage), 1);
-        if ($page > $totalPages) {
-            $page = $totalPages;
-        }
-        $skip = ($page - 1) * $perPage;
-
-        $results = [];
-        foreach ($this->db->findByUrl($url, $direction, $skip, $perPage) as $row) {
-            $results[] = new Profile([
-                '_id' => $row['id'],
-                'meta' => [
-                    'url' => $row['url'],
-                    'SERVER' => json_decode($row['SERVER'], true),
-                    'get' => json_decode($row['GET'], true),
-                    'env' => json_decode($row['ENV'], true),
-                    'simple_url' => $row['simple_url'],
-                    'request_ts' => $row['request_ts'],
-                    'request_ts_micro' => $row['request_ts_micro'],
-                    'request_date' => $row['request_date'],
-                ],
-                'profile' => [
-                    'main()' => [
-                        'wt' => (int) $row['main_wt'],
-                        'ct' => (int) $row['main_ct'],
-                        'cpu' => (int) $row['main_cpu'],
-                        'mu' => (int) $row['main_mu'],
-                        'pmu' => (int) $row['main_pmu'],
-                    ],
-                ],
-            ]);
-        }
-
-        return [
-            'results' => $results,
-            'sort' => 'meta.request_ts',
-            'direction' => $direction,
-            'page' => $page,
-            'perPage' => $perPage,
-            'totalPages' => $totalPages,
-        ];
+        return $this->paginate($options->toArray());
     }
 
     /**
@@ -226,5 +224,54 @@ class PdoSearcher implements SearcherInterface
         }
 
         return $row;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    private function paginate(array $options): array
+    {
+        $opt = $this->db->buildQuery($options);
+
+        $totalRows = $this->db->countByUrl($opt);
+        $totalPages = max(ceil($totalRows / $opt['perPage']), 1);
+
+        $page = min(max($options['page'] ?? 1, 1), $totalPages);
+        $opt['skip'] = ($page - 1) * $opt['perPage'];
+
+        $results = [];
+        foreach ($this->db->findByUrl($opt) as $row) {
+            $results[] = new Profile([
+                '_id' => $row['id'],
+                'meta' => [
+                    'url' => $row['url'],
+                    'SERVER' => json_decode($row['SERVER'], true),
+                    'get' => json_decode($row['GET'], true),
+                    'env' => json_decode($row['ENV'], true),
+                    'simple_url' => $row['simple_url'],
+                    'request_ts' => $row['request_ts'],
+                    'request_ts_micro' => $row['request_ts_micro'],
+                    'request_date' => $row['request_date'],
+                ],
+                'profile' => [
+                    'main()' => [
+                        'wt' => (int) $row['main_wt'],
+                        'ct' => (int) $row['main_ct'],
+                        'cpu' => (int) $row['main_cpu'],
+                        'mu' => (int) $row['main_mu'],
+                        'pmu' => (int) $row['main_pmu'],
+                    ],
+                ],
+            ]);
+        }
+
+        return [
+            'results' => $results,
+            'sort' => 'meta.request_ts',
+            'direction' => $opt['direction'],
+            'page' => $page,
+            'perPage' => $opt['perPage'],
+            'totalPages' => $totalPages,
+        ];
     }
 }
