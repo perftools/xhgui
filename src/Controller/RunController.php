@@ -75,7 +75,7 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function view(Request $request, Response $response): void
+    public function view(Request $request): void
     {
         $detailCount = $this->config('detail.count');
         $result = $this->searcher->get($request->get('id'));

@@ -66,7 +66,7 @@ class RouteProvider implements ServiceProviderInterface
 
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $controller->view($request, $response);
+            $controller->view($request);
         })->setName('run.view');
 
         $app->get('/run/delete', static function () use ($di, $app): void {

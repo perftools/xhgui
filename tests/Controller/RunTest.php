@@ -232,7 +232,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*,strpos()',
         ]);
 
-        $this->runs->view($this->app->request(), $this->app->response());
+        $this->runs->view($this->app->request());
         $result = $this->view->all();
 
         $this->assertCount(1, $result['profile']);
@@ -249,7 +249,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*',
         ]);
 
-        $this->runs->view($this->app->request(), $this->app->response());
+        $this->runs->view($this->app->request());
         $result = $this->view->all();
 
         $this->assertCount(2, $result['profile']);
@@ -266,7 +266,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=true',
         ]);
 
-        $this->runs->view($this->app->request(), $this->app->response());
+        $this->runs->view($this->app->request());
         $result = $this->view->all();
 
         $this->assertCount(2, $result['profile']);
