@@ -97,7 +97,7 @@ class RunController extends AbstractController
         }
 
         if (false !== $request->get(self::FILTER_ARGUMENT_NAME, false)) {
-            $profile = $result->sort('ewt', $result->filter($result->getProfile(), $this->getFilters()));
+            $profile = $result->sort('ewt', $result->filter($result->getProfile(), $this->getFilters($request)));
         } else {
             $profile = $result->sort('ewt', $result->getProfile());
         }
@@ -114,9 +114,8 @@ class RunController extends AbstractController
     /**
      * @return array
      */
-    protected function getFilters()
+    private function getFilters($request)
     {
-        $request = $this->app->request();
         $filterString = $request->get(self::FILTER_ARGUMENT_NAME);
         if (strlen($filterString) > 1 && $filterString !== 'true') {
             $filters = array_map('trim', explode(',', $filterString));
