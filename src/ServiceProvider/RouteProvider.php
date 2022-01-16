@@ -221,10 +221,12 @@ class RouteProvider implements ServiceProviderInterface
         })->setName('custom.query');
 
         // Waterfall routes
-        $app->get('/waterfall', static function () use ($di): void {
+        $app->get('/waterfall', static function () use ($di, $app): void {
             /** @var Controller\WaterfallController $controller */
             $controller = $di[Controller\WaterfallController::class];
-            $controller->index();
+            $request = $app->request();
+
+            $controller->index($request);
         })->setName('waterfall.list');
 
         $app->get('/waterfall/data', static function () use ($di, $app): void {

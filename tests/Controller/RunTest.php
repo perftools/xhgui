@@ -20,7 +20,7 @@ class RunTest extends TestCase
 
     public function testIndexEmpty(): void
     {
-        $this->runs->index($this->app->request());
+        $this->runs->index($this->request);
         $result = $this->view->all();
 
         $this->assertEquals('Recent runs', $result['title']);
@@ -42,7 +42,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'sort=wt',
         ]);
 
-        $this->runs->index($this->app->request());
+        $this->runs->index($this->request);
         $result = $this->view->all();
         $this->assertEquals('Longest wall time', $result['title']);
         $this->assertEquals('wt', $result['paging']['sort']);
@@ -56,7 +56,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'sort=cpu&direction=desc',
         ]);
 
-        $this->runs->index($this->app->request());
+        $this->runs->index($this->request);
         $result = $this->view->all();
         $this->assertEquals('Most CPU time', $result['title']);
         $this->assertEquals('cpu', $result['paging']['sort']);
@@ -71,7 +71,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'sort=mu&direction=asc&url=index.php',
         ]);
 
-        $this->runs->index($this->app->request());
+        $this->runs->index($this->request);
         $result = $this->view->all();
         $this->assertEquals('Highest memory use', $result['title']);
         $this->assertEquals('mu', $result['paging']['sort']);
@@ -90,7 +90,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'url=%2Ftasks',
         ]);
 
-        $this->runs->url($this->app->request());
+        $this->runs->url($this->request);
 
         $result = $this->view->all();
         $this->assertEquals('url.view', $result['base_url']);
@@ -139,7 +139,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
         ]);
 
-        $this->runs->callgraph($this->app->request());
+        $this->runs->callgraph($this->request);
         $result = $this->view->all();
         $this->assertArrayHasKey('profile', $result);
         $this->assertArrayHasKey('date_format', $result);
@@ -156,7 +156,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
         ]);
 
-        $result = $this->runs->callgraphData($this->app->request());
+        $result = $this->runs->callgraphData($this->request);
 
         $this->assertInternalType('array', $result);
         $this->assertArrayHasKey('metric', $result);
@@ -190,7 +190,7 @@ class RunTest extends TestCase
         $result = $searcher->getAll(new SearchOptions());
         $count = count($result['results']);
 
-        $this->runs->deleteSubmit($this->app->request());
+        $this->runs->deleteSubmit($this->request);
 
         $result = $searcher->getAll(new SearchOptions());
         $this->assertCount($count - 1, $result['results']);
@@ -234,7 +234,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*,strpos()',
         ]);
 
-        $this->runs->view($this->app->request());
+        $this->runs->view($this->request);
         $result = $this->view->all();
 
         $this->assertCount(1, $result['profile']);
@@ -251,7 +251,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*',
         ]);
 
-        $this->runs->view($this->app->request());
+        $this->runs->view($this->request);
         $result = $this->view->all();
 
         $this->assertCount(2, $result['profile']);
@@ -268,7 +268,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=true',
         ]);
 
-        $this->runs->view($this->app->request());
+        $this->runs->view($this->request);
         $result = $this->view->all();
 
         $this->assertCount(2, $result['profile']);

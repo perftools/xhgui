@@ -50,7 +50,7 @@ class ImportTest extends TestCase
         $before = $searcher->getForUrl('/things', []);
         $this->assertEmpty($before['results']);
 
-        $this->import->import($this->app->request(), $this->app->response());
+        $this->import->import($this->request);
 
         $after = $searcher->getForUrl('/things', []);
         $this->assertNotEmpty($after['results']);

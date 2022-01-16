@@ -22,9 +22,8 @@ class WaterfallController extends AbstractController
         $this->searcher = $searcher;
     }
 
-    public function index(): void
+    public function index($request): void
     {
-        $request = $this->app->request();
         $search = [];
         $keys = ['remote_addr', 'request_start', 'request_end'];
         foreach ($keys as $key) {
