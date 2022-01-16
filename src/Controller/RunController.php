@@ -4,9 +4,9 @@ namespace XHGui\Controller;
 
 use Exception;
 use Slim\App;
-use Slim\Http\Request;
 use XHGui\AbstractController;
 use XHGui\Options\SearchOptions;
+use XHGui\RequestProxy as Request;
 use XHGui\Searcher\SearcherInterface;
 
 class RunController extends AbstractController

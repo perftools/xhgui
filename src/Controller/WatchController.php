@@ -3,8 +3,8 @@
 namespace XHGui\Controller;
 
 use Slim\App;
-use Slim\Http\Request;
 use XHGui\AbstractController;
+use XHGui\RequestProxy as Request;
 use XHGui\Searcher\SearcherInterface;
 
 class WatchController extends AbstractController
