@@ -90,7 +90,7 @@ class RunTest extends TestCase
             'QUERY_STRING' => 'url=%2Ftasks',
         ]);
 
-        $this->runs->url($this->app->request(), $this->app->response());
+        $this->runs->url($this->app->request());
 
         $result = $this->view->all();
         $this->assertEquals('url.view', $result['base_url']);
