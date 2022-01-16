@@ -30,6 +30,17 @@ abstract class AbstractController
         $response->write($body);
     }
 
+    /**
+     * Redirect to the URL of a named route
+     *
+     * @param string $name The route name
+     * @param array $params Associative array of URL parameters and replacement values
+     */
+    protected function redirectTo(string $name, array $params = []): void
+    {
+        $this->app->redirectTo($name, $params);
+    }
+
     protected function flashSuccess(string $message): void
     {
         $this->app->flash('success', $message);
