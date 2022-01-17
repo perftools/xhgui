@@ -12,16 +12,16 @@ class TwigExtension extends AbstractExtension
 {
     /** @var Router */
     private $router;
-    /** @var string|null */
+    /** @var string */
+    private $basePath;
+    /** @var string */
     private $pathPrefix;
-    /** @var Request */
-    private $request;
 
     public function __construct(Router $router, Request $request, ?string $pathPrefix)
     {
         $this->router = $router;
-        $this->request = $request;
-        $this->pathPrefix = $pathPrefix;
+        $this->basePath = $request->getUri()->getBasePath();
+        $this->pathPrefix = rtrim($this->buildPathPrefix($this->basePath, $pathPrefix), '/');
     }
 
     public function getFunctions(): array
@@ -75,10 +75,14 @@ class TwigExtension extends AbstractExtension
             $query = '?' . http_build_query($queryargs);
         }
 
-        // this is copy of \Slim\Slim::urlFor()
-        // to mix path prefix in \Slim\Slim::urlFor
+        $url = $this->router->urlFor($name);
 
-        return rtrim($this->pathPrefix(), '/') . $this->router->urlFor($name) . $query;
+        // Remove basePath from url
+        if ($this->basePath && strpos($url, $this->basePath) === 0) {
+            $url = substr($url, strlen($this->basePath));
+        }
+
+        return $this->pathPrefix(ltrim($url, '/') . $query);
     }
 
     /**
@@ -89,9 +93,7 @@ class TwigExtension extends AbstractExtension
      */
     public function staticUrl(string $path): string
     {
-        $rootUri = $this->pathPrefix();
-
-        return rtrim($rootUri, '/') . '/' . $path;
+        return $this->pathPrefix($path);
     }
 
     public function formatBytes($value): string
@@ -130,13 +132,16 @@ class TwigExtension extends AbstractExtension
         return number_format((float)$value * 100, 0) . ' <span class="units">%</span>';
     }
 
-    private function pathPrefix(): string
+    private function pathPrefix($path): string
     {
-        if ($this->pathPrefix !== null) {
-            return $this->pathPrefix;
-        }
+        return $this->pathPrefix . '/' . $path;
+    }
 
-        $rootUri = $this->request->getUri()->getBasePath();
+    private function buildPathPrefix(string $rootUri, ?string $pathPrefix): string
+    {
+        if ($pathPrefix !== null) {
+            return rtrim($pathPrefix, '/');
+        }
 
         // Get URL part prepending index.php
         $indexPos = strpos($rootUri, 'index.php');
@@ -144,6 +149,6 @@ class TwigExtension extends AbstractExtension
             return substr($rootUri, 0, $indexPos);
         }
 
-        return $rootUri;
+        return rtrim($rootUri, '/');
     }
 }
