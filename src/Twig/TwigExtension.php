@@ -75,10 +75,7 @@ class TwigExtension extends AbstractExtension
             $query = '?' . http_build_query($queryargs);
         }
 
-        // this is copy of \Slim\Slim::urlFor()
-        // to mix path prefix in \Slim\Slim::urlFor
-
-        return rtrim($this->getPathPrefix(), '/') . $this->router->urlFor($name) . $query;
+        return $this->pathPrefix($this->router->urlFor($name) . $query);
     }
 
     /**
@@ -89,9 +86,7 @@ class TwigExtension extends AbstractExtension
      */
     public function staticUrl(string $path): string
     {
-        $rootUri = $this->getPathPrefix();
-
-        return rtrim($rootUri, '/') . '/' . $path;
+        return $this->pathPrefix($path);
     }
 
     public function formatBytes($value): string
@@ -128,6 +123,11 @@ class TwigExtension extends AbstractExtension
     public function formatPercent($value): string
     {
         return number_format((float)$value * 100, 0) . ' <span class="units">%</span>';
+    }
+
+    private function pathPrefix($path): string
+    {
+        return rtrim($this->getPathPrefix(), '/') . '/'. $path;
     }
 
     private function getPathPrefix(): string
