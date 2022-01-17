@@ -12,7 +12,7 @@ class TwigExtension extends AbstractExtension
 {
     /** @var Router */
     private $router;
-    /** @var string */
+    /** @var string|null */
     private $pathPrefix;
     /** @var Request */
     private $request;
