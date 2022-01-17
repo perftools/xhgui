@@ -135,7 +135,7 @@ class TwigExtension extends AbstractExtension
 
     private function pathPrefix(): string
     {
-        if ($this->pathPrefix !== null) {
+        if ($this->pathPrefix !== '') {
             return $this->pathPrefix;
         }
 
