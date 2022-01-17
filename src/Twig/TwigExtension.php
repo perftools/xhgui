@@ -78,11 +78,11 @@ class TwigExtension extends AbstractExtension
         $url = $this->router->urlFor($name);
 
         // Remove basePath from url
-        if (strpos($url, $this->basePath) === 0) {
-            $url = ltrim(substr($url, strlen($this->basePath)), '/');
+        if ($this->basePath && strpos($url, $this->basePath) === 0) {
+            $url = substr($url, strlen($this->basePath));
         }
 
-        return $this->pathPrefix($url . $query);
+        return $this->pathPrefix(ltrim($url, '/') . $query);
     }
 
     /**
