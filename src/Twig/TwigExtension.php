@@ -12,7 +12,7 @@ class TwigExtension extends AbstractExtension
 {
     /** @var Router */
     private $router;
-    /** @var string|null */
+    /** @var string */
     private $pathPrefix;
     /** @var Request */
     private $request;
@@ -21,6 +21,9 @@ class TwigExtension extends AbstractExtension
     {
         $this->router = $router;
         $this->request = $request;
+        if (!$pathPrefix) {
+            $pathPrefix = '';
+        }
         $this->pathPrefix = $pathPrefix;
     }
 
@@ -75,15 +78,10 @@ class TwigExtension extends AbstractExtension
             $query = '?' . http_build_query($queryargs);
         }
 
-        $prepend = '';
-        if ($this->pathPrefix !== null) {
-            $prepend = rtrim($this->pathPrefix, '/');
-        }
-
         // this is copy of \Slim\Slim::urlFor()
         // to mix path prefix in \Slim\Slim::urlFor
 
-        return $prepend . $this->router->urlFor($name) . $query;
+        return rtrim($this->pathPrefix, '/') . $this->router->urlFor($name) . $query;
     }
 
     /**
