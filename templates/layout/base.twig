@@ -36,7 +36,9 @@
     <div class="container-fluid">
         {% if flash.success %}
         <div class="flash alert alert-success">
-            {{ flash.success }}
+            {% for msg in flash.success %}
+                <li>{{ msg }}</li>
+            {% endfor %}
         </div>
         {% endif %}
 

@@ -28,6 +28,13 @@ abstract class AbstractController
         /** @var Twig $renderer */
         $renderer = $container->get('view');
 
+        if (!isset($data['flash'])) {
+            /** @var Flash\Messages $flash */
+            $flash = $this->app->getContainer()->get('flash');
+            $messages = $flash->getMessages();
+            $data['flash'] = $messages;
+        }
+
         $renderer->render($response, $template, $data);
     }
 
