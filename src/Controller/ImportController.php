@@ -4,10 +4,9 @@ namespace XHGui\Controller;
 
 use Exception;
 use InvalidArgumentException;
-use Slim\Http\Request;
-use Slim\Http\Response;
-use Slim\Slim as App;
+use Slim\App;
 use XHGui\AbstractController;
+use XHGui\RequestProxy as Request;
 use XHGui\Saver\SaverInterface;
 
 class ImportController extends AbstractController
@@ -27,21 +26,21 @@ class ImportController extends AbstractController
         $this->token = $token;
     }
 
-    public function import(Request $request, Response $response): void
+    public function import(Request $request)
     {
+        $status = 200;
         try {
             $id = $this->runImport($request);
             $result = ['ok' => true, 'id' => $id, 'size' => $request->getContentLength()];
         } catch (InvalidArgumentException $e) {
             $result = ['error' => true, 'message' => $e->getMessage()];
-            $response->setStatus(401);
+            $status = 401;
         } catch (Exception $e) {
             $result = ['error' => true, 'message' => $e->getMessage()];
-            $response->setStatus(500);
+            $status = 500;
         }
 
-        $response['Content-Type'] = 'application/json';
-        $response->body(json_encode($result));
+        return [$status, $result];
     }
 
     private function runImport(Request $request): string

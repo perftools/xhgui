@@ -23,7 +23,13 @@ class ConfigProvider implements ServiceProviderInterface
                 Config::load($app['app.config_dir'] . '/config.php');
             }
 
-            return Config::all();
+            $config = Config::all();
+            $config += [
+                'template_dir' => $app['app.dir'] . '/templates',
+                'cache_dir' => $app['app.dir'] . '/cache',
+            ];
+
+            return $config;
         };
     }
 }

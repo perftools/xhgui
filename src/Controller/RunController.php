@@ -3,11 +3,10 @@
 namespace XHGui\Controller;
 
 use Exception;
-use Slim\Http\Request;
-use Slim\Http\Response;
-use Slim\Slim as App;
+use Slim\App;
 use XHGui\AbstractController;
 use XHGui\Options\SearchOptions;
+use XHGui\RequestProxy as Request;
 use XHGui\Searcher\SearcherInterface;
 
 class RunController extends AbstractController
@@ -28,7 +27,7 @@ class RunController extends AbstractController
         $this->searcher = $searcher;
     }
 
-    public function index(Request $request, Response $response): void
+    public function index(Request $request): void
     {
         $search = [];
         $keys = ['date_start', 'date_end', 'server_name', 'url'];
@@ -75,7 +74,7 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function view(Request $request, Response $response): void
+    public function view(Request $request): void
     {
         $detailCount = $this->config('detail.count');
         $result = $this->searcher->get($request->get('id'));
@@ -98,7 +97,7 @@ class RunController extends AbstractController
         }
 
         if (false !== $request->get(self::FILTER_ARGUMENT_NAME, false)) {
-            $profile = $result->sort('ewt', $result->filter($result->getProfile(), $this->getFilters()));
+            $profile = $result->sort('ewt', $result->filter($result->getProfile(), $this->getFilters($request)));
         } else {
             $profile = $result->sort('ewt', $result->getProfile());
         }
@@ -115,9 +114,8 @@ class RunController extends AbstractController
     /**
      * @return array
      */
-    protected function getFilters()
+    private function getFilters($request)
     {
-        $request = $this->app->request();
         $filterString = $request->get(self::FILTER_ARGUMENT_NAME);
         if (strlen($filterString) > 1 && $filterString !== 'true') {
             $filters = array_map('trim', explode(',', $filterString));
@@ -158,9 +156,8 @@ class RunController extends AbstractController
         // Delete the profile run.
         $this->searcher->delete($id);
 
-        $this->app->flash('success', 'Deleted profile ' . $id);
-
-        $this->app->redirect($this->app->urlFor('home'));
+        $this->flashSuccess('Deleted profile ' . $id);
+        $this->redirectTo('home');
     }
 
     public function deleteAllForm(): void
@@ -173,9 +170,8 @@ class RunController extends AbstractController
         // Delete all profile runs.
         $this->searcher->truncate();
 
-        $this->app->flash('success', 'Deleted all profiles');
-
-        $this->app->redirect($this->app->urlFor('home'));
+        $this->flashSuccess('Deleted all profiles');
+        $this->redirectTo('home');
     }
 
     public function url(Request $request): void
@@ -331,27 +327,21 @@ class RunController extends AbstractController
         ]);
     }
 
-    public function callgraphData(Request $request, Response $response)
+    public function callgraphData(Request $request)
     {
         $profile = $this->searcher->get($request->get('id'));
         $metric = $request->get('metric') ?: 'wt';
         $threshold = (float)$request->get('threshold') ?: 0.01;
-        $callgraph = $profile->getCallgraph($metric, $threshold);
 
-        $response['Content-Type'] = 'application/json';
-
-        return $response->body(json_encode($callgraph));
+        return $profile->getCallgraph($metric, $threshold);
     }
 
-    public function callgraphDataDot(Request $request, Response $response)
+    public function callgraphDataDot(Request $request)
     {
         $profile = $this->searcher->get($request->get('id'));
         $metric = $request->get('metric') ?: 'wt';
         $threshold = (float)$request->get('threshold') ?: 0.01;
-        $callgraph = $profile->getCallgraphNodes($metric, $threshold);
 
-        $response['Content-Type'] = 'application/json';
-
-        return $response->body(json_encode($callgraph));
+        return $profile->getCallgraphNodes($metric, $threshold);
     }
 }

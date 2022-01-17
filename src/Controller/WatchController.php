@@ -2,9 +2,9 @@
 
 namespace XHGui\Controller;
 
-use Slim\Http\Request;
-use Slim\Slim as App;
+use Slim\App;
 use XHGui\AbstractController;
+use XHGui\RequestProxy as Request;
 use XHGui\Searcher\SearcherInterface;
 
 class WatchController extends AbstractController
@@ -35,8 +35,9 @@ class WatchController extends AbstractController
             $this->searcher->saveWatch($data);
         }
         if ($saved) {
-            $this->app->flash('success', 'Watch functions updated.');
+            $this->flashSuccess('Watch functions updated.');
         }
-        $this->app->redirect($this->app->urlFor('watch.list'));
+
+        $this->redirectTo('watch.list');
     }
 }
