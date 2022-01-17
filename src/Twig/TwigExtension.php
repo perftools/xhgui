@@ -21,9 +21,6 @@ class TwigExtension extends AbstractExtension
     {
         $this->router = $router;
         $this->request = $request;
-        if (!$pathPrefix) {
-            $pathPrefix = '';
-        }
         $this->pathPrefix = $pathPrefix;
     }
 
@@ -81,7 +78,9 @@ class TwigExtension extends AbstractExtension
         // this is copy of \Slim\Slim::urlFor()
         // to mix path prefix in \Slim\Slim::urlFor
 
-        return rtrim($this->pathPrefix, '/') . $this->router->urlFor($name) . $query;
+        $prepend = $this->pathPrefix ?: '';
+
+        return rtrim($prepend, '/') . $this->router->urlFor($name) . $query;
     }
 
     /**
@@ -135,7 +134,7 @@ class TwigExtension extends AbstractExtension
 
     private function pathPrefix(): string
     {
-        if ($this->pathPrefix !== '') {
+        if ($this->pathPrefix !== null) {
             return $this->pathPrefix;
         }
 
