@@ -2,7 +2,8 @@ version: "3.7"
 
 services:
   xhgui:
-    image: xhgui/xhgui:0.18.0
+    # https://hub.docker.com/r/xhgui/xhgui/tags
+    image: xhgui/xhgui:latest
     volumes:
       - ./config:/var/www/xhgui/config
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
