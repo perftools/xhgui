@@ -157,7 +157,7 @@ class RunTest extends TestCase
         ]);
 
         $result = $this->runs->callgraphData($this->request);
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertArrayHasKey('metric', $result);
         $this->assertArrayHasKey('total', $result);
         $this->assertArrayHasKey('nodes', $result);
