@@ -52,6 +52,10 @@ return [
 
     // Add this path prefix to all links and resources
     // If this is not defined, auto-detection will try to find it itself
+    // Example:
+    // - prefix=null: use auto-detection from request
+    // - prefix='': use '' for prefix
+    // - prefix='/xhgui': use '/xhgui'
     'path.prefix' => null,
 
     // Setup timezone for date formatting
