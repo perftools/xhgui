@@ -12,16 +12,16 @@ class TwigExtension extends AbstractExtension
 {
     /** @var Router */
     private $router;
-    /** @var string|null */
+    /** @var string */
+    private $basePath;
+    /** @var string */
     private $pathPrefix;
-    /** @var Request */
-    private $request;
 
     public function __construct(Router $router, Request $request, ?string $pathPrefix)
     {
         $this->router = $router;
-        $this->request = $request;
-        $this->pathPrefix = $pathPrefix;
+        $this->basePath = $request->getUri()->getBasePath();
+        $this->pathPrefix = $this->buildPathPrefix($this->basePath, $pathPrefix);
     }
 
     public function getFunctions(): array
@@ -75,12 +75,11 @@ class TwigExtension extends AbstractExtension
             $query = '?' . http_build_query($queryargs);
         }
 
-        $basePath = $this->getBasePath();
         $url = $this->router->urlFor($name);
 
         // Remove basePath from url
-        if (strpos($url, $basePath) === 0) {
-            $url = ltrim(substr($url, strlen($basePath)), '/');
+        if (strpos($url, $this->basePath) === 0) {
+            $url = ltrim(substr($url, strlen($this->basePath)), '/');
         }
 
         return $this->pathPrefix($url . $query);
@@ -135,16 +134,14 @@ class TwigExtension extends AbstractExtension
 
     private function pathPrefix($path): string
     {
-        return rtrim($this->getPathPrefix(), '/') . '/'. $path;
+        return rtrim($this->pathPrefix, '/') . '/'. $path;
     }
 
-    private function getPathPrefix(): string
+    private function buildPathPrefix(string $rootUri, ?string $pathPrefix): string
     {
-        if ($this->pathPrefix !== null) {
-            return $this->pathPrefix;
+        if ($pathPrefix !== null) {
+            return $pathPrefix;
         }
-
-        $rootUri = $this->getBasePath();
 
         // Get URL part prepending index.php
         $indexPos = strpos($rootUri, 'index.php');
@@ -153,10 +150,5 @@ class TwigExtension extends AbstractExtension
         }
 
         return $rootUri;
-    }
-
-    private function getBasePath(): string
-    {
-        return $this->request->getUri()->getBasePath();
     }
 }
