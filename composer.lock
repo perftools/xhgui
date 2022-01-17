@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alcaeus/mongo-php-adapter.git",
-                "reference": "b828ebc06cd3c270997b13c97dadc94731b36354"
+                "reference": "e9f2cb6ab4ccc59f28eba1360aba96051e02fa33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alcaeus/mongo-php-adapter/zipball/b828ebc06cd3c270997b13c97dadc94731b36354",
-                "reference": "b828ebc06cd3c270997b13c97dadc94731b36354",
+                "url": "https://api.github.com/repos/alcaeus/mongo-php-adapter/zipball/e9f2cb6ab4ccc59f28eba1360aba96051e02fa33",
+                "reference": "e9f2cb6ab4ccc59f28eba1360aba96051e02fa33",
                 "shasum": ""
             },
             "require": {
@@ -32,7 +32,7 @@
             },
             "require-dev": {
                 "squizlabs/php_codesniffer": "^3.2",
-                "symfony/phpunit-bridge": "5.x-dev"
+                "symfony/phpunit-bridge": "^4.4.16 || ^5.2"
             },
             "type": "library",
             "extra": {
@@ -68,7 +68,11 @@
                 "database",
                 "mongodb"
             ],
-            "time": "2020-11-11T14:05:46+00:00"
+            "support": {
+                "issues": "https://github.com/alcaeus/mongo-php-adapter/issues",
+                "source": "https://github.com/alcaeus/mongo-php-adapter/tree/1.2.1"
+            },
+            "time": "2021-07-08T11:24:49+00:00"
         },
         {
             "name": "mongodb/mongodb",
@@ -128,6 +132,10 @@
                 "mongodb",
                 "persistence"
             ],
+            "support": {
+                "issues": "https://github.com/mongodb/mongo-php-library/issues",
+                "source": "https://github.com/mongodb/mongo-php-library/tree/master"
+            },
             "time": "2017-10-27T19:42:57+00:00"
         },
         {
@@ -174,33 +182,37 @@
                 "router",
                 "routing"
             ],
+            "support": {
+                "issues": "https://github.com/nikic/FastRoute/issues",
+                "source": "https://github.com/nikic/FastRoute/tree/master"
+            },
             "time": "2018-02-13T20:26:39+00:00"
         },
         {
             "name": "pimple/pimple",
-            "version": "v3.2.3",
+            "version": "v3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Pimple.git",
-                "reference": "9e403941ef9d65d20cba7d54e29fe906db42cf32"
+                "reference": "a94b3a4db7fb774b3d78dad2315ddc07629e1bed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/9e403941ef9d65d20cba7d54e29fe906db42cf32",
-                "reference": "9e403941ef9d65d20cba7d54e29fe906db42cf32",
+                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/a94b3a4db7fb774b3d78dad2315ddc07629e1bed",
+                "reference": "a94b3a4db7fb774b3d78dad2315ddc07629e1bed",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0",
-                "psr/container": "^1.0"
+                "php": ">=7.2.5",
+                "psr/container": "^1.1 || ^2.0"
             },
             "require-dev": {
-                "symfony/phpunit-bridge": "^3.2"
+                "symfony/phpunit-bridge": "^5.4@dev"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2.x-dev"
+                    "dev-master": "3.4.x-dev"
                 }
             },
             "autoload": {
@@ -219,36 +231,34 @@
                 }
             ],
             "description": "Pimple, a simple Dependency Injection Container",
-            "homepage": "http://pimple.sensiolabs.org",
+            "homepage": "https://pimple.symfony.com",
             "keywords": [
                 "container",
                 "dependency injection"
             ],
-            "time": "2018-01-21T07:42:36+00:00"
+            "support": {
+                "source": "https://github.com/silexphp/Pimple/tree/v3.5.0"
+            },
+            "time": "2021-10-28T11:13:42+00:00"
         },
         {
             "name": "psr/container",
-            "version": "1.0.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/container.git",
-                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f"
+                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
-                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/8622567409010282b7aeebe4bb841fe98b58dcaf",
+                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=7.2.0"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Psr\\Container\\": "src/"
@@ -261,7 +271,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
+                    "homepage": "https://www.php-fig.org/"
                 }
             ],
             "description": "Common Container Interface (PHP FIG PSR-11)",
@@ -273,7 +283,11 @@
                 "container-interop",
                 "psr"
             ],
-            "time": "2017-02-14T16:28:37+00:00"
+            "support": {
+                "issues": "https://github.com/php-fig/container/issues",
+                "source": "https://github.com/php-fig/container/tree/1.1.1"
+            },
+            "time": "2021-03-05T17:36:06+00:00"
         },
         {
             "name": "psr/http-message",
@@ -323,6 +337,9 @@
                 "request",
                 "response"
             ],
+            "support": {
+                "source": "https://github.com/php-fig/http-message/tree/master"
+            },
             "time": "2016-08-06T14:39:51+00:00"
         },
         {
@@ -371,6 +388,10 @@
                 "provider",
                 "slim"
             ],
+            "support": {
+                "issues": "https://github.com/slimphp/Slim-Flash/issues",
+                "source": "https://github.com/slimphp/Slim-Flash/tree/master"
+            },
             "time": "2017-10-22T10:35:05+00:00"
         },
         {
@@ -444,6 +465,10 @@
                 "micro",
                 "router"
             ],
+            "support": {
+                "issues": "https://github.com/slimphp/Slim/issues",
+                "source": "https://github.com/slimphp/Slim/tree/3.x"
+            },
             "time": "2019-11-28T17:40:33+00:00"
         },
         {
@@ -495,6 +520,10 @@
                 "twig",
                 "view"
             ],
+            "support": {
+                "issues": "https://github.com/slimphp/Twig-View/issues",
+                "source": "https://github.com/slimphp/Twig-View/tree/master"
+            },
             "time": "2019-11-28T18:03:50+00:00"
         },
         {
@@ -544,6 +573,9 @@
                 "configuration",
                 "options"
             ],
+            "support": {
+                "source": "https://github.com/symfony/options-resolver/tree/v3.4.47"
+            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -562,20 +594,23 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.19.0",
+            "version": "v1.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "aed596913b70fae57be53d86faa2e9ef85a2297b"
+                "reference": "30885182c981ab175d4d034db0f6f469898070ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/aed596913b70fae57be53d86faa2e9ef85a2297b",
-                "reference": "aed596913b70fae57be53d86faa2e9ef85a2297b",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/30885182c981ab175d4d034db0f6f469898070ab",
+                "reference": "30885182c981ab175d4d034db0f6f469898070ab",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=7.1"
+            },
+            "provide": {
+                "ext-ctype": "*"
             },
             "suggest": {
                 "ext-ctype": "For best performance"
@@ -583,7 +618,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.19-dev"
+                    "dev-main": "1.23-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -620,6 +655,9 @@
                 "polyfill",
                 "portable"
             ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.24.0"
+            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -634,34 +672,34 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-23T09:01:57+00:00"
+            "time": "2021-10-20T20:35:02+00:00"
         },
         {
             "name": "twig/twig",
-            "version": "v1.42.5",
+            "version": "v1.44.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "87b2ea9d8f6fd014d0621ca089bb1b3769ea3f8e"
+                "reference": "ae39480f010ef88adc7938503c9b02d3baf2f3b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/87b2ea9d8f6fd014d0621ca089bb1b3769ea3f8e",
-                "reference": "87b2ea9d8f6fd014d0621ca089bb1b3769ea3f8e",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ae39480f010ef88adc7938503c9b02d3baf2f3b3",
+                "reference": "ae39480f010ef88adc7938503c9b02d3baf2f3b3",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.0",
+                "php": ">=7.2.5",
                 "symfony/polyfill-ctype": "^1.8"
             },
             "require-dev": {
                 "psr/container": "^1.0",
-                "symfony/phpunit-bridge": "^4.4|^5.0"
+                "symfony/phpunit-bridge": "^4.4.9|^5.0.9"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.42-dev"
+                    "dev-master": "1.44-dev"
                 }
             },
             "autoload": {
@@ -698,7 +736,21 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2020-02-11T05:59:23+00:00"
+            "support": {
+                "issues": "https://github.com/twigphp/Twig/issues",
+                "source": "https://github.com/twigphp/Twig/tree/v1.44.6"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/twig/twig",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-11-25T13:31:46+00:00"
         }
     ],
     "packages-dev": [
@@ -743,6 +795,10 @@
                 }
             ],
             "description": "Provides a configuration for php-cs-fixer",
+            "support": {
+                "issues": "https://github.com/glensc/php-cs-fixer-config/issues",
+                "source": "https://github.com/glensc/php-cs-fixer-config/tree/master"
+            },
             "time": "2020-04-26T08:36:26+00:00"
         },
         {
@@ -796,20 +852,24 @@
                 "lazy loading",
                 "utility"
             ],
+            "support": {
+                "issues": "https://github.com/Ocramius/LazyProperty/issues",
+                "source": "https://github.com/Ocramius/LazyProperty/tree/master"
+            },
             "time": "2016-01-21T16:19:39+00:00"
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v5.2.1",
+            "version": "v5.2.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "235823f6d215c9bd930a47a496e62c1354cde55b"
+                "reference": "06e1bda76e73915b4afb2eb7669ca17b793d258a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/235823f6d215c9bd930a47a496e62c1354cde55b",
-                "reference": "235823f6d215c9bd930a47a496e62c1354cde55b",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/06e1bda76e73915b4afb2eb7669ca17b793d258a",
+                "reference": "06e1bda76e73915b4afb2eb7669ca17b793d258a",
                 "shasum": ""
             },
             "require": {
@@ -860,8 +920,11 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "Symfony PHPUnit Bridge",
+            "description": "Provides utilities for PHPUnit, especially user deprecation notices management",
             "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/phpunit-bridge/tree/v5.2.12"
+            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -876,7 +939,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-14T22:27:17+00:00"
+            "time": "2021-07-15T21:36:33+00:00"
         }
     ],
     "aliases": [],
@@ -893,5 +956,5 @@
         "php": "7.2.5",
         "ext-mongodb": "1.3.0"
     },
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.1.0"
 }
