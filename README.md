@@ -15,7 +15,7 @@ it.
 
 XHGui has the following requirements:
 
-- PHP version 7.2 up to 7.3
+- Known to work: PHP >= 7.2, 8.0.
 - If using MongoDB storage, see [MongoDB](#MongoDB) requirements
 - If using PDO storage, see [PDO](#PDO) requirements
 - To profile an application, one of the profiling PHP extensions is required.
