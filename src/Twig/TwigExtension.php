@@ -75,10 +75,15 @@ class TwigExtension extends AbstractExtension
             $query = '?' . http_build_query($queryargs);
         }
 
+        $prepend = '';
+        if ($this->pathPrefix !== null) {
+            $prepend = rtrim($this->pathPrefix, '/');
+        }
+
         // this is copy of \Slim\Slim::urlFor()
         // to mix path prefix in \Slim\Slim::urlFor
 
-        return rtrim($this->pathPrefix(), '/') . $this->router->urlFor($name) . $query;
+        return $prepend . $this->router->urlFor($name) . $query;
     }
 
     /**
