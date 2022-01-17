@@ -75,7 +75,15 @@ class TwigExtension extends AbstractExtension
             $query = '?' . http_build_query($queryargs);
         }
 
-        return $this->pathPrefix($this->router->urlFor($name) . $query);
+        $basePath = $this->getBasePath();
+        $url = $this->router->urlFor($name);
+
+        // Remove basePath from url
+        if (strpos($url, $basePath) === 0) {
+            $url = ltrim(substr($url, strlen($basePath)), '/');
+        }
+
+        return $this->pathPrefix($url . $query);
     }
 
     /**
