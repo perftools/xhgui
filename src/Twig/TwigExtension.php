@@ -78,7 +78,7 @@ class TwigExtension extends AbstractExtension
         // this is copy of \Slim\Slim::urlFor()
         // to mix path prefix in \Slim\Slim::urlFor
 
-        return rtrim($this->pathPrefix(), '/') . $this->router->urlFor($name) . $query;
+        return rtrim($this->getPathPrefix(), '/') . $this->router->urlFor($name) . $query;
     }
 
     /**
@@ -89,7 +89,7 @@ class TwigExtension extends AbstractExtension
      */
     public function staticUrl(string $path): string
     {
-        $rootUri = $this->pathPrefix();
+        $rootUri = $this->getPathPrefix();
 
         return rtrim($rootUri, '/') . '/' . $path;
     }
@@ -130,7 +130,7 @@ class TwigExtension extends AbstractExtension
         return number_format((float)$value * 100, 0) . ' <span class="units">%</span>';
     }
 
-    private function pathPrefix(): string
+    private function getPathPrefix(): string
     {
         if ($this->pathPrefix !== null) {
             return $this->pathPrefix;
