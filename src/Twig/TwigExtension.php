@@ -21,7 +21,7 @@ class TwigExtension extends AbstractExtension
     {
         $this->router = $router;
         $this->basePath = $request->getUri()->getBasePath();
-        $this->pathPrefix = $this->buildPathPrefix($this->basePath, $pathPrefix);
+        $this->pathPrefix = rtrim($this->buildPathPrefix($this->basePath, $pathPrefix), '/');
     }
 
     public function getFunctions(): array
@@ -134,13 +134,13 @@ class TwigExtension extends AbstractExtension
 
     private function pathPrefix($path): string
     {
-        return rtrim($this->pathPrefix, '/') . '/'. $path;
+        return $this->pathPrefix . '/' . $path;
     }
 
     private function buildPathPrefix(string $rootUri, ?string $pathPrefix): string
     {
         if ($pathPrefix !== null) {
-            return $pathPrefix;
+            return rtrim($pathPrefix, '/');
         }
 
         // Get URL part prepending index.php
@@ -149,6 +149,6 @@ class TwigExtension extends AbstractExtension
             return substr($rootUri, 0, $indexPos);
         }
 
-        return $rootUri;
+        return rtrim($rootUri, '/');
     }
 }
