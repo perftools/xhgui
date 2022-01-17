@@ -2,7 +2,7 @@
 
 namespace XHGui\Test\Controller;
 
-use Slim\Environment;
+use Slim\Http\Environment;
 use XHGui\Options\SearchOptions;
 use XHGui\Test\TestCase;
 
@@ -12,7 +12,7 @@ class RunTest extends TestCase
     {
         parent::setUp();
 
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
         ]);
@@ -36,7 +36,7 @@ class RunTest extends TestCase
 
     public function testIndexSortedWallTime(): void
     {
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=wt',
@@ -50,7 +50,7 @@ class RunTest extends TestCase
 
     public function testIndexSortedCpu(): void
     {
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=cpu&direction=desc',
@@ -65,7 +65,7 @@ class RunTest extends TestCase
 
     public function testIndexWithSearch(): void
     {
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'sort=mu&direction=asc&url=index.php',
@@ -84,7 +84,7 @@ class RunTest extends TestCase
     {
         $this->skipIfPdo('getForUrl is not implemented');
 
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/url/view',
             'QUERY_STRING' => 'url=%2Ftasks',
@@ -133,7 +133,7 @@ class RunTest extends TestCase
     {
         $this->searcher->truncate();
         $this->importFixture($this->saver);
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
@@ -150,14 +150,13 @@ class RunTest extends TestCase
     {
         $this->searcher->truncate();
         $this->importFixture($this->saver);
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaaa',
         ]);
 
         $result = $this->runs->callgraphData($this->request);
-
         $this->assertInternalType('array', $result);
         $this->assertArrayHasKey('metric', $result);
         $this->assertArrayHasKey('total', $result);
@@ -171,19 +170,18 @@ class RunTest extends TestCase
         $searcher = $this->searcher->truncate();
         $this->importFixture($this->saver);
 
-        Environment::mock([
+        $this->env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/delete',
-            'slim.request.form_hash' => [
-                'id' => 'aaaaaaaaaaaaaaaaaaaaaaaa',
-            ],
         ]);
+
+        $request = $this->createPostRequest(['id' => 'aaaaaaaaaaaaaaaaaaaaaaaa']);
 
         $result = $searcher->getAll(new SearchOptions());
         $count = count($result['results']);
 
-        $this->runs->deleteSubmit($this->request);
+        $this->runs->deleteSubmit($request);
 
         $result = $searcher->getAll(new SearchOptions());
         $this->assertCount($count - 1, $result['results']);
@@ -195,7 +193,7 @@ class RunTest extends TestCase
         $this->searcher->truncate();
         $this->importFixture($this->saver);
 
-        Environment::mock([
+        $this->env = Environment::mock([
           'SCRIPT_NAME' => 'index.php',
           'PATH_INFO' => '/run/delete_all',
         ]);
@@ -214,7 +212,7 @@ class RunTest extends TestCase
         $this->searcher->truncate();
         $this->importFixture($this->saver);
 
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*,strpos()',
@@ -231,7 +229,7 @@ class RunTest extends TestCase
         $this->searcher->truncate();
         $this->importFixture($this->saver);
 
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=main*',
@@ -248,7 +246,7 @@ class RunTest extends TestCase
         $this->searcher->truncate();
         $this->importFixture($this->saver);
 
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/run/view',
             'QUERY_STRING' => 'id=aaaaaaaaaaaaaaaaaaaaaaad&filter=true',

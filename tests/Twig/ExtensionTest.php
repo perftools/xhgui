@@ -2,23 +2,16 @@
 
 namespace XHGui\Test\Twig;
 
-use Slim\Environment;
-use Slim\Slim as App;
+use Slim\Http\Environment;
 use XHGui\Test\TestCase;
-use XHGui\Twig\TwigExtension;
 
 class ExtensionTest extends TestCase
 {
-    /** @var TwigExtension */
-    private $ext;
-
     public function setUp(): void
     {
         parent::setUp();
-        $app = new App();
-        $app->get('/test', static function (): void {
+        $this->app->get('/test', function (): void {
         })->setName('test');
-        $this->ext = new TwigExtension($app);
     }
 
     public function testFormatBytes(): void
@@ -101,7 +94,7 @@ class ExtensionTest extends TestCase
 
     public function testStaticUrlNoIndexPhp(): void
     {
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => '/index.php',
             'PHP_SELF' => '/index.php',
             'REQUEST_URI' => '/',
@@ -112,7 +105,7 @@ class ExtensionTest extends TestCase
 
     public function testStaticUrlWithIndexPhp(): void
     {
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => '/xhgui/webroot/index.php',
             'PHP_SELF' => '/xhgui/webroot/index.php/',
             'REQUEST_URI' => '/xhgui/webroot/index.php/',

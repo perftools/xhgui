@@ -2,11 +2,11 @@
 
 namespace XHGui\Controller;
 
-use Slim\Http\Request;
-use Slim\Slim as App;
+use Slim\App;
 use XHGui\AbstractController;
 use XHGui\Options\SearchOptions;
 use XHGui\Profile;
+use XHGui\RequestProxy as Request;
 use XHGui\Searcher\SearcherInterface;
 
 class WaterfallController extends AbstractController

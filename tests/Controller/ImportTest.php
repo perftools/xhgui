@@ -2,7 +2,7 @@
 
 namespace XHGui\Test\Controller;
 
-use Slim\Environment;
+use Slim\Http\Environment;
 use XHGui\Profile;
 use XHGui\Test\TestCase;
 
@@ -12,7 +12,7 @@ class ImportTest extends TestCase
     {
         parent::setUp();
 
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
         ]);
@@ -40,17 +40,18 @@ class ImportTest extends TestCase
                 ],
             ],
         ];
-        Environment::mock([
+        $this->env = Environment::mock([
             'SCRIPT_NAME' => 'index.php',
             'PATH_INFO' => '/',
-            'slim.input' => json_encode($data),
         ]);
+
+        $request = $this->createJsonPostRequest($data);
 
         $searcher = $this->searcher->truncate();
         $before = $searcher->getForUrl('/things', []);
         $this->assertEmpty($before['results']);
 
-        $this->import->import($this->request);
+        $this->import->import($request);
 
         $after = $searcher->getForUrl('/things', []);
         $this->assertNotEmpty($after['results']);

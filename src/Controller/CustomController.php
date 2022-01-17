@@ -2,9 +2,9 @@
 
 namespace XHGui\Controller;
 
-use Slim\Http\Request;
-use Slim\Slim as App;
+use Slim\App;
 use XHGui\AbstractController;
+use XHGui\RequestProxy as Request;
 use XHGui\Searcher\SearcherInterface;
 
 class CustomController extends AbstractController

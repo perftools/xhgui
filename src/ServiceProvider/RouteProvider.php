@@ -2,13 +2,12 @@
 
 namespace XHGui\ServiceProvider;
 
-use Exception;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use Slim\Slim as App;
-use Slim\Views\Twig;
+use Slim\App;
 use XHGui\Controller;
-use XHGui\Twig\TwigExtension;
+use XHGui\RequestProxy as Request;
+use XHGui\ResponseProxy as Response;
 
 class RouteProvider implements ServiceProviderInterface
 {
@@ -20,8 +19,9 @@ class RouteProvider implements ServiceProviderInterface
 
     private function registerRoutes(Container $di, App $app): void
     {
+        /*
         $app->error(static function (Exception $e) use ($di, $app): void {
-            /** @var Twig $view */
+            // @var Twig $view
             $view = $di['view'];
             $view->parserOptions['cache'] = false;
             $view->parserExtensions = [
@@ -34,27 +34,38 @@ class RouteProvider implements ServiceProviderInterface
                 'stack_trace' => $e->getTraceAsString(),
             ]);
         });
+        */
+
+        /**
+         * Wrap Request/Response with RequestProxuy/RequestWrapper
+         */
+        $wrap = static function ($handler) use ($di, $app) {
+            return function () use ($handler, $di, $app) {
+                $container = $app->getContainer();
+                $request = $container->get('request.proxy');
+                $response = $container->get('response.proxy');
+
+                $handler($di, $request, $response);
+
+                return $container->get('response.final');
+            };
+        };
 
         // Profile Runs routes
-        $app->get('/', static function () use ($di, $app): void {
+        $app->get('/', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-            $response = $app->response();
 
             // The list changes whenever new profiles are recorded.
             // Generally avoid caching, but allow re-use in browser's bfcache
             // and by cache proxies for concurrent requests.
             // https://github.com/perftools/xhgui/issues/261
-            $response->headers->set('Cache-Control', 'public, max-age=0');
+            $response->setHeader('Cache-Control', 'public, max-age=0');
 
             $controller->index($request);
-        })->setName('home');
+        }))->setName('home');
 
-        $app->get('/run/view', static function () use ($di, $app): void {
-            $request = $app->request();
-            $response = $app->response();
-
+        $app->get('/run/view', $wrap(function ($di, Request $request, Response $response): void {
             // Permalink views to a specific run are meant to be public and immutable.
             // But limit the cache to only a short period of time (enough to allow
             // handling of abuse or other stampedes). This way we don't have to
@@ -62,196 +73,170 @@ class RouteProvider implements ServiceProviderInterface
             // or for after XHGui itself is upgraded and static assets may be
             // incompatible etc.
             // https://github.com/perftools/xhgui/issues/261
-            $response->headers->set('Cache-Control', 'public, max-age=60, must-revalidate');
+            $response->setHeader('Cache-Control', 'public, max-age=0');
 
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
             $controller->view($request);
-        })->setName('run.view');
+        }))->setName('run.view');
 
-        $app->get('/run/delete', static function () use ($di, $app): void {
+        $app->get('/run/delete', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->deleteForm($request);
-        })->setName('run.delete.form');
+        }))->setName('run.delete.form');
 
-        $app->post('/run/delete', static function () use ($di, $app): void {
+        $app->post('/run/delete', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->deleteSubmit($request);
-        })->setName('run.delete.submit');
+        }))->setName('run.delete.submit');
 
-        $app->get('/run/delete_all', static function () use ($di): void {
+        $app->get('/run/delete_all', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
             $controller->deleteAllForm();
-        })->setName('run.deleteAll.form');
+        }))->setName('run.deleteAll.form');
 
-        $app->post('/run/delete_all', static function () use ($di): void {
+        $app->post('/run/delete_all', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
             $controller->deleteAllSubmit();
-        })->setName('run.deleteAll.submit');
+        }))->setName('run.deleteAll.submit');
 
-        $app->get('/url/view', static function () use ($di, $app): void {
+        $app->get('/url/view', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->url($request);
-        })->setName('url.view');
+        }))->setName('url.view');
 
-        $app->get('/run/compare', static function () use ($di, $app): void {
+        $app->get('/run/compare', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->compare($request);
-        })->setName('run.compare');
+        }))->setName('run.compare');
 
-        $app->get('/run/symbol', static function () use ($di, $app): void {
+        $app->get('/run/symbol', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->symbol($request);
-        })->setName('run.symbol');
+        }))->setName('run.symbol');
 
-        $app->get('/run/symbol/short', static function () use ($di, $app): void {
+        $app->get('/run/symbol/short', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->symbolShort($request);
-        })->setName('run.symbol-short');
+        }))->setName('run.symbol-short');
 
-        $app->get('/run/callgraph', static function () use ($di, $app): void {
+        $app->get('/run/callgraph', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-
             $controller->callgraph($request);
-        })->setName('run.callgraph');
+        }))->setName('run.callgraph');
 
-        $app->get('/run/callgraph/data', static function () use ($di, $app): void {
+        $app->get('/run/callgraph/data', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-            $response = $app->response();
 
-            $callgraph = $controller->callgraphData($request, $response);
+            $callgraph = $controller->callgraphData($request);
 
-            $response['Content-Type'] = 'application/json';
-            $response->body(json_encode($callgraph));
-        })->setName('run.callgraph.data');
+            $response
+                ->setHeader('Content-Type', 'application/json')
+                ->writeJson($callgraph);
+        }))->setName('run.callgraph.data');
 
-        $app->get('/run/callgraph/dot', static function () use ($di, $app): void {
+        $app->get('/run/callgraph/dot', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\RunController $controller */
             $controller = $di[Controller\RunController::class];
-            $request = $app->request();
-            $response = $app->response();
 
             $callgraph = $controller->callgraphDataDot($request);
 
-            $response['Content-Type'] = 'application/json';
-            $response->body(json_encode($callgraph));
-        })->setName('run.callgraph.dot');
+            $response
+                ->setHeader('Content-Type', 'application/json')
+                ->writeJson($callgraph);
+        }))->setName('run.callgraph.dot');
 
         // Import route
-        $app->post('/run/import', static function () use ($di, $app): void {
+        $app->post('/run/import', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\ImportController $controller */
             $controller = $di[Controller\ImportController::class];
-            $request = $app->request();
-            $response = $app->response();
 
             [$status, $result] = $controller->import($request);
 
-            $response['Content-Type'] = 'application/json';
-            $response->setStatus($status);
-            $response->body(json_encode($result));
-        })->setName('run.import');
+            $response
+                ->setHeader('Content-Type', 'application/json')
+                ->setStatus($status)
+                ->writeJson($result);
+        }))->setName('run.import');
 
         // Watch function routes.
-        $app->get('/watch', static function () use ($di): void {
+        $app->get('/watch', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\WatchController $controller */
             $controller = $di[Controller\WatchController::class];
             $controller->get();
-        })->setName('watch.list');
+        }))->setName('watch.list');
 
-        $app->post('/watch', static function () use ($di, $app): void {
+        $app->post('/watch', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\WatchController $controller */
             $controller = $di[Controller\WatchController::class];
-            $request = $app->request();
-
             $controller->post($request);
-        })->setName('watch.save');
+        }))->setName('watch.save');
 
         // Custom report routes.
-        $app->get('/custom', static function () use ($di): void {
+        $app->get('/custom', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\CustomController $controller */
             $controller = $di[Controller\CustomController::class];
             $controller->get();
-        })->setName('custom.view');
+        }))->setName('custom.view');
 
-        $app->get('/custom/help', static function () use ($di, $app): void {
+        $app->get('/custom/help', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\CustomController $controller */
             $controller = $di[Controller\CustomController::class];
-            $request = $app->request();
-
             $controller->help($request);
-        })->setName('custom.help');
+        }))->setName('custom.help');
 
-        $app->post('/custom/query', static function () use ($di, $app): void {
+        $app->post('/custom/query', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\CustomController $controller */
             $controller = $di[Controller\CustomController::class];
-            $request = $app->request();
-            $response = $app->response();
-
             $query = $request->post('query');
             $retrieve = $request->post('retrieve');
 
             $result = $controller->query($query, $retrieve);
 
-            $response->body(json_encode($result));
-            $response['Content-Type'] = 'application/json';
-        })->setName('custom.query');
+            $response
+                ->setHeader('Content-Type', 'application/json')
+                ->writeJson($result);
+        }))->setName('custom.query');
 
         // Waterfall routes
-        $app->get('/waterfall', static function () use ($di, $app): void {
+        $app->get('/waterfall', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\WaterfallController $controller */
             $controller = $di[Controller\WaterfallController::class];
-            $request = $app->request();
-
             $controller->index($request);
-        })->setName('waterfall.list');
+        }))->setName('waterfall.list');
 
-        $app->get('/waterfall/data', static function () use ($di, $app): void {
+        $app->get('/waterfall/data', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\WaterfallController $controller */
             $controller = $di[Controller\WaterfallController::class];
-            $request = $app->request();
-            $response = $app->response();
 
-            $data = $controller->query($request);
+            $data = $controller->query($di['response.proxy']);
 
-            $response->body(json_encode($data));
-            $response['Content-Type'] = 'application/json';
-        })->setName('waterfall.data');
+            $response
+                ->setHeader('Content-Type', 'application/json')
+                ->writeJson($data);
+        }))->setName('waterfall.data');
 
         // Metrics
-        $app->get('/metrics', static function () use ($di, $app): void {
+        $app->get('/metrics', $wrap(function ($di, Request $request, Response $response): void {
             /** @var Controller\MetricsController $controller */
             $controller = $di[Controller\MetricsController::class];
-            $response = $app->response();
 
             $body = $controller->metrics();
 
-            $response->body($body);
-            $response['Content-Type'] = 'text/plain; version=0.0.4';
-        })->setName('metrics');
+            $response
+                ->setHeader('Content-Type', 'text/plain; version=0.0.4')
+                ->write($body);
+        }))->setName('metrics');
     }
 
     private function registerControllers(Container $app): void

@@ -2,8 +2,10 @@
 
 namespace XHGui;
 
-use Slim\Http\Response;
-use Slim\Slim as App;
+use Psr\Http\Message\ResponseInterface;
+use Slim\App;
+use Slim\Flash;
+use Slim\Router;
 use Slim\Views\Twig;
 
 abstract class AbstractController
@@ -20,14 +22,20 @@ abstract class AbstractController
 
     protected function render(string $template, array $data = []): void
     {
-        /** @var Response $response */
-        $response = $this->app->response;
+        $container = $this->app->getContainer();
+        /** @var ResponseInterface $response */
+        $response = $container->get('response');
         /** @var Twig $renderer */
-        $renderer = $this->app->view;
+        $renderer = $container->get('view');
 
-        $renderer->appendData($data);
-        $body = $renderer->fetch($template);
-        $response->write($body);
+        if (!isset($data['flash'])) {
+            /** @var Flash\Messages $flash */
+            $flash = $this->app->getContainer()->get('flash');
+            $messages = $flash->getMessages();
+            $data['flash'] = $messages;
+        }
+
+        $renderer->render($response, $template, $data);
     }
 
     /**
@@ -38,16 +46,25 @@ abstract class AbstractController
      */
     protected function redirectTo(string $name, array $params = []): void
     {
-        $this->app->redirectTo($name, $params);
+        $container = $this->app->getContainer();
+        /** @var ResponseProxy $response */
+        $response = $container->get('response.proxy');
+        /** @var Router $router */
+        $router = $container->get('router');
+
+        $url = $router->pathFor($name, $params);
+        $response->redirect($url);
     }
 
     protected function flashSuccess(string $message): void
     {
-        $this->app->flash('success', $message);
+        /** @var Flash\Messages $flash */
+        $flash = $this->app->getContainer()->get('flash');
+        $flash->addMessage('success', $message);
     }
 
     protected function config(string $key)
     {
-        return $this->app->config($key);
+        return $this->app->getContainer()->get($key);
     }
 }
