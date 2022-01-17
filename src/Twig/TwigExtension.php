@@ -136,7 +136,7 @@ class TwigExtension extends AbstractExtension
             return $this->pathPrefix;
         }
 
-        $rootUri = $this->request->getUri()->getBasePath();
+        $rootUri = $this->getBasePath();
 
         // Get URL part prepending index.php
         $indexPos = strpos($rootUri, 'index.php');
@@ -145,5 +145,10 @@ class TwigExtension extends AbstractExtension
         }
 
         return $rootUri;
+    }
+
+    private function getBasePath(): string
+    {
+        return $this->request->getUri()->getBasePath();
     }
 }
