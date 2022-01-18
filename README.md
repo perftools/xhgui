@@ -22,6 +22,10 @@ XHGui has the following requirements:
   See [Profiling a Web Request or CLI script](#profiling-a-web-request-or-cli-script).
   The extension is not needed to run XHGui itself.
 
+If you need to decide which backend to use, you can check the [compatibility
+matrix](#compatibility-matrix) what features are implemented or missing per
+backend.
+
 ## MongoDB
 
 The default installation uses MongoDB database. Most of the documentation speaks about MongoDB.
