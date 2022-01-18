@@ -279,5 +279,25 @@
                 "pmu": 0
             }
         }
+    },
+    {
+        "_id": "aaaaaaaaaaaaaaaaaaaaaab2",
+        "meta": {
+            "url": "/bar",
+            "simple_url": "/bar",
+            "get": [],
+            "env": [],
+            "SERVER": {"REQUEST_TIME": 1358614812, "SERVER_NAME": "foo", "REQUEST_METHOD": "GET"},
+            "request_ts_micro": {"sec": 1358614812, "usec": 123456}
+        },
+        "profile": {
+            "main()": {
+                "ct": 1,
+                "wt": 10,
+                "cpu": 12,
+                "mu": 3000,
+                "pmu": 3001
+            }
+        }
     }
 ]

@@ -102,6 +102,7 @@ NOTE: PDO may not support all the features of XHGui, see [#320].
    > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
    > db.results.ensureIndex( { 'meta.url' : 1 } )
    > db.results.ensureIndex( { 'meta.simple_url' : 1 } )
+   > db.results.ensureIndex( { 'meta.SERVER.SERVER_NAME' : 1 } )
    ```
 
 7. Install dependencies with composer
@@ -271,11 +272,13 @@ storage.)
 | Searcher::getAllWatches()       | ✓        | ✓ [#435] |
 | Searcher::truncateWatches()     | ✓        | ✓ [#435] |
 | Searcher::stats()               | ✗ [#305] | ✓        |
+| Searcher::getAllServerNames()   | ✓ [#460] | ✗        |
 
 [#305]: https://github.com/perftools/xhgui/pull/305
 [#384]: https://github.com/perftools/xhgui/pull/384
 [#435]: https://github.com/perftools/xhgui/pull/435
 [#436]: https://github.com/perftools/xhgui/pull/436
+[#460]: https://github.com/perftools/xhgui/pull/460
 
 # Releases / Changelog
 
