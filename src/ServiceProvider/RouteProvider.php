@@ -20,7 +20,7 @@ class RouteProvider implements ServiceProviderInterface
     private function registerRoutes(Container $di, App $app): void
     {
         /**
-         * Wrap Request/Response with RequestProxuy/RequestWrapper
+         * Wrap Request/Response with RequestProxy/RequestWrapper
          */
         $wrap = static function ($handler) use ($di, $app) {
             return function () use ($handler, $di, $app) {
