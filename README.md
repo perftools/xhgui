@@ -22,6 +22,10 @@ XHGui has the following requirements:
   See [Profiling a Web Request or CLI script](#profiling-a-web-request-or-cli-script).
   The extension is not needed to run XHGui itself.
 
+If you need to decide which backend to use, you can check the [compatibility
+matrix](#compatibility-matrix) what features are implemented or missing per
+backend.
+
 ## MongoDB
 
 The default installation uses MongoDB database. Most of the documentation speaks about MongoDB.
@@ -241,6 +245,31 @@ Some Notes:
 [Prometheus](https://prometheus.io) metrics suitable for monitoring service
 health are exposed on `/metrics`.  (This currently only works if using PDO for
 storage.)
+
+# Compatibility matrix
+
+| Feature                         | MongoDB  | PDO      |
+|---------------------------------|----------|----------|
+| Prometheus exporter             | ✗        | ✓ [#305] |
+| Searcher::latest()              | ✓        | ✓        |
+| Searcher::query()               | ✓        | ✗ [#384] |
+| Searcher::get()                 | ✓        | ✓        |
+| Searcher::getForUrl()           | ✓        | ✓ [#436] |
+| Searcher::getPercentileForUrl() | ✓        | ✓ [#436] |
+| Searcher::getAvgsForUrl()       | ✓        | ✗ [#384] |
+| Searcher::getAll(sort)          | ✓        | ✓ [#436] |
+| Searcher::getAll(direction)     | ✓        | ✓ [#436] |
+| Searcher::delete()              | ✓        | ✓        |
+| Searcher::truncate()            | ✓        | ✓        |
+| Searcher::saveWatch()           | ✓        | ✓ [#435] |
+| Searcher::getAllWatches()       | ✓        | ✓ [#435] |
+| Searcher::truncateWatches()     | ✓        | ✓ [#435] |
+| Searcher::stats()               | ✗ [#305] | ✓        |
+
+[#305]: https://github.com/perftools/xhgui/pull/305
+[#384]: https://github.com/perftools/xhgui/pull/384
+[#435]: https://github.com/perftools/xhgui/pull/435
+[#436]: https://github.com/perftools/xhgui/pull/436
 
 # Releases / Changelog
 
