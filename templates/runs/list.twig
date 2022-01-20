@@ -30,7 +30,16 @@
         <div class="control-group span4">
             <label class="control-label" for="server-name">Server Name</label>
             <div class="controls">
-                <input type="text" id="server-name" name="server_name" value="{{ search.server_name }}">
+                {% if server_names is iterable %}
+                    <select id="server-name" name="server_name">
+                        {% for server_name in server_names %}
+                            <option></option>
+                            <option value="{{ server_name }}"{% if server_name == search.server_name %} selected{% endif %}>{{ server_name }}</option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <input type="text" id="server-name" name="server_name" value="{{ search.server_name }}">
+                {% endif %}
             </div>
             <label class="control-label" for="url">URL</label>
             <div class="controls">

@@ -254,4 +254,12 @@ class MongoTest extends TestCase
             $this->assertEquals($options['name'], $name);
         }
     }
+
+    public function testGetAllServerNames(): void
+    {
+        $result = $this->mongo->getAllServerNames();
+        $this->assertCount(2, $result);
+        $this->assertContains('localhost', $result);
+        $this->assertContains('foo', $result);
+    }
 }

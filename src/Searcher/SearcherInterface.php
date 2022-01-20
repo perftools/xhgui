@@ -140,4 +140,11 @@ interface SearcherInterface
      * @return array array of stats
      */
     public function stats();
+
+    /**
+     * Get all the known server names.
+     *
+     * @return array|null array of server names or null if not supported
+     */
+    public function getAllServerNames(): ?array;
 }

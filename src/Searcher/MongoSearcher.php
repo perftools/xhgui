@@ -364,4 +364,12 @@ class MongoSearcher implements SearcherInterface
             'bytes' => 0,
         ];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllServerNames(): ?array
+    {
+        return $this->_collection->distinct('meta.SERVER.SERVER_NAME');
+    }
 }

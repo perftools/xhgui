@@ -47,6 +47,8 @@ class RunController extends AbstractController
             'projection' => true,
         ]));
 
+        $serverNames = $this->searcher->getAllServerNames();
+
         $title = 'Recent runs';
         $titleMap = [
             'wt' => 'Longest wall time',
@@ -71,6 +73,7 @@ class RunController extends AbstractController
             'search' => $search,
             'has_search' => implode('', $search) !== '',
             'title' => $title,
+            'server_names' => $serverNames,
         ]);
     }
 
