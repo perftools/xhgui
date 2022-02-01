@@ -2,10 +2,16 @@
 
 A graphical interface for XHProf profiling data that can store the results in MongoDB or PDO database.
 
-Application is [profiled](#profiling-a-web-request-or-cli-script) and the
+Application is profiled and the
 profiling data is transferred to XHGui, which takes that information, saves it
 in MongoDB (or PDO database), and provides a convenient GUI for working with
 it.
+
+This project is the GUI for showing profiling results,
+to profile your application, use specific minimal library:
+- [perftools/php-profiler]
+
+[perftools/php-profiler]: #profiling-a-web-request-or-cli-script
 
 [![Build Status](https://travis-ci.org/perftools/xhgui.svg?branch=master)](https://travis-ci.org/perftools/xhgui)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/perftools/xhgui/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/perftools/xhgui/?branch=master)
@@ -15,12 +21,16 @@ it.
 
 XHGui has the following requirements:
 
-- Known to work: PHP >= 7.2, 8.0.
+- Known to work: PHP >= 7.2, 8.0, 8.1
 - If using MongoDB storage, see [MongoDB](#MongoDB) requirements
 - If using PDO storage, see [PDO](#PDO) requirements
 - To profile an application, one of the profiling PHP extensions is required.
   See [Profiling a Web Request or CLI script](#profiling-a-web-request-or-cli-script).
   The extension is not needed to run XHGui itself.
+
+If you need to decide which backend to use, you can check the [compatibility
+matrix](#compatibility-matrix) what features are implemented or missing per
+backend.
 
 ## MongoDB
 
@@ -92,6 +102,7 @@ NOTE: PDO may not support all the features of XHGui, see [#320].
    > db.results.ensureIndex( { 'profile.main().cpu' : -1 } )
    > db.results.ensureIndex( { 'meta.url' : 1 } )
    > db.results.ensureIndex( { 'meta.simple_url' : 1 } )
+   > db.results.ensureIndex( { 'meta.SERVER.SERVER_NAME' : 1 } )
    ```
 
 7. Install dependencies with composer
@@ -241,6 +252,33 @@ Some Notes:
 [Prometheus](https://prometheus.io) metrics suitable for monitoring service
 health are exposed on `/metrics`.  (This currently only works if using PDO for
 storage.)
+
+# Compatibility matrix
+
+| Feature                         | MongoDB  | PDO      |
+|---------------------------------|----------|----------|
+| Prometheus exporter             | ✗        | ✓ [#305] |
+| Searcher::latest()              | ✓        | ✓        |
+| Searcher::query()               | ✓        | ✗ [#384] |
+| Searcher::get()                 | ✓        | ✓        |
+| Searcher::getForUrl()           | ✓        | ✓ [#436] |
+| Searcher::getPercentileForUrl() | ✓        | ✓ [#436] |
+| Searcher::getAvgsForUrl()       | ✓        | ✗ [#384] |
+| Searcher::getAll(sort)          | ✓        | ✓ [#436] |
+| Searcher::getAll(direction)     | ✓        | ✓ [#436] |
+| Searcher::delete()              | ✓        | ✓        |
+| Searcher::truncate()            | ✓        | ✓        |
+| Searcher::saveWatch()           | ✓        | ✓ [#435] |
+| Searcher::getAllWatches()       | ✓        | ✓ [#435] |
+| Searcher::truncateWatches()     | ✓        | ✓ [#435] |
+| Searcher::stats()               | ✗ [#305] | ✓        |
+| Searcher::getAllServerNames()   | ✓ [#460] | ✗        |
+
+[#305]: https://github.com/perftools/xhgui/pull/305
+[#384]: https://github.com/perftools/xhgui/pull/384
+[#435]: https://github.com/perftools/xhgui/pull/435
+[#436]: https://github.com/perftools/xhgui/pull/436
+[#460]: https://github.com/perftools/xhgui/pull/460
 
 # Releases / Changelog
 

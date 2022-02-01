@@ -19,25 +19,8 @@ class RouteProvider implements ServiceProviderInterface
 
     private function registerRoutes(Container $di, App $app): void
     {
-        /*
-        $app->error(static function (Exception $e) use ($di, $app): void {
-            // @var Twig $view
-            $view = $di['view'];
-            $view->parserOptions['cache'] = false;
-            $view->parserExtensions = [
-                new TwigExtension($app),
-            ];
-
-            $app->view($view);
-            $app->render('error/view.twig', [
-                'message' => $e->getMessage(),
-                'stack_trace' => $e->getTraceAsString(),
-            ]);
-        });
-        */
-
         /**
-         * Wrap Request/Response with RequestProxuy/RequestWrapper
+         * Wrap Request/Response with RequestProxy/RequestWrapper
          */
         $wrap = static function ($handler) use ($di, $app) {
             return function () use ($handler, $di, $app) {

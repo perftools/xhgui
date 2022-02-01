@@ -229,6 +229,14 @@ class PdoSearcher implements SearcherInterface
     /**
      * {@inheritdoc}
      */
+    public function getAllServerNames(): ?array
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     private function paginate(array $options): array
     {
         $opt = $this->db->buildQuery($options);
