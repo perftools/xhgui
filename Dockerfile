@@ -6,25 +6,10 @@
 # build (build from source), prebuilt (use copy from last release image)
 ARG BUILD_SOURCE=build
 
-FROM alpine:3.12 AS alpine
+FROM alpine:3.15 AS alpine
 
 FROM alpine AS base
 ENV PHP_INI_DIR /etc/php7
-
-# ext-mongodb: build and stage
-FROM base AS build-ext-mongodb
-RUN apk add --no-cache alpine-sdk openssl-dev php7-dev php7-openssl php7-pear
-RUN pecl install mongodb
-
-FROM base AS stage-ext-mongodb
-RUN apk add binutils
-
-WORKDIR /build/etc/php7/conf.d
-RUN echo extension=mongodb.so > mongodb.ini
-
-WORKDIR /build/usr/lib/php7/modules
-COPY --from=build-ext-mongodb /usr/lib/php7/modules/mongodb.so .
-RUN strip *.so && chmod a+rx *.so
 
 # php-fpm runtime
 FROM base AS php-build
@@ -42,6 +27,7 @@ RUN set -x \
 		php-phar \
 		php-session \
 		php-simplexml \
+		php7-pecl-mongodb \
 	# Use www-data uid from alpine also present in docker php images
 	&& adduser -u 82 -D -S -G www-data www-data \
 	# Tweak php-fpm config
@@ -112,7 +98,6 @@ RUN install -d /cache -m 700
 
 # runtime image from current build
 FROM php AS runtime-build
-COPY --from=stage-ext-mongodb /build /
 
 ARG APPDIR=/var/www/xhgui
 ARG WEBROOT=$APPDIR/webroot
