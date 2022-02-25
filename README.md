@@ -9,9 +9,7 @@ it.
 
 This project is the GUI for showing profiling results,
 to profile your application, use specific minimal library:
-- [perftools/php-profiler]
-
-[perftools/php-profiler]: #profiling-a-web-request-or-cli-script
+-  [perftools/php-profiler](#profiling-a-web-request-or-cli-script)
 
 [![Build Status](https://travis-ci.org/perftools/xhgui.svg?branch=master)](https://travis-ci.org/perftools/xhgui)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/perftools/xhgui/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/perftools/xhgui/?branch=master)
