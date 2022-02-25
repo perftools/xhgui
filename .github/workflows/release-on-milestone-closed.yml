@@ -42,7 +42,7 @@ jobs:
         with:
           command-name: "laminas:automatic-releases:create-merge-up-pull-request"
         env:
-          "GITHUB_TOKEN": ${{ secrets.GITHUB_TOKEN }}
+          "GITHUB_TOKEN": ${{ secrets.ORGANIZATION_ADMIN_TOKEN }}
           "SIGNING_SECRET_KEY": ${{ secrets.SIGNING_SECRET_KEY }}
           "GIT_AUTHOR_NAME": ${{ env.GIT_AUTHOR_NAME }}
           "GIT_AUTHOR_EMAIL": ${{ env.GIT_AUTHOR_EMAIL }}
@@ -62,7 +62,7 @@ jobs:
         with:
           command-name: "laminas:automatic-releases:bump-changelog"
         env:
-          "GITHUB_TOKEN": ${{ secrets.GITHUB_TOKEN }}
+          "GITHUB_TOKEN": ${{ secrets.ORGANIZATION_ADMIN_TOKEN }}
           "SIGNING_SECRET_KEY": ${{ secrets.SIGNING_SECRET_KEY }}
           "GIT_AUTHOR_NAME": ${{ env.GIT_AUTHOR_NAME }}
           "GIT_AUTHOR_EMAIL": ${{ env.GIT_AUTHOR_EMAIL }}
@@ -72,7 +72,7 @@ jobs:
         with:
           command-name: "laminas:automatic-releases:create-milestones"
         env:
-          "GITHUB_TOKEN": ${{ secrets.GITHUB_TOKEN }}
+          "GITHUB_TOKEN": ${{ secrets.ORGANIZATION_ADMIN_TOKEN }}
           "SIGNING_SECRET_KEY": ${{ secrets.SIGNING_SECRET_KEY }}
           "GIT_AUTHOR_NAME": ${{ env.GIT_AUTHOR_NAME }}
           "GIT_AUTHOR_EMAIL": ${{ env.GIT_AUTHOR_EMAIL }}
