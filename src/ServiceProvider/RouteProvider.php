@@ -202,7 +202,7 @@ class RouteProvider implements ServiceProviderInterface
             /** @var Controller\WaterfallController $controller */
             $controller = $di[Controller\WaterfallController::class];
 
-            $data = $controller->query($di['response.proxy']);
+            $data = $controller->query($request);
 
             $response
                 ->setHeader('Content-Type', 'application/json')
