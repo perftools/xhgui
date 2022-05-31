@@ -184,28 +184,26 @@ server {
 
 # Profiling a Web Request or CLI script
 
-The recommended way tho profile an application is to use [perftools/php-profiler] package.
+The supported way to profile an application is to use [perftools/php-profiler]
+package.
 
-You can use that package to collect data from your web applications and CLI
-scripts.
+You can use that package to collect data from your web application or a CLI
+script.
 
-This data is then pushed into XHGui database where it can be viewed with this
+This data is then pushed into XHGui database where it can be viewed with XHGui
 application.
 
-It offers submitting data directly to XHGui instance once the profiling is
-complete at the end of the request.
+The `php-profiler` package offers submitting data directly to XHGui instance
+once the profiling is complete at the end of the request.
 
-If the site cannot directly connect to XHGui instance, the package offers
-solution to capture profiling data to file which you can import using
-`external/import.php` script:
-
-```bash
-php external/import.php -f /path/to/jsonlinesfile.jsonl
-```
+If the application cannot directly connect to XHGui instance, the package
+offers solution to capture profiling data to a file which you can import later
+using the [import][import-jsonl-files] script.
 
 **Warning**: Importing the same file twice will create duplicate profiles.
 
 [perftools/php-profiler]: https://github.com/perftools/php-profiler
+[import-jsonl-files]: https://github.com/perftools/php-profiler#import-jsonl-files
 
 ## Limiting MongoDB Disk Usage
 
