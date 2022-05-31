@@ -35,7 +35,7 @@ backend.
 The default installation uses MongoDB database. Most of the documentation speaks about MongoDB.
 
 - [MongoDB Extension][ext-mongodb] MongoDB PHP driver: `pecl install mongodb`
-  XHGui requires verison 1.3.0 or later.
+  XHGui requires version 1.3.0 or later.
 - [MongoDB][mongodb] MongoDB Itself. XHGui requires version 3.2 or later.
 
 [ext-mongodb]: https://pecl.php.net/package/mongodb
