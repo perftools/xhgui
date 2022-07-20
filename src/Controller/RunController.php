@@ -271,10 +271,8 @@ class RunController extends AbstractController
             'base_run' => $baseRun,
             'head_run' => $headRun,
             'candidates' => $candidates,
-            // 'url_params' => $request->get(),
             'url_params' => $request->getQueryParams(),
             'comparison' => $comparison,
-            'paging' => $paging,
             'pagination' => $paging,
             'search' => [
                 'base' => $request->get('base'),
