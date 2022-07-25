@@ -17,6 +17,11 @@ class RequestProxy
         $this->request = $request;
     }
 
+    public function getQueryParams()
+    {
+        return $this->request->getQueryParams();
+    }
+
     public function get(string $key, $default = null)
     {
         return $this->request->getQueryParam($key, $default);
