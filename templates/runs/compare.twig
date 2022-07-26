@@ -36,7 +36,7 @@
     <div class="row-fluid row-spaced">
         <h3>Other runs with {{ base_run.meta.simple_url }}</h3>
         {% include 'runs/paginated-list.twig' with {runs: candidates.results, show_compare_link: true} %}
-        {{ helpers.pagination('run.compare', pagination, url_params) }}
+        {{ helpers.pagination('run.compare', paging, url_params) }}
     </div>
     {% endif %}
 
