@@ -187,7 +187,7 @@ class PdoRepository
         $this->pdo->exec(sprintf('
             CREATE TABLE IF NOT EXISTS %s (
               "id"               CHAR(24) PRIMARY KEY,
-              "profile"          TEXT           NOT NULL,
+              "profile"          LONGTEXT       NOT NULL,
               "url"              TEXT           NULL,
               "SERVER"           TEXT           NULL,
               "GET"              TEXT           NULL,
