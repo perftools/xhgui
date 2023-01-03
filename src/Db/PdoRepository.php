@@ -184,10 +184,11 @@ class PdoRepository
 
     public function initSchema(): void
     {
+        $profileColumnType = $this->driverName === 'mysql' ? 'LONGTEXT' : 'TEXT';
         $this->pdo->exec(sprintf('
             CREATE TABLE IF NOT EXISTS %s (
               "id"               CHAR(24) PRIMARY KEY,
-              "profile"          TEXT           NOT NULL,
+              "profile"          %s             NOT NULL,
               "url"              TEXT           NULL,
               "SERVER"           TEXT           NULL,
               "GET"              TEXT           NULL,
@@ -202,7 +203,7 @@ class PdoRepository
               "main_mu"          INTEGER        NOT NULL,
               "main_pmu"         INTEGER        NOT NULL
             )
-        ', $this->table));
+        ', $this->table, $profileColumnType));
         $this->pdo->exec(sprintf('
             CREATE TABLE IF NOT EXISTS %s (
               "id"               CHAR(24) PRIMARY KEY,

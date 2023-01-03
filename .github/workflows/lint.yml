@@ -18,6 +18,8 @@ jobs:
           php-version: 7.2
           tools: php-cs-fixer:2.16, cs2pr
           coverage: none
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies with composer
         run: composer install --no-interaction --no-progress --no-suggest
