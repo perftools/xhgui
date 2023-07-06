@@ -34,7 +34,6 @@ class PdoRepository
         $this->driverName = $driverName;
         $this->table = sprintf('"%s"', $table);
         $this->tableWatches = sprintf('"%s"', $tableWatch);
-        $this->initSchema();
     }
 
     public function getLatest(): array
