@@ -48,12 +48,16 @@ class PdoStorageProvider implements ServiceProviderInterface
         };
 
         $app[PdoRepository::class] = static function ($app) {
-            return new PdoRepository(
+            $repo = new PdoRepository(
                 $app['pdo'],
                 $app['pdo.driver'],
                 $app['config']['pdo']['table'],
                 $app['config']['pdo']['tableWatch']
             );
+            if ($app['config']['pdo']['initSchema'] === 'true') {
+                $repo->initSchema();
+            }
+            return $repo;
         };
 
         $app['searcher.pdo'] = static function ($app) {
