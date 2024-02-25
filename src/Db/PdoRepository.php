@@ -48,7 +48,7 @@ class PdoRepository
             "ENV",
             "simple_url",
             "request_ts",
-            "request_ts_micro,"
+            "request_ts_micro",
             "request_date"
           FROM %s
           ORDER BY "request_date" ASC
