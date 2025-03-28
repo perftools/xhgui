@@ -11,6 +11,11 @@ updates:
     schedule:
       interval: "daily"
 
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+
   - package-ecosystem: "composer"
     directory: "/"
     schedule:
