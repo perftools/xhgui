@@ -57,6 +57,7 @@ class PdoStorageProvider implements ServiceProviderInterface
             if ($app['config']['pdo']['initSchema'] === 'true') {
                 $repo->initSchema();
             }
+
             return $repo;
         };
 
