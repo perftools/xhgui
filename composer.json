@@ -34,7 +34,7 @@
     "require-dev": {
         "glen/php-cs-fixer-config": "^0.3.0",
         "ocramius/lazy-property": "^1.0",
-        "symfony/phpunit-bridge": "^5.2"
+        "symfony/phpunit-bridge": "^7.2"
     },
     "suggest": {
         "ext-pdo": "Required to pdo backend."
