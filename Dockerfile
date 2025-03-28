@@ -3,16 +3,13 @@
 # also modifying source, would not need to rebuild extensions layer.
 # Author: Elan Ruusamäe <glen@pld-linux.org>
 
-# build (build from source), prebuilt (use copy from last release image)
-ARG BUILD_SOURCE=build
-
 FROM alpine:3.15 AS alpine
 
 FROM alpine AS base
 ENV PHP_INI_DIR=/etc/php8
 
 # php-fpm runtime
-FROM base AS php-build
+FROM base AS php
 RUN set -x \
 	&& apk add --no-cache \
 		nginx \
@@ -56,10 +53,6 @@ RUN set -x \
 	&& ln -s /usr/bin/php8 /usr/bin/php \
 	&& php -m
 
-FROM xhgui/xhgui:latest AS php-prebuilt
-# "php" alias
-FROM php-$BUILD_SOURCE AS php
-
 # prepare sources
 FROM alpine AS source
 WORKDIR /app
@@ -98,7 +91,7 @@ RUN mv vendor /
 RUN install -d /cache -m 700
 
 # runtime image from current build
-FROM php AS runtime-build
+FROM php AS runtime
 
 ARG APPDIR=/var/www/xhgui
 ARG WEBROOT=$APPDIR/webroot
@@ -107,12 +100,6 @@ WORKDIR $APPDIR
 EXPOSE 80
 CMD ["sh", "-c", "nginx -g 'pid /dev/shm/nginx.pid;' && exec php-fpm"]
 
-# runtime image from last release
-FROM xhgui/xhgui:latest AS runtime-prebuilt
-RUN rm -rf $(pwd)
-
-# build final image
-FROM runtime-$BUILD_SOURCE AS runtime
 COPY --from=build /vendor ./vendor/
 COPY --from=build /app ./
 COPY --from=build --chown=www-data /cache ./cache/
