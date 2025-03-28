@@ -17,7 +17,7 @@ jobs:
 
     services:
       mongodb:
-        image: percona/percona-server-mongodb:3.6
+        image: percona/percona-server-mongodb:4.0
         ports:
           - 27017:27017
 
