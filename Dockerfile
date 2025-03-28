@@ -9,27 +9,27 @@ ARG BUILD_SOURCE=build
 FROM alpine:3.15 AS alpine
 
 FROM alpine AS base
-ENV PHP_INI_DIR /etc/php7
+ENV PHP_INI_DIR /etc/php8
 
 # php-fpm runtime
 FROM base AS php-build
 RUN set -x \
 	&& apk add --no-cache \
 		nginx \
-		php-cli \
-		php-ctype \
-		php-fpm \
-		php-json \
-		php-pdo \
-		php-pdo_mysql \
-		php-pdo_pgsql \
-		php-pdo_sqlite \
-		php-phar \
-		php-session \
-		php-simplexml \
-		php7-pecl-mongodb \
-	# Use www-data uid from alpine also present in docker php images
-	&& adduser -u 82 -D -S -G www-data www-data \
+		php8-cli \
+		php8-ctype \
+		php8-fpm \
+		php8-json \
+		php8-pdo \
+		php8-pdo_mysql \
+		php8-pdo_pgsql \
+		php8-pdo_sqlite \
+		php8-phar \
+		php8-simplexml \
+        php8-session \
+		php8-pecl-mongodb \
+   	# Use www-data uid from alpine also present in docker php images
+    && adduser -u 82 -D -S -G www-data www-data \
 	# Tweak php-fpm config
 	&& sed -i \
 		-e "s#^;daemonize\s*=\s*yes#daemonize = no#" \
@@ -45,14 +45,15 @@ RUN set -x \
 		-e "s#^group = nobody\s*#group = www-data#" \
 		-e "s#^;catch_workers_output\s*=.*#catch_workers_output = yes#" \
 		$POOL_CONFIG \
-	&& rm -rf /var/log/php7 \
-	&& ln -s php /var/log/php7 \
+	&& rm -rf /var/log/php8 \
+	&& ln -s php /var/log/php8 \
 	&& install -d -o www-data -g www-data /var/log/php \
-	&& ln -s php-fpm7 /usr/sbin/php-fpm \
+	&& ln -s php-fpm8 /usr/sbin/php-fpm \
 	&& ln -s /dev/stderr /var/log/php/fpm.access.log \
 	&& ln -s /dev/stderr /var/log/php/fpm.error.log \
 	&& ln -s /dev/stdout /var/log/nginx/access.log \
 	&& ln -s /dev/stderr /var/log/nginx/error.log \
+    && ln -s /usr/bin/php8 /usr/bin/php \
 	&& php -m
 
 FROM xhgui/xhgui:latest AS php-prebuilt

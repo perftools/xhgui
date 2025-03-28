@@ -13,6 +13,7 @@ jobs:
           - "7.2"
           - "7.3"
           - "7.4"
+          - "8.0"
 
     services:
       # https://docs.github.com/en/free-pro-team@latest/actions/guides/creating-postgresql-service-containers
