@@ -28,7 +28,6 @@ services:
       - "27017:27017"
 
 volumes:
-  webroot-share:
   mongodb:
 
 # vim:ts=2:sw=2:et
