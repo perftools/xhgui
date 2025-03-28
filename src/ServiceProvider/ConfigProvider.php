@@ -17,7 +17,7 @@ class ConfigProvider implements ServiceProviderInterface
                 define('XHGUI_ROOT_DIR', $app['app.dir']);
             }
 
-            Config::load($app['app.config_dir'] . '/config.default.php');
+            Config::load($app['app.dir'] . '/src/config.default.php');
 
             if (file_exists($app['app.config_dir'] . '/config.php')) {
                 Config::load($app['app.config_dir'] . '/config.php');
