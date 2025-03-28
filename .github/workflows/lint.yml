@@ -21,9 +21,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies with composer
-        run: composer install --no-interaction --no-progress --no-suggest
-
       - name: Run ecs check
         run: ecs check --ansi --output-format=checkstyle | cs2pr
 
