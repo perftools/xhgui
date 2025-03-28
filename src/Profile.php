@@ -449,7 +449,7 @@ class Profile
      */
     public function filter($profileData, $filters = [])
     {
-        foreach ($filters as $key => $item) {
+        foreach ($filters as $item) {
             foreach ($profileData as $keyItem => $method) {
                 if (fnmatch($item, $keyItem)) {
                     unset($profileData[$keyItem]);
