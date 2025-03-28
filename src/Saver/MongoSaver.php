@@ -53,7 +53,7 @@ class MongoSaver implements SaverInterface
      *   InvalidArgumentException: invalid document for insert: keys cannot contain ".":
      *   "Zend_Controller_Dispatcher_Standard::loadClass==>load::controllers/ArticleController.php"
      *
-     * Replace the dots with underscrore in keys.
+     * Replace the dots with underscore in keys.
      *
      * @see https://github.com/perftools/xhgui/issues/209
      */
