@@ -26,10 +26,10 @@ RUN set -x \
 		php8-pdo_sqlite \
 		php8-phar \
 		php8-simplexml \
-        php8-session \
+		php8-session \
 		php8-pecl-mongodb \
-   	# Use www-data uid from alpine also present in docker php images
-    && adduser -u 82 -D -S -G www-data www-data \
+	# Use www-data uid from alpine also present in docker php images
+	&& adduser -u 82 -D -S -G www-data www-data \
 	# Tweak php-fpm config
 	&& sed -i \
 		-e "s#^;daemonize\s*=\s*yes#daemonize = no#" \
@@ -53,7 +53,7 @@ RUN set -x \
 	&& ln -s /dev/stderr /var/log/php/fpm.error.log \
 	&& ln -s /dev/stdout /var/log/nginx/access.log \
 	&& ln -s /dev/stderr /var/log/nginx/error.log \
-    && ln -s /usr/bin/php8 /usr/bin/php \
+	&& ln -s /usr/bin/php8 /usr/bin/php \
 	&& php -m
 
 FROM xhgui/xhgui:latest AS php-prebuilt
