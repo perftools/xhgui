@@ -116,7 +116,7 @@ NOTE: PDO may not support all the features of XHGui, see [#320].
 
 This setup uses [docker-compose] to orchestrate docker containers.
 
-1. Clone or download `xhgui` from GitHub.
+1. Copy example [`docker-compose.yml`][docker-compose.yml] from this project
 
 2. Startup the containers: `docker-compose up -d`
 
@@ -124,9 +124,8 @@ This setup uses [docker-compose] to orchestrate docker containers.
 
 4. To customize xhgui, copy `src/config.default.php` to `config/config.php` and edit that file.
 
-5. To customize docker-compose, copy `docker-compose.yml` to `docker-compose.override.yml` and edit that file.
-
 [docker-compose]: https://docs.docker.com/compose/
+[docker-compose.yml]: https://github.com/perftools/xhgui/raw/HEAD/docker-compose.yml
 
 # Configuration
 
