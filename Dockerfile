@@ -6,26 +6,26 @@
 FROM alpine:3.21 AS alpine
 
 FROM alpine AS base
-ENV PHP_INI_DIR=/etc/php8
+ENV PHP_INI_DIR=/etc/php83
 
 # php-fpm runtime
 FROM base AS php
 RUN set -x \
 	&& apk add --no-cache \
 		nginx \
-		php8-cli \
-		php8-ctype \
-		php8-fpm \
-		php8-iconv \
-		php8-json \
-		php8-pdo \
-		php8-pdo_mysql \
-		php8-pdo_pgsql \
-		php8-pdo_sqlite \
-		php8-pecl-mongodb \
-		php8-phar \
-		php8-session \
-		php8-simplexml \
+		php83-cli \
+		php83-ctype \
+		php83-fpm \
+		php83-iconv \
+		php83-json \
+		php83-pdo \
+		php83-pdo_mysql \
+		php83-pdo_pgsql \
+		php83-pdo_sqlite \
+		php83-pecl-mongodb \
+		php83-phar \
+		php83-session \
+		php83-simplexml \
 	# Use www-data uid from alpine also present in docker php images
 	&& adduser -u 82 -D -S -G www-data www-data \
 	# Tweak php-fpm config
@@ -43,15 +43,15 @@ RUN set -x \
 		-e "s#^group = nobody\s*#group = www-data#" \
 		-e "s#^;catch_workers_output\s*=.*#catch_workers_output = yes#" \
 		$POOL_CONFIG \
-	&& rm -rf /var/log/php8 \
-	&& ln -s php /var/log/php8 \
+	&& rm -rf /var/log/php83 \
+	&& ln -s php /var/log/php83 \
 	&& install -d -o www-data -g www-data /var/log/php \
-	&& ln -s php-fpm8 /usr/sbin/php-fpm \
+	&& ln -s php-fpm83 /usr/sbin/php-fpm \
 	&& ln -s /dev/stderr /var/log/php/fpm.access.log \
 	&& ln -s /dev/stderr /var/log/php/fpm.error.log \
 	&& ln -s /dev/stdout /var/log/nginx/access.log \
 	&& ln -s /dev/stderr /var/log/nginx/error.log \
-	&& ln -s /usr/bin/php8 /usr/bin/php \
+	&& ln -sf php83 /usr/bin/php \
 	&& php -m
 
 # prepare sources
