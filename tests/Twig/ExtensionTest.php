@@ -54,7 +54,7 @@ class ExtensionTest extends TestCase
      */
     public function testMakePercent($value, $total, $expected): void
     {
-        $result = $this->ext->makePercent($value, $total, $total);
+        $result = $this->ext->makePercent($value, $total);
         $this->assertEquals($expected, $result);
     }
 

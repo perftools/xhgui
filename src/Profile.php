@@ -430,11 +430,7 @@ class Profile
     public function sort($dimension, $data)
     {
         $sorter = static function ($a, $b) use ($dimension) {
-            if ($a[$dimension] == $b[$dimension]) {
-                return 0;
-            }
-
-            return $a[$dimension] > $b[$dimension] ? -1 : 1;
+            return $b[$dimension] <=> $a[$dimension];
         };
         uasort($data, $sorter);
 
@@ -449,7 +445,7 @@ class Profile
      */
     public function filter($profileData, $filters = [])
     {
-        foreach ($filters as $key => $item) {
+        foreach ($filters as $item) {
             foreach ($profileData as $keyItem => $method) {
                 if (fnmatch($item, $keyItem)) {
                     unset($profileData[$keyItem]);
