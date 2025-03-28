@@ -44,7 +44,7 @@
             "@phpunit-setup"
         ],
         "cover": "simple-phpunit --coverage-clover=unittest-coverage.clover",
-        "openurl": "open http://xhgui.127.0.0.1.xip.io:8142",
+        "openurl": "open http://xhgui.127.0.0.1.nip.io:8142",
         "phpunit-setup": "test $COMPOSER_DEV_MODE = 0 || simple-phpunit --version",
         "test": "simple-phpunit"
     }
