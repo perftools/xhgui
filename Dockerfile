@@ -9,7 +9,7 @@ ARG BUILD_SOURCE=build
 FROM alpine:3.15 AS alpine
 
 FROM alpine AS base
-ENV PHP_INI_DIR /etc/php8
+ENV PHP_INI_DIR=/etc/php8
 
 # php-fpm runtime
 FROM base AS php-build
@@ -105,8 +105,7 @@ ARG WEBROOT=$APPDIR/webroot
 WORKDIR $APPDIR
 
 EXPOSE 80
-CMD ["sh", "-c", "nginx && exec php-fpm"]
-VOLUME "/run/nginx"
+CMD ["sh", "-c", "nginx -g 'pid /dev/shm/nginx.pid;' && exec php-fpm"]
 
 # runtime image from last release
 FROM xhgui/xhgui:latest AS runtime-prebuilt
