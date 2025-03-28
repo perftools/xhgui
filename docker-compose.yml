@@ -12,7 +12,7 @@ services:
       - "8142:80"
 
   mongo:
-    image: percona/percona-server-mongodb:4.0
+    image: percona/percona-server-mongodb:4.4
     # (case sensitive) engine: mmapv1, rocksdb, wiredTiger, inMemory
     command: --storageEngine=wiredTiger
     restart: always
