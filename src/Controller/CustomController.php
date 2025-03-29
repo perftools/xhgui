@@ -61,6 +61,7 @@ class CustomController extends AbstractController
         } catch (NotImplementedException $e) {
             return ['error' => ['generic' => 'Not available for your save handler.']];
         }
+
         return $results;
     }
 }
