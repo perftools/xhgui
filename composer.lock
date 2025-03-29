@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c8644c858a6f4154119267ece9182931",
+    "content-hash": "8e278b9e49bd3d67cd9a3bed537acb69",
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -754,6 +754,72 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "ocramius/lazy-property",
+            "version": "2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Ocramius/LazyProperty.git",
+                "reference": "a6ccad5c43f26d01f8d25ba2486bcccf4ff6d946"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Ocramius/LazyProperty/zipball/a6ccad5c43f26d01f8d25ba2486bcccf4ff6d946",
+                "reference": "a6ccad5c43f26d01f8d25ba2486bcccf4ff6d946",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.0.0 || ~8.1.0"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^10.0.0",
+                "phpunit/phpunit": "^9.5.26",
+                "roave/infection-static-analysis-plugin": "^1.25.0",
+                "vimeo/psalm": "^4.29.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LazyProperty\\": "src/LazyProperty"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com",
+                    "homepage": "http://ocramius.github.io/"
+                },
+                {
+                    "name": "Niklas Schöllhorn",
+                    "email": "schoellhorn.niklas@gmail.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "A library that provides lazy instantiation logic for object properties",
+            "homepage": "https://github.com/Ocramius/LazyProperty",
+            "keywords": [
+                "lazy",
+                "lazy instantiation",
+                "lazy loading",
+                "utility"
+            ],
+            "support": {
+                "issues": "https://github.com/Ocramius/LazyProperty/issues",
+                "source": "https://github.com/Ocramius/LazyProperty/tree/2.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Ocramius",
+                    "type": "github"
+                }
+            ],
+            "abandoned": true,
+            "time": "2022-10-31T11:45:52+00:00"
+        },
         {
             "name": "symfony/phpunit-bridge",
             "version": "v7.2.0",

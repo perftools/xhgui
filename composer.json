@@ -32,6 +32,7 @@
         "twig/twig": "^1.26"
     },
     "require-dev": {
+        "ocramius/lazy-property": "^2.4",
         "symfony/phpunit-bridge": "^7.2"
     },
     "suggest": {
