@@ -56,7 +56,6 @@ class CustomController extends AbstractController
         }
 
         $perPage = $this->config('page.limit');
-
         try {
             $results = $this->searcher->query($conditions, $perPage, $fields);
         } catch (NotImplementedException $e) {
