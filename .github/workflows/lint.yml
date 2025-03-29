@@ -5,7 +5,7 @@ on:
 
 jobs:
   tests:
-    name: PHP CS Fixer
+    name: Coding Standard
     runs-on: ubuntu-20.04
 
     steps:
@@ -15,16 +15,13 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.2
-          tools: php-cs-fixer:2.16, cs2pr
+          php-version: 8.0
+          tools: ecs, cs2pr
           coverage: none
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies with composer
-        run: composer install --no-interaction --no-progress --no-suggest
-
-      - name: Run php-cs-fixer
-        run: php-cs-fixer fix --verbose --diff --dry-run --format=checkstyle | cs2pr
+      - name: Run ecs check
+        run: ecs check --ansi --output-format=checkstyle | cs2pr
 
 # vim:ft=yaml:et:ts=2:sw=2
