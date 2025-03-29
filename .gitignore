@@ -1,4 +1,5 @@
 /.envrc.local
+/.phpunit.result.cache
 /composer.phar
 /tags
 /vendor
