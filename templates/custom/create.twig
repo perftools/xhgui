@@ -39,19 +39,12 @@
     </div><!--/span-->
   
   </div><!--/row-->
-    <div class="row-fluid">
-
-    <div class="span12">
+ <div class="row-fluid">
+    <div class="span12" id="run-button-container">
         <div class="btn btn-large" style="display: block; margin-left: auto; margin-right: auto; width: 150px;" id="runbutton">Run</div>
 		<div style="display: block; margin-left: auto; margin-right: auto; width: 150px; display: none" id="loading"><img src="{{ static('img/loading.gif') }}"></div>
     </div><!--/span-->
 
-
-
-
-
-
-  
   </div><!--/row-->
   <table class="table table-hover" id="results">
     <thead>
@@ -105,7 +98,6 @@
                     $("#loading").hide();
                     if (data.hasOwnProperty('error'))
                     {
-                      console.log(data.error);
                       if (data.error.hasOwnProperty('query'))
                       {
                         $('#selection').animate(
@@ -126,6 +118,18 @@
                         $(this).animate({ backgroundColor: '#FFF'});
                         }
                         );
+                      }
+
+                      if (data.error.hasOwnProperty('generic'))
+                      {
+                          $('#run-button-container').animate(
+                              { backgroundColor: '#FFD9D9'},
+                              800,
+                              function() {
+                                  $(this).animate({ backgroundColor: '#FFF'});
+                              }
+                          );
+                          $('#run-button-container').text(data.error.generic);
                       }
                     }else  {
                       $.each( data, function(i, n){

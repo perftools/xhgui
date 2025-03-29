@@ -4,6 +4,7 @@ namespace XHGui\Controller;
 
 use Slim\App;
 use XHGui\AbstractController;
+use XHGui\Exception\NotImplementedException;
 use XHGui\RequestProxy as Request;
 use XHGui\Searcher\SearcherInterface;
 
@@ -56,6 +57,11 @@ class CustomController extends AbstractController
 
         $perPage = $this->config('page.limit');
 
-        return $this->searcher->query($conditions, $perPage, $fields);
+        try {
+            $results = $this->searcher->query($conditions, $perPage, $fields);
+        } catch (NotImplementedException $e) {
+            return ['error' => ['generic' => 'Not available for your save handler.']];
+        }
+        return $results;
     }
 }
