@@ -25,6 +25,7 @@ RUN set -x \
 		php8-simplexml \
 		php8-session \
 		php8-pecl-mongodb \
+        php8-iconv \
 	# Use www-data uid from alpine also present in docker php images
 	&& adduser -u 82 -D -S -G www-data www-data \
 	# Tweak php-fpm config
