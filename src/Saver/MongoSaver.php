@@ -55,7 +55,7 @@ class MongoSaver implements SaverInterface
     {
         $results = [];
         foreach ($profile as $k => $v) {
-            if (strpos($k, '.') !== false) {
+            if (str_contains($k, '.')) {
                 $k = str_replace('.', '_', $k);
             }
             $results[$k] = $v;
