@@ -75,7 +75,7 @@ class TwigExtension extends AbstractExtension
         $url = $this->router->urlFor($name);
 
         // Remove basePath from url
-        if ($this->basePath && strpos($url, $this->basePath) === 0) {
+        if ($this->basePath && str_starts_with($url, $this->basePath)) {
             $url = substr($url, strlen($this->basePath));
         }
 
