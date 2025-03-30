@@ -19,7 +19,7 @@ to profile your application, use specific minimal library:
 
 XHGui has the following requirements:
 
-- Known to work: PHP >= 7.2, 8.0-8.3
+- Known to work: PHP 8.0-8.3
 - If using MongoDB storage, see [MongoDB](#MongoDB) requirements
 - If using PDO storage, see [PDO](#PDO) requirements
 - To profile an application, one of the profiling PHP extensions is required.
