@@ -29,7 +29,7 @@ abstract class OptionsConfigurator implements ArrayAccess, IteratorAggregate
         return array_key_exists($offset, $this->options);
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->options[$offset];
     }

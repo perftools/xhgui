@@ -20,7 +20,7 @@ class NormalizingSaver implements SaverInterface
             throw new RuntimeException('No url provided');
         }
         $query = parse_url($url, PHP_URL_QUERY);
-        parse_str($query, $get);
+        parse_str((string)$query, $get);
         $data['meta']['get'] = $get;
 
         foreach ($data['profile'] as $index => &$profile) {
