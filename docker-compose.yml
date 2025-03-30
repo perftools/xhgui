@@ -5,7 +5,6 @@ services:
     restart: always
     volumes:
       - ./config:/var/www/xhgui/config
-      - ./nginx.conf:/etc/nginx/http.d/default.conf:ro
     environment:
       - XHGUI_MONGO_HOSTNAME=mongo
       - XHGUI_MONGO_DATABASE=xhprof
