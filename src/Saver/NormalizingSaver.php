@@ -20,7 +20,7 @@ class NormalizingSaver implements SaverInterface
         $data['meta']['get'] = $get;
 
         foreach ($data['profile'] as $index => &$profile) {
-            // skip empty profilings
+            // skip empty profiling
             if (!$profile) {
                 unset($data['profile'][$index]);
                 continue;
