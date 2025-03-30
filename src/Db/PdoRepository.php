@@ -410,7 +410,7 @@ class PdoRepository
                 $date->sub(new DateInterval($search['limit']));
                 $where['conditions'] .= ' and request_ts >= :limit_start';
                 $where['params']['limit_start'] = $date->getTimestamp();
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 $where['conditions'] .= ' and request_ts >= :limit_start';
                 $where['params']['limit_start'] = time() + 86400;
             }

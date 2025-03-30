@@ -58,7 +58,7 @@ class CustomController extends AbstractController
         $perPage = $this->config('page.limit');
         try {
             $results = $this->searcher->query($conditions, $perPage, $fields);
-        } catch (NotImplementedException $e) {
+        } catch (NotImplementedException) {
             return ['error' => ['generic' => 'Not available for your save handler.']];
         }
 
