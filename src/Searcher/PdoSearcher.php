@@ -10,12 +10,8 @@ use XHGui\Util;
 
 class PdoSearcher implements SearcherInterface
 {
-    /** @var PdoRepository */
-    private $db;
-
-    public function __construct(PdoRepository $db)
+    public function __construct(private PdoRepository $db)
     {
-        $this->db = $db;
     }
 
     /**

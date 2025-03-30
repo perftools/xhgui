@@ -11,19 +11,9 @@ use XHGui\Saver\SaverInterface;
 
 class ImportController extends AbstractController
 {
-    /**
-     * @var SaverInterface
-     */
-    private $saver;
-
-    /** @var string */
-    private $token;
-
-    public function __construct(App $app, SaverInterface $saver, $token)
+    public function __construct(App $app, private SaverInterface $saver, private string $token)
     {
         parent::__construct($app);
-        $this->saver = $saver;
-        $this->token = $token;
     }
 
     public function import(Request $request)

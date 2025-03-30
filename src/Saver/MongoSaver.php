@@ -8,14 +8,8 @@ use MongoId;
 
 class MongoSaver implements SaverInterface
 {
-    /**
-     * @var MongoCollection
-     */
-    private $_collection;
-
-    public function __construct(MongoCollection $collection)
+    public function __construct(private MongoCollection $_collection)
     {
-        $this->_collection = $collection;
     }
 
     public function save(array $data, string $id = null): string

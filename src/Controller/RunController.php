@@ -16,15 +16,9 @@ class RunController extends AbstractController
      */
     private const FILTER_ARGUMENT_NAME = 'filter';
 
-    /**
-     * @var SearcherInterface
-     */
-    private $searcher;
-
-    public function __construct(App $app, SearcherInterface $searcher)
+    public function __construct(App $app, private SearcherInterface $searcher)
     {
         parent::__construct($app);
-        $this->searcher = $searcher;
     }
 
     public function index(Request $request): void

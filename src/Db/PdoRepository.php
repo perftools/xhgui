@@ -11,12 +11,6 @@ use XHGui\Searcher\SearcherInterface;
 
 class PdoRepository
 {
-    /** @var PDO */
-    private $pdo;
-
-    /** @var string */
-    private $driverName;
-
     /** @var string */
     private $table;
 
@@ -28,10 +22,8 @@ class PdoRepository
      * @param string $table Table name where Xhgui profiles are stored
      * @param string $tableWatch Table name where Xhgui watch functions are stored
      */
-    public function __construct(PDO $pdo, string $driverName, string $table, string $tableWatch)
+    public function __construct(private PDO $pdo, private string $driverName, string $table, string $tableWatch)
     {
-        $this->pdo = $pdo;
-        $this->driverName = $driverName;
         $this->table = sprintf('"%s"', $table);
         $this->tableWatches = sprintf('"%s"', $tableWatch);
     }
