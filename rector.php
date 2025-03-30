@@ -14,7 +14,7 @@ return RectorConfig::configure()
     ->withRules([
     ])
     ->withSets([
-        LevelSetList::UP_TO_PHP_80,
+        LevelSetList::UP_TO_PHP_83,
     ])
     ->withTypeCoverageLevel(0)
     ->withDeadCodeLevel(0)
