@@ -16,16 +16,16 @@ RUN set -x \
 		php8-cli \
 		php8-ctype \
 		php8-fpm \
+		php8-iconv \
 		php8-json \
 		php8-pdo \
 		php8-pdo_mysql \
 		php8-pdo_pgsql \
 		php8-pdo_sqlite \
-		php8-phar \
-		php8-simplexml \
-		php8-session \
 		php8-pecl-mongodb \
-        php8-iconv \
+		php8-phar \
+		php8-session \
+		php8-simplexml \
 	# Use www-data uid from alpine also present in docker php images
 	&& adduser -u 82 -D -S -G www-data www-data \
 	# Tweak php-fpm config
