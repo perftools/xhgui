@@ -10,8 +10,7 @@ use Twig\TwigFunction;
 
 class TwigExtension extends AbstractExtension
 {
-    /** @var string */
-    private $basePath;
+    private string $basePath;
     private string $pathPrefix;
 
     public function __construct(private Router $router, Request $request, ?string $pathPrefix)

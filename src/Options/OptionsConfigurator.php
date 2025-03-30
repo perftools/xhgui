@@ -12,8 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 abstract class OptionsConfigurator implements ArrayAccess, IteratorAggregate
 {
-    /** @var array */
-    protected $options;
+    protected array $options;
 
     public function __construct(array $options = [])
     {
