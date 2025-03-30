@@ -6,26 +6,27 @@
 FROM alpine:3.21 AS alpine
 
 FROM alpine AS base
-ENV PHP_INI_DIR=/etc/php83
+ENV PHP_SUFFIX=83
+ENV PHP_INI_DIR=/etc/php$PHP_SUFFIX
 
 # php-fpm runtime
 FROM base AS php
 RUN set -x \
 	&& apk add --no-cache \
 		nginx \
-		php83-cli \
-		php83-ctype \
-		php83-fpm \
-		php83-iconv \
-		php83-json \
-		php83-pdo \
-		php83-pdo_mysql \
-		php83-pdo_pgsql \
-		php83-pdo_sqlite \
-		php83-pecl-mongodb \
-		php83-phar \
-		php83-session \
-		php83-simplexml \
+		php$PHP_SUFFIX-cli \
+		php$PHP_SUFFIX-ctype \
+		php$PHP_SUFFIX-fpm \
+		php$PHP_SUFFIX-iconv \
+		php$PHP_SUFFIX-json \
+		php$PHP_SUFFIX-pdo \
+		php$PHP_SUFFIX-pdo_mysql \
+		php$PHP_SUFFIX-pdo_pgsql \
+		php$PHP_SUFFIX-pdo_sqlite \
+		php$PHP_SUFFIX-pecl-mongodb \
+		php$PHP_SUFFIX-phar \
+		php$PHP_SUFFIX-session \
+		php$PHP_SUFFIX-simplexml \
 	# Use www-data uid from alpine also present in docker php images
 	&& adduser -u 82 -D -S -G www-data www-data \
 	# Tweak php-fpm config
@@ -43,15 +44,15 @@ RUN set -x \
 		-e "s#^group = nobody\s*#group = www-data#" \
 		-e "s#^;catch_workers_output\s*=.*#catch_workers_output = yes#" \
 		$POOL_CONFIG \
-	&& rm -rf /var/log/php83 \
-	&& ln -s php /var/log/php83 \
+	&& rm -rf /var/log/php$PHP_SUFFIX \
+	&& ln -s php /var/log/php$PHP_SUFFIX \
 	&& install -d -o www-data -g www-data /var/log/php \
-	&& ln -s php-fpm83 /usr/sbin/php-fpm \
+	&& ln -s php-fpm$PHP_SUFFIX /usr/sbin/php-fpm \
 	&& ln -s /dev/stderr /var/log/php/fpm.access.log \
 	&& ln -s /dev/stderr /var/log/php/fpm.error.log \
 	&& ln -s /dev/stdout /var/log/nginx/access.log \
 	&& ln -s /dev/stderr /var/log/nginx/error.log \
-	&& ln -sf php83 /usr/bin/php \
+	&& ln -sf php$PHP_SUFFIX /usr/bin/php \
 	&& php -m
 
 # prepare sources
