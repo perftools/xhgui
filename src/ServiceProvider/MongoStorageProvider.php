@@ -48,9 +48,7 @@ class MongoStorageProvider implements ServiceProviderInterface
             return new MongoClient($server, $options, $driverOptions);
         };
 
-        $app['searcher.mongodb'] = static function ($app) {
-            return new MongoSearcher($app[MongoDB::class]);
-        };
+        $app['searcher.mongodb'] = static fn($app) => new MongoSearcher($app[MongoDB::class]);
 
         $app['saver.mongodb'] = static function ($app) {
             /** @var MongoDB $mongoDB */

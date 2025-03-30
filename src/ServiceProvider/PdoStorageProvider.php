@@ -14,9 +14,7 @@ class PdoStorageProvider implements ServiceProviderInterface
 {
     public function register(Container $app): void
     {
-        $app['pdo.driver'] = static function ($app) {
-            return explode(':', $app['config']['pdo']['dsn'], 2)[0];
-        };
+        $app['pdo.driver'] = static fn($app) => explode(':', $app['config']['pdo']['dsn'], 2)[0];
 
         $app['pdo'] = static function ($app) {
             if (!class_exists(PDO::class)) {
@@ -61,12 +59,8 @@ class PdoStorageProvider implements ServiceProviderInterface
             return $repo;
         };
 
-        $app['searcher.pdo'] = static function ($app) {
-            return new PdoSearcher($app[PdoRepository::class]);
-        };
+        $app['searcher.pdo'] = static fn($app) => new PdoSearcher($app[PdoRepository::class]);
 
-        $app['saver.pdo'] = static function ($app) {
-            return new PdoSaver($app[PdoRepository::class]);
-        };
+        $app['saver.pdo'] = static fn($app) => new PdoSaver($app[PdoRepository::class]);
     }
 }

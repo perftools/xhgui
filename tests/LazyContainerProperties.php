@@ -86,20 +86,15 @@ trait LazyContainerProperties
         /** @var \Slim\Container $container */
         $container = $di['app']->getContainer();
         $container->register(new class($this) implements ServiceProviderInterface {
-            private $ctx;
-
-            public function __construct($ctx)
+            public function __construct(private $ctx)
             {
-                $this->ctx = $ctx;
             }
 
             public function register(Container $container): void
             {
                 $container['view.class'] = TwigView::class;
                 $container['flash.storage'] = [];
-                $container['environment'] = function () {
-                    return $this->ctx->getEnv();
-                };
+                $container['environment'] = (fn() => $this->ctx->getEnv());
             }
         });
 

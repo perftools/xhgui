@@ -8,14 +8,8 @@ use MongoId;
 
 class MongoSaver implements SaverInterface
 {
-    /**
-     * @var MongoCollection
-     */
-    private $_collection;
-
-    public function __construct(MongoCollection $collection)
+    public function __construct(private MongoCollection $_collection)
     {
-        $this->_collection = $collection;
     }
 
     public function save(array $data, string $id = null): string
@@ -61,7 +55,7 @@ class MongoSaver implements SaverInterface
     {
         $results = [];
         foreach ($profile as $k => $v) {
-            if (strpos($k, '.') !== false) {
+            if (str_contains($k, '.')) {
                 $k = str_replace('.', '_', $k);
             }
             $results[$k] = $v;

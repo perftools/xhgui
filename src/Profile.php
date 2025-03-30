@@ -18,8 +18,6 @@ class Profile
      * @const Key used for methods with no parent
      */
     private const NO_PARENT = '__xhgui_top__';
-
-    private $data;
     private $collapsed;
     private $indexed;
     private $visited;
@@ -30,16 +28,14 @@ class Profile
     private $exclusiveKeys = ['ewt', 'ecpu', 'emu', 'epmu'];
     private $functionCount;
 
-    public function __construct(array $profile, $convert = true)
+    public function __construct(private array $data, $convert = true)
     {
-        $this->data = $profile;
-
         // cast MongoIds to string
         if (isset($this->data['_id']) && !is_string($this->data['_id'])) {
             $this->data['_id'] = (string) $this->data['_id'];
         }
 
-        if (!empty($profile['profile']) && $convert) {
+        if (!empty($this->data['profile']) && $convert) {
             $this->process();
         }
     }
@@ -429,10 +425,7 @@ class Profile
      */
     public function sort($dimension, $data)
     {
-        $sorter = static function ($a, $b) use ($dimension) {
-            return $b[$dimension] <=> $a[$dimension];
-        };
-        uasort($data, $sorter);
+        uasort($data, static fn($a, $b) => $b[$dimension] <=> $a[$dimension]);
 
         return $data;
     }

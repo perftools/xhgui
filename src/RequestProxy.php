@@ -9,12 +9,8 @@ use Slim\Http\Request;
  */
 class RequestProxy
 {
-    /** @var Request */
-    private $request;
-
-    public function __construct(Request $request)
+    public function __construct(private Request $request)
     {
-        $this->request = $request;
     }
 
     public function getQueryParams()

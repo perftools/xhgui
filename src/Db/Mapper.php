@@ -71,7 +71,7 @@ class Mapper
             try {
                 $date->sub(new DateInterval($search['limit']));
                 $conditions['meta.request_ts']['$gte'] = new MongoDate($date->getTimestamp());
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // Match a day in the future so we match nothing, as it's likely an invalid format
                 $conditions['meta.request_ts']['$gte'] = new MongoDate(time() + 86400);
             }

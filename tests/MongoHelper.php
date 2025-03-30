@@ -6,14 +6,11 @@ use MongoDB;
 
 class MongoHelper
 {
-    /** @var MongoDB */
-    private $mongodb;
     /** @var array */
     private $indexes = [];
 
-    public function __construct(MongoDB $mongodb)
+    public function __construct(private MongoDB $mongodb)
     {
-        $this->mongodb = $mongodb;
     }
 
     public function dropCollection(string $collectionName): void

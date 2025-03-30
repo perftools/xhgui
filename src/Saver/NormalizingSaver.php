@@ -6,11 +6,8 @@ use RuntimeException;
 
 class NormalizingSaver implements SaverInterface
 {
-    private $saver;
-
-    public function __construct(SaverInterface $saver)
+    public function __construct(private SaverInterface $saver)
     {
-        $this->saver = $saver;
     }
 
     public function save(array $data, string $id = null): string

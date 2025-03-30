@@ -10,16 +10,13 @@ use Twig\TwigFunction;
 
 class TwigExtension extends AbstractExtension
 {
-    /** @var Router */
-    private $router;
     /** @var string */
     private $basePath;
     /** @var string */
     private $pathPrefix;
 
-    public function __construct(Router $router, Request $request, ?string $pathPrefix)
+    public function __construct(private Router $router, Request $request, ?string $pathPrefix)
     {
-        $this->router = $router;
         $this->basePath = $request->getUri()->getBasePath();
         $this->pathPrefix = rtrim($this->buildPathPrefix($this->basePath, $pathPrefix), '/');
     }
@@ -78,7 +75,7 @@ class TwigExtension extends AbstractExtension
         $url = $this->router->urlFor($name);
 
         // Remove basePath from url
-        if ($this->basePath && strpos($url, $this->basePath) === 0) {
+        if ($this->basePath && str_starts_with($url, $this->basePath)) {
             $url = substr($url, strlen($this->basePath));
         }
 
