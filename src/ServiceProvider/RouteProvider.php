@@ -22,16 +22,14 @@ class RouteProvider implements ServiceProviderInterface
         /**
          * Wrap Request/Response with RequestProxy/RequestWrapper
          */
-        $wrap = static function ($handler) use ($di, $app) {
-            return function () use ($handler, $di, $app) {
-                $container = $app->getContainer();
-                $request = $container->get('request.proxy');
-                $response = $container->get('response.proxy');
+        $wrap = static fn($handler) => function () use ($handler, $di, $app) {
+            $container = $app->getContainer();
+            $request = $container->get('request.proxy');
+            $response = $container->get('response.proxy');
 
-                $handler($di, $request, $response);
+            $handler($di, $request, $response);
 
-                return $container->get('response.final');
-            };
+            return $container->get('response.final');
         };
 
         // Profile Runs routes
@@ -224,28 +222,11 @@ class RouteProvider implements ServiceProviderInterface
 
     private function registerControllers(Container $app): void
     {
-        $app[Controller\WatchController::class] = $app->factory(static function ($app) {
-            return new Controller\WatchController($app['app'], $app['searcher']);
-        });
-
-        $app[Controller\RunController::class] = $app->factory(static function ($app) {
-            return new Controller\RunController($app['app'], $app['searcher']);
-        });
-
-        $app[Controller\CustomController::class] = $app->factory(static function ($app) {
-            return new Controller\CustomController($app['app'], $app['searcher']);
-        });
-
-        $app[Controller\WaterfallController::class] = $app->factory(static function ($app) {
-            return new Controller\WaterfallController($app['app'], $app['searcher']);
-        });
-
-        $app[Controller\ImportController::class] = $app->factory(static function ($app) {
-            return new Controller\ImportController($app['app'], $app['saver'], $app['config']['upload.token']);
-        });
-
-        $app[Controller\MetricsController::class] = $app->factory(static function ($app) {
-            return new Controller\MetricsController($app['app'], $app['searcher']);
-        });
+        $app[Controller\WatchController::class] = $app->factory(static fn($app) => new Controller\WatchController($app['app'], $app['searcher']));
+        $app[Controller\RunController::class] = $app->factory(static fn($app) => new Controller\RunController($app['app'], $app['searcher']));
+        $app[Controller\CustomController::class] = $app->factory(static fn($app) => new Controller\CustomController($app['app'], $app['searcher']));
+        $app[Controller\WaterfallController::class] = $app->factory(static fn($app) => new Controller\WaterfallController($app['app'], $app['searcher']));
+        $app[Controller\ImportController::class] = $app->factory(static fn($app) => new Controller\ImportController($app['app'], $app['saver'], $app['config']['upload.token']));
+        $app[Controller\MetricsController::class] = $app->factory(static fn($app) => new Controller\MetricsController($app['app'], $app['searcher']));
     }
 }

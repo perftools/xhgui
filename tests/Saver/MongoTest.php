@@ -21,19 +21,17 @@ class MongoTest extends TestCase
         $collection
             ->expects($this->exactly(count($data)))
             ->method('insert')
-            ->withConsecutive(...array_map(function () {
-                return [
-                    $this->callback(function ($data) {
-                        $this->assertIsArray($data);
-                        $this->assertArrayHasKey('_id', $data);
-                        $this->assertArrayHasKey('meta', $data);
-                        $this->assertArrayHasKey('profile', $data);
+            ->withConsecutive(...array_map(fn() => [
+                $this->callback(function ($data) {
+                    $this->assertIsArray($data);
+                    $this->assertArrayHasKey('_id', $data);
+                    $this->assertArrayHasKey('meta', $data);
+                    $this->assertArrayHasKey('profile', $data);
 
-                        return true;
-                    }),
-                    $this->equalTo(['w' => 0]),
-                ];
-            }, $data));
+                    return true;
+                }),
+                $this->equalTo(['w' => 0]),
+            ], $data));
 
         $saver = new MongoSaver($collection);
 

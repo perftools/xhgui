@@ -425,10 +425,7 @@ class Profile
      */
     public function sort($dimension, $data)
     {
-        $sorter = static function ($a, $b) use ($dimension) {
-            return $b[$dimension] <=> $a[$dimension];
-        };
-        uasort($data, $sorter);
+        uasort($data, static fn($a, $b) => $b[$dimension] <=> $a[$dimension]);
 
         return $data;
     }
