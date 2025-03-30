@@ -102,6 +102,7 @@ WORKDIR $APPDIR
 EXPOSE 80
 CMD ["sh", "-c", "nginx -g 'pid /dev/shm/nginx.pid;' && exec php-fpm"]
 
+COPY --from=source /app/nginx.conf /etc/nginx/http.d/default.conf
 COPY --from=build /vendor ./vendor/
 COPY --from=build /app ./
 COPY --from=build --chown=www-data /cache ./cache/

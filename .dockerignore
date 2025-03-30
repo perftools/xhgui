@@ -4,6 +4,7 @@
 !/composer.*
 !/config/
 !/external/
+!/nginx.conf
 !/src/
 !/templates/
 !/vendor/
