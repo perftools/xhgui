@@ -10,10 +10,7 @@ use Slim\Views\Twig;
 
 abstract class AbstractController
 {
-    /**
-     * @var App
-     */
-    protected $app;
+    protected App $app;
 
     public function __construct(App $app)
     {

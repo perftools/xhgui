@@ -11,11 +11,9 @@ use XHGui\Searcher\SearcherInterface;
 
 class PdoRepository
 {
-    /** @var string */
-    private $table;
+    private string $table;
 
-    /** @var string */
-    private $tableWatches;
+    private string $tableWatches;
 
     /**
      * @param PDO $pdo An open database connection

@@ -20,7 +20,7 @@ class MongoSearcher implements SearcherInterface
 
     protected $_watches;
 
-    protected $_mapper;
+    protected Mapper $_mapper;
 
     public function __construct(MongoDb $db)
     {

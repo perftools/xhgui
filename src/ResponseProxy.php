@@ -9,8 +9,7 @@ use Slim\Http\Response;
  */
 class ResponseProxy
 {
-    /** @var Response */
-    private $response;
+    private Response $response;
 
     public function __construct(Response $response = null)
     {

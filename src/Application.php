@@ -8,8 +8,7 @@ use XHGui\Saver\SaverInterface;
 
 class Application extends Container
 {
-    /** @var bool */
-    private $booted = false;
+    private bool $booted = false;
 
     public function __construct()
     {
