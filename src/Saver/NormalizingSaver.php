@@ -15,7 +15,11 @@ class NormalizingSaver implements SaverInterface
         // extract "get" from "url"
         // profiler no longer needs to send "get" over the wire.
         // the individual savers may choose not to store this down separately
-        $query = parse_url($data['meta']['url'], PHP_URL_QUERY);
+        $url = $data['meta']['url'];
+        if (!$url) {
+            throw new RuntimeException('No url provided');
+        }
+        $query = parse_url($url, PHP_URL_QUERY);
         parse_str($query, $get);
         $data['meta']['get'] = $get;
 
