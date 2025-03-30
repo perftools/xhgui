@@ -20,7 +20,7 @@ class PdoSaver implements SaverInterface
         $sec = $ts['sec'];
         $usec = $ts['usec'];
 
-        $id = $id ?? Util::generateId();
+        $id ??= Util::generateId();
         $this->db->saveProfile([
             'id' => $id,
             'profile' => json_encode($data['profile']),
