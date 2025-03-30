@@ -11,15 +11,9 @@ use XHGui\Searcher\SearcherInterface;
 
 class WaterfallController extends AbstractController
 {
-    /**
-     * @var SearcherInterface
-     */
-    protected $searcher;
-
-    public function __construct(App $app, SearcherInterface $searcher)
+    public function __construct(App $app, protected SearcherInterface $searcher)
     {
         parent::__construct($app);
-        $this->searcher = $searcher;
     }
 
     public function index($request): void

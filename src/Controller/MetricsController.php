@@ -8,15 +8,9 @@ use XHGui\Searcher\SearcherInterface;
 
 class MetricsController extends AbstractController
 {
-    /**
-     * @var SearcherInterface
-     */
-    protected $searcher;
-
-    public function __construct(App $app, SearcherInterface $searcher)
+    public function __construct(App $app, protected SearcherInterface $searcher)
     {
         parent::__construct($app);
-        $this->searcher = $searcher;
     }
 
     public function metrics()

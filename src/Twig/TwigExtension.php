@@ -12,8 +12,7 @@ class TwigExtension extends AbstractExtension
 {
     /** @var string */
     private $basePath;
-    /** @var string */
-    private $pathPrefix;
+    private string $pathPrefix;
 
     public function __construct(private Router $router, Request $request, ?string $pathPrefix)
     {
