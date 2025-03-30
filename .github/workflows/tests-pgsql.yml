@@ -11,6 +11,9 @@ jobs:
       matrix:
         php:
           - "8.0"
+          - "8.1"
+          - "8.2"
+          - "8.3"
 
     services:
       # https://docs.github.com/en/free-pro-team@latest/actions/guides/creating-postgresql-service-containers
