@@ -3,7 +3,7 @@
 # also modifying source, would not need to rebuild extensions layer.
 # Author: Elan Ruusamäe <glen@pld-linux.org>
 
-FROM alpine:3.15 AS alpine
+FROM alpine:3.21 AS alpine
 
 FROM alpine AS base
 ENV PHP_INI_DIR=/etc/php8
