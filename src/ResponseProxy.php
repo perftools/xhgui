@@ -5,7 +5,7 @@ namespace XHGui;
 use Slim\Http\Response;
 
 /**
- * Class dealing with Response being mutable
+ * Class dealing with Response being immutable
  */
 class ResponseProxy
 {
