@@ -35,6 +35,11 @@ class Application
         return $this;
     }
 
+    public function getContainer(): AppContainer
+    {
+        return $this->container;
+    }
+
     public function getSlim(): App
     {
         return $this->container['app'];
