@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b44abc807f5333dabef22d2a7e3d505",
+    "content-hash": "8065f4e4a6de0a9a5a15478ec5c8b8db",
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -605,20 +605,21 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v3.4.47",
+            "version": "v6.0.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "c7efc97a47b2ebaabc19d5b6c6b50f5c37c92744"
+                "reference": "6a180d1c45e0d9797470ca9eb46215692de00fa3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/c7efc97a47b2ebaabc19d5b6c6b50f5c37c92744",
-                "reference": "c7efc97a47b2ebaabc19d5b6c6b50f5c37c92744",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/6a180d1c45e0d9797470ca9eb46215692de00fa3",
+                "reference": "6a180d1c45e0d9797470ca9eb46215692de00fa3",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.5.9|>=7.0.8"
+                "php": ">=8.0.2",
+                "symfony/deprecation-contracts": "^2.1|^3"
             },
             "type": "library",
             "autoload": {
@@ -643,7 +644,7 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "Symfony OptionsResolver Component",
+            "description": "Provides an improved replacement for the array_replace PHP function",
             "homepage": "https://symfony.com",
             "keywords": [
                 "config",
@@ -651,7 +652,7 @@
                 "options"
             ],
             "support": {
-                "source": "https://github.com/symfony/options-resolver/tree/v3.4.47"
+                "source": "https://github.com/symfony/options-resolver/tree/v6.0.19"
             },
             "funding": [
                 {
@@ -667,7 +668,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-24T10:57:07+00:00"
+            "time": "2023-01-01T08:36:10+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
