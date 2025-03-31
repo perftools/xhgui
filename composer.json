@@ -27,7 +27,7 @@
         "pimple/pimple": "^3.0",
         "slim/flash": "^0.4.0",
         "slim/slim": "^4.14",
-        "slim/twig-view": "^2.5",
+        "slim/twig-view": "^3.4",
         "symfony/options-resolver": "^6.0",
         "twig/twig": "^3.19"
     },
