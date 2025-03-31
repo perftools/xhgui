@@ -10,8 +10,7 @@ class ExtensionTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->app->get('/test', function (): void {
-        })->setName('test');
+        $this->app->get('/test', fn() => null)->setName('test');
     }
 
     public function testFormatBytes(): void
