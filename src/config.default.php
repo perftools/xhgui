@@ -57,7 +57,7 @@ return [
     // - prefix=null: use auto-detection from request
     // - prefix='': use '' for prefix
     // - prefix='/xhgui': use '/xhgui'
-    'path.prefix' => null,
+    'path.prefix' => getenv('XHGUI_PATH_PREFIX') ?: null,
 
     // Setup timezone for date formatting
     // Example: 'UTC', 'Europe/Tallinn'
