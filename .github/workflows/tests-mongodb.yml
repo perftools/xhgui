@@ -30,7 +30,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: xdebug, mongodb
+          extensions: xdebug, mongodb-1.11.0
         env:
           fail-fast: true
 
