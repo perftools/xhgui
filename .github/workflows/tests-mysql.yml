@@ -51,7 +51,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress
 
       - name: Run PHPUnit tests
         run: composer test

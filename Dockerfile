@@ -66,7 +66,7 @@ RUN chmod -R a+rX /app
 # install composer vendor
 FROM php AS build
 WORKDIR /app
-ARG COMPOSER_FLAGS="--no-interaction --no-suggest --ansi --no-dev"
+ARG COMPOSER_FLAGS="--no-interaction --ansi --no-dev"
 COPY --from=composer:1.10 /usr/bin/composer /usr/bin/
 
 COPY --from=source /app/composer.* ./
