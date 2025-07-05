@@ -31,6 +31,8 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: xdebug, mongodb
+        env:
+          fail-fast: true
 
       - name: Validate composer.json and composer.lock
         run: composer validate
