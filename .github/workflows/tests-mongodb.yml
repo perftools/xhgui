@@ -30,7 +30,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: xdebug-2.9.8, mongodb
+          extensions: xdebug, mongodb
 
       - name: Validate composer.json and composer.lock
         run: composer validate
