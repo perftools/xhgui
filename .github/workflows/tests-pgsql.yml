@@ -34,7 +34,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: xdebug-2.9.8, pdo, pdo_pgsql
+          extensions: xdebug, pdo, pdo_pgsql
+        env:
+          fail-fast: true
 
       - name: Validate composer.json and composer.lock
         run: composer validate
