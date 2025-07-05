@@ -11,6 +11,7 @@ use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
+use XHGui\AppContainer;
 use XHGui\Application;
 use XHGui\Controller;
 use XHGui\RequestProxy;
@@ -75,17 +76,16 @@ trait LazyContainerProperties
         ]);
     }
 
-    protected function getDi()
+    protected function getDi(): AppContainer
     {
-        $di = new Application();
+        $app = new Application();
+        $di = $app->getContainer();
 
         // Use a test databases
         // TODO: do the same for PDO. currently PDO uses DSN syntax and has too many variations
         $di['mongodb.database'] = 'test_xhgui';
 
-        /** @var \Slim\Container $container */
-        $container = $di['app']->getContainer();
-        $container->register(new class($this) implements ServiceProviderInterface {
+        $di->register(new class($this) implements ServiceProviderInterface {
             public function __construct(private $ctx)
             {
             }
@@ -98,7 +98,7 @@ trait LazyContainerProperties
             }
         });
 
-        $di->boot();
+        $app->boot();
 
         return $di;
     }

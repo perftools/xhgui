@@ -2,22 +2,22 @@
 
 namespace XHGui;
 
-use Pimple\Container;
 use Slim\App;
 use XHGui\Saver\SaverInterface;
 
-class Application extends Container
+class Application
 {
     private bool $booted = false;
+    private AppContainer $container;
 
     public function __construct()
     {
-        parent::__construct();
-        $this->register(new ServiceProvider\ServiceProvider());
-        $this->register(new ServiceProvider\ConfigProvider());
-        $this->register(new ServiceProvider\PdoStorageProvider());
-        $this->register(new ServiceProvider\MongoStorageProvider());
-        $this->register(new ServiceProvider\SlimProvider());
+        $this->container = $container = new AppContainer();
+        $container->register(new ServiceProvider\ServiceProvider());
+        $container->register(new ServiceProvider\ConfigProvider());
+        $container->register(new ServiceProvider\PdoStorageProvider());
+        $container->register(new ServiceProvider\MongoStorageProvider());
+        $container->register(new ServiceProvider\SlimProvider());
     }
 
     public function run(): void
@@ -28,20 +28,25 @@ class Application extends Container
     public function boot(): self
     {
         if (!$this->booted) {
-            $this->register(new ServiceProvider\RouteProvider());
+            $this->container->register(new ServiceProvider\RouteProvider());
             $this->booted = true;
         }
 
         return $this;
     }
 
+    public function getContainer(): AppContainer
+    {
+        return $this->container;
+    }
+
     public function getSlim(): App
     {
-        return $this['app'];
+        return $this->container['app'];
     }
 
     public function getSaver(): SaverInterface
     {
-        return $this['saver'];
+        return $this->container['saver'];
     }
 }
