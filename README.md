@@ -122,10 +122,11 @@ This setup uses [docker-compose] to orchestrate docker containers.
 
 3. Open your browser at http://xhgui.127.0.0.1.nip.io:8142 or just http://localhost:8142 or type at terminal `composer open`
 
-4. To customize xhgui, copy `src/config.default.php` to `config/config.php` and edit that file.
+4. To customize xhgui, copy [`src/config.default.php`][src/config.default.php] to `config/config.php` and edit that file.
 
 [docker-compose]: https://docs.docker.com/compose/
 [docker-compose.yml]: https://github.com/perftools/xhgui/raw/HEAD/docker-compose.yml
+[src/config.default.php]: https://github.com/perftools/xhgui/raw/HEAD/src/config.default.php
 
 # Configuration
 
