@@ -362,43 +362,43 @@ class PdoRepository
 
         // simple_url equals match
         if (isset($search['simple_url'])) {
-            $where['conditions'] .= ' and simple_url = :simple_url';
+            $where['conditions'] .= ' and "simple_url" = :simple_url';
             $where['params']['simple_url'] = $search['simple_url'];
         }
 
         if (isset($search['date_start']) && !$hasLimit) {
-            $where['conditions'] .= ' and request_date >= :date_start';
+            $where['conditions'] .= ' and "request_date" >= :date_start';
             $where['params']['date_start'] = $search['date_start'];
         }
 
         if (isset($search['date_end']) && !$hasLimit) {
-            $where['conditions'] .= ' and request_date <= :date_end';
+            $where['conditions'] .= ' and "request_date" <= :date_end';
             $where['params']['date_end'] = $search['date_end'];
         }
 
         if (isset($search['request_start'])) {
-            $where['conditions'] .= ' and request_ts >= :request_start';
+            $where['conditions'] .= ' and "request_ts" >= :request_start';
             $where['params']['request_start'] = strtotime($search['request_start']);
         }
 
         if (isset($search['request_end'])) {
-            $where['conditions'] .= ' and request_ts <= :request_end';
+            $where['conditions'] .= ' and "request_ts" <= :request_end';
             $where['params']['request_end'] = strtotime($search['request_end']);
         }
 
         // TODO need JSON support
         if (isset($search['remote_addr'])) {
-            $where['conditions'] .= ' and SERVER like :remote_addr';
+            $where['conditions'] .= ' and "SERVER" like :remote_addr';
             $where['params']['remote_addr'] = '%' . $search['remote_addr'] . '%';
         }
 
         if (isset($search['cookie'])) {
-            $where['conditions'] .= ' and SERVER like :cookie';
+            $where['conditions'] .= ' and "SERVER" like :cookie';
             $where['params']['cookie'] = '%' . $search['cookie'] . '%';
         }
 
         if (isset($search['server_name'])) {
-            $where['conditions'] .= ' and SERVER like :server_name';
+            $where['conditions'] .= ' and "SERVER" like :server_name';
             $where['params']['server_name'] = '%' . $search['server_name'] . '%';
         }
 
@@ -406,10 +406,10 @@ class PdoRepository
             $date = new DateTime();
             try {
                 $date->sub(new DateInterval($search['limit']));
-                $where['conditions'] .= ' and request_ts >= :limit_start';
+                $where['conditions'] .= ' and "request_ts" >= :limit_start';
                 $where['params']['limit_start'] = $date->getTimestamp();
             } catch (\Exception) {
-                $where['conditions'] .= ' and request_ts >= :limit_start';
+                $where['conditions'] .= ' and "request_ts" >= :limit_start';
                 $where['params']['limit_start'] = time() + 86400;
             }
         }
