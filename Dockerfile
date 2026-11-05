@@ -53,6 +53,8 @@ RUN set -x \
 	&& ln -s /dev/stdout /var/log/nginx/access.log \
 	&& ln -s /dev/stderr /var/log/nginx/error.log \
 	&& ln -sf php$PHP_SUFFIX /usr/bin/php \
+	# Allow large profiles to be imported (keep in sync with client_max_body_size in nginx.conf)
+	&& echo 'post_max_size = 100M' > $PHP_INI_DIR/conf.d/99-xhgui.ini \
 	&& php -m
 
 # prepare sources
